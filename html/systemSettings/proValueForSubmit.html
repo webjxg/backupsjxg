@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>属性管理</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <!--插件样式-->
+    <link rel="stylesheet" href="../../plugins/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../plugins/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../../plugins/icheck/skins/square/green.css">
+    <link rel="stylesheet" href="../../plugins/webUpLoader/webuploader.css">
+    <!--引入样式-->
+    <link rel="stylesheet" href="../../css/common.css">
+    <link rel="stylesheet" href="../../css/userCheckView.css">
+
+</head>
+<script>
+    var BASE_URL='http://114.115.165.184:8080/admin-api'
+</script>
+<body>
+<i id="btnMenu" class="icon-th-list" style="cursor:pointer;float:right;margin:10px;"></i>
+<form id="inputForm" class="form-horizontal" method="post" action="/api/sys/SysAuthPropertyValue/ajaxSave">
+    <!--<input id="id" name="id" type="hidden" />-->
+    <table class="table table-bordered  table-condensed dataTables-example dataTable no-footer">
+        <tbody>
+        <tr>
+            <td class="width-15 active" ><label class="pull-right">名称:</label></td>
+            <td class="width-35">
+                <input id="valueNameId" name="valueNameId" class="form-control" type="hidden" value="1" aria-required="true">
+                <input id="valueName" name="name" type="text" value="" data-msg-required="" class="form-control valid" style="" aria-required="true" aria-invalid="false">
+
+                <label id="proName-error" class="error" for="proName" style="display:none"></label>
+            </td>
+            <td class="width-15 active" ><label class="pull-right">属性值:</label></td>
+            <td class="width-35">
+                <input id="valueId" name="valueId" class="form-control" type="hidden" value="1" aria-required="true">
+                <input id="value" name="value" type="text" value="" data-msg-required="" class="form-control valid" style="" aria-required="true" aria-invalid="false">
+                <label id="proCode-error" class="error" for="proCode" style="display:none"></label>
+            </td>
+        </tr>
+        <tr>
+            <td class="active">
+                <label class="pull-right">
+                    是否可用:
+                </label>
+            </td>
+            <td>
+                <select id="enable" name="enable" class="form-control">
+                    <option value="1">是</option>
+                    <option value="0">否</option>
+                </select>
+            </td>
+            <td class="active">
+                <label class="pull-right">
+                    所属属性:
+                </label>
+            </td>
+            <td>
+                <input id="sysAuthPropertyId" name="sysAuthProperty.id" class="form-control" type="hidden" value="" aria-required="true">
+                <input id="sysAuthPropertyName" name="sysAuthProperty.name" class="form-control" value="">
+            </td>
+        </tr>
+        <tr class="hiddenView" >
+            <td class="active">
+                <label class="pull-right">
+                    上级节点:
+                </label>
+            </td>
+            <td>
+                <input id="parentId" name="parent.id" class="form-control" type="hidden" value="" aria-required="true">
+                <input id="parentName" name="parentName" type="text" value="" data-msg-required="" class="form-control valid" style="" aria-required="true" aria-invalid="false">
+                <label id="prodes-error" class="error" for="prodes" style="display:none"></label>
+            </td>
+
+            <td class="active">
+                <label class="pull-right">
+                    源ID:
+                </label>
+            </td>
+            <td>
+                <input id="source" name="source" class="form-control" type="hidden" value="1" aria-required="true">
+                <input id="sourceId" name="sourceId" class="form-control">
+            </td>
+        </tr>
+        <tr class="hiddenUpdata">
+            <td class="active">
+                <label class="pull-right">创建人:</label>
+            </td>
+            <td>
+                <input id="createById" name="createById" class="form-control" type="hidden" value="1" aria-required="true">
+                <input id="createBy" name="createBy" class="form-control" type="text" value="" maxlength="100"/>
+            </td>
+            <td class="active">
+                <label class="pull-right">创建时间:</label>
+            </td>
+            <td>
+                <input id="createDateId" name="createDateId" class="form-control" type="hidden" value="1" aria-required="true">
+                <input id="createDate" name="createDate" class="form-control">
+            </td>
+        </tr>
+        <tr class="hiddenUpdata">
+            <td class="active">
+                <label class="pull-right">修改人:</label>
+            </td>
+            <td>
+                <input id="updateById" name="updateById" class="form-control" type="hidden" value="1" aria-required="true">
+                <input id="updateBy" name="updateBy" class="form-control" type="text" value="" maxlength="100"/>
+            </td>
+            <td class="active">
+                <label class="pull-right">修改时间:</label>
+            </td>
+            <td>
+                <input id="updateDateId" name="updateDateId" class="form-control" type="hidden" value="1" aria-required="true">
+                <input id="updateDate" name="updateDate" class="form-control">
+            </td>
+        </tr>
+        <tr>
+            <td class="active">
+                <label class="pull-right">备注信息:</label>
+            </td>
+            <td>
+                <input id="remarkId" name="remarkId" class="form-control" type="hidden" value="1" aria-required="true">
+                <textarea id="remark" name="remark" class="form-control" rows="3">
+
+                </textarea>
+            </td>
+            <td class="active">
+                <label class="pull-right">排序:</label>
+            </td>
+            <td>
+                <input id="sortId" name="sortId" class="form-control" type="hidden" value="1" aria-required="true">
+                <input id="sort" name="sort" class="form-control">
+            </td>
+        </tr>
+
+        </tbody>
+    </table>
+</form>
+
+<!--核心插件-->
+<script src="../../js/jquery-2.2.4.min.js"></script>
+<script src="../../plugins/bootstrap/js/bootstrap.min.js"></script>
+<!--附属插件-->
+<script src="../../plugins/validate/jquery.validate.min.js"></script>
+<script src="../../plugins/validate/messages_zh.min.js"></script>
+<script src="../../plugins/layer/layer.js"></script>
+<script src="../../plugins/icheck/icheck.min.js"></script>
+<script src="../../plugins/webUpLoader/webuploader.js"></script>
+<!--自定义文件-->
+<script src="../../js/jeeplus.js"></script>
+<script src="../../js/customForm.js"></script>
+<script src="../../js/public.js"></script>
+<script src="../../js/page.js"></script>
+
+
+
+
+
+
+<script>
+    $(document).ready(function() {
+        icheckinner();
+        var id = getQueryString('pid');
+        var Sid=getQueryString('Sid');
+        $('#sysAuthPropertyId').val(Sid);
+        $('#parentId').val(id);
+        var obj={"parent":{"id":id},"sysAuthProperty":{"id":Sid}}
+        var data=JSON.stringify(obj)
+        var view=getQueryString('View');
+        if(view=="yes"){
+            $('.hiddenView').hide();
+        }else if(view=="no"){
+            $('.hiddenUpdata').hide();
+        }
+        $('#id').val(id);
+        if (id) {
+                /*此处后端接口  id为弹出窗口自带的id 通过浏览器方法传参得到*/
+//            /api/sys/SysAuthPropertyValue/ajaxSave
+                var url = "/api/sys/SysAuthPropertyValue/form";
+                ajaxToServer(url, data, function (result){
+                    console.log(result);
+                    if (result.success) {
+                        $('#parentName').val(result.parentName);
+                        $('#sysAuthPropertyName').val(result.SysAuthPropertyValue.sysAuthProperty.name);
+                        /*运行把ajax数据渲染到弹出窗口中*/
+                    } else {
+                        layer.msg(result.message);
+                    }
+
+                });
+            }
+
+
+    });
+
+    /*清除头像*/
+    function getSubmitFormId(){
+        return "#inputForm";
+    }
+
+</script>
+</body>
+</html>

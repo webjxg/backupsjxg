@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>text</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="stylesheet" href="../../css/dictionaries.css">
+    <link rel="stylesheet" href="../../plugins/treetable/css/jquery.treetable.css">
+    <link rel="stylesheet" href="../../plugins/treetable/css/jquery.treetable.theme.default.css">
+    <link rel="stylesheet" href="../../plugins/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../plugins/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../../plugins/ztree/css/metroStyle/metroStyle.css">
+    <link rel="stylesheet" href="../../plugins/datatables/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="../../plugins/icheck/skins/square/aero.css">
+    <link rel="stylesheet" href="../../plugins/datatables/css/mydatatable.css">
+
+    <!--引入样式-->
+    <link rel="stylesheet" href="../../css/common.css">
+    <link rel="stylesheet" href="../../css/proPreserveValueTable.css">
+    <link rel="stylesheet" href="../../css/dictionaries.css">
+
+
+
+</head>
+<body>
+
+<div class="wrapper ibox-content wrapper-content">
+    <!--按钮条-->
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="pull-left">
+                <button class="btn btn-white btn-sm" id="btnadd"  data-toggle="tooltip" data-placement="left" title="添加"><i class="fa fa-plus"></i> 添加
+                </button>
+                <button class="btn btn-white btn-sm " id="refresh-btn" data-toggle="tooltip" data-placement="left"
+                        onclick="window.location.reload();" title="刷新"><i class="glyphicon glyphicon-repeat"></i> 刷新
+                </button>
+            </div>
+        </div>
+    </div>
+    <!--内容表格-->
+    <table id="treeTable" class="table table-striped table-bordered table-hover table-condensed dataTables-example dataTable">
+        <thead>
+        <tr>
+            <th>名称</th>
+            <th>值</th>
+            <th>排序</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody id="treeTableBody" >
+
+        </tbody>
+    </table>
+</div>
+
+
+<!--核心插件-->
+<script src="../../js/jquery-2.2.4.min.js"></script>
+<script src="../../plugins/bootstrap/js/bootstrap.min.js"></script>
+<!--附属插件-->
+<script src="../../plugins/ibox.2.2/ibox.js"></script>
+<script src="../../plugins/layer/layer.js"></script>
+<script src="../../plugins/icheck/icheck.min.js"></script>
+<script src="../../plugins/metismenu-master/metisMenu.min.js"></script>
+<script src="../../plugins/slimScroll/jquery.slimscroll.min.js"></script>
+<script src="../../plugins/ztree/js/jquery.ztree.core.js"></script>
+<script src="../../plugins/datatables/js/jquery.dataTables.min.js"></script>
+<script src="../../plugins/icheck/icheck.min.js"></script>
+<script src="../../plugins/treetable/jquery.treetable.js"></script>
+<script src="../../plugins/bootStrapPager/js/extendPagination.js"></script>
+<!--公共样式-->
+<script src="../../js/public.js"></script>
+<script src="../../js/jeeplus.js"></script>
+<script src="../../js/customForm.js"></script>
+<script src="../../js/page.js"></script>
+
+<script>
+
+    //承接父页面操作子iframe方法
+    function updatason(node){
+        var id = getQueryString('id');
+        if(node==''){
+            var obj={"id":'',"sysAuthProperty":{"id":id}}
+        }else{
+            var obj={"id":node,"sysAuthProperty":{"id":id}}
+        }
+        var data= JSON.stringify(obj);
+
+
+        ajaxToServer("/api/sys/SysAuthPropertyValue/ajaxTreeJson",data,function(tableData){
+            renderTableData(tableData.rows );
+            clickButton();
+        })
+    }
+    window.pageLoad= function () {
+        var id = getQueryString('id');
+        var obj={"id":'',"sysAuthProperty":{"id":id}};
+        var data= JSON.stringify(obj);
+        ajaxToServer("/api/sys/SysAuthPropertyValue/ajaxTreeJson",data,function(tableData){
+//            console.log(data,tableData);
+            renderTableData(tableData.rows);
+            $('tbody tr').css('text-align','center');
+            clickButton();
+        });
+
+
+    };
+    pageLoad();
+    //渲染
+    function clickButton() {
+        $('.btn-check').click(function () {
+            var id = $(this).parents("tr").find('.i-Checks').attr('id');
+            openDialog('查看属性信息', './systemSettings/proValueCheckView.html?id=' + id+'&View=yes', '800px', '500px');
+        });
+        $('.btn-change').click(function () {
+            var id = $(this).parents("tr").find('.i-Checks').attr('id');
+            openEditDialog('修改属性信息', './systemSettings/proValueCheckView.html?id=' + id+'&View=no', '800px', '500px')
+        });
+        $('.btn-delete').click(function () {
+            var id = $(this).parents("tr").find('.i-Checks').attr('id');
+            deleteItem('确定要删除该属性吗', '/api/sys/SysAuthPropertyValue/ajaxDel/' + id)
+        });
+        $('.btn-add').click(function(){
+            var id = $(this).parents("tr").find('.i-Checks').attr('id');
+            var Sid=getQueryString('id');
+            openEditDialog('添加下级属性','./systemSettings/proValueForSubmit.html?pid='+id+"&Sid="+Sid+'&View=no','800px','500px')
+        });
+        $('#btnadd').click(function(){
+            var Sid=getQueryString('id');
+            openEditDialog('添加属性','./systemSettings/proValueForSubmit.html?Sid='+Sid+'&View=no','800px','500px')
+        });
+    }
+
+//    function Dialog(title,url,width,height,innerCallbackFn){
+//        var clickFlag = true;
+//        if(navigator.userAgent.match(/(iPhone|iPod|Android|ios)/i)){//如果是移动端，就使用自适应大小弹窗
+//            width='auto';
+//            height='auto';
+//        }else{//如果是PC端，根据用户设置的width和height显示。
+//        }
+//        var ind =  top.layer.open({
+//            type: 2,
+//            area: [width, height],
+//            title: title,
+//            maxmin: true, //开启最大化最小化按钮
+//            content: url ,
+//            btn: ['确定', '关闭'],
+//            yes: function(index, layero){
+//                var body = top.layer.getChildFrame('body', index);  //获取子iframe
+//                var iframeWin = layero.find('iframe')[0]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
+//                if(clickFlag){
+//                    if(!innerCallbackFn){
+//                        iframeWin.contentWindow.doSubmit(iframeWin.contentWindow,body,index);
+//                    }else{
+//                        //iframeWin.contentWindow[innerCallbackFn]();   //有bug  innerCallbackFn必须是字符串 待解决
+//                        innerCallbackFn.call(iframeWin.contentWindow,iframeWin.contentWindow,body,index);
+//                    }
+//                    clickFlag = false;
+//                    setTimeout(function(){
+//                        clickFlag = true;
+//                    },3000);
+//                }
+//            },
+//            cancel: function(index){
+//            }
+//        });
+//    }
+//    function dsubmit(a,b,c){
+//        console.log(a,b,c);
+//        var id = getQueryString('id');//属性id
+//        var pid=getQueryString('pid')
+//        var obj={'sysAuthProperty':{'id':pid},'parent':{'id':id}};
+//        var data= JSON.stringify(obj);
+//        console.log(data);
+//        ajaxToServer('/api/sys/SysAuthPropertyValue/form',data,function(result){
+//            console.log(data,result);
+//            if(result.success == true){
+//                layer.msg('已成功提交',{time: 1000});
+//                setTimeout(function(){
+////                        var src =top.getActiveTab().attr('src');
+//                    //获取父层
+//                    var index = top.layer.getFrameIndex(window.name);
+//                    //关闭弹出层
+////                    top.layer.close(index);
+//                    //刷新父层
+//                    var frameActive = top.getActiveTab().attr("name");
+//                    var obj = $('#refresh-btn', top.window.frames[frameActive].document);
+//                    if(obj.length == 0){
+//                        obj = $('#search-btn', top.window.frames[frameActive].document);
+//                    }
+//                    obj.trigger('click');
+//                },1000);
+//            }else{
+//                layerAlert(result.message)
+//            }
+//
+//    })
+//    }
+
+
+
+
+
+    //    渲染表格
+    function renderTableData(data) {
+        var tableStr = "";
+        for (var i = 0; i < data.length; i++) {
+            var count = 'data-tt-id=' + data[i].id;
+            if (data[i]._parentId && data[i]._parentId != '') {
+                count += '  data-tt-parent-id=' + data[i]._parentId;
+            }
+            tableStr += "<tr  " + count + " >"
+                + "<td class='i-Checks' id='" + data[i].id + "'>" + data[i].name + "</td>"
+                + "<td>" + data[i].value + "</td>"
+                + "<td>" + data[i].sort + "</td>"
+                + "<td class='autoWidth' ><a class='btn btn-info btn-xs btn-check'><i class='fa fa-search-plus'></i>查看</a>" + " <a class='btn btn-success btn-xs btn-change'><i class='fa fa-edit'></i>修改</a>" + " <a class='btn btn-danger btn-xs btn-delete'><i class='fa fa-trash'></i> 删除</a>" + "  <a class='btn btn-primary btn-xs btn-add'><i class='fa fa-plus'></i> 添加下级节点</a>"
+                + "</tr>";
+        }
+        if (tableStr.length == 0) {
+            var len = $("#treeTable thead tr").children("th").length;
+            tableStr = "<tr style='text-align: center'><td colspan='" + len + "'><font color='#cd0a0a'>暂无记录</font></td></tr>";
+        }
+        $('#treeTableBody').html(tableStr);
+        $("#treeTable").treetable({expandable: true, column: 0}, true);  //第二个参数表示为true时强制重新初始化树。
+    }
+
+
+
+
+</script>
+</body>
+</html>

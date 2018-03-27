@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>应用管理内页</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <!--插件样式-->
+    <link rel="stylesheet" href="../../plugins/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../../plugins/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../plugins/layer/theme/default/layer.css">
+    <link rel="stylesheet" href="../../plugins/icheck/skins/square/green.css">
+    <!--自定义样式-->
+    <link rel="stylesheet" href="../../css/common.css">
+    <link rel="stylesheet" href="../../css/dic-inner.css">
+    <link rel="stylesheet" href="../../plugins/datatables/css/mydatatable.css">
+
+</head>
+<body id="" class="hideScroll  pace-done" style="">
+<i id="btnMenu" class="icon-th-list" style="cursor:pointer;float:right;margin:10px;"></i>
+<form id="inputForm" class="form-horizontal" action="/api/sys/SysApplication/ajaxSave" method="post" novalidate="novalidate">
+    <input id="id" name="id" type="hidden" value="">
+    <table class="table table-bordered  table-condensed dataTables-example dataTable no-footer">
+        <tbody>
+        <tr>
+            <td class="width-15 active">
+                <label class="pull-right">应用名称:</label>
+            </td>
+            <td class="width-35">
+                <input id="name" name="name" class="form-control "   required  type="text" value="" maxlength="50" aria-required="true"></td>
+            <td class="width-15 active">
+                <label class="pull-right">应用编码:</label>
+            </td>
+            <td class="width-35">
+                <input id="code" name="code" class="form-control "  required  type="text" value="" maxlength="50" aria-required="true">
+            </td>
+        </tr>
+        <tr>
+            <td class="width-15 active">
+                <label class="pull-right">描述:</label>
+            </td>
+            <td class="width-35">
+                <input id="des" name="des" class="form-control required abc" type="text" value="" maxlength="50" aria-required="true">
+            </td>
+            <td class="width-15 active">
+                <label class="pull-right">所属应用:</label>
+            </td>
+            <td class="width-35">
+                <select  id="selApp" name="sysApplication.id"  class=" form-control required valid" aria-invalid="false">
+                    <option value="">11</option>
+                    <option value="1">22</option>
+                    <option value="2">33</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td class="width-15 active">
+                <label class="pull-right">排序:</label>
+            </td>
+            <td class="width-35">
+                <input id="sort" name="sort" class="form-control required digits" type="text" value="" maxlength="11" aria-required="true">
+            </td>
+            <td class="width-15 active">
+                <label class="pull-right">是否可用:</label>
+            </td>
+            <td class="width-35">
+                <select name="enable" id="enable" class="form-control required " aria-invalid="false">
+                    <option value="">请选择</option>
+                    <option value="1">启用</option>
+                    <option value="0">禁用</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td class="width-15 active">
+                <label class="pull-right">备注:</label>
+            </td>
+            <td class="width-35">
+                <textarea id="remark" name="remark" maxlength="200" class="form-control "rows="3"></textarea>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</form>
+
+
+<!--核心插件-->
+<script src="../../js/jquery-2.2.4.min.js"></script>
+<script src="../../plugins/bootstrap/js/bootstrap.min.js"></script>
+<!--附属插件-->
+<script src="../../plugins/validate/jquery.validate.min.js"></script>
+<script src="../../plugins/validate/messages_zh.min.js"></script>
+<script src="../../plugins/jBox/jquery.jBox-2.3.min.js"></script>
+<script src="../../plugins/ibox.2.2/ibox.js"></script>
+<script src="../../plugins/layer/layer.js"></script>
+<script src="../../plugins/icheck/icheck.min.js"></script>
+<script src="../../plugins/slimScroll/jquery.slimscroll.min.js"></script>
+<script src="../../plugins/datatables/js/jquery.dataTables.min.js"></script>
+<!--自定义文件-->
+<script src="../../js/common.js"></script>
+<script src="../../js/customForm.js"></script>
+<script>
+    $(document).ready(function() {
+        var id =getQueryString('id');
+        var api = getQueryString('api') || 'form';
+        var html = "<option value = ''>请选择</option>";
+        var url = "/api/sys/SysApplication/"+api+"/"+id;
+        ajaxToServer(url,{},function(result){
+            console.log(result.SysApplication);
+            if(result.success){
+                var data = result.SysApplication;
+                if(id){
+                    var  selVal =data.id;
+                    var  selText = data.appNameParam;
+                }
+                if(api == 'view'){
+                    html += "<option value='"+selVal+"'>"+selText+"</option>";
+                }else if(api == 'form'){
+                    console.log(result.SysApplication)
+                    var selArr = result;
+                    console.log(selArr)
+                    for(var i=0;i<selArr.length;i++) {
+                        console.log(selArr[i])
+                        selValFor = selArr[i].id;
+                        selTextFor = selArr[i].appNameParam;
+                        html += "<option value='" + selValFor + "'>" + selTextFor + "</option>";
+                    }
+                }
+                $("#selApp").empty().append(html).val(selVal);
+                renderData(data,$('#inputForm'));
+            }else{
+                layer.msg(result.message);
+            }
+        });
+    });
+    function getSubmitFormId(){
+        return "#inputForm";
+    }
+</script>
+</body>
+</html>

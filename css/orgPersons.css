@@ -1,0 +1,27 @@
+body{
+    background: none;
+}
+table.dataTable{
+    width: 90%;
+}
+table td,table th{
+    position: relative;
+}
+td{
+    width: auto;
+}
+caption{
+    padding: 8px ;
+}
+.icheckbox_square-green{
+    position: inherit;
+    top: auto;
+    left: auto;
+    text-align: center;
+}
+table.dataTable thead th, table.dataTable tbody td {
+    padding: 8px 10px;
+}
+tbody tr td:nth-of-type(1){
+    text-align: center;
+}

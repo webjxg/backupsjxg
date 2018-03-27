@@ -1,0 +1,6 @@
+.sprite1{ background:url("sprite1.png") top left no-repeat; }
+.sprite1_r1_c4{ width:16px; height:16px; background-position:-10px -10px; }
+.sprite1_r1_c3{ width:16px; height:16px; background-position:-10px -36px; }
+.sprite1_r1_c2{ width:16px; height:16px; background-position:-10px -62px; }
+.sprite1_r1_c1{ width:16px; height:16px; background-position:-10px -88px; }
+

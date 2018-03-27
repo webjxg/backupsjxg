@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>参数管理</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <!--插件样式-->
+    <link rel="stylesheet" href="../../plugins/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../plugins/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../../plugins/icheck/skins/square/green.css">
+    <link rel="stylesheet" href="../../plugins/webUpLoader/webuploader.css">
+    <!--引入样式-->
+    <link rel="stylesheet" href="../../css/common.css">
+    <link rel="stylesheet" href="../../css/userCheckView.css">
+
+</head>
+
+<body>
+<i id="btnMenu" class="icon-th-list" style="cursor:pointer;float:right;margin:10px;"></i>
+<form id="inputForm" class="form-horizontal" action="/api/sys/SysOperation/ajaxSave" method="post">
+    <input id="id" name="id" type="hidden" />
+    <table class="table table-bordered  table-condensed dataTables-example dataTable no-footer">
+        <tbody>
+        <tr>
+            <td class="width-15 active" ><label class="pull-right">模版名称:</label></td>
+            <td class="width-35">
+                <input id="opeName" name="name" type="text" value="" data-msg-required="" class="form-control valid" style="" aria-required="true" aria-invalid="false">
+
+                <label id="proName-error" class="error" for="proName" style="display:none"></label>
+            </td>
+            <td class="width-15 active" ><label class="pull-right">模版编码:</label></td>
+            <td class="width-35">
+                <input id="opeCode" name="code" type="text" value="" data-msg-required="" class="form-control valid" style="" aria-required="true" aria-invalid="false">
+                <label id="proCode-error" class="error" for="proCode" style="display:none"></label>
+            </td>
+        </tr>
+        <tr>
+            <td class="active">
+                <label class="pull-right">
+                    是否启用：
+                </label>
+            </td>
+            <td>
+                <select id="enable" name="enable" class="form-control">
+                    <option value="1">是</option>
+                    <option value="0">否</option>
+                </select>
+            </td>
+            <!--<td class="active">-->
+                <!--<label class="pull-right">创建时间:</label>-->
+            <!--</td>-->
+            <!--<td>-->
+                <!--<input id="createDate" name="createDate" class="form-control" type="text" value="" maxlength="100"/>-->
+            <!--</td>-->
+        </tr>
+        </tbody>
+    </table>
+</form>
+<!--核心插件-->
+<script src="../../js/jquery-2.2.4.min.js"></script>
+<script src="../../plugins/bootstrap/js/bootstrap.min.js"></script>
+<!--附属插件-->
+<script src="../../plugins/validate/jquery.validate.min.js"></script>
+<script src="../../plugins/validate/messages_zh.min.js"></script>
+<script src="../../plugins/layer/layer.js"></script>
+<script src="../../plugins/icheck/icheck.min.js"></script>
+<script src="../../plugins/webUpLoader/webuploader.js"></script>
+<!--自定义文件-->
+<script src="../../js/jeeplus.js"></script>
+<script src="../../js/customForm.js"></script>
+<script src="../../js/public.js"></script>
+<script src="../../js/page.js"></script>
+
+
+
+
+
+
+<script>
+    $(document).ready(function() {
+        icheckinner();
+        var id = getQueryString('id');
+        $('#id').val(id);
+        if (id) {
+            /*此处后端接口  id为弹出窗口自带的id 通过浏览器方法传参得到*/
+            var url = "/api/sys/SysOperation/view/" + id;
+            ajaxToServer(url, {}, function (result) {
+                console.log(url,result); //查看请求回来的参数
+                if (result.success) {
+                    renderData(result.SysOperation, $('#inputForm'));
+                } else {
+                    layer.msg(result.message);
+                }
+
+            });
+        }
+    });
+
+    /*清除头像*/
+    function getSubmitFormId(){
+        return "#inputForm";
+    }
+
+</script>
+</body>
+</html>

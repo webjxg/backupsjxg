@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>角色管理内页</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <!--插件样式-->
+    <link rel="stylesheet" href="../../plugins/metismenu-master/metisMenu.css">
+    <link rel="stylesheet" href="../../plugins/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../../plugins/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../plugins/layer/theme/default/layer.css">
+    <link rel="stylesheet" href="../../plugins/icheck/skins/square/green.css">
+    <!--自定义样式-->
+    <link rel="stylesheet" href="../../css/common.css">
+    <link rel="stylesheet" href="../../css/dic-inner.css">
+    <link rel="stylesheet" href="../../plugins/datatables/css/mydatatable.css">
+</head>
+<body id="" class="hideScroll  pace-done" style="">
+<i id="btnMenu" class="icon-th-list" style="cursor:pointer;float:right;margin:10px;"></i>
+<form id="inputForm" class="form-horizontal" action="/api/sys/SysRole/ajaxSave" method="post" novalidate="novalidate">
+    <input id="id" name="id" type="hidden" value="">
+    <table class="table table-bordered  table-condensed dataTables-example dataTable no-footer">
+        <tbody>
+        <tr>
+            <td class="width-15"><label class="pull-right"><font color="red">*</font>角色名称:</label></td>
+            <td class="width-35">
+                <input id="name" name="name" class="form-control required valid" type="text" value="" maxlength="50"
+                       aria-required="true" aria-invalid="false"></td>
+            <td class="width-15 active"><label class="pull-right"><font color="red">*</font>英文名称:</label></td>
+            <td class="width-35">
+                <input id="enname" name="enname" class="form-control required valid" type="text" value=""
+                       maxlength="50" aria-required="true" aria-invalid="false"></td>
+        </tr>
+        <tr>
+            <td class="width-15"><label class="pull-right">角色类型:</label>
+            </td>
+            <td class="width-35">
+                <select id="roleType" name="roleType" class="form-control ">
+                </select>
+                <span class="help-inline" title="activiti有3种预定义的组类型：security-role、assignment、user 如果使用Activiti Explorer，需要security-role才能看到manage页签，需要assignment才能claim任务">
+						工作流组用户组类型（任务分配：assignment、管理角色：security-role、普通角色：user）
+                </span>
+            </td>
+            <td class="width-15 active"><label class="pull-right">是否系统数据:</label>
+            </td>
+            <td class="width-35">
+                <select id="isSys" name="isSys" class="form-control valid" aria-invalid="false">
+                    <option value="1" selected="selected">是</option>
+                    <option value="0">否</option>
+                </select>
+                <span class="help-inline">“是”代表此数据只有超级管理员能进行修改，“否”则表示拥有角色修改人员的权限都能进行修改</span>
+            </td>
+        </tr>
+        <tr>
+            <td class="width-15"><label class="pull-right">是否可用</label></td>
+            <td class="width-35">
+                <select id="enable" name="enable" class="form-control valid" aria-invalid="false">
+                    <option value="1" selected="selected">是</option>
+                    <option value="0">否</option>
+                </select>
+                <span class="help-inline">“是”代表此数据可用，“否”则表示此数据不可用</span>
+            </td>
+            <td class="width-15 active"><label class="pull-right">备注:</label></td>
+            <td class="width-35">
+                <textarea id="remark" name="remark" maxlength="200" class="form-control " rows="3"></textarea>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</form>
+
+
+
+
+<!--核心插件-->
+<script src="../../js/jquery-2.2.4.min.js"></script>
+<script src="../../plugins/bootstrap/js/bootstrap.min.js"></script>
+<!--附属插件-->
+<script src="../../plugins/validate/jquery.validate.min.js"></script>
+<script src="../../plugins/validate/messages_zh.min.js"></script>
+<script src="../../plugins/jBox/jquery.jBox-2.3.min.js"></script>
+<script src="../../plugins/ibox.2.2/ibox.js"></script>
+<script src="../../plugins/layer/layer.js"></script>
+<script src="../../plugins/icheck/icheck.min.js"></script>
+<script src="../../plugins/slimScroll/jquery.slimscroll.min.js"></script>
+<script src="../../plugins/datatables/js/jquery.dataTables.min.js"></script>
+<!--自定义文件-->
+<script src="../../js/common.js"></script>
+<script src="../../js/customForm.js"></script>
+<script>
+    $("#roleTypeLabel").html("");
+    $(document).ready(function () {
+        var id = getQueryString('id'),
+            api = getQueryString('api') || 'form';
+            var url = "/api/sys/SysRole/" + api + "/" + id;
+            ajaxToServer(url, {}, function (result) {
+                if (result.success) {
+                    var data = result.roleTypeList,
+                        html="<option value =''>请选择</option>";
+                    for(var i = 0;i<data.length;i++){
+                        var label = data[i].label;
+                         html += "<option value = "+label+">"+label+"</option>";
+                    }
+                    $("#roleType").empty().append(html);
+                    renderData(result.SysRole, $('#inputForm'));
+                } else {
+                    layer.msg(result.message);
+                }
+            });
+
+        $("#officeButton").click(function(){
+            // 多选的情况下multiple = true,否则为false;
+            var url = "selectTree.html?multiple=false&defaultVal="+$("#menuId").val();
+            url += "&dataUrl=/api/sys/SysOrg/leftTree";
+            openDialog("选择机构",url,"300px","400px",function(iframeWin,body){
+                var selArr = iframeWin.getCheckVal();
+                if(selArr){
+                    var name = "",id ="";
+                    for(var i = 0;i<selArr.length;i++){
+                        name += ","+selArr[i].name;
+                        id += ","+selArr[i].id;
+                    }
+                    if(id.length>0){
+                        $("#officeName").val(name.substr(1));
+                        $("#officeId").val(id.substr(1));
+                    }
+
+                }
+            });
+
+        });
+    });
+
+
+    function getSubmitFormId() {
+        return "#inputForm";
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>计划模版</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <!--插件样式-->
+    <link rel="stylesheet" href="../../plugins/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../plugins/font-awesome/css/font-awesome.min.css">
+    <!--引入样式-->
+    <link rel="stylesheet" href="../../css/common.css">
+    <!--<link rel="stylesheet" href="../../css/dictionaries.css">-->
+    <style>
+        .row {
+            margin-bottom: 20px;
+        }
+
+        .pull-left span {
+            margin: 10px;
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .pull-left select {
+            height: 30px;
+            line-height: 30px;
+            font-size: 16px;
+            border-radius: 5px;
+            border-color: #acbad5;
+            padding: 0 10px 0 20px;
+            margin-left: 15px;
+        }
+
+        .panel-group {
+            width: 100%;
+        }
+
+        .panel-group .panel + .panel {
+            margin-top: 15px;
+        }
+
+        .panel-heading {
+            padding: 10px 25px;
+        }
+
+        tr th {
+            text-align: center;
+        }
+
+        tr td input {
+            width: 80%;
+            height: 100%;
+            line-height: 100%;
+            border: 1px solid #e5e6e7;
+            border-radius: 2px;
+        }
+
+
+    </style>
+</head>
+<body>
+<div class="wrapper wrapper-content ibox-content">
+    <form action="">
+        <!--按钮条-->
+        <div class="row">
+            <div class="col-sm-12">
+                <div class="pull-left">
+                    <span>运行部</span>
+                    <!--下拉菜单选择时间-->
+                    <select name="yearMonth" id="yearMonth">
+                        <option value="">2018年1月</option>
+                        <option value="">2018年2月</option>
+                        <option value="">2018年3月</option>
+                        <option value="">2018年4月</option>
+                        <option value="">2018年5月</option>
+                        <option value="">2018年6月</option>
+                        <option value="">2018年7月</option>
+                        <option value="">2018年8月</option>
+                        <option value="">2018年9月</option>
+                    </select>
+                    <select name="week" id="week">
+                        <option value="">第一周</option>
+                        <option value="">第二周</option>
+                        <option value="">第三周</option>
+                        <option value="">第四周</option>
+                        <option value="">第五周</option>
+                    </select>
+                    <span>生产计划</span>
+
+                </div>
+                <div class="pull-right">
+                    <input type="hidden" name="state" id="state" value>
+                    <button class="btn btn-primary btn-rounded btn-outline btn-sm " id="save-btn"><i
+                            class="fa fa-floppy-o"></i> 暂存
+                    </button>
+                    <button class="btn btn-primary btn-rounded btn-outline btn-sm " id="submit-btn"><i
+                            class="fa fa-check-square-o"></i> 递交
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!--表格区-->
+        <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+            <!--产量-->
+            <div class="panel panel-default">
+                <div class="panel-heading" role="tablist" aria-multiselectable="true" style="font-size: 20px;background-color: #23a6c8;">
+                    <span>产量计划</span>
+                    <a style="font-size: 25px; float: right;"  onclick="$('#yieldTable').toggle()" >
+                        <i class="fa fa-navicon"></i>
+                    </a>
+                </div>
+                <table id="yieldTable" class="table-striped table-bordered table-hover table-condensed dataTables-example dataTable " >
+                    <thead>
+                    <tr class="alignCenter">
+                        <th class='autoWidth'>序号</th>
+                        <th class='autoWidth'>项目</th>
+                        <th class='autoWidth'>单位</th>
+                        <th class='autoWidth'>月计划</th>
+                        <th class='autoWidth'>周计划</th>
+                        <th class='autoWidth'>日计划</th>
+                    </tr>
+                    </thead>
+                    <tbody id="yieldBody">
+
+                    </tbody>
+                </table>
+            </div>
+            <!--班计划-->
+            <div class="panel panel-default">
+                <div class="panel-heading" style="font-size: 20px;background-color: #23b6e8;">
+                    <span>班计划</span>
+                    <a style="font-size: 25px; float: right;" onclick="$('#shiftlan').toggle()">
+                        <i class="fa fa-navicon"></i>
+                    </a>
+                </div>
+                <table id="shiftlan"
+                       class="table-striped table-bordered table-hover table-condensed dataTables-example dataTable">
+                    <thead>
+                    <tr class="alignCenter">
+                        <th class='autoWidth'>序号</th>
+                        <th class='autoWidth'>项目</th>
+                        <th class='autoWidth'>单位</th>
+                        <th class='autoWidth'>月计划</th>
+                        <th class='autoWidth'>周计划</th>
+                        <th class='autoWidth'>日计划</th>
+                    </tr>
+                    </thead>
+                    <tbody id="shiftlanBody">
+
+                    </tbody>
+                </table>
+            </div>
+            <!--质量指标计划-->
+            <div class="panel panel-default">
+                <div class="panel-heading" style="font-size: 20px;background-color: #23c6a8;">
+                    <span>质量指标计划</span>
+                    <a  style="font-size: 25px; float: right;" onclick="$('#qualityIndex').toggle()">
+                        <i class="fa fa-navicon"></i>
+                    </a>
+                </div>
+                <table id="qualityIndex"
+                       class="table-striped table-bordered table-hover table-condensed dataTables-example dataTable">
+                    <thead>
+                    <tr class="alignCenter">
+                        <th class='autoWidth'>序号</th>
+                        <th class='autoWidth'>项目</th>
+                        <th class='autoWidth'>单位</th>
+                        <th class='autoWidth'>月计划</th>
+                        <th class='autoWidth'>周计划</th>
+                        <th class='autoWidth'>日计划</th>
+                    </tr>
+                    </thead>
+                    <tbody id="qualityIndexBody">
+
+                    </tbody>
+                </table>
+            </div>
+            <!--技术指标计划-->
+            <div class="panel panel-default">
+                <div class="panel-heading" style="font-size: 20px;background-color: #23d6a8;">
+                    <span>技术指标计划</span>
+                    <a style="font-size: 25px; float: right;" onclick="$('#technicalIndex').toggle()">
+                        <i class="fa fa-navicon"></i>
+                    </a>
+                </div>
+                <table id="technicalIndex"
+                       class="table-striped table-bordered table-hover table-condensed dataTables-example dataTable">
+                    <thead>
+                    <tr class="alignCenter">
+                        <th class='autoWidth'>序号</th>
+                        <th class='autoWidth'>项目</th>
+                        <th class='autoWidth'>单位</th>
+                        <th class='autoWidth'>月计划</th>
+                        <th class='autoWidth'>周计划</th>
+                        <th class='autoWidth'>日计划</th>
+                    </tr>
+                    </thead>
+                    <tbody id="technicalIndexBody">
+
+                    </tbody>
+                </table>
+            </div>
+            <!--各项单耗指标计划-->
+            <div class="panel panel-default">
+                <div class="panel-heading" style="font-size: 20px;background-color: #23e6a8;">
+                    <span>各项单耗指标计划</span>
+                    <a style="font-size: 25px; float: right;" onclick="$('#consumption').toggle()">
+                        <i class="fa fa-navicon"></i>
+                    </a>
+                </div>
+                <table id="consumption"
+                       class="table-striped table-bordered table-hover table-condensed dataTables-example dataTable">
+                    <thead>
+                    <tr class="alignCenter">
+                        <th class='autoWidth'>序号</th>
+                        <th class='autoWidth'>项目</th>
+                        <th class='autoWidth'>单位</th>
+                        <th class='autoWidth'>月计划</th>
+                        <th class='autoWidth'>周计划</th>
+                        <th class='autoWidth'>日计划</th>
+                    </tr>
+                    </thead>
+                    <tbody id="consumptionBody">
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </form>
+</div>
+<!--核心插件-->
+<script src="../../js/jquery-2.2.4.min.js"></script>
+<script src="../../plugins/bootstrap/js/bootstrap.min.js"></script>
+<!--附属插件-->
+<script src="../../plugins/layer/layer.js"></script>
+<script src="../../js/customForm.js"></script>
+
+
+</body>
+<script>
+    $(document).ready(function () {
+        $('#save-btn').on('click', function () {
+            $('#state').val(0);
+        });
+        $('#submit-btn').on('click', function () {
+            $('#state').val(1);
+        });
+        ajaxToServer("/api/sys/SysOrg/treeJson/0", {}, function (tableData) {
+            renderTableData(tableData.rows, "#yieldBody");
+            renderTableData(tableData.rows, "#shiftlanBody");
+            renderTableData(tableData.rows, "#qualityIndexBody");
+            renderTableData(tableData.rows, "#technicalIndexBody");
+            renderTableData(tableData.rows, "#consumptionBody");
+            console.log(tableData);
+        });
+    });
+    function renderTableData(data, table) {
+        var tableStr = "";
+        for (var i = 0; i < data.length; i++) {
+            tableStr += "<tr class='alignCenter'>"
+                + "<td id='" + data[i].id + "'></td>"
+                + "<td>" + data[i].name + "</td>"
+                + "<td>" + data[i].code + "</td>"
+                + "<td><input type='text'></td>"
+                + "<td><input type='text'></td>"
+                + "<td><input type='text'></td>"
+                + "</tr>";
+        }
+        $(table).html(tableStr);
+        var tr = table + '>tr';
+        var len = $(tr).length;
+        console.log(len);
+        for (var i = 0; i < len; i++) {
+            $(table).children('.alignCenter').children('td:nth-of-type(1)').eq(i).text(i+1);
+        }
+    }
+
+
+</script>
+
+</html>

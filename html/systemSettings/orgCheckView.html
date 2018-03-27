@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>text</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="stylesheet" href="../../plugins/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../plugins/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../../plugins/ztree/css/metroStyle/metroStyle.css">
+    <link rel="stylesheet" href="../../plugins/datatables/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="../../plugins/icheck/skins/square/aero.css">
+    <!--引入样式-->
+    <link rel="stylesheet" href="../../css/common.css">
+    <link rel="stylesheet" href="../../css/orgCheckView.css">
+    <link rel="stylesheet" href="../../plugins/datatables/css/mydatatable.css">
+</head>
+<body>
+<form id="inputForm" class="form-horizontal" action="/api/sys/SysOrg/save" method="post" novalidate="novalidate">
+    <input id="id" name="id" type="hidden" value="1">
+    <table class="table table-bordered  table-condensed dataTables-example dataTable no-footer">
+        <tbody>
+        <tr>
+            <td class="width-15 active"><label class="pull-right"><font color="red">*</font>机构名称:</label></td>
+            <td class="width-35">
+                <input id="orgNameId" name="orgNameId.id" class="form-control" type="hidden" value="" >
+                <input id="orgName" name="name" type="text" value=""
+                           data-msg-required="" class="form-control required" style="">
+            </td>
+            <td class="width-15"><label class="pull-right"><font color="red">*</font>机构简称:</label></td>
+            <td class="width-35">
+                <input id="sNameId" name="sNameId.id" class="form-control" type="hidden" value="">
+                <input id="sName" name="sname" type="text" value="" data-msg-required=""
+                           class="form-control required" style="" aria-required="true">
+
+        </tr>
+        <tr>
+            <td class="width-15 active"><label class="pull-right"><font color="red">*</font>上级机构:</label></td>
+            <td class="width-35">
+                <input id="parentId" name="parent.id" class="form-control" type="hidden" value="">
+                <div class="input-group" id="parentalert">
+                    <input id="parentName" name="parent.name" type="text" readonly="readonly"
+                           value="" data-msg-required="" class="form-control" style="" placeholder="双击选择">
+                    <span class="input-group-btn">
+	       		        <button type="button" id="parentNameButton" class="btn   btn-primary  ">
+                            <i class="fa fa-search"></i>
+                        </button>
+       		        </span>
+                </div>
+                <label id="parentName-error" class="error" for="parentName" style="display:none"></label>
+            </td>
+            <td class="width-15"><label class="pull-right"><font color="red">*</font>机构编码:</label></td>
+            <td class="width-35">
+                <input id="codeId" name="codeId.id" class="form-control" type="hidden" value="">
+                <input id="code" name="code" type="text" value="" data-msg-required=""
+                       class="form-control required" style="" aria-required="true">
+            </td>
+        </tr>
+        <tr>
+            <td class="width-15 active"><label class="pull-right"><font color="red">*</font>机构类型:</label></td>
+            <td class="width-35">
+                <input id="typeId" name="typeId.id" class="form-control" type="hidden" value="">
+                <select id="type" name="type" class="form-control required">
+                    <option selected="selected" value="">--请选择--</option>
+                    <option value="1">公司</option>
+                    <option value="2">部门</option>
+                </select>
+            </td>
+            <td class="width-15"><label class="pull-right"><font color="red">*</font>机构等级:</label></td>
+            <td class="width-35">
+                <input id="gradeId" name="gradeId.id" class="form-control" type="hidden" value="">
+                <input id="grade" name="grade" maxlength="1" type="text" value="" data-msg-required=""
+                       class="form-control required" style="" aria-required="true">
+            </td>
+        </tr>
+        <tr>
+            <td class="width-15 active"><label class="pull-right">负责人:</label></td>
+            <td class="width-35">
+                <input id="masterId" name="masterId.id" class="form-control" type="hidden" value="">
+                <input id="master" name="master"  type="text" value="" data-msg-required=""
+                       class="form-control" style="" aria-required="true">
+            </td>
+            <td class="width-15"><label class="pull-right">联系电话:</label></td>
+            <td class="width-35">
+                <input id="phoneId" name="phoneId.id" class="form-control" type="hidden" value="">
+                <input id="phone" name="phone" type="text" value="" data-msg-required=""
+                       class="form-control" style="" aria-required="true">
+            </td>
+        </tr>
+        <tr>
+            <td class="width-15"><label class="pull-right">传真:</label></td>
+            <td class="width-35">
+                <input id="faxId" name="faxId.id" class="form-control" type="hidden" value="">
+                <input id="fax" name="fax"  type="text" value="" data-msg-required=""
+                       class="form-control" style="" aria-required="true">
+            </td>
+            <td class="width-15"><label class="pull-right">邮箱:</label></td>
+            <td class="width-35">
+                <input id="emailId" name="emailId.id" class="form-control" type="hidden" value="">
+                <input id="email" name="email" type="text" value="" data-msg-required=""
+                       class="form-control" style="" aria-required="true">
+            </td>
+        </tr>
+        <tr>
+            <td class="width-15"><label class="pull-right">主负责人:</label></td>
+            <td class="width-35">
+                <input id="pnameId" name="primaryPerson.id" class="form-control" type="hidden" value=""><!--这里传给后台的是 弹出框反选的id-->
+                <div class="input-group" id="ppalert">
+                    <input id="pname" name="primaryPerson.name" type="text"
+                           value="" data-msg-required="" readonly="readonly" class="form-control" style="" placeholder="双击选择"><!--这里传给后台的是 弹出框反选的名字-->
+                    <span class="input-group-btn">
+	       		        <button type="button" id="primaryPersonButton" class="btn   btn-primary  ">
+                            <i class="fa fa-search"></i>
+                        </button>
+       		        </span>
+                </div>
+            </td>
+            <td class="width-15"><label class="pull-right">副负责人:</label></td>
+            <td class="width-35">
+                <input id="dnameId" name="deputyPerson.id" class="form-control" type="hidden" value=""><!--这里传给后台的是 弹出框反选的id-->
+                <div class="input-group" id="dpalert">
+                    <input id="dname" name="deputyPerson.name" type="text"
+                           value="" data-msg-required=""  readonly="readonly" class="form-control" style="" placeholder="双击选择"><!--这里传给后台的是 弹出框反选的名字-->
+                    <span class="input-group-btn">
+	       		        <button type="button" id="deputyPersonButton" class="btn   btn-primary  ">
+                            <i class="fa fa-search"></i>
+                        </button>
+       		        </span>
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <td class="width-15 active"><label class="pull-right"><font color="red">*</font>是否启用:</label></td>
+            <td class="width-35">
+                <input id="enableId" name="enableId.id" class="form-control" type="hidden" value="">
+                    <select id="enable" name="enable" class="form-control"  >
+                    <option value="1">启用</option>
+                    <option value="2">禁用</option>
+                </select>
+            </td>
+            <td class="width-15"><label class="pull-right">排序:</label></td>
+            <td class="width-35">
+                <input id="sortId" name="sortId.id" class="form-control" type="hidden" value="">
+                <input id="sort" name="sort" type="text" value="10" data-msg-required=""
+                       class="form-control" style="" aria-required="true">
+            </td>
+        </tr>
+        <tr>
+            <td class="width-15"><label class="pull-right">备注:</label></td>
+            <td class="width-35">
+                <input id="remarkId" name="remarkId.id" class="form-control" type="hidden" value="">
+                <textarea id="remark" name="remark" maxlength="200"
+                          class="form-control" rows="3">
+                </textarea>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</form>
+<!--核心插件-->
+<script src="../../js/jquery-2.2.4.min.js"></script>
+<script src="../../plugins/bootstrap/js/bootstrap.min.js"></script>
+<!--附属插件-->
+<script src="../../plugins/ibox.2.2/ibox.js"></script>
+<script src="../../plugins/layer/layer.js"></script>
+<script src="../../plugins/icheck/icheck.min.js"></script>
+<script src="../../plugins/metismenu-master/metisMenu.min.js"></script>
+<script src="../../plugins/slimScroll/jquery.slimscroll.min.js"></script>
+<script src="../../plugins/ztree/js/jquery.ztree.core.js"></script>
+<script src="../../plugins/datatables/js/jquery.dataTables.min.js"></script>
+<script src="../../plugins/icheck/icheck.min.js"></script>
+<script src="../../plugins/treetable/jquery.treetable.js"></script>
+<script src="../../plugins/bootStrapPager/js/extendPagination.js"></script>
+<script src="../../plugins/validate/jquery.validate.min.js"></script>
+<script src="../../plugins/validate/messages_zh.min.js"></script>
+<!--公共样式-->
+<script src="../../js/public.js"></script>
+<script src="../../js/jeeplus.js"></script>
+<script src="../../js/customForm.js"></script>
+<script src="../../js/page.js"></script>
+
+<script>
+    $(document).ready(function() {
+        var id = getQueryString('id');
+        $('#id').val(id);
+        /*api = getQueryString('api') || 'form';*/
+        if (id) {
+            /*此处后端接口  id为弹出窗口自带的id 通过浏览器方法传参得到*/
+            var url = "/api/sys/SysOrg/view/" + id;
+            ajaxToServer(url, {}, function (result) {
+                console.log(url,result);
+                if (result.success) {
+                    var SysOrg = result.SysOrg;
+                    renderData(SysOrg, $('#inputForm'));
+                    /*运行把ajax数据渲染到弹出窗口中*/
+                    renderData(result, $('#inputForm'));
+                    $('#pname').val(SysOrg.primaryPerson?SysOrg.primaryPerson.name:"");
+                    $('#dname').val(SysOrg.deputyPerson?SysOrg.deputyPerson.name:"");
+
+                } else {
+                    layer.msg(result.message);
+                }
+
+            });
+        }
+        layerInZtreeAll('#parentalert', ['300px', '424px'], './systemSettings/orgParents.html', '#parentName', '#parentId');
+        layerInPersons('#ppalert', ['800px', '600px'], './systemSettings/orgPersons.html', '#pname', '#pnameId');
+        layerInPersons('#dpalert', ['800px', '600px'], './systemSettings/orgPersons.html', '#dname', '#dnameId');
+    });
+    /*得到传后台的表单*/
+    function getSubmitFormId(){
+        return "#inputForm";
+    }
+    function layerInPersons(btn,size,url,name,id) {
+        $(btn).on('dblclick',function () {
+            top.layer.open({
+                btn: ['确定', '取消'],
+                shade: [0.4, '#000'], //0.1透明度的白色背景
+                type: 2,
+                title: '添加',
+                shadeClose: true,
+                maxmin: true, //开启最大化最小化按钮
+                area: size,
+                content: url,
+                yes: function (index, layero) {
+                    var iframeWin = layero.find('iframe')[0];
+                    var selobj = iframeWin.contentWindow.getElement();//在layer中运行当前弹出页内的getSelectVal方法
+                    if (selobj) {
+                        $(name).val(selobj.name);
+                        $(id).val(selobj.id);
+                    }
+
+                    top.layer.close(index);
+
+                }
+            })
+        })
+    }
+</script>
+
+
+
+</body>
+</html>

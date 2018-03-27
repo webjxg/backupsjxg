@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>许可管理内页之授权数据</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <!--插件样式-->
+    <link rel="stylesheet" href="../../plugins/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../../plugins/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../plugins/icheck/skins/square/green.css">
+    <link rel="stylesheet" href="../../plugins/ztree/css/metroStyle/metroStyle.css">
+    <link rel="stylesheet" href="../../plugins/ztree/css/zTreeStyle/zTreeStyle.css">
+    <!--自定义样式-->
+    <link rel="stylesheet" href="../../css/common.css">
+    <link rel="stylesheet" href="../../css/dic-inner.css">
+    <link rel="stylesheet" href="../../plugins/datatables/css/mydatatable.css">
+    <style>
+        .permitAuthTit{margin:10px;}
+        .permitAuthTit span{margin:0 8px;font-size:16px;}
+        #tree{margin-left:30px;}
+        .permitAuth{width:100%;padding:0 15px;}
+        .permitAuth-l{width:30%;float:left;}
+        .permitAuth-r{width:65%;float:right;}
+    </style>
+
+</head>
+<body>
+<!--<input type="text" value="" id="objectId">-->
+<!--4ab7ca918a664acca34dc259c5ff1f07-->
+<div class="permitAuthTit text-center"></div>
+<div class="clearfix permitAuth">
+    <div class="permitAuth-l">
+        <form id="inputForm"  method="post" action="/api/sys/SysPermission/ajaxSaveAuthData" novalidate="novalidate">
+            <input id="permissionId" type="hidden" value="" name="permissionId"  >
+            <input id="objectId" type="hidden" value="" name="objectId" >
+            <!--<input id="propId" type="text" value="" name="propId">-->
+            <input id="propvals" type="hidden" value="" name="propvals" >
+            <select name="propId" id="permitAuthZtree" required class="form-control">
+                <option value = ''>请选择</option>
+            </select>
+        </form>
+        <ul id="tree" class="ztree"></ul>
+    </div>
+    <div class="permitAuth-r">
+        <table id = "permitAuthTab" class="table table-bordered  table-condensed dataTables-example dataTable no-footer">
+            <tbody>
+            <tr>
+                <td class="width-15 active">
+                    <label class="pull-right">属性值名称:</label>
+                </td>
+                <td class="width-35">
+                    <span id="name" name="name"  ></span>
+                </td>
+                <td class="width-15 active">
+                    <label class="pull-right">属性值:</label>
+                </td>
+                <td class="width-35">
+                    <span name="value" id="value" ></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="width-15 active">
+                    <label class="pull-right">所属属性:</label>
+                </td>
+                <td class="width-35">
+                    <span id="permitPro" name="sysAuthProperty.code"  ></span>
+                </td>
+                <td class="width-15 active">
+                    <label class="pull-right">是否启用:</label>
+                </td>
+                <td class="width-35">
+                    <span id="enable" name="enable" ></span>
+                </td>
+            </tr>
+            <tr>
+                <td class="width-15 active">
+                    <label class="pull-right">备注:</label>
+                </td>
+                <td class="width-35">
+                    <span id="remark" name="remark" ></span>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
+
+
+<!--核心插件-->
+<script src="../../js/jquery-2.2.4.min.js"></script>
+<script src="../../plugins/bootstrap/js/bootstrap.min.js"></script>
+<!--附属插件-->
+<script src="../../plugins/validate/jquery.validate.min.js"></script>
+<script src="../../plugins/validate/messages_zh.min.js"></script>
+<script src="../../plugins/layer/layer.js"></script>
+<script src="../../plugins/icheck/icheck.min.js"></script>
+<script src="../../plugins/ztree/js/jquery.ztree.core.min.js"></script>
+<script src="../../plugins/ztree/js/jquery.ztree.excheck.js"></script>
+<script src="../../plugins/datatables/js/jquery.dataTables.min.js"></script>
+<!--自定义文件-->
+<script src="../../js/common.js"></script>
+<script src="../../js/customForm.js"></script>
+<script>
+    function refreshLoad(){
+       var selVal = $("#permitAuthZtree").val() ;
+        $("#permitAuthZtree").val(selVal);
+        $("#permitAuthZtree").trigger("change");
+    }
+    var id =getQueryString('id');
+    $("#permissionId").val(id);
+    var selHtml = html1 = "<option value = '' selected>请选择</option>";
+    var zTreeObj,objectId,permissionId,propId;
+    var setting = {
+        check:{
+           // chkboxType: { "Y": "ps", "N": "ps" },
+            chkStyle: "checkbox",//复选框类型
+            enable: true //每个节点上是否显示 CheckBox
+        },
+        data: {
+            simpleData: {
+                enable: true,
+                idKey: "id",
+                pIdKey: "pId",
+            }
+        },
+        view: {
+            //禁止树节点多选
+            selectedMulti: false
+        },
+        callback: {
+            onDblClick: onDblClick,
+            onCheck:zTreeOnCheck
+        }
+    };
+    ajaxToServer('/api/sys/SysPermission/authData/'+id,{},function(result){
+        if(result.success){
+            var data = result.SysPermission,
+                selList = data.sysAuthClass.sysAuthProperties;
+            var html = "<span>许可:["+data.name+"]</span><span>鉴权类:["+data.sysAuthClass.name+"]</span><span>操作:["+data.sysOperation.name+"]</span>";
+            $('.permitAuthTit').empty().html(html);
+            $('#objectId').val(data.sysAuthObject.id);
+            for(var i=0;i<selList.length;i++){
+                selHtml += "<option value='"+selList[i].id+"'>" +selList[i].name+"</option>";
+            }
+            $("#permitAuthZtree").empty().append(selHtml);
+        }
+    });
+    $('#objectId').val();
+   $('#permitAuthZtree').change(function(){
+       var val = $(this).val();
+           objectId = $('#objectId').val(),
+           url = "/api/sys/SysPermission/listPropVal/"+objectId+"/"+val;
+       ajaxToServer(url,{},function(result){
+           if(result.success==true) {
+               var treeNodes = JSON.stringify(result.zTree);
+               var checkNodes = result.checkIds;
+               $("#propvals").val(checkNodes);
+               initZtree(treeNodes);
+               if(checkNodes){
+                   for (var i = 0; i < checkNodes.length; i++) {
+                       var treeObj = $.fn.zTree.getZTreeObj("tree");
+                       var node = treeObj.getNodeByParam("id", checkNodes[i]);
+                       node.checked = true;
+                       treeObj.updateNode(node);
+                   }
+               }
+           }
+       });
+   });
+    function onDblClick(event, treeId, treeNode){
+        var id = treeNode.id;
+        var url = "/api/sys/SysAuthPropertyValue/perimissionview/"+id;
+        ajaxToServer(url,{},function(result){
+            if(result.success){
+                var data = result.SysAuthPropertyValue;
+                renderData(data,$('#permitAuthTab'));
+                $("#permitPro").empty().text(data.sysAuthProperty.code);
+                $("#enable").text((data.enable==1?"是":"否"));
+            }
+        });
+    }
+    //初始化ZTree树
+    function initZtree(data) {
+        var zNodes = eval("(" + data + ")");//动态js语句
+        zTreeObj = $.fn.zTree.init($('#tree'), setting, zNodes);	//Tree 树的id，支持多个树
+        zTreeObj.expandAll(true);		//展开所有树节点
+    }
+
+    function zTreeOnCheck(event,treeId,treeNode){
+            var treeObj=$.fn.zTree.getZTreeObj("tree"),
+                nodes=treeObj.getCheckedNodes(true),
+                propvals ="";
+            for(var i=0;i<nodes.length;i++){
+                 propvals+=","+nodes[i].id ;
+            }
+            if(propvals.length>0){
+                propvals = propvals.substring(1,propvals.length);
+                $("#propvals").val(propvals);
+            }
+        }
+    function getSubmitFormId(){
+        return "#inputForm";
+    }
+
+
+
+
+
+
+
+
+
+
+</script>
+</body>
+</html>

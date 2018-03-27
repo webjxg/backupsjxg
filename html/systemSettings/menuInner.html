@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>text</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <!--插件样式-->
+    <link rel="stylesheet" href="../../plugins/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../plugins/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../../plugins/datatables/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="../../plugins/icheck/skins/square/green.css">
+    <!--引入样式-->
+    <link rel="stylesheet" href="../../css/common.css">
+    <link rel="stylesheet" href="../../css/menu-inner.css">
+    <link rel="stylesheet" href="../../plugins/datatables/css/mydatatable.css">
+
+</head>
+<body id="" class="  pace-done" style="">
+<i id="btnMenu" class="icon-th-list" style="cursor:pointer;float:right;margin:10px;"></i>
+<div id="menuContent"></div>
+<div class="pace  pace-inactive">
+    <div class="pace-progress" data-progress-text="100%" data-progress="99" style="width: 100%;">
+        <div class="pace-progress-inner"></div>
+    </div>
+    <div class="pace-activity"></div>
+</div>
+<form id="inputForm" class="form-horizontal" action="/api/sys/SysMenu/ajaxSave" method="post" novalidate="novalidate">
+    <input id="id" name="id" type="hidden" value="">
+    <!-- 0:隐藏tip, 1隐藏box,不设置显示全部 -->
+    <table class="table table-bordered  table-condensed dataTables-example dataTable no-footer">
+        <tbody>
+        <tr>
+            <td class="width-15 active"><label class="pull-right">上级菜单:</label></td>
+            <td class="width-35">
+                <input id="menuId" name="parent.id" class="form-control required" type="hidden" value=""
+                       aria-required="true">
+                <div class="input-group">
+                    <input id="menuName" name="parent.name" readonly="readonly" type="text" value=""
+                           data-msg-required="" class="form-control  valid" style="" aria-required="true"
+                           aria-invalid="false">
+                    <span class="input-group-btn">
+	       		 <button type="button" id="menuButton" class="btn   btn-primary  "><i class="fa fa-search"></i>
+	             </button>
+       		         </span>
+                </div>
+                <label id="menuName-error" class="error" for="menuName" style="display:none"></label>
+            </td>
+            <td class="width-15 active"><label class="pull-right"><font color="red">*</font> 名称:</label></td>
+            <td class="width-35"><input id="name" name="name" class="required form-control " type="text" value="" maxlength="50" aria-required="true"></td>
+        </tr>
+        <tr>
+            <td class="width-15 active"><label class="pull-right">链接:</label></td>
+            <td class="width-35"><input id="href" name="href" class="form-control " type="text" value="" maxlength="2000">
+                <span class="help-inline">点击菜单跳转的页面</span></td>
+            <td class="width-15 active"><label class="pull-right">目标:</label></td>
+            <td class="width-35"><input id="target" name="target" class="form-control " type="text" value="" maxlength="10">
+                <span class="help-inline">链接打开的目标窗口，默认：mainFrame</span></td>
+        </tr>
+        <tr>
+            <td class="width-15 active"><label class="pull-right">图标:</label></td>
+            <td class="width-35">
+                <i id="iconIcon" class="icon-hide"></i>&nbsp;<span id="iconIconLabel">无</span>&nbsp;
+                <input id="icon" name="icon" type="hidden" value=""><a id="iconButton" href="javascript:" class="btn btn-primary">选择</a>&nbsp;&nbsp;
+                <input id="iconclear" class="btn btn-default" type="button" value="清除" onclick="clear()">
+            </td>
+            <td class="width-15 active"><label class="pull-right">排序:</label></td>
+            <td class="width-35">
+                <input id="sort" name="sort" class="required digits form-control valid" type="text" value="" maxlength="50" aria-required="true" aria-invalid="false">
+                <span class="help-inline">排列顺序，升序。</span>
+            </td>
+        </tr>
+        <tr>
+            <td class="width-15 active"><label class="pull-right">可见:</label></td>
+            <td class="width-35">
+                <label >
+                    <input id="isShow1" name="isShow" class="required i-checks " type="radio" value="1" checked="checked" aria-required="true" >显示
+                </label>
+
+                <label >
+                    <input id="isShow2" name="isShow" class="required i-checks " type="radio" value="0" aria-required="true" >隐藏
+                </label>
+                <span class="help-inline">该菜单或操作是否显示到系统菜单中</span></td>
+            <td class="width-15 active"><label class="pull-right">权限标识:</label></td>
+            <td class="width-35"><input id="permission" name="permission" class="form-control " type="text" value=""
+                                        maxlength="100">
+                <span class="help-inline">控制器中定义的权限标识，如：@RequiresPermissions("权限标识")</span></td>
+        </tr>
+        <tr>
+            <td class="width-15 active"><label class="pull-right">备注:</label></td>
+            <td class="width-35"><textarea id="remarks" name="remarks" maxlength="200" class="form-control " rows="3"></textarea></td>
+            <td class="width-15 active"><label class="pull-right"></label></td>
+            <td class="width-35"></td>
+        </tr>
+        </tbody>
+    </table>
+</form>
+
+
+
+<!--核心插件-->
+<script src="../../js/jquery-2.2.4.min.js"></script>
+<script src="../../plugins/bootstrap/js/bootstrap.min.js"></script>
+<!--附属插件-->
+<script src="../../plugins/validate/jquery.validate.min.js"></script>
+<script src="../../plugins/validate/messages_zh.min.js"></script>
+<script src="../../plugins/jBox/jquery.jBox-2.3.min.js"></script>
+<script src="../../plugins/ibox.2.2/ibox.js"></script>
+<script src="../../plugins/layer/layer.js"></script>
+<script src="../../plugins/icheck/icheck.min.js"></script>
+<script src="../../plugins/slimScroll/jquery.slimscroll.min.js"></script>
+<script src="../../plugins/datatables/js/jquery.dataTables.min.js"></script>
+<!--自定义文件-->
+<script src="../../js/common.js"></script>
+<script src="../../js/customForm.js"></script>
+<script>
+    $(document).ready(function() {
+        var id =getQueryString('id')||'',
+            pid = getQueryString('pid') || '',
+            data = {
+            "id":id,
+            "parent":{
+                "id":pid
+            }
+        };
+            data = JSON.stringify(data);
+        $("#value").focus();
+        if( id != "" || pid != "" ){
+            var url = "/api/sys/SysMenu/form";
+            ajaxToServer(url,data,function(result){
+                if(result.success){
+                    var SysMenu = result.SysMenu;
+                    renderData(SysMenu,$('#inputForm'));
+                    $("#menuId").val(SysMenu.parentId);
+                    $("#menuName").val(result.parentName);
+                    $("#iconIconLabel").text(SysMenu.icon?SysMenu.icon:"无");
+                }else{
+                    layer.msg(result.message);
+                }
+            });
+        }
+        $("#menuButton").click(function(){
+            // 多选的情况下multiple = true,否则为false;
+            var url = "selectTree.html?multiple=false&defaultVal="+$("#menuId").val();
+            url += "&dataUrl=/api/sys/SysMenu/openTree";
+            openDialog("选择上级菜单",url,"300px","400px",function(iframeWin,body){
+                var selArr = iframeWin.getCheckVal();
+                if(selArr){
+                    var name = "",id ="";
+                    for(var i = 0;i<selArr.length;i++){
+                        name += ","+selArr[i].name;
+                        id += ","+selArr[i].id;
+                    }
+                    if(id.length>0){
+                        $("#menuName").val(name.substr(1));
+                        $("#menuId").val(id.substr(1));
+                    }
+
+                }
+            });
+
+        });
+        RenderiCheckTblBody();
+    });
+    function getSubmitFormId(){
+        return "#inputForm";
+    }
+</script>
+
+
+
+</body>
+</html>

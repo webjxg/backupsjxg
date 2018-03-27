@@ -1,0 +1,59 @@
+body {
+  font-family: "open sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 13px;
+  color: #676a6c;
+  overflow-x: hidden;
+  background-color: #f3f3f4;
+  padding: 4px;}
+
+.wrapper, .ibox, .ibox-content, .content {
+  height: 100%; }
+
+.wrapper-content {
+  padding: 20px; }
+
+.ibox {
+  clear: both;
+  margin-bottom: 25px;
+  margin-top: 0;
+  padding: 0; }
+
+.ibox-content {
+  clear: both;
+  background-color: #fff;
+  color: inherit;
+  padding: 15px 20px 20px 20px;
+  border-color: #e7eaec;
+  border-image: none;
+  border-style: solid solid none;
+  border-width: 1px 0; }
+
+#content {
+  background-color: #fff; }
+
+.row {
+  margin: -20px; }
+
+#left {
+  min-height: 400px;
+  margin: 15px 0 0 15px;
+  padding-left: 0;
+  box-sizing: border-box; }
+  #left > a {
+    cursor: pointer; }
+
+.ztree {
+  overflow: auto;
+  margin: 0;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  padding: 10px 0 10px 10px; }
+
+#right {
+  padding: 15px;
+  min-height: 650px;
+  overflow: auto;
+}
+
+
+/*# sourceMappingURL=orgIndex.css.map */

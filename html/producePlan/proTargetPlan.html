@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>全厂主要生产技术指标计划</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="stylesheet" href="../../plugins/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../plugins/font-awesome/css/font-awesome.min.css">
+    <!--引入样式-->
+    <link rel="stylesheet" href="../../css/common.css">
+    <style>
+        .targetPlanTit{font-size:18px;line-height: 30px;}
+        .targetPlanTab-nav{margin:20px 0 ;}
+        .targetPlanTab-nav li{width:33%;text-align: center;line-height: 30px;font-size:14px;float:left;cursor: pointer;}
+        .targetPlanTab-nav li.active{background: #a7e6eb;}
+        /*.targetPlanTab-nav li:hover{background:#5fbb6f;color:#fff;border-color:#5fbb6f;}*/
+
+    </style>
+</head>
+<body>
+<div class="wrapper wrapper-content">
+    <div class="ibox">
+        <div class="ibox-content">
+            <h1 class="targetPlanTit"><span>2018年11月</span>全厂主要生产技术指标计划</h1>
+            <div class="targetPlanTab">
+                <ul class="targetPlanTab-nav clearfix">
+                    <li class="active">全厂主要生产技术指标计划</li>
+                    <li>商务采购指标计划</li>
+                    <li>安全、环保、设备管理总体指标计划</li>
+                </ul>
+                <div class="targetPlanTab-con">
+                    <iframe id="targetPlanCon" src="./proTechTarget.html" name="targetPlanCon"  width="100%" height="650px" frameborder="0"></iframe>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--核心插件-->
+<script src="../../js/jquery-2.2.4.min.js"></script>
+<script src="../../plugins/bootstrap/js/bootstrap.min.js"></script>
+<!--附属插件-->
+<script src="../../plugins/layer/layer.js"></script>
+<script>
+    $(function(){
+        var tabconUrl = ["./proTechTarget.html","./proCommercePurPlan.html","./proSafeEnviPlan.html"],
+            $targetPlanTab = $(".targetPlanTab"),
+            $targetPlanTabNavLi =$targetPlanTab.find(".targetPlanTab-nav").find('li'),
+            $targetPlanCon = $("#targetPlanCon");
+        $targetPlanTabNavLi.click(function(){
+            var ind = $(this).index();
+            $(this).addClass('active').siblings("li").removeClass('active');
+            $targetPlanCon.attr("src",tabconUrl[ind]);
+        });
+    })
+</script>
+
+</body>
+</html>

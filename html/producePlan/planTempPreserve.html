@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>text</title>
+    <!--插件-->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="stylesheet" href="../../plugins/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../plugins/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../../plugins/ztree/css/metroStyle/metroStyle.css">
+    <link rel="stylesheet" href="../../plugins/datatables/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="../../plugins/icheck/skins/square/aero.css">
+    <!--引入样式-->
+    <link rel="stylesheet" href="../../css/common.css">
+    <link rel="stylesheet" href="../../plugins/datatables/css/mydatatable.css">
+    <link rel="stylesheet" href="../../css/dictionaries.css">
+</head>
+<body>
+<i id="btnMenu" class="icon-th-list" style="cursor:pointer;float:right;margin:10px;"></i>
+<div class="wrapper wrapper-content">
+    <div class="ibox">
+        <div class="ibox-content">
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="pull-left">
+                        <button class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="left" title="添加" id="btn-add">
+                            <i class="fa fa-plus"></i> 添加下级项目
+                        </button>
+
+                        <button class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="left" title="删除" id="btn-del">
+                            <i class="fa fa-trash-o"></i> 删除此项目
+                        </button>
+                        <button class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top" title="编辑" id="btn-update">
+                            <i class="fa fa-file-text-o"></i> 编辑此项目
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div id="content" class="row">
+                <!--左侧内容-->
+                <div id="left" style=" width: 210px; height: 100%;" class="leftBox pull-left">
+                    <div id="tree" class="ztree leftBox-content" style="height: 100%;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!--核心插件-->
+<script src="../../js/jquery-2.2.4.min.js"></script>
+<script src="../../plugins/bootstrap/js/bootstrap.min.js"></script>
+<!--附属插件-->
+<script src="../../plugins/ibox.2.2/ibox.js"></script>
+<script src="../../plugins/layer/layer.js"></script>
+<script src="../../plugins/icheck/icheck.min.js"></script>
+<script src="../../plugins/metismenu-master/metisMenu.min.js"></script>
+<script src="../../plugins/slimScroll/jquery.slimscroll.min.js"></script>
+<script src="../../plugins/ztree/js/jquery.ztree.core.js"></script>
+<script src="../../plugins/datatables/js/jquery.dataTables.min.js"></script>
+<script src="../../plugins/icheck/icheck.min.js"></script>
+<script src="../../plugins/treetable/jquery.treetable.js"></script>
+<script src="../../plugins/bootStrapPager/js/extendPagination.js"></script>
+<!--公共样式-->
+<script src="../../js/common.js"></script>
+<script src="../../js/jeeplus.js"></script>
+<script src="../../js/customForm.js"></script>
+<script src="../../js/page.js"></script>
+<script src="../../js/public.js"></script>
+
+<script>
+    $(document).ready(function(){
+        page='orgInner.html';
+        $('#officeContent').attr('src','./orgInner.html');
+        ajaxToServer('/api/sys/SysOrg/leftTree','json',zTree);
+    });
+
+    function zTree(da) {
+        var data=da.rows;
+        var zTreeObj;
+        // zTree 的参数配置，深入使用请参考 API 文档（setting 配置详解）
+        var setting = {
+            data: {
+                simpleData: {
+                    enable: true,   //设置是否使用简单数据模式(Array)
+                    idKey: "id",    //设置节点唯一标识属性名称
+                    pIdKey: "pId"      //设置父节点唯一标识属性名称
+                },
+                key: {
+                    name: "name",//zTree 节点数据保存节点名称的属性名称
+                    title: "name"//zTree 节点数据保存节点提示信息的属性名称
+                }
+            },
+            callback: {
+                onClick: function (e, treeId, node){
+                    if(node.id){
+                        rendersun(node.id)
+                    }
+                }
+            }
+
+        };
+        // zTree 的数据属性，深入使用请参考 API 文档（zTreeNode 节点数据详解）
+        var zNodes = data;
+        //执行ztree
+        var treeObj =$.fn.zTree.init($("#tree"), setting, zNodes);
+    }
+
+        function rendersun(data) {
+//            $('#officeContent')[0].contentWindow.updatason(data);
+            $('#btn-add').click(function () {
+                openEditDialog('项目信息维护', './producePlan/planTempPreserveCV.html?Pid=' + data, '800px', '500px')
+            });
+            $('#btn-update').click(function () {
+                openEditDialog('项目信息修改', './producePlan/planTempPreserveCV.html?id=' + data, '800px', '500px')
+            });
+            $('#btn-del').click(function () {
+                deleteIt('确定要删除该项目吗', '/api/sys/SysOrg/del/', data)
+            });
+
+        }
+    function deleteIt(mess,url,id){
+        //var ids= eleP.find('input.i-checks').attr('id')
+        var data = {id:id} || {};
+        top.layer.confirm(mess, {icon: 3, title:'系统提示'},function(index){
+            ajaxToServer1(url,data,function(result){
+                console.log(url,data,result)
+                if(result.success == true){
+                    var frameActive = top.getActiveTab().attr("name");
+                    var obj = $('#search-btn', top.window.frames[frameActive].document);
+                    if(obj.length == 0){
+                        obj = $('#refresh-btn', top.window.frames[frameActive].document);
+                    }
+                    obj.trigger('click');
+                }
+            });
+            top.layer.close(index);
+        });
+        return false;
+    }
+
+</script>
+</body>
+</html>

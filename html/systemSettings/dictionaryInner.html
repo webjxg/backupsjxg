@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>字典管理内页</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <!--插件样式-->
+    <link rel="stylesheet" href="../../plugins/metismenu-master/metisMenu.css">
+    <link rel="stylesheet" href="../../plugins/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../../plugins/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../plugins/layer/theme/default/layer.css">
+    <link rel="stylesheet" href="../../plugins/icheck/skins/square/green.css">
+    <!--自定义样式-->
+    <link rel="stylesheet" href="../../css/common.css">
+    <link rel="stylesheet" href="../../css/dic-inner.css">
+    <link rel="stylesheet" href="../../plugins/datatables/css/mydatatable.css">
+
+</head>
+<body id="" class="hideScroll  pace-done" style="">
+<i id="btnMenu" class="icon-th-list" style="cursor:pointer;float:right;margin:10px;"></i>
+<form id="inputForm" class="form-horizontal" action="/api/sys/SysDict/save" method="post" novalidate="novalidate">
+    <input id="id" name="id" type="hidden" value="" >
+    <table class="table table-bordered  table-condensed dataTables-example dataTable no-footer">
+        <tbody>
+        <tr>
+            <td class="width-15 active">
+                <label class="pull-right">键值:</label>
+            </td>
+            <td class="width-35">
+                <input id="value" name="value" class="form-control "   required  type="text" value="" maxlength="50" aria-required="true"></td>
+            <td class="width-15 active">
+                <label class="pull-right">标签:</label>
+            </td>
+            <td class="width-35">
+                <input id="label" name="label" class="form-control "  required  type="text" value="" maxlength="50" aria-required="true">
+            </td>
+        </tr>
+        <tr>
+            <td class="width-15 active">
+                <label class="pull-right">类型:</label>
+            </td>
+            <td class="width-35">
+                <input id="type" name="type" class="form-control required abc" type="text" value="" maxlength="50" aria-required="true">
+            </td>
+            <td class="width-15 active">
+                <label class="pull-right">描述:</label>
+            </td>
+            <td class="width-35">
+                <input id="description" name="description" class="form-control required" type="text" value="" maxlength="50" aria-required="true">
+            </td>
+        </tr>
+        <tr>
+            <td class="width-15 active">
+                <label class="pull-right">排序:</label>
+            </td>
+            <td class="width-35">
+                <input id="sort" name="sort" class="form-control required digits" type="text" value="" maxlength="11" aria-required="true">
+            </td>
+            <td class="width-15 active">
+                <label class="pull-right">备注:</label>
+            </td>
+            <td class="width-35">
+                <textarea id="remarks" name="remarks" maxlength="200" class="form-control "rows="3"></textarea>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</form>
+
+
+<!--核心插件-->
+<script src="../../js/jquery-2.2.4.min.js"></script>
+<script src="../../plugins/bootstrap/js/bootstrap.min.js"></script>
+<!--附属插件-->
+<script src="../../plugins/validate/jquery.validate.min.js"></script>
+<script src="../../plugins/validate/messages_zh.min.js"></script>
+<script src="../../plugins/layer/layer.js"></script>
+<script src="../../plugins/icheck/icheck.min.js"></script>
+<script src="../../plugins/datatables/js/jquery.dataTables.min.js"></script>
+<!--自定义文件-->
+<script src="../../js/common.js"></script>
+<script src="../../js/customForm.js"></script>
+<script>
+    $(document).ready(function() {
+        var id =getQueryString('id'),
+            api = getQueryString('api') || 'form';
+        $("#value").focus();
+        if(id){
+            var url = "/api/sys/SysDict/"+api+"/"+id;
+            ajaxToServer(url,{},function(result){
+                if(result.success){
+                    renderData(result.SysDict,$('#inputForm'));
+                }else{
+                    layer.msg(result.message);
+                }
+            });
+        }
+    });
+    function getSubmitFormId(){
+        return "#inputForm";
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>商务采购指标计划</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="stylesheet" href="../../plugins/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../plugins/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../../plugins/easyui/themes/default/easyui.css">
+    <link rel="stylesheet" href="../../plugins/easyui/themes/default/datagrid.css">
+    <!--引入样式-->
+    <link rel="stylesheet" href="../../css/common.css">
+    <link rel="stylesheet" href="../../css/dictionaries.css">
+    <style>
+        .tableItemBox{margin-bottom:10px;}
+        .tableItem{background:#2c9c9c;}
+        .datagrid-btable{width:100%;}
+        .panel-title{color:#0d474a;height:30px;line-height: 30px;}
+    </style>
+</head>
+<body>
+<div class="wrapper wrapper-content">
+    <div class="ibox">
+        <div class="ibox-content">
+            <div class="clearfix">
+                <button class="btn btn-success btn-save pull-right" type="button">保存</button>
+            </div>
+            <div class="commercePurCon proTargetPlanItem">
+                <div class="tableItemBox">
+                    <table id="td0" class="tableItem"  title="商务采购指标计划">
+                    </table>
+                    <div id="tb" style="height:auto">
+                        <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-save',plain:true" >Accept</a>
+                    </div>
+                </div>
+                <div class="tableItemBox">
+                    <table id="td1" class="tableItem"  title="商务采购指标计划11">
+                    </table>
+                    <div id="tb1" style="height:auto">
+                        <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-save',plain:true" >Accept</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!--核心插件-->
+<script src="../../js/jquery-2.2.4.min.js"></script>
+<script src="../../plugins/bootstrap/js/bootstrap.min.js"></script>
+<!--附属插件-->
+<script src="../../plugins/layer/layer.js"></script>
+<script src="../../plugins/easyui/js/jquery.easyui.min.js"></script>
+<script>
+    var swcgzbjhArr=[],swcgzbjhArr1=[],saveItemArr=[],arrIndex = -1;
+    $.ajax({
+        dataType : "json",
+        url:"../../json/test-dic.json",
+        success:function(result){
+           var  swcgzbjh = result.swcgzbjh,
+               swcgzbjh11 = result.swcgzbjh11;
+            for ( var item in swcgzbjh) {
+                var arrItem = {
+                    'id':swcgzbjh[item].id,
+                    'itemName': swcgzbjh[item].itemName,
+                    'itemUnit': swcgzbjh[item].itemUnit,
+                    'yearTarget': swcgzbjh[item].yearTarget,
+                    'monthPlan': swcgzbjh[item].monthPlan,
+                    'remark': swcgzbjh[item].remark
+                };
+                swcgzbjhArr.push(arrItem);
+            }
+            for ( var item1 in swcgzbjh11) {
+                var arrItem = {
+                    'id':swcgzbjh11[item].id,
+                    'itemName': swcgzbjh11[item].itemName,
+                    'itemName1': swcgzbjh11[item].itemName1,
+                    'itemUnit': swcgzbjh11[item].itemUnit,
+                    'yearTarget': swcgzbjh11[item].yearTarget,
+                    'monthPlan': swcgzbjh11[item].monthPlan,
+                    'remark': swcgzbjh11[item].remark
+                };
+                swcgzbjhArr1.push(arrItem);
+            }
+            $('#td0').datagrid('loadData',swcgzbjh);
+            $('#td1').datagrid('loadData',swcgzbjh11);
+        }
+
+    });
+    var editIndex = undefined;
+        $('#td0').datagrid({
+            fitColumns:true,
+            rownumbers:true,
+            collapsible:true,
+            singleSelect: true,
+            onClickRow: function(index){
+                a(index,"#td0")
+            },
+            columns:[[
+                {field:'id',title:'id', hideColumn:'id'},
+                {field:'itemName',title:'项目',width:100,align:'center'},
+                {field:'itemUnit',title:'单位',width:100,align:'center'},
+                {field:'yearTarget',title:'全年基本目标',width:100,align:'center',editor:{type:'numberbox',options:{precision:1}}},
+                {field:'monthPlan',title:'月计划',editor:'numberbox',width:100,align:'center'},
+                {field:'remark',title:'备注',editor:'text',width:150,align:'center'},
+            ]],
+            onAfterEdit: function (rowIndex, rowData, changes) {
+                pushRowData(rowData);
+                editIndex = undefined;
+                editRow = undefined;
+            },
+            toolbar: '#tb',
+        });
+        $('#td1').datagrid({
+            fitColumns:true,
+            rownumbers:true,
+            collapsible:true,
+            singleSelect: true,
+            onClickRow: function(index){
+                a(index,"#td1")
+            },
+            columns:[[
+                {field:'id',title:'id', hideColumn:'id'},
+                {field:'itemName',title:'项目',width:100,align:'center'},
+                {field:'itemName1',title:'项目1',width:100,align:'center'},
+                {field:'itemUnit',title:'单位',width:100,align:'center'},
+                {field:'yearTarget',title:'全年基本目标',width:100,align:'center',editor:{type:'numberbox',options:{precision:1}}},
+                {field:'monthPlan',title:'月计划',editor:'numberbox',width:100,align:'center'},
+                {field:'remark',title:'备注',editor:'text',width:150,align:'center'},
+            ]],
+            onAfterEdit: function (rowIndex, rowData, changes) {
+                pushRowData(rowData);
+                editIndex = undefined;
+                editRow = undefined;
+            },
+            toolbar: '#tb1',
+        });
+    //编辑过的元素如果不存在就push到数组中，如果已存在新的数据会替换原有的数据
+    function pushRowData(rowData){
+        if(saveItemArr.length>0){
+            filterItem(saveItemArr,rowData);
+            if(arrIndex == -1){
+                saveItemArr.push(rowData);
+            }else{
+                saveItemArr.splice(arrIndex,1,rowData);
+
+            }
+        }else{
+            saveItemArr.push(rowData);
+        }
+    }
+    //判断元素是否存在于数组中
+    function filterItem(arr,item){
+        for( var i=0;i<arr.length;i++){
+            console.log((arr[i].id),(item.id));
+            if((arr[i].id)===(item.id)){
+                arrIndex = i;
+                return ;
+            }else{
+                arrIndex = -1;
+            }
+        }
+    }
+    //单击某行进行编辑
+    function a(index,id) {
+        if (editIndex != index) {
+            if (endEditing(id)) {
+                $(id).datagrid('selectRow', index)
+                    .datagrid('beginEdit', index);
+                editIndex = index;
+            } else {
+                $(id).datagrid('selectRow', editIndex);
+            }
+        }
+    }
+    //编辑状态
+    function endEditing(gridTableId) {
+        if (editIndex == undefined) { return true }
+        if ($(gridTableId).datagrid('validateRow', editIndex)) {
+            /* var ed = $(gridTableId).datagrid('getEditor', { index: editIndex, field: 'productid' });*/
+            $(gridTableId).datagrid('endEdit', editIndex);
+            editIndex = undefined;
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+
+
+    $(function(){
+        $('#td0,#td1').datagrid('hideColumn','id');
+    });
+
+
+
+</script>
+</body>
+</html>

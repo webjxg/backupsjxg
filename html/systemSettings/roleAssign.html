@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>加色管理之已分配用户</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <!--插件样式-->
+    <link rel="stylesheet" href="../../plugins/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../plugins/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../../plugins/datatables/css/mydatatable.css">
+    <link rel="stylesheet" href="../../plugins/icheck/skins/square/green.css">
+    <!--自定义样式-->
+    <link rel="stylesheet" href="../../css/common.css">
+    <link rel="stylesheet" href="../../css/dictionaries.css">
+    <style>
+        #datainner td{
+            vertical-align: middle;
+        }
+       b{font-weight: 700;}
+        .container-fluid span{margin:0 5px;}
+        .role-info{margin:0 -15px ;}
+        #assignButton{margin:10px 0;}
+    </style>
+</head>
+<body>
+<div class="wrapper wrapper-content">
+    <div class="container-fluid role-info">
+    </div>
+    <!-- 0:隐藏tip, 1隐藏box,不设置显示全部 -->
+    <div class="">
+        <form id="assignRoleForm" action="/api/sys/SysRole/saveUserRole" method="post" class="hide">
+            <input type="hidden" name="roleId" id = "roleId" value="">
+            <input id="idsArr" type="hidden" name="userIds" value="">
+        </form>
+        <button id="assignButton" type="submit" class="btn btn-outline btn-primary btn-sm" title="添加人员"><i class="fa fa-plus"></i> 添加人员</button>
+        <button class="btn btn-danger btn-sm" id="delete-btn" data-toggle="tooltip" onclick="removeUserBatch()" data-placement="top"><i class="fa fa-trash-o"> 删除</i>
+        </button>
+        <button class="btn btn-white btn-sm hidden" id="refresh-btn" data-toggle="tooltip" data-placement="left"  title="刷新"><i class="glyphicon glyphicon-repeat"></i> 刷新
+        </button>
+    </div>
+    <table id="treeTable" class="table table-striped table-bordered table-hover table-condensed dataTables-example dataTable tree_table">
+        <thead>
+            <tr>
+                <th width="60px"><input type="checkbox" class="i-checks" style="position: absolute; opacity: 0;"></th>
+                <th>登录名</th>
+                <th>姓名</th>
+                <th>电话</th>
+                <th>手机</th>
+                <th>操作</th>
+            </tr>
+        </thead>
+        <!--表内容-->
+        <tbody id="datainner">
+        </tbody>
+    </table>
+</div>
+<!--核心插件-->
+<script src="../../js/jquery-2.2.4.min.js"></script>
+<script src="../../plugins/bootstrap/js/bootstrap.min.js"></script>
+<!--附属插件-->
+<script src="../../plugins/validate/jquery.validate.min.js"></script>
+<script src="../../plugins/layer/layer.js"></script>
+<script src="../../plugins/icheck/icheck.min.js"></script>
+<script src="../../plugins/datatables/js/jquery.dataTables.min.js"></script>
+<!--自定义文件-->
+<script src="../../js/common.js"></script>
+<script src="../../js/customForm.js"></script>
+<script>
+    var id = getQueryString('id')|| "";
+    $(document).ready(function() {
+        $("#roleId").val(id);
+        $("#datainner").on("click",'.btn-delete',function(){
+            var userIds = $(this).attr('id'),
+                roleName = $(this).parents('tr').find('.roleName').text();
+            var data = {
+                userIds:userIds,
+                roleId:id
+            };
+            deleteACallback('确认要将用户 <b>['+ roleName +']</b>从 <b>['+$(".roleType b").text()+']</b>角色中移除吗？', function(layIdx){
+                var url = '/api/sys/SysRole/removeUser';
+                ajaxToServer1(url,data,function(result){
+                    if(result.success == true){
+                        top.layer.close(layIdx);
+                        refreshLoad();
+                    }
+
+                });
+            });
+        });
+        //查看角色信息接口
+        ajaxToServer("/api/sys/SysRole/view/"+id, {}, function (result) {
+            if (result.success) {
+                var data = result.list,
+                    html = "",
+                    SysRole = result.SysRole;
+                html += " <div class=\"row-fluid span12\">" +
+                    "<span class=\"span4 roleType\">角色名称: <b>" + SysRole.name + "</b></span>" +
+                    "<span class=\"span4\">英文名称: " + SysRole.enname + "</span>" +
+                    " </div>" +
+                    " <div class=\"row-fluid span8\">" +
+                    "<span class=\"span4\">角色类型: " + SysRole.roleType + "</span>" +
+                    " </div>";
+                $(".container-fluid").append(html);
+                renderTableData(data);
+            } else {
+                layer.msg(result.message);
+            }
+        });
+
+        $("#refresh-btn").click(function(){
+            refreshLoad();
+        });
+        refreshLoad();
+    });
+    function refreshLoad(){
+        var roleId = $("#roleId").val();
+        if(roleId != ''){
+            //用户功能显示（已分配）用户信息列表
+            var url = "/api/sys/SysRole/assign/" + roleId;
+            ajaxToServer(url, {}, function (result) {
+                if (result.success) {
+                    var data = result.list;
+                    renderTableData(data);
+                } else {
+                    layer.msg(result.message);
+                }
+            });
+        }
+    }
+
+    function removeUserBatch(){
+        var userIds = "";
+        $("#treeTable tbody tr td input.i-checks:checkbox").each(function(){
+            if(true == $(this).is(':checked')){
+                userIds+=","+$(this).attr("id");
+            }
+        });
+        if(userIds.length > 0){
+            var data = {
+                userIds:userIds.substr(1),
+                roleId:id
+            };
+            deleteACallback('确认要将已选择的用户从角色<b>['+$(".roleType b").text()+']</b>中移除吗？', function(layIdx){
+                var url = '/api/sys/SysRole/removeUser';
+                ajaxToServer1(url,data,function(result){
+                    if(result.success == true){
+                        top.layer.close(layIdx);
+                        refreshLoad();
+                        //去掉标题中的选中状态
+                        $(".icheckbox_square-green").find("[type='checkbox']").iCheck('uncheck');
+
+                    }
+
+                });
+            });
+        }else{
+            top.layer.alert('请至少选择一条数据!', {icon: 0, title:'警告'});
+        }
+    }
+
+    //  datatables使用ajax
+    function renderTableData(tableData){
+        $('#treeTable').dataTable({
+            "bPaginate": false,
+            "bAutoWidth": false,
+            "bDestroy":true,
+            "paging": false,
+            "bProcessing": true,
+            "searching": false, //禁用aa原生搜索
+            "info": false,  //底部文字
+            "order": [],
+            "ordering": false,
+            "oLanguage": lang,
+            "data":tableData,
+            //定义列 宽度 以及在json中的列名
+            "aoColumns": [
+                {"data": null,"sWidth":"60px;","defaultContent":"",'sClass':"alignCenter",
+                    "render":function(data, type, row, meta) {
+                        return data = "<input type='checkbox' id=" + row.id + " class='i-checks'>"
+                    }
+                },
+                {"data": "loginName",'sClass':" alignCenter"},
+                {
+                    "data": "name", "orderable": false, "defaultContent": "",'sClass':" alignCenter autoWidth ",
+                    "render": function (data, type, row, meta) {
+                        return "<a class='btn-check  roleName' >"+row.name+"</a >" ;
+                    }
+                },
+                {"data": "phone",'sClass':"alignCenter"},
+                {"data": "mobile",'sClass':"alignCenter"},
+                {
+                    "data": "id", "orderable": false, "defaultContent": "",'sClass':" alignCenter autoWidth",
+                    "render": function (data, type, row, meta) {
+                        return "<a class='btn-delete ' id='"+row.id+"'>删除</a >" ;
+                    }
+                }]
+        });
+        RenderiCheckTblBody();
+    };
+    //添加人员
+    $("#assignButton").click(function(){
+        top.layer.open({
+            type: 2,
+            area: ['800px', '600px'],
+            title:"选择用户",
+            maxmin: true, //开启最大化最小化按钮
+            content: "systemSettings/usertorole.html?id="+id ,
+            btn: ['确定', '关闭'],
+            yes: function(index,layero){
+                var pre_ids = layero.find("iframe")[0].contentWindow.pre_ids;
+                var ids = layero.find("iframe")[0].contentWindow.ids;
+                var body = top.layer.getChildFrame('body', index);  //获取子iframe
+                var iframeWin = layero.find('iframe')[0]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
+                if(ids[0]==''){
+                    ids.shift();
+                    pre_ids.shift();
+                }
+                if(pre_ids.sort().toString() == ids.sort().toString()){
+                    layer.msg("未给角色【管理员】分配新成员！");
+                    return false;
+                };
+                // 执行保存
+                //loading('正在提交，请稍等...');
+                var idsArr = "";
+                for (var i = 0; i<ids.length; i++) {
+                    idsArr = (idsArr + ids[i]) + (((i + 1)== ids.length) ? '':',');
+                }
+                $('#idsArr').val(idsArr);
+               //$('#assignRoleForm').submit();
+                var formdata = {
+                    roleId:id,
+                    userIds:idsArr
+                };
+                var url = $("#assignRoleForm").attr('action');
+                ajaxToServer1(url,formdata,function(result) {
+                    if (result.success == true) {
+                        layer.msg('已成功提交', {time: 1000});
+                        setTimeout(function () {
+//                        var src =top.getActiveTab().attr('src');
+                            //获取父层
+                            // var index = top.layer.getFrameIndex(window.name);
+                            //关闭弹出层
+                            top.layer.close(index);
+                            //刷新
+                            refreshLoad();
+                            // var frameActive = top.getActiveTab().attr("name");
+                            // var obj = $('#refresh-btn', top.window.frames[frameActive].document);
+                            // if (obj.length == 0) {
+                            //     obj = $('#search-btn', top.window.frames[frameActive].document);
+                            // }
+                            // obj.trigger('click');
+                        }, 1000);
+                    } else {
+                        layerAlert(result.message)
+                    }
+                });
+                //top.layer.close(index);
+            },
+            cancel: function(index){
+            }
+        });
+    });
+    function getSubmitFormId(){
+        return "#assignRoleForm";
+    };
+
+</script>
+
+
+
+</body>
+</html>

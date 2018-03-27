@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>公司</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="stylesheet" href="../plugins/ztree/css/metroStyle/metroStyle.css">
+    <script src="../js/jquery-2.2.4.min.js"></script>
+    <script src="../plugins/ztree/js/jquery.ztree.core.min.js"></script>
+    <script src="../plugins/ztree/js/jquery.ztree.excheck.js"></script>
+    <script src="../plugins/layer/layer.js"></script>
+    <script src="../js/common.js"></script>
+    <script src="../js/customForm.js"></script>
+</head>
+<body>
+<div id="tree" class="ztree leftBox-content">
+
+</div>
+<script>
+    var multiple = false;
+    $(document).ready(function(){
+        var zTreeObj;
+        var dataUrl = getQueryString("dataUrl"),
+            defaultVal = getQueryString("defaultVal");
+            multiple = getQueryString("multiple")||false;
+        ajaxToServer(dataUrl,{},function(result){
+            if(result.success){
+                var setting = {
+                        data: {
+                            simpleData: {
+                                enable: true,   //设置是否使用简单数据模式(Array)
+                                idKey: "id",    //设置节点唯一标识属性名称
+                                pIdKey: "pId"      //设置父节点唯一标识属性名称
+                            }
+                        },
+                        view:{
+                            selectedMulti:false
+                        },
+                        callback: {
+                            onClick: zTreeOnClick
+                        }
+                };
+                if(multiple =="true" || multiple == true){
+                    setting.check = {
+                        enable:true,
+                        chkStyle: "checkbox",
+                        chkboxType: { "Y": "ps", "N": "ps" }
+                    }
+                }
+                var zNodes = result.rows;
+                zTreeObj= $.fn.zTree.init($('#tree'), setting, zNodes);
+                checkDefaultVal(defaultVal)
+            }else{
+                layer.msg(result.message);
+            }
+        });
+    });
+    function zTreeOnClick(event,treeId,treeNode,clickFlag){
+        var treeObj = $.fn.zTree.getZTreeObj("tree");
+        treeObj.expandNode(treeNode)
+    }
+
+    function getCheckVal(){
+        var retArr = [];
+        var treeObj = $.fn.zTree.getZTreeObj("tree");
+        if(multiple =="true" || multiple == true){
+            var nodes = treeObj.getCheckedNodes(true);
+            for(var i = 0;i<nodes.length;i++){
+                if(nodes[i].isParent){
+                    continue;
+                }
+                var retObj = {
+                    "id":nodes[i].id,
+                    "name":nodes[i].name
+                };
+
+                retArr.push(retObj);
+            }
+        }else{
+            var nodes = treeObj.getSelectedNodes();
+            if(nodes.length != 1){
+                layer.msg("请选择一项！");
+                return null;
+            }
+            var retObj = {
+                "id":nodes[0].id,
+                "name":nodes[0].name
+            };
+            retArr.push(retObj);
+
+        }
+        //获取父层
+        var index = top.layer.getFrameIndex(window.name);
+        //关闭弹出层
+        top.layer.close(index);
+        return retArr;
+
+    }
+    function checkDefaultVal(vals,param){
+        if(vals && vals.length > 0){
+            param = param || "id";
+            var treeObj = $.fn.zTree.getZTreeObj("tree");
+            var nodeArr = [];
+            var valueArr = vals.split(',');
+            for(var j=0; j<valueArr.length; j++){
+                if(0 <valueArr[j].length){
+                    var nodes = treeObj.getNodesByParam(param, valueArr[j], null);
+                    if(nodes.length > 0){
+                        nodeArr.push(nodes[0]);
+                    }
+                }
+            }
+            for (var i=0; i<nodeArr.length; i++) {
+                if(nodes[i]){
+                    if(multiple =="true" || multiple == true){
+                        treeObj.checkNode(nodeArr[i], true, true);
+                    }else{
+                        treeObj.selectNode(nodes[i]);
+                    }
+                    treeObj.expandNode(nodes[i].getParentNode(), true, true, true);
+                }
+
+            }
+        }
+    }
+
+</script>
+
+<!--引入公共方法-->
+<script src="../js/public.js"></script>
+</body>
+</html>

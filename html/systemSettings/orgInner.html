@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>text</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="stylesheet" href="../../plugins/treetable/css/jquery.treetable.css">
+    <link rel="stylesheet" href="../../plugins/treetable/css/jquery.treetable.theme.default.css">
+    <link rel="stylesheet" href="../../plugins/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../plugins/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../../plugins/ztree/css/metroStyle/metroStyle.css">
+    <link rel="stylesheet" href="../../plugins/datatables/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="../../plugins/icheck/skins/square/aero.css">
+    <link rel="stylesheet" href="../../plugins/datatables/css/mydatatable.css">
+    <!--引入样式-->
+    <link rel="stylesheet" href="../../css/common.css">
+    <!--<link rel="stylesheet" href="../../css/orgInner.css">-->
+    <link rel="stylesheet" href="../../css/dictionaries.css">
+
+
+</head>
+<body>
+
+<div class="wrapper wrapper-content ibox-content">
+    <!--按钮条-->
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="pull-left">
+                <button class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="left"
+                        onclick="openEditDialog('新增用户','./systemSettings/orgCheckView.html','800px','500px')" title="添加"><i class="fa fa-plus"></i> 添加
+                </button>
+                <button class="btn btn-white btn-sm " id="refresh-btn" data-toggle="tooltip" data-placement="left"
+                        onclick="window.location.reload()" title="刷新"><i class="glyphicon glyphicon-repeat"></i> 刷新
+                </button>
+            </div>
+        </div>
+    </div>
+    <!--内容表格-->
+    <table id="treeTable" class="table table-striped table-bordered table-hover table-condensed dataTables-example dataTable">
+        <thead>
+        <tr>
+            <th class='autoWidth'>机构名称</th>
+            <th class='autoWidth'>机构编码</th>
+            <th class='autoWidth'>机构类型</th>
+            <th class='autoWidth'>机构简称</th>
+            <th class='autoWidth'>机构等级</th>
+            <th class='autoWidth'>是否逻辑删除</th>
+            <th class='autoWidth'>操作</th>
+        </tr>
+        </thead>
+        <tbody id="treeTableBody" >
+
+        </tbody>
+    </table>
+</div>
+
+
+
+<!--核心插件-->
+<script src="../../js/jquery-2.2.4.min.js"></script>
+<script src="../../plugins/bootstrap/js/bootstrap.min.js"></script>
+<!--附属插件-->
+<script src="../../plugins/ibox.2.2/ibox.js"></script>
+<script src="../../plugins/layer/layer.js"></script>
+<script src="../../plugins/icheck/icheck.min.js"></script>
+<script src="../../plugins/metismenu-master/metisMenu.min.js"></script>
+<script src="../../plugins/slimScroll/jquery.slimscroll.min.js"></script>
+<script src="../../plugins/ztree/js/jquery.ztree.core.js"></script>
+<script src="../../plugins/datatables/js/jquery.dataTables.min.js"></script>
+<script src="../../plugins/icheck/icheck.min.js"></script>
+<script src="../../plugins/treetable/jquery.treetable.js"></script>
+<script src="../../plugins/bootStrapPager/js/extendPagination.js"></script>
+<!--公共样式-->
+<script src="../../js/public.js"></script>
+<script src="../../js/jeeplus.js"></script>
+<script src="../../js/customForm.js"></script>
+<script src="../../js/page.js"></script>
+
+<script>
+    function updatason(node){
+        ajaxToServer("/api/sys/SysOrg/treeJson/"+node,{},function(tableData){
+            renderTableData(tableData.rows);
+            clickButton();
+        })
+    }
+    window.pageLoad= function () {
+        ajaxToServer("/api/sys/SysOrg/treeJson/0",{},function(tableData){
+            renderTableData(tableData.rows);
+            console.log(tableData);
+            $('.i-Checks span').css('padding-left',0);
+            clickButton();
+        });
+
+
+    };
+    pageLoad();
+    function clickButton() {
+        $('.btn-check').click(function () {
+            var id = $(this).parents("tr").find('.i-Checks').attr('id');
+            openDialog('查看用户信息', './systemSettings/orgCheckView.html?id=' + id, '800px', '600px')
+        });
+        $('.btn-change').click(function () {
+            var id = $(this).parents("tr").find('.i-Checks').attr('id');
+            openEditDialog('修改用户信息', './systemSettings/orgCheckView.html?id=' + id, '800px', '600px')
+        });
+        $('.btn-delete').click(function () {
+            var id = $(this).parents("tr").find('.i-Checks').attr('id');
+            deleteIt('确定要删除该机构吗', '/api/sys/SysOrg/del/',id)
+        });
+        $('.btn-add').click(function(){
+            var id = $(this).parents("tr").find('.i-Checks').attr('id');
+            openEditDialog('添加下级菜单','./systemSettings/orgCheckView.html?pid='+id,'800px','600px')
+        });
+        $('.btn-allot').click(function(){
+            var id = $(this).parents("tr").find('.i-Checks').attr('id');//注意大小写
+            openDialog('分配用户','./systemSettings/orgAssign.html?id='+id,'800px','600px');
+        });
+        $('.btn-allotApp').click(function(){
+            var id = $(this).parents("tr").find('.i-Checks').attr('id');
+            openDialog('分配应用','./systemSettings/orgAllotApp.html?id='+id,'800px','600px');
+        });
+    }
+    function renderTableData(data) {
+        var tableStr = "";
+        for (var i = 0; i < data.length; i++) {
+            var count = 'data-tt-id=' + data[i].id;
+            if (data[i]._parentId && data[i]._parentId != '') {
+                count += '  data-tt-parent-id=' + data[i]._parentId;
+            }
+            tableStr += "<tr class='alignCenter'   " + count + " >"
+                + "<td class='i-Checks' id='" + data[i].id + "'>" + data[i].name + "</td>"
+                + "<td>" + data[i].code + "</td>"
+                + "<td>" + data[i].type + "</td>"
+                + "<td>" + data[i].sname + "</td>"
+                + "<td>" + data[i].grade + "</td>"
+                + "<td >" + (data[i].delFlag == 0 ? '否' : '是') + "</td>"
+                + "<td class='autoWidth' >" +
+                "<a class='btn btn-info btn-xs btn-check'><i class='fa fa-search-plus'></i>查看</a>" +
+                " <a class='btn btn-success btn-xs btn-change'><i class='fa fa-edit'></i>修改</a>" +
+                " <a class='btn btn-danger btn-xs btn-delete'><i class='fa fa-trash'></i> 删除</a>" + " " +
+                " <a class='btn btn-primary btn-xs btn-add'><i class='fa fa-plus'></i> 添加下级机构</a> </br>" +
+                "<a class='btn  btn-warning btn-xs btn-allot'><i class='fa fa-plus'></i> 分配用户</a> " +
+                "<a class='btn  btn-info btn-xs btn-allotApp'><i class='fa fa-plus'></i> 分配应用</a>" +
+                "</td>"
+
+                + "</tr>";
+        }
+        if (tableStr.length == 0) {
+            var len = $("#treeTable thead tr").children("th").length;
+            tableStr = "<tr style='text-align: center'><td colspan='" + len + "'><font color='#cd0a0a'>暂无记录</font></td></tr>";
+        }
+        $('#treeTableBody').html(tableStr);
+        $("#treeTable").treetable({expandable: true, column: 0}, true);  //第二个参数表示为true时强制重新初始化树。
+    }
+
+    function deleteIt(mess,url,id){
+        //var ids= eleP.find('input.i-checks').attr('id')
+        var data = {id:id} || {};
+        top.layer.confirm(mess, {icon: 3, title:'系统提示'},function(index){
+            ajaxToServer1(url,data,function(result){
+                console.log(url,data,result)
+                if(result.success == true){
+                    var frameActive = top.getActiveTab().attr("name");
+                    var obj = $('#search-btn', top.window.frames[frameActive].document);
+                    if(obj.length == 0){
+                        obj = $('#refresh-btn', top.window.frames[frameActive].document);
+                    }
+                    obj.trigger('click');
+                }
+            });
+            top.layer.close(index);
+            pageload();
+        });
+        return false;
+    }
+
+
+</script>
+</body>
+</html>

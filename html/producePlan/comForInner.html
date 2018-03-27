@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>参数配置</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <!--插件样式-->
+    <link rel="stylesheet" href="../../plugins/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../plugins/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../../plugins/select2/css/select2.min.css">
+    <!--自定义样式-->
+    <link rel="stylesheet" href="../../css/common.css">
+    <link rel="stylesheet" href="../../css/dictionaries.css">
+    <style>
+        .previewParam {
+            margin: 20px 0;
+            border: 1px solid #1ab394;
+            min-height: 100px;
+            padding: 8px;
+            width:100%;
+            resize: none;
+        }
+    </style>
+</head>
+<body>
+
+<div class="wrapper wrapper-content bg-gray">
+    <div class="ibox">
+        <!--头部-->
+        <div class="ibox-title">
+            <div class="ibox-tools">
+                <a class="collapse-link">
+                    <i class="fa fa-chevron-up"></i>
+                </a>
+                <a class="dropdown-toggle" data-toggle="dropdown" href="form_basic.html#" aria-expanded="false">
+                    <i class="fa fa-wrench"></i>
+                </a>
+                <ul class="dropdown-menu dropdown-user">
+                    <li><a href="#">选项1</a>
+                    </li>
+                    <li><a href="#">选项2</a>
+                    </li>
+                </ul>
+                <a class="close-link">
+                    <i class="fa fa-times"></i>
+                </a>
+            </div>
+        </div>
+        <!--内容区-->
+        <div class="ibox-content">
+            <div class="row">
+                <div class="col-sm-12 clearfix">
+                    <div class="col-sm-6" style="margin-top:8px;">
+                        <select id="e1" class="populate placeholder" style="width: 300px; display: none;" tabindex="-1" title="">
+                            <option></option>
+                            <option value="1">生产1</option>
+                            <option value="2">生产2</option>
+                            <option value="3">生产3</option>
+                            <option value="4">生产4</option>
+                            <option value="5">生产5</option>
+                            <option value="6">生产6</option>
+                            <option value="7">生产7</option>
+                            <option value="8">生产8</option>
+                        </select>
+                    </div>
+                    <div class="comForIdent col-sm-6">
+                        <span class="btn btn-primary addBtn">+</span>
+                        <span class="btn btn-primary subBtn">-</span>
+                        <span class="btn btn-primary mulBtn">x</span>
+                        <span class="btn btn-primary divsBtn">/</span>
+                        <span class="btn btn-primary bracLBtn">(</span>
+                        <span class="btn btn-primary bracRBtn">)</span>
+                    </div>
+                </div>
+                <div class="col-sm-12">
+                    <textarea class="previewParam"></textarea>
+                    <input type="hidden" class="previewParamHide" value="">
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--核心插件-->
+<script src="../../js/jquery-2.2.4.min.js"></script>
+<script src="../../plugins/bootstrap/js/bootstrap.min.js"></script>
+<!--附属插件-->
+<script src="../../plugins/layer/layer.js"></script>
+<script src="../../plugins/icheck/icheck.min.js"></script>
+<script src="../../plugins/ztree/js/jquery.ztree.core.js"></script>
+<script src="../../plugins/datatables/js/jquery.dataTables.min.js"></script>
+<script src="../../plugins/datatables/js/dataTables.bootstrap.js"></script>
+<script src="../../plugins/bootStrapPager/js/extendPagination.js"></script>
+<script src="../../plugins/select2/js/select2.js"></script>
+
+<!--自定义文件-->
+<script src="../../js/common.js"></script>
+<script src="../../js/jeeplus.js"></script>
+<script src="../../js/customForm.js"></script>
+<script src="../../js/page.js"></script>
+<script>
+    $(function () {
+        $("#e1").select2({
+            placeholder: "Select a State",
+            allowClear: true
+        });
+        var id = getQueryString('id');
+
+        function renderHtml() {
+            var previewParam = $(".previewParam"),
+                previewParamHide = $(".previewParamHide"),
+                html = "";
+            $(".comForIdent span").click(function () {
+                html += $(this).html() + " ";
+                renHtmlFn(html);
+
+            });
+            $("#e1").change(function () {
+                html += $("#select2-e1-container").text() + " ";
+                renHtmlFn(html);
+            });
+            function renHtmlFn(html) {
+                previewParam.html(html);
+                previewParamHide.val(html);
+            }
+
+        }
+
+        renderHtml();
+
+
+    });
+
+</script>
+</body>
+</html>

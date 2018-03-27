@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>菜单管理</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <!--插件样式-->
+    <link rel="stylesheet" href="../../plugins/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../plugins/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../../plugins/ztree/css/metroStyle/metroStyle.css">
+    <link rel="stylesheet" href="../../plugins/datatables/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="../../plugins/icheck/skins/square/green.css">
+    <link rel="stylesheet" href="../../plugins/treetable/css/jquery.treetable.theme.default.css">
+    <link rel="stylesheet" href="../../plugins/treetable/css/jquery.treetable.css">
+    <link rel="stylesheet" href="../../plugins/datatables/css/mydatatable.css">
+    <!--引入样式-->
+    <link rel="stylesheet" href="../../css/common.css">
+    <link rel="stylesheet" href="../../css/dictionaries.css">
+
+
+</head>
+<!--内容-->
+<body id="menu-content">
+
+<div class="wrapper wrapper-content">
+    <div class="ibox">
+        <!--头部-->
+        <div class="ibox-title">
+            <h5>菜单管理</h5>
+            <div class="ibox-tools">
+                <a class="collapse-link">
+                    <i class="fa fa-chevron-up"></i>
+                </a>
+                <a class="dropdown-toggle" data-toggle="dropdown" href="form_basic.html#" aria-expanded="false">
+                    <i class="fa fa-wrench"></i>
+                </a>
+                <ul class="dropdown-menu dropdown-user">
+                    <li><a href="#">选项1</a>
+                    </li>
+                    <li><a href="#">选项2</a>
+                    </li>
+                </ul>
+                <a class="close-link">
+                    <i class="fa fa-times"></i>
+                </a>
+            </div>
+        </div>
+        <!--内容区-->
+        <div class="ibox-content">
+            <!--按钮组-->
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="pull-left">
+                        <button class="btn btn-white btn-sm " id = "add-btn"  data-toggle="tooltip" data-placement="left" onclick="openEditDialog('新增菜单','systemSettings/menuInner.html','800px','500px')"
+                                title="添加"><i class="fa fa-plus"></i> 添加
+                        </button>
+                        <button class="btn btn-white btn-sm" id = "edit-btn" data-toggle="tooltip" data-placement="left" onclick="edit('修改菜单','systemSettings/menuInner.html','800px','500px','#treeTable')"
+                                title="修改"><!--onclick="#"--><i class="fa fa-file-text-o"></i> 修改
+                        </button>
+                        <button class="btn btn-white btn-sm"  id = "delete-btn" data-toggle="tooltip" onclick="deleteAll('要删除该菜单及所有子菜单项吗？','/api/sys/SysMenu/ajaxDel/','#treeTable')"
+                                data-placement="top"><i class="fa fa-trash-o"> 删除</i>
+                        </button>
+                        <button  class="btn btn-white btn-sm" id="updateSort-btn" data-toggle="tooltip" data-placement="left" title="保存排序"><i class="fa fa-save"></i> 保存排序
+                        </button>
+                        <button class="btn btn-white btn-sm " id="refresh-btn" data-toggle="tooltip" data-placement="left" onclick="pageLoad()"
+                                title="刷新"><i class="glyphicon glyphicon-repeat"></i> 刷新
+                        </button>
+                    </div>
+                    <div class="pull-right">
+                        <button class="btn btn-white btn-sm " id="sync-btn" data-toggle="tooltip" data-placement="left"
+                                title="同步到属性"><i class="glyphicon glyphicon-refresh"></i> 同步到属性
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <!--表格区-->
+            <form id="listFrom" method="post">
+                <table id="treeTable" class="table table-striped table-bordered table-hover table-condensed dataTables-example dataTable tree_table">
+                    <thead>
+                        <tr>
+                            <th width='60px;'><input type='checkbox' class='i-checks'></th>
+                            <th>名称</th>
+                            <th>链接</th>
+                            <th>排序</th>
+                            <th>可见</th>
+                            <th>权限标识</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody id="treeTableBody">
+                    </tbody>
+                </table>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<!--核心插件-->
+<script src="../../js/jquery-2.2.4.min.js"></script>
+<script src="../../plugins/bootstrap/js/bootstrap.min.js"></script>
+<!--附属插件-->
+<script src="../../plugins/ibox.2.2/ibox.js"></script>
+<script src="../../plugins/layer/layer.js"></script>
+<script src="../../plugins/icheck/icheck.min.js"></script>
+<script src="../../plugins/metismenu-master/metisMenu.min.js"></script>
+<script src="../../plugins/slimScroll/jquery.slimscroll.min.js"></script>
+<script src="../../plugins/ztree/js/jquery.ztree.core.js"></script>
+<script src="../../plugins/datatables/js/jquery.dataTables.min.js"></script>
+<script src="../../plugins/icheck/icheck.min.js"></script>
+<script src="../../plugins/treetable/jquery.treetable.js"></script>
+<!--自定义文件-->
+<script src="../../js/common.js"></script>
+<script src="../../js/jeeplus.js"></script>
+<script src="../../js/customForm.js"></script>
+<script src="../../js/page.js"></script>
+
+<script>
+    $(document).ready(function() {
+        $("#updateSort-btn").click(function(){
+            var ids="",sorts="";
+            $("input[name='sort']").each(function(ind,item){
+                var id = $(item).parents("tr").find('.i-checks').attr("id");
+                var itemDVal= $(item).attr("data-val");
+                var itemVal = $(item).val();
+                if(itemDVal !== itemVal){
+                    ids+= ","+id;
+                    sorts+= ","+itemVal;
+                }
+            });
+            if(ids.length>0){
+                ids = ids.substring(1);
+                sorts = sorts.substring(1);
+                var data = {
+                    ids: ids,
+                    sorts: sorts
+                };
+                ajaxToServer1("/api/sys/SysMenu/ajaxSort",data,function(result){
+
+                    if(result.success){
+                        reload();
+                    }else{
+                        layerAlert(result.message);
+                    }
+                })
+            }else{
+                layer.msg("没有修改任何排序！")
+            }
+        });
+        $("#sync-btn").click(function(){
+            ajaxToServer1("/api/sys/SysMenu/ajaxSys",{},function(result){
+                layerAlert(result.message);
+            })
+        });
+        window.pageLoad = function (){
+            ajaxToServer("/api/sys/SysMenu/getTreeGraidJson",{},function(tableData){
+                renderTableData(tableData.rows);
+                $('.btn-check').click(function(){
+                    var id = $(this).parents("tr").find('.i-checks').attr('id');
+                    openDialog('查看菜单','systemSettings/menuInner.html?id='+id,'800px','500px')
+                });
+                $('.btn-change').click(function(){
+                    var id = $(this).parents("tr").find('.i-checks').attr('id');
+                    openEditDialog('修改菜单','systemSettings/menuInner.html?id='+id,'800px','500px')
+                });
+                $('.btn-delete').click(function(){
+                    var id = $(this).parents("tr").find('.i-checks').attr('id');
+                    deleteItem('要删除该菜单及所有子菜单项吗','/api/sys/SysMenu/ajaxDel',id)
+                });
+                $('.btn-add').click(function(){
+                    var id = $(this).parents("tr").find('.i-checks').attr('id');
+                    openEditDialog('添加下级菜单','systemSettings/menuInner.html?pid='+id,'800px','500px')
+                });
+            });
+        };
+
+        pageLoad();
+        windowclick();
+        //点击重置按钮
+        $("#reset-btn").click(function(){
+            $("#type option:first").prop("selected", 'selected');
+            $('#description').val("");
+            pageLoad();
+        });
+    });
+    //   datatables使用ajax
+        function renderTableData(data){
+            var tableStr = "";
+            for ( var i = 0; i < data.length; i++) {
+                var count = 'data-tt-id='+data[i].id;
+                if(data[i]._parentId && data[i]._parentId != '') {
+                    count += ' data-tt-parent-id='+data[i]._parentId;
+                }
+                    tableStr += "<tr  "+count+" >"
+                        +"<td style='text-align: center;'><input type='checkbox' class='i-checks' id='"+data[i].id+"'></td>"
+                        +"<td>"+data[i].name+"</td>"
+                        +"<td>"+data[i].href+"</td>"
+                        +"<td class='autoWidth'><input type='number' name='sort' value='"+data[i].sort+"' data-val='"+data[i].sort+"' class='form-control' style='width:100px'></td>"
+                        +"<td style='text-align: center;'>"+(data[i].is_show =='1'?'是':'否' )+"</td>"
+                        +"<td>"+data[i].permission+"</td>"
+                        +"<td class='autoWidth' ><a href='#' class='btn btn-info btn-xs btn-check'><i class='fa fa-search-plus'></i>查看</a>"+" <a href='#' class='btn btn-success btn-xs btn-change'><i class='fa fa-edit'></i>修改</a>"+" <a href='#' class='btn btn-danger btn-xs btn-delete'><i class='fa fa-trash'></i> 删除</a>"+"  <a href='#' class='btn btn-primary btn-xs btn-add'><i class='fa fa-plus'></i> 添加下级菜单</a></td>"
+                    +"</tr>";
+            }
+            if(tableStr.length==0){
+                var len = $("#treeTable thead tr").children("th").length;
+                tableStr ="<tr style='text-align: center'><td colspan='"+len+"'><font color='#cd0a0a'>暂无记录</font></td></tr>";
+            }
+            $('#treeTableBody').html(tableStr);
+            $("#treeTable").treetable({expandable:true,column:1 },true);  //第二个参数表示为true时强制重新初始化树。
+            RenderiCheckTblBody();
+        }
+
+
+/*//  窗口点击事件
+    function windowclick(){
+        $('.collapse-link>.fa').eq(0).click(function () {
+                if ($('.collapse-link>.fa').hasClass('fa-chevron-up')) {
+                    $('.collapse-link>.fa').eq(0).addClass('fa-chevron-down').removeClass('fa-chevron-up');
+                    $('.ibox-content').slideUp('fast');
+                } else {
+                    $('.collapse-link>.fa').eq(0).addClass('fa-chevron-up').removeClass('fa-chevron-down');
+                    $('.ibox-content').slideDown('fast');
+                }
+            }
+        )
+        $('.close-link>.fa').eq(0).click(function () {
+            $('.wrapper-content').fadeOut("normal");
+        })
+    }*/
+
+//  隐藏排序按钮
+    function inputsort(){
+        var inputval=$('.sortuser').val();
+        $('thead>tr>th:nth-of-type(4)').removeClass('sorting_asc').addClass('sorting_disabled');
+
+    }
+
+//  多选框 icheck
+    /*function icheck() {
+        $('input[class="i-checks"]').iCheck({
+            checkboxClass: 'icheckbox_square-aero',
+            radioClass: 'iradio_square-aero'
+        })
+        //全选多选
+        $('th input[class="i-checks"]').on('ifChecked', function () {
+            $('td input[class="i-checks"]').iCheck('check');
+        });
+        $('th input[class="i-checks"]').on('ifUnchecked', function () {
+            $('td input[class="i-checks"]').iCheck('uncheck');
+        });
+
+    }*/
+
+//  添加按钮
+    function tolayer(){
+        layer.open({
+            btn: ['确定','取消'],
+            shade: [0.5,'#000'],
+            type: 2,
+            title: '选择菜单',
+            shadeClose: true,
+            area: ['893px', '600px'],
+            content: 'menu-inner.html'
+        })
+    }
+
+//  修改按钮
+    function updata(){
+        var chkvalue =[];
+        $('tr td input[type="checkbox"]:checked').each(function(){
+            chkvalue.push($(this).val());
+        });
+        if(chkvalue.length==0){
+            layer.alert('请至少选择一项进行修改')
+        }else if(chkvalue.length>1){
+            layer.alert('请选择一项进行修改')
+        }else{
+            layer.open({
+                    btn: ['保存','取消'],
+                    shade: [0.1,'#fff'], //0.1透明度的白色背景
+                    type: 2,
+                    title: '添加',
+                    shadeClose: true,
+                    maxmin: true, //开启最大化最小化按钮
+                    area: ['893px', '600px'],
+                    content: './menu-inner.html'
+                }
+            );
+        }
+    }
+
+//  多删除按钮事件 layer
+    function removeall(){
+        var chkvalue =[];
+        $('tr td input[type="checkbox"]:checked').each(function(){
+            chkvalue.push($(this).val());
+        });
+        if(chkvalue.length==0){
+            layer.alert('请至少选择一项进行删除')
+        }else{
+            layer.confirm('请确定是否删除？', {
+                btn: ['确定','关闭'] //按钮
+            }, function(){
+                $('tr td input[type="checkbox"]:checked').parent('div').parent('td').parent('tr').remove();
+                layer.closeAll();
+            });
+
+        }
+    }
+
+//  刷新按钮
+    function reload() {
+        window.location.reload();
+    }
+
+//  查找修改添加
+    function fua(btn) {//find updata add
+        $(btn).each(function (){
+            $(this).attr('onclick','tolayer()')
+        })
+        $('.paging_simple_numbers').click(function () {
+            $(btn).each(function (){
+                $(this).attr('onclick','tolayer()')
+            })
+        })
+
+    }
+
+//  单独删除按钮事件
+    /*function removeone() {
+        $('.btn-danger').each(function (){
+            $(this).attr('onclick','removeoe(this)')
+        })
+        $('.paging_simple_numbers').click(function () {
+            $('.btn-danger').each(function (){
+                $(this).attr('onclick','removeoe(this)')
+            })
+        })
+
+    }
+    function removeoe(data){
+        layer.confirm('请确定是否删除？', {
+            btn: ['确定','关闭'] //按钮
+        }, function(){
+            $(data).parent().parent().remove();
+            layer.closeAll();
+        });
+    }*/
+</script>
+</body>
+</html>
