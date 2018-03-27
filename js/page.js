@@ -48,6 +48,7 @@ var Page = {
                 }
             }
         }
+
         Page.paramData.page.pageSize = $("#pag-sel").val();
         Page.pageCom(Page.paramData,true);
     },

@@ -6,11 +6,9 @@
     RenderiCheckTblBody();
 });*/
 
-
- // urlPrefix = "http://192.168.1.110:8080/admin-api";
 var urlPrefix = "http://114.115.165.184:8080/admin-api";
-// var urlPrefix = "http://192.168.39.221:8080/admin-api";
-// var urlPrefix = "http://192.168.39.221:8088/admin-api";
+
+
 //点击查询按钮
 $("#search-btn").click(function(){
     pageLoad();
@@ -55,6 +53,7 @@ function ajaxToServer(url, data, callbackFun){//传送的参数是josnString时
         dataType: 'json',
         contentType:'application/json',
         success: function(result){
+            console.log(result);
             layer.close(layerIndex);
             if(callbackFun){
                 callbackFun(result);
@@ -185,6 +184,48 @@ function windowclick(){
         $('.wrapper-content').fadeOut("normal");
     })
 }
+//分配、撤销功能
+function allotCancelItem(tableId,opflag,ifAllot,dataPrama,url){
+    var str="",flag = true;
+    $(tableId +" tbody tr td input.i-checks:checkbox").each(function(){
+        if(true == $(this).is(':checked')) {
+            var ifAllotText = "";
+            ifAllotText = $(this).parents("tr").find('.ifAllot').text();
+            str += "," + $(this).attr("id");
+            if (ifAllotText == ifAllot) {
+                var tit = "";
+                if(ifAllot == "是"){
+                    tit = "您所选的已有分配！"
+                }else{
+                    tit ="您所选的已有撤销的！"
+                }
+                top.layer.alert(tit, {icon: 0, title: '警告'});
+                flag = false;
+                return;
+            }
+        }
+    });
+    if(str == ""){
+        top.layer.alert('请至少选择一条数据!', {icon: 0, title:'警告'});
+    }
+    if(flag){
+
+        var data = {
+            [dataPrama[0]]:id,
+            [dataPrama[1]]:str.substr(1),
+            opflag:opflag
+        };
+        console.log(data);
+        console.log(url)
+        ajaxToServer1(url,data,function (result) {
+            if (result.success == true) {
+                document.location.reload();
+            }
+        });
+    }
+
+};
+
 
 //打开对话框(查看、选择上级菜单)
 function openDialog(title,url,width,height,innerCallbackFn){
@@ -274,6 +315,7 @@ function doSubmit(){
     var validateFlag = formObj.validate({
         submitHandler: function(form){
             var formdata = JSON.stringify(formObj.serializeJSON());
+            console.log(formdata);
             layer.msg('正在提交，请稍等...',{time: 1000});
             ajaxToServer(url,formdata,function(result){
                 console.log(url,formdata,result);
@@ -307,7 +349,7 @@ function doSubmit(){
                 error.insertAfter(element);
             }
         }
-    }).form
+    }).form;
     if(validateFlag){
         formObj.submit();
        // $(".layui-layer-btn0").css({"background":'red'});
@@ -522,7 +564,7 @@ function getJsonData(data, arr, key){
             arr.push({'name':ret, 'value':value}); //将获取到的属性名称赋值给"name",属性值赋值给"value"
         }else{
             var ret = key==''?item:(key+"."+item);
-           // getJsonData(value, arr, ret);
+            getJsonData(value, arr, ret);
         }
     }
     return arr;

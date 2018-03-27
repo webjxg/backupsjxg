@@ -99,22 +99,9 @@
 <script>
     $(function () {
         window.pageLoad = function () {
-            Page.init("/api/sys/SysOperation/page",{}, true, function (tableData) {
+            Page.init("/api/aps/Template/list",{}, true, function (tableData) {
                 console.log(tableData);
                 dataout(tableData);
-//                $('tbody tr').attr('class','alignCenter');
-//                $('.btn-check').click(function () {
-//                    var id = $(this).parents("tr").find('.i-checks').attr('id');
-//                    openDialog('查看参数信息', './producePlan/paramConfigCheckView.html?id=' + id, '800px', '500px')
-//                });
-//                $('.btn-change').click(function () {
-//                    var id = $(this).parents("tr").find('.i-checks').attr('id');
-//                    openEditDialog('修改参数', './producePlan/paramConfigCheckView.html?id=' + id, '800px', '500px')
-//                });
-//                $('.btn-delete').click(function () {
-//                    var id = $(this).parents("tr").find('.i-checks').attr('id');
-//                    deleteItem('确定要删除该参数吗', '/api/sys/SysOperation/delete',id)
-//                });
                 $('.btn-preserve').click(function () {
                     var id = $(this).parents("tr").find('.i-checks').attr('id');
                     openDialog('项目信息维护', './producePlan/planTempPreserve.html?id=' + id, '800px', '500px')
@@ -128,14 +115,6 @@
 
         pageLoad();
         windowclick();
-//        //点击重置按钮
-//        $("#reset-btn").click(function () {
-//            $("#operationName").val("");
-//            $('#operationCode').val("");
-//            $('#opeDescription').val("");
-//            $('#enable').val("");
-//            Page.reset([]);
-//        });
 
     });
     //   ajax请求渲染datatable数据
@@ -176,17 +155,10 @@
                 {"data": "id", "orderable": false, "defaultContent": "",
                     "render": function (data, type, row, meta) {
                         return data =
-//                                "<a class='btn btn-info btn-xs  btn-check'><i class='fa fa-search-plus'></i>查看</a >" +
-//                            "<a class='btn btn-success btn-xs btn-change'><i class='fa fa fa-edit'></i>修改</a >" +
-//                            "<a class='btn btn-danger btn-xs btn-delete'><i class='fa fa-trash' ></i>删除</a >"+
                             "<a class='btn btn-success btn-xs btn-preserve'><i class='fa fa-edit' ></i>项目信息维护</a >"
                     }
                 }],
-//            "fnDrawCallback" : function(){
-//                this.api().column(1).nodes().each(function(cell, i) {
-//                    cell.innerHTML =  i + 1;
-//                });
-//            },
+
 
         });
         RenderiCheckTblBody();

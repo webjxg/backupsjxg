@@ -7,9 +7,11 @@
     <!--插件样式-->
     <link rel="stylesheet" href="../../plugins/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="../../plugins/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../../plugins/easyui/themes/default/easyui.css">
+    <link rel="stylesheet" href="../../plugins/easyui/themes/default/datagrid.css">
     <!--引入样式-->
     <link rel="stylesheet" href="../../css/common.css">
-    <!--<link rel="stylesheet" href="../../css/dictionaries.css">-->
+    <link rel="stylesheet" href="../../css/dictionaries.css">
     <style>
         .row {
             margin-bottom: 20px;
@@ -90,9 +92,6 @@
                 </div>
                 <div class="pull-right">
                     <input type="hidden" name="state" id="state" value>
-                    <button class="btn btn-primary btn-rounded btn-outline btn-sm " id="save-btn"><i
-                            class="fa fa-floppy-o"></i> 暂存
-                    </button>
                     <button class="btn btn-primary btn-rounded btn-outline btn-sm " id="submit-btn"><i
                             class="fa fa-check-square-o"></i> 递交
                     </button>
@@ -105,124 +104,76 @@
             <div class="panel panel-default">
                 <div class="panel-heading" role="tablist" aria-multiselectable="true" style="font-size: 20px;background-color: #23a6c8;">
                     <span>产量计划</span>
+                    <div id="tb" style="height:auto;float: left;">
+                        <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-save',plain:true" >暂存</a>
+                    </div>
                     <a style="font-size: 25px; float: right;"  onclick="$('#yieldTable').toggle()" >
                         <i class="fa fa-navicon"></i>
                     </a>
                 </div>
-                <table id="yieldTable" class="table-striped table-bordered table-hover table-condensed dataTables-example dataTable " >
-                    <thead>
-                    <tr class="alignCenter">
-                        <th class='autoWidth'>序号</th>
-                        <th class='autoWidth'>项目</th>
-                        <th class='autoWidth'>单位</th>
-                        <th class='autoWidth'>月计划</th>
-                        <th class='autoWidth'>周计划</th>
-                        <th class='autoWidth'>日计划</th>
-                    </tr>
-                    </thead>
-                    <tbody id="yieldBody">
-
-                    </tbody>
+                <table id="yieldTable" class="table-striped table-bordered table-hover table-condensed dataTables-example dataTable tableItem ">
                 </table>
+
             </div>
             <!--班计划-->
             <div class="panel panel-default">
                 <div class="panel-heading" style="font-size: 20px;background-color: #23b6e8;">
                     <span>班计划</span>
+                    <div id="tb1" style="height:auto;float: left; ">
+                        <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-save',plain:true" >暂存</a>
+                    </div>
                     <a style="font-size: 25px; float: right;" onclick="$('#shiftlan').toggle()">
                         <i class="fa fa-navicon"></i>
                     </a>
                 </div>
                 <table id="shiftlan"
-                       class="table-striped table-bordered table-hover table-condensed dataTables-example dataTable">
-                    <thead>
-                    <tr class="alignCenter">
-                        <th class='autoWidth'>序号</th>
-                        <th class='autoWidth'>项目</th>
-                        <th class='autoWidth'>单位</th>
-                        <th class='autoWidth'>月计划</th>
-                        <th class='autoWidth'>周计划</th>
-                        <th class='autoWidth'>日计划</th>
-                    </tr>
-                    </thead>
-                    <tbody id="shiftlanBody">
-
-                    </tbody>
+                       class="table-striped table-bordered table-hover table-condensed dataTables-example dataTable tableItem">
                 </table>
+
             </div>
             <!--质量指标计划-->
             <div class="panel panel-default">
                 <div class="panel-heading" style="font-size: 20px;background-color: #23c6a8;">
                     <span>质量指标计划</span>
+                    <div id="tb2" style="height:auto;float: left;">
+                        <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-save',plain:true" >暂存</a>
+                    </div>
                     <a  style="font-size: 25px; float: right;" onclick="$('#qualityIndex').toggle()">
                         <i class="fa fa-navicon"></i>
                     </a>
                 </div>
                 <table id="qualityIndex"
                        class="table-striped table-bordered table-hover table-condensed dataTables-example dataTable">
-                    <thead>
-                    <tr class="alignCenter">
-                        <th class='autoWidth'>序号</th>
-                        <th class='autoWidth'>项目</th>
-                        <th class='autoWidth'>单位</th>
-                        <th class='autoWidth'>月计划</th>
-                        <th class='autoWidth'>周计划</th>
-                        <th class='autoWidth'>日计划</th>
-                    </tr>
-                    </thead>
-                    <tbody id="qualityIndexBody">
-
-                    </tbody>
                 </table>
             </div>
             <!--技术指标计划-->
             <div class="panel panel-default">
                 <div class="panel-heading" style="font-size: 20px;background-color: #23d6a8;">
                     <span>技术指标计划</span>
+                    <div id="tb3" style="height:auto;float: left;">
+                        <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-save',plain:true" >暂存</a>
+                    </div>
                     <a style="font-size: 25px; float: right;" onclick="$('#technicalIndex').toggle()">
                         <i class="fa fa-navicon"></i>
                     </a>
                 </div>
                 <table id="technicalIndex"
                        class="table-striped table-bordered table-hover table-condensed dataTables-example dataTable">
-                    <thead>
-                    <tr class="alignCenter">
-                        <th class='autoWidth'>序号</th>
-                        <th class='autoWidth'>项目</th>
-                        <th class='autoWidth'>单位</th>
-                        <th class='autoWidth'>月计划</th>
-                        <th class='autoWidth'>周计划</th>
-                        <th class='autoWidth'>日计划</th>
-                    </tr>
-                    </thead>
-                    <tbody id="technicalIndexBody">
-
-                    </tbody>
                 </table>
             </div>
             <!--各项单耗指标计划-->
             <div class="panel panel-default">
                 <div class="panel-heading" style="font-size: 20px;background-color: #23e6a8;">
                     <span>各项单耗指标计划</span>
+                    <div id="tb4" style="height:auto;float: left;">
+                        <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-save',plain:true" >暂存</a>
+                    </div>
                     <a style="font-size: 25px; float: right;" onclick="$('#consumption').toggle()">
                         <i class="fa fa-navicon"></i>
                     </a>
                 </div>
                 <table id="consumption"
                        class="table-striped table-bordered table-hover table-condensed dataTables-example dataTable">
-                    <thead>
-                    <tr class="alignCenter">
-                        <th class='autoWidth'>序号</th>
-                        <th class='autoWidth'>项目</th>
-                        <th class='autoWidth'>单位</th>
-                        <th class='autoWidth'>月计划</th>
-                        <th class='autoWidth'>周计划</th>
-                        <th class='autoWidth'>日计划</th>
-                    </tr>
-                    </thead>
-                    <tbody id="consumptionBody">
-
-                    </tbody>
                 </table>
             </div>
         </div>
@@ -233,48 +184,301 @@
 <script src="../../plugins/bootstrap/js/bootstrap.min.js"></script>
 <!--附属插件-->
 <script src="../../plugins/layer/layer.js"></script>
-<script src="../../js/customForm.js"></script>
+<script src="../../plugins/easyui/js/jquery.easyui.min.js"></script>
 
 
 </body>
 <script>
-    $(document).ready(function () {
-        $('#save-btn').on('click', function () {
-            $('#state').val(0);
-        });
-        $('#submit-btn').on('click', function () {
-            $('#state').val(1);
-        });
-        ajaxToServer("/api/sys/SysOrg/treeJson/0", {}, function (tableData) {
-            renderTableData(tableData.rows, "#yieldBody");
-            renderTableData(tableData.rows, "#shiftlanBody");
-            renderTableData(tableData.rows, "#qualityIndexBody");
-            renderTableData(tableData.rows, "#technicalIndexBody");
-            renderTableData(tableData.rows, "#consumptionBody");
-            console.log(tableData);
-        });
-    });
-    function renderTableData(data, table) {
-        var tableStr = "";
-        for (var i = 0; i < data.length; i++) {
-            tableStr += "<tr class='alignCenter'>"
-                + "<td id='" + data[i].id + "'></td>"
-                + "<td>" + data[i].name + "</td>"
-                + "<td>" + data[i].code + "</td>"
-                + "<td><input type='text'></td>"
-                + "<td><input type='text'></td>"
-                + "<td><input type='text'></td>"
-                + "</tr>";
+//    $(document).ready(function () {
+//        $('#save-btn').on('click', function () {
+//            $('#state').val(0);
+//        });
+//        $('#submit-btn').on('click', function () {
+//            $('#state').val(1);
+//        });
+//        ajaxToServer("/api/sys/SysOrg/treeJson/0", {}, function (tableData) {
+//            renderTableData(tableData.rows, "#yieldBody");
+//            renderTableData(tableData.rows, "#shiftlanBody");
+//            renderTableData(tableData.rows, "#qualityIndexBody");
+//            renderTableData(tableData.rows, "#technicalIndexBody");
+//            renderTableData(tableData.rows, "#consumptionBody");
+//            console.log(tableData);
+//        });
+//    });
+//    function renderTableData(data, table) {
+//        var tableStr = "";
+//        for (var i = 0; i < data.length; i++) {
+//            tableStr += "<tr class='alignCenter'>"
+//                + "<td id='" + data[i].id + "'></td>"
+//                + "<td>" + data[i].name + "</td>"
+//                + "<td>" + data[i].code + "</td>"
+//                + "<td><input type='text'></td>"
+//                + "<td><input type='text'></td>"
+//                + "<td><input type='text'></td>"
+//                + "</tr>";
+//        }
+//        $(table).html(tableStr);
+//        var tr = table + '>tr';
+//        var len = $(tr).length;
+//        console.log(len);
+//        for (var i = 0; i < len; i++) {
+//            $(table).children('.alignCenter').children('td:nth-of-type(1)').eq(i).text(i+1);
+//        }
+//    }
+//建立空数组
+var swcgzbjhArr=[],
+    swcgzbjhArr1=[],
+    swcgzbjhArr2=[],
+    swcgzbjhArr3=[],
+    swcgzbjhArr4=[],
+    saveItemArr=[],
+    arrIndex = -1;
+//请求数据渲染表格 以及实现datagrid部分功能
+$.ajax({
+    dataType : "json",
+    url:"../../json/testdayplan.json",
+    success:function(result){
+         console.log(result);
+        var  swcgzbjh = result.swcgzbjh,
+            swcgzbjh1 = result.swcgzbjh1;
+            swcgzbjh2 = result.swcgzbjh2;
+            swcgzbjh3 = result.swcgzbjh3;
+            swcgzbjh4 = result.swcgzbjh4;
+        for ( var item in swcgzbjh) {
+            var arrItem = {
+                'id':swcgzbjh[item].id,
+                'itemName': swcgzbjh[item].itemName,
+                'itemUnit': swcgzbjh[item].itemUnit,
+                'yearTarget': swcgzbjh[item].yearTarget,
+                'monthPlan': swcgzbjh[item].monthPlan,
+                'remark': swcgzbjh[item].remark
+            };
+            swcgzbjhArr.push(arrItem);
         }
-        $(table).html(tableStr);
-        var tr = table + '>tr';
-        var len = $(tr).length;
-        console.log(len);
-        for (var i = 0; i < len; i++) {
-            $(table).children('.alignCenter').children('td:nth-of-type(1)').eq(i).text(i+1);
+        for ( var item in swcgzbjh1) {
+            var arrItem = {
+                'id':swcgzbjh1[item].id,
+                'itemName': swcgzbjh1[item].itemName,
+                'itemName1': swcgzbjh1[item].itemName1,
+                'itemUnit': swcgzbjh1[item].itemUnit,
+                'yearTarget': swcgzbjh1[item].yearTarget,
+                'monthPlan': swcgzbjh1[item].monthPlan,
+                'remark': swcgzbjh1[item].remark
+            };
+            swcgzbjhArr1.push(arrItem);
         }
+        for ( var item in swcgzbjh2) {
+            var arrItem = {
+                'id':swcgzbjh2[item].id,
+                'itemName': swcgzbjh2[item].itemName,
+                'itemUnit': swcgzbjh2[item].itemUnit,
+                'yearTarget': swcgzbjh2[item].yearTarget,
+                'monthPlan': swcgzbjh2[item].monthPlan,
+                'remark': swcgzbjh2[item].remark
+            };
+            swcgzbjhArr2.push(arrItem);
+        }
+        for ( var item in swcgzbjh3) {
+            var arrItem = {
+                'id':swcgzbjh3[item].id,
+                'itemName': swcgzbjh3[item].itemName,
+                'itemUnit': swcgzbjh3[item].itemUnit,
+                'yearTarget': swcgzbjh3[item].yearTarget,
+                'monthPlan': swcgzbjh3[item].monthPlan,
+                'remark': swcgzbjh3[item].remark
+            };
+            swcgzbjhArr3.push(arrItem);
+        }
+        for ( var item in swcgzbjh4) {
+            var arrItem = {
+                'id':swcgzbjh4[item].id,
+                'itemName': swcgzbjh4[item].itemName,
+                'itemUnit': swcgzbjh4[item].itemUnit,
+                'yearTarget': swcgzbjh4[item].yearTarget,
+                'monthPlan': swcgzbjh4[item].monthPlan,
+                'remark': swcgzbjh4[item].remark
+            };
+            swcgzbjhArr4.push(arrItem);
+        }
+        $('#yieldTable').datagrid('loadData',swcgzbjh);
+        $('#shiftlan').datagrid('loadData',swcgzbjh1);
+        $('#qualityIndex').datagrid('loadData',swcgzbjh2);
+        $('#technicalIndex').datagrid('loadData',swcgzbjh3);
+        $('#consumption').datagrid('loadData',swcgzbjh4);
     }
 
+});
+var editIndex = undefined;
+$('#yieldTable').datagrid({
+    fitColumns:true,
+    rownumbers:true,
+    collapsible:true,
+    singleSelect: true,
+    onClickRow: function(index){
+        a(index,"#yieldTable")
+    },
+    columns:[[
+        {field:'id',title:'id', hideColumn:'id'},
+        {field:'itemName',title:'项目',width:100,align:'center'},
+        {field:'itemUnit',title:'单位',width:100,align:'center'},
+        {field:'yearTarget',title:'全年基本目标',width:100,align:'center',editor:{type:'numberbox',options:{precision:1}}},
+        {field:'monthPlan',title:'月计划',editor:'numberbox',width:100,align:'center'},
+        {field:'remark',title:'备注',editor:'text',width:150,align:'center'},
+    ]],
+    onAfterEdit: function (rowIndex, rowData, changes) {
+        pushRowData(rowData);
+        editIndex = undefined;
+        editRow = undefined;
+    },
+    toolbar: '#tb',
+});
+$('#shiftlan').datagrid({
+    fitColumns:true,
+    rownumbers:true,
+    collapsible:true,
+    singleSelect: true,
+    onClickRow: function(index){
+        a(index,"#shiftlan")
+    },
+    columns:[[
+        {field:'id',title:'id', hideColumn:'id'},
+        {field:'itemName',title:'项目',width:100,align:'center'},
+        {field:'itemName1',title:'项目1',width:100,align:'center'},
+        {field:'itemUnit',title:'单位',width:100,align:'center'},
+        {field:'yearTarget',title:'全年基本目标',width:100,align:'center',editor:{type:'numberbox',options:{precision:1}}},
+        {field:'monthPlan',title:'月计划',editor:'numberbox',width:100,align:'center'},
+        {field:'remark',title:'备注',editor:'text',width:150,align:'center'},
+    ]],
+    onAfterEdit: function (rowIndex, rowData, changes) {
+        pushRowData(rowData);
+        editIndex = undefined;
+        editRow = undefined;
+    },
+    toolbar: '#tb1',
+});
+$('#qualityIndex').datagrid({
+    fitColumns:true,
+    rownumbers:true,
+    collapsible:true,
+    singleSelect: true,
+    onClickRow: function(index){
+        a(index,"#qualityIndex")
+    },
+    columns:[[
+        {field:'id',title:'id', hideColumn:'id'},
+        {field:'itemName',title:'项目',width:100,align:'center'},
+        {field:'itemUnit',title:'单位',width:100,align:'center'},
+        {field:'yearTarget',title:'全年基本目标',width:100,align:'center',editor:{type:'numberbox',options:{precision:1}}},
+        {field:'monthPlan',title:'月计划',editor:'numberbox',width:100,align:'center'},
+        {field:'remark',title:'备注',editor:'text',width:150,align:'center'},
+    ]],
+    onAfterEdit: function (rowIndex, rowData, changes) {
+        pushRowData(rowData);
+        editIndex = undefined;
+        editRow = undefined;
+    },
+    toolbar: '#tb2',
+});
+$('#technicalIndex').datagrid({
+    fitColumns:true,
+    rownumbers:true,
+    collapsible:true,
+    singleSelect: true,
+    onClickRow: function(index){
+        a(index,"#technicalIndex")
+    },
+    columns:[[
+        {field:'id',title:'id', hideColumn:'id'},
+        {field:'itemName',title:'项目',width:100,align:'center'},
+        {field:'itemUnit',title:'单位',width:100,align:'center'},
+        {field:'yearTarget',title:'全年基本目标',width:100,align:'center',editor:{type:'numberbox',options:{precision:1}}},
+        {field:'monthPlan',title:'月计划',editor:'numberbox',width:100,align:'center'},
+        {field:'remark',title:'备注',editor:'text',width:150,align:'center'},
+    ]],
+    onAfterEdit: function (rowIndex, rowData, changes) {
+        pushRowData(rowData);
+        editIndex = undefined;
+        editRow = undefined;
+    },
+    toolbar: '#tb3',
+});
+$('#consumption').datagrid({
+    fitColumns:true,
+    rownumbers:true,
+    collapsible:true,
+    singleSelect: true,
+    onClickRow: function(index){
+        a(index,"#consumption")
+    },
+    columns:[[
+        {field:'id',title:'id', hideColumn:'id'},
+        {field:'itemName',title:'项目',width:100,align:'center'},
+        {field:'itemUnit',title:'单位',width:100,align:'center'},
+        {field:'yearTarget',title:'全年基本目标',width:100,align:'center',editor:{type:'numberbox',options:{precision:1}}},
+        {field:'monthPlan',title:'月计划',editor:'numberbox',width:100,align:'center'},
+        {field:'remark',title:'备注',editor:'text',width:150,align:'center'},
+    ]],
+    onAfterEdit: function (rowIndex, rowData, changes) {
+        pushRowData(rowData);
+        editIndex = undefined;
+        editRow = undefined;
+    },
+    toolbar: '#tb4',
+});
+//编辑过的元素如果不存在就push到数组中，如果已存在新的数据会替换原有的数据
+function pushRowData(rowData){
+    if(saveItemArr.length>0){
+        filterItem(saveItemArr,rowData);
+        if(arrIndex == -1){
+            saveItemArr.push(rowData);
+        }else{
+            saveItemArr.splice(arrIndex,1,rowData);
+
+        }
+    }else{
+        saveItemArr.push(rowData);
+    }
+}
+//判断元素是否存在于数组中
+function filterItem(arr,item){
+    for( var i=0;i<arr.length;i++){
+        console.log((arr[i].id),(item.id));
+        if((arr[i].id)===(item.id)){
+            arrIndex = i;
+            return ;
+        }else{
+            arrIndex = -1;
+        }
+    }
+}
+//单击某行进行编辑
+function a(index,id) {
+    if (editIndex != index) {
+        if (endEditing(id)) {
+            $(id).datagrid('selectRow', index)
+                .datagrid('beginEdit', index);
+            editIndex = index;
+        } else {
+            $(id).datagrid('selectRow', editIndex);
+        }
+    }
+}
+//编辑状态
+function endEditing(gridTableId) {
+    if (editIndex == undefined) { return true }
+    if ($(gridTableId).datagrid('validateRow', editIndex)) {
+        /* var ed = $(gridTableId).datagrid('getEditor', { index: editIndex, field: 'productid' });*/
+        $(gridTableId).datagrid('endEdit', editIndex);
+        editIndex = undefined;
+        return true;
+    } else {
+        return false;
+    }
+}
+
+$(function(){
+    $('#yieldTable,#shiftlan,#qualityIndex,#technicalIndex,#consumption').datagrid('hideColumn','id');
+});
 
 </script>
 
