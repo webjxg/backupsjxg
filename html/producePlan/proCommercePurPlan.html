@@ -10,35 +10,23 @@
     <link rel="stylesheet" href="../../plugins/easyui/themes/default/datagrid.css">
     <!--引入样式-->
     <link rel="stylesheet" href="../../css/common.css">
-    <link rel="stylesheet" href="../../css/dictionaries.css">
-    <style>
-        .tableItemBox{margin-bottom:10px;}
-        .tableItem{background:#2c9c9c;}
-        .datagrid-btable{width:100%;}
-        .panel-title{color:#0d474a;height:30px;line-height: 30px;}
-    </style>
+    <link rel="stylesheet" href="../../css/customDatagrid.css">
 </head>
 <body>
-<div class="wrapper wrapper-content">
+<div class="wrapper">
     <div class="ibox">
         <div class="ibox-content">
             <div class="clearfix">
-                <button class="btn btn-success btn-save pull-right" type="button">保存</button>
+                <button class="btn btn-primary  btn-save pull-right" type="button" style="margin-bottom:15px;">保存</button>
             </div>
             <div class="commercePurCon proTargetPlanItem">
                 <div class="tableItemBox">
                     <table id="td0" class="tableItem"  title="商务采购指标计划">
                     </table>
-                    <div id="tb" style="height:auto">
-                        <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-save',plain:true" >Accept</a>
-                    </div>
                 </div>
                 <div class="tableItemBox">
                     <table id="td1" class="tableItem"  title="商务采购指标计划11">
                     </table>
-                    <div id="tb1" style="height:auto">
-                        <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-save',plain:true" >Accept</a>
-                    </div>
                 </div>
             </div>
         </div>
@@ -52,14 +40,55 @@
 <!--附属插件-->
 <script src="../../plugins/layer/layer.js"></script>
 <script src="../../plugins/easyui/js/jquery.easyui.min.js"></script>
+
 <script>
+    var dataGridObj = {
+        td0EditIndex:undefined,
+        td1EditIndex:undefined,
+        getEditIndex:function (id) {
+            id = id.substr(1);
+            return eval("dataGridObj."+id+"EditIndex");
+        },
+        setEditIndex:function(id, val){
+            id = id.substr(1);
+            // alert("dataGridObj."+id+"EditIndex="+val);
+            eval("dataGridObj."+id+"EditIndex="+val);
+//            new Function("dataGridObj."+id+"EditIndex="+val+";");
+            // alert(dataGridObj.getEditIndex(id));
+        },
+        startEditing:function(index,id){
+            if (dataGridObj.getEditIndex(id) != index) {
+                console.log(11)
+                if (dataGridObj.endEditing(id)) {
+                    $(id).datagrid('selectRow', index)
+                        .datagrid('beginEdit', index);
+                    dataGridObj.setEditIndex(id,index);
+                } else {
+                    $(id).datagrid('selectRow', dataGridObj.editIndex);
+                }
+            }
+        },
+        endEditing:function(gridTableId){
+            var editIndex = dataGridObj.getEditIndex(gridTableId);
+            if ( editIndex == undefined) { return true }
+            if ($(gridTableId).datagrid('validateRow', editIndex)) {
+                $(gridTableId).datagrid('endEdit', editIndex);
+//                dataGridObj.editIndex = undefined;
+                dataGridObj.setEditIndex(gridTableId,undefined);
+                return true;
+            } else {
+                return false;
+            }
+        }
+    }
+
     var swcgzbjhArr=[],swcgzbjhArr1=[],saveItemArr=[],arrIndex = -1;
     $.ajax({
         dataType : "json",
         url:"../../json/test-dic.json",
         success:function(result){
-           var  swcgzbjh = result.swcgzbjh,
-               swcgzbjh11 = result.swcgzbjh11;
+            var  swcgzbjh = result.swcgzbjh,
+                swcgzbjh11 = result.swcgzbjh11;
             for ( var item in swcgzbjh) {
                 var arrItem = {
                     'id':swcgzbjh[item].id,
@@ -88,54 +117,63 @@
         }
 
     });
-    var editIndex = undefined;
-        $('#td0').datagrid({
-            fitColumns:true,
-            rownumbers:true,
-            collapsible:true,
-            singleSelect: true,
-            onClickRow: function(index){
-                a(index,"#td0")
-            },
-            columns:[[
-                {field:'id',title:'id', hideColumn:'id'},
-                {field:'itemName',title:'项目',width:100,align:'center'},
-                {field:'itemUnit',title:'单位',width:100,align:'center'},
-                {field:'yearTarget',title:'全年基本目标',width:100,align:'center',editor:{type:'numberbox',options:{precision:1}}},
-                {field:'monthPlan',title:'月计划',editor:'numberbox',width:100,align:'center'},
-                {field:'remark',title:'备注',editor:'text',width:150,align:'center'},
-            ]],
-            onAfterEdit: function (rowIndex, rowData, changes) {
-                pushRowData(rowData);
-                editIndex = undefined;
-                editRow = undefined;
-            },
-            toolbar: '#tb',
-        });
-        $('#td1').datagrid({
-            fitColumns:true,
-            rownumbers:true,
-            collapsible:true,
-            singleSelect: true,
-            onClickRow: function(index){
-                a(index,"#td1")
-            },
-            columns:[[
-                {field:'id',title:'id', hideColumn:'id'},
-                {field:'itemName',title:'项目',width:100,align:'center'},
-                {field:'itemName1',title:'项目1',width:100,align:'center'},
-                {field:'itemUnit',title:'单位',width:100,align:'center'},
-                {field:'yearTarget',title:'全年基本目标',width:100,align:'center',editor:{type:'numberbox',options:{precision:1}}},
-                {field:'monthPlan',title:'月计划',editor:'numberbox',width:100,align:'center'},
-                {field:'remark',title:'备注',editor:'text',width:150,align:'center'},
-            ]],
-            onAfterEdit: function (rowIndex, rowData, changes) {
-                pushRowData(rowData);
-                editIndex = undefined;
-                editRow = undefined;
-            },
-            toolbar: '#tb1',
-        });
+    var data0 = $('#td0').datagrid({
+        fitColumns:true,
+        rownumbers:true,
+        collapsible:true,
+        singleSelect: true,
+        onClickRow: function(index){
+            dataGridObj.startEditing(index,"#td0")
+        },
+        columns:[[
+            {field:'id',title:'id', hideColumn:'id'},
+            {field:'itemName',title:'项目',width:100,align:'center'},
+            {field:'itemUnit',title:'单位',width:100,align:'center'},
+            {field:'yearTarget',title:'全年基本目标',width:100,align:'center',editor:{type:'numberbox',options:{precision:1}}},
+            {field:'monthPlan',title:'月计划',editor:'numberbox',width:100,align:'center'},
+            {field:'remark',title:'备注',editor:'text',width:150,align:'center'},
+        ]],
+        onAfterEdit: function (rowIndex, rowData, changes) {
+            pushRowData(rowData);
+            dataGridObj.setEditIndex("#td0",undefined);
+        },
+        toolbar: [{
+            text: '保存11', iconCls: 'icon-save', handler: function () {
+                //保存时结束当前编辑的行，自动触发onAfterEdit事件如果要与后台交互可将数据通过Ajax提交后台
+                console.log("td0:"+dataGridObj.editIndex);
+                $('#td0').datagrid('endEdit', dataGridObj.getEditIndex("#td0"));
+            }
+        }]
+    });
+    var data1 = $('#td1').datagrid({
+        fitColumns:true,
+        rownumbers:true,
+        collapsible:true,
+        singleSelect: true,
+        onClickRow: function(index){
+            dataGridObj.startEditing(index,"#td1")
+        },
+        columns:[[
+            {field:'id',title:'id', hideColumn:'id'},
+            {field:'itemName',title:'项目',width:100,align:'center'},
+            {field:'itemName1',title:'项目1',width:100,align:'center'},
+            {field:'itemUnit',title:'单位',width:100,align:'center'},
+            {field:'yearTarget',title:'全年基本目标',width:100,align:'center',editor:{type:'numberbox',options:{precision:1}}},
+            {field:'monthPlan',title:'月计划',editor:'numberbox',width:100,align:'center'},
+            {field:'remark',title:'备注',editor:'text',width:150,align:'center'},
+        ]],
+        onAfterEdit: function (rowIndex, rowData, changes) {
+            pushRowData(rowData);
+            dataGridObj.setEditIndex("#td1",undefined);
+        },
+        toolbar:[{
+            text: '保存', iconCls: 'icon-save', handler: function () {
+                //保存时结束当前编辑的行，自动触发onAfterEdit事件如果要与后台交互可将数据通过Ajax提交后台
+                console.log("td1:"+dataGridObj.editIndex);
+                $('#td1').datagrid('endEdit', dataGridObj.getEditIndex("#td1"));
+            }
+        }]
+    });
     //编辑过的元素如果不存在就push到数组中，如果已存在新的数据会替换原有的数据
     function pushRowData(rowData){
         if(saveItemArr.length>0){
@@ -144,7 +182,6 @@
                 saveItemArr.push(rowData);
             }else{
                 saveItemArr.splice(arrIndex,1,rowData);
-
             }
         }else{
             saveItemArr.push(rowData);
@@ -153,7 +190,6 @@
     //判断元素是否存在于数组中
     function filterItem(arr,item){
         for( var i=0;i<arr.length;i++){
-            console.log((arr[i].id),(item.id));
             if((arr[i].id)===(item.id)){
                 arrIndex = i;
                 return ;
@@ -162,35 +198,19 @@
             }
         }
     }
-    //单击某行进行编辑
-    function a(index,id) {
-        if (editIndex != index) {
-            if (endEditing(id)) {
-                $(id).datagrid('selectRow', index)
-                    .datagrid('beginEdit', index);
-                editIndex = index;
-            } else {
-                $(id).datagrid('selectRow', editIndex);
-            }
+    $(".btn-save").click(function(){
+        var len = $(".tableItemBox").length;
+        for(var i = 0; i<len;i++){
+            console.log( $("#td"+i).parents('.datagrid-view').siblings(".datagrid-toolbar").find(".l-btn-text").text());
+            $("#td"+i).parents('.datagrid-view').siblings(".datagrid-toolbar").find(".l-btn-text").trigger('click');
         }
-    }
-    //编辑状态
-    function endEditing(gridTableId) {
-        if (editIndex == undefined) { return true }
-        if ($(gridTableId).datagrid('validateRow', editIndex)) {
-            /* var ed = $(gridTableId).datagrid('getEditor', { index: editIndex, field: 'productid' });*/
-            $(gridTableId).datagrid('endEdit', editIndex);
-            editIndex = undefined;
-            return true;
-        } else {
-            return false;
-        }
-    }
+        console.log(saveItemArr);
 
-
+    })
 
     $(function(){
         $('#td0,#td1').datagrid('hideColumn','id');
+
     });
 
 

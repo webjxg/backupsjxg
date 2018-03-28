@@ -67,6 +67,7 @@ function ajaxToServer(url, data, callbackFun){//传送的参数是josnString时
 }
 function ajaxToServer1(url, data, callbackFun){  //传送的参数是string时
     var layerIndex = layer.load(2);
+    url = url.toLowerCase().indexOf("http://") == 0? url : (urlPrefix + url);
     $.ajax({
         headers:{
             Accept: "application/json; charset=utf-8",
@@ -74,7 +75,7 @@ function ajaxToServer1(url, data, callbackFun){  //传送的参数是string时
             Authorization: "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlzcyI6ImFkbWluIiwiYXVkIjoiQWRtaW4gSldUIE9ubGluZSJ9.0fEB0SHaUfc10ARex-BCLPmOxbbr5vgcMfvivQKY1Rc"
         },
         type: "post",
-        url: urlPrefix + url,
+        url: url,
         data: data,
         dataType: 'json',
         contentType:'application/x-www-form-urlencoded',

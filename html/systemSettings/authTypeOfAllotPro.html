@@ -156,7 +156,6 @@
                     nameParam:$("#authProName").val(),
                     codeParam:$("#authPro").val(),
                     id:id
-
             };
             Page.init("/api/sys/SysAuthClass/authPropertyPage",data,true,function(tableData){
                 renderTableData(tableData);
