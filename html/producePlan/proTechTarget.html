@@ -6,15 +6,31 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <link rel="stylesheet" href="../../plugins/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="../../plugins/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../../plugins/easyui/themes/default/easyui.css">
+    <link rel="stylesheet" href="../../plugins/easyui/themes/default/datagrid.css">
     <!--引入样式-->
     <link rel="stylesheet" href="../../css/common.css">
-    <link rel="stylesheet" href="../../css/user.css">
+    <link rel="stylesheet" href="../../css/customDatagrid.css">
+    <link rel="stylesheet" href="../../css/aps.css">
 </head>
 <body>
 <div class="wrapper wrapper-content">
     <div class="ibox">
         <div class="ibox-content">
-            全厂主要生产技术指标计划
+            <div class="clearfix btn-box">
+                <button class="btn btn-info btn-change pull-right" type="button">修改</button>
+                <button class="btn btn-success  btn-save pull-right" type="button">保存</button>
+            </div>
+            <div class="commercePurCon proTargetPlanItem">
+                <div class="tableItemBox">
+                    <table id="td0" class="tableItem"  title="产量计划">
+                    </table>
+                </div>
+                <div class="tableItemBox">
+                    <table id="td1" class="tableItem"  title="班计划">
+                    </table>
+                </div>
+            </div>
         </div>
     </div>
 </div>
@@ -25,5 +41,108 @@
 <script src="../../plugins/bootstrap/js/bootstrap.min.js"></script>
 <!--附属插件-->
 <script src="../../plugins/layer/layer.js"></script>
+<script src="../../plugins/easyui/js/jquery.easyui.min.js"></script>
+
+<script src="../../js/dataGridCustom.js"></script>
+<script>
+    var swcgzbjhArr=[],swcgzbjhArr1=[];
+    $.ajax({
+        dataType : "json",
+        url:"../../json/test-dic.json",
+        success:function(result){
+            var  swcgzbjh = result.swcgzbjh,
+                swcgzbjh11 = result.swcgzbjh11;
+            for ( var item in swcgzbjh) {
+                var arrItem = {
+                    'id':swcgzbjh[item].id,
+                    'itemName': swcgzbjh[item].itemName,
+                    'itemUnit': swcgzbjh[item].itemUnit,
+                    'yearTarget': swcgzbjh[item].yearTarget,
+                    'monthPlan': swcgzbjh[item].monthPlan,
+                    'remark': swcgzbjh[item].remark
+                };
+                swcgzbjhArr.push(arrItem);
+            }
+            for ( var item1 in swcgzbjh11) {
+                var arrItem = {
+                    'id':swcgzbjh11[item].id,
+                    'itemName': swcgzbjh11[item].itemName,
+                    'itemName1': swcgzbjh11[item].itemName1,
+                    'itemUnit': swcgzbjh11[item].itemUnit,
+                    'yearTarget': swcgzbjh11[item].yearTarget,
+                    'monthPlan': swcgzbjh11[item].monthPlan,
+                    'remark': swcgzbjh11[item].remark
+                };
+                swcgzbjhArr1.push(arrItem);
+            }
+            $('#td0').datagrid('loadData',swcgzbjh);
+            $('#td1').datagrid('loadData',swcgzbjh11);
+        }
+
+    });
+    $('#td0').datagrid({
+        fitColumns:true,
+        rownumbers:true,
+        collapsible:true,
+        singleSelect: true,
+        onClickRow: function(index){
+            dataGridObj.startEditing(index,"#td0")
+        },
+        columns:[[
+            {field:'id',title:'id', hideColumn:'id'},
+            {field:'itemName',title:'项目',width:100,align:'center'},
+            {field:'itemUnit',title:'单位',width:100,align:'center'},
+            {field:'yearTarget',title:'全年基本目标',width:100,align:'center',editor:{type:'numberbox',options:{precision:1}}},
+            {field:'monthPlan',title:'月计划',editor:'numberbox',width:100,align:'center'},
+            {field:'remark',title:'备注',editor:'text',width:150,align:'center'},
+        ]],
+        onAfterEdit: function (rowIndex, rowData, changes) {
+            dataGridObj.pushRowData(rowData);
+            dataGridObj.setEditIndex("#td0",undefined);
+        },
+        toolbar: [{
+            text: '保存11', iconCls: 'icon-save', handler: function () {
+                //保存时结束当前编辑的行，自动触发onAfterEdit事件如果要与后台交互可将数据通过Ajax提交后台
+                console.log("td0:"+dataGridObj.editIndex);
+                $('#td0').datagrid('endEdit', dataGridObj.getEditIndex("#td0"));
+            }
+        }]
+    });
+    $('#td1').datagrid({
+        fitColumns:true,
+        rownumbers:true,
+        collapsible:true,
+        singleSelect: true,
+        onClickRow: function(index){
+            dataGridObj.startEditing(index,"#td1")
+        },
+        columns:[[
+            {field:'id',title:'id', hideColumn:'id'},
+            {field:'itemName',title:'项目',width:100,align:'center'},
+            {field:'itemName1',title:'项目1',width:100,align:'center'},
+            {field:'itemUnit',title:'单位',width:100,align:'center'},
+            {field:'yearTarget',title:'全年基本目标',width:100,align:'center',editor:{type:'numberbox',options:{precision:1}}},
+            {field:'monthPlan',title:'月计划',editor:'numberbox',width:100,align:'center'},
+            {field:'remark',title:'备注',editor:'text',width:150,align:'center'},
+        ]],
+        onAfterEdit: function (rowIndex, rowData, changes) {
+            dataGridObj.pushRowData(rowData);
+            dataGridObj.setEditIndex("#td1",undefined);
+        },
+        toolbar:[{
+            text: '保存', iconCls: 'icon-save', handler: function () {
+                //保存时结束当前编辑的行，自动触发onAfterEdit事件如果要与后台交互可将数据通过Ajax提交后台
+                $('#td1').datagrid('endEdit', dataGridObj.getEditIndex("#td1"));
+            }
+        }]
+    });
+
+
+    $(function(){
+        $('#td0,#td1').datagrid('hideColumn','id');
+
+    });
+
+</script>
 </body>
 </html>

@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>生产计划创建</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="stylesheet" href="../../plugins/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../plugins/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../../plugins/datetimepicker/css/bootstrap-datetimepicker.min.css">
+    <!--引入样式-->
+    <link rel="stylesheet" href="../../css/common.css">
+    <link rel="stylesheet" href="../../css/customDatagrid.css">
+    <link rel="stylesheet" href="../../css/aps.css">
+    <style>
+        .fa-map-marker{color:#1ab394;font-size:16px;margin-right:8px;display: inline-block;vertical-align: middle;}
+        .apsType-linkage{font-size:0;display: inline-block;vertical-align: middle;}
+        .apsType-linkage li{font-size:14px;display: inline-block;vertical-align: middle;margin-right:10px;}
+        .apsType-linkage li select,.apsType-linkage li #datetimepicker{width:100px;border:1px solid #e5e6e7;background: #fff;padding:6px 12px;height:34px;border-radius: 6px;}
+        .hide{display: none;}
+        .show{display: block;}
+    </style>
+</head>
+<body>
+    <div class="wrapper wrapper-content">
+        <div class="ibox">
+            <div class="ibox-content">
+                <div class="clearfix">
+                    <div class="apsType-box pull-left">
+                        <i class="fa fa-map-marker" aria-hidden="true"></i>
+                        <ul class="apsType-linkage">
+                            <li class="year">
+                                类型：
+                                <select name="" id="apsType">
+                                    <option value="year">年计划</option>
+                                    <option value="month">月计划</option>
+                                    <option value="day">日计划</option>
+                                </select>
+                            </li>
+                            <li class="hide month">
+                                计划周期（年月）：
+                                <input type="text" value=" " id="datetimepicker" >
+                            </li>
+                            <li class="hide week">
+                                计划周期（周）：
+                                <select name="" id="apsWeek">
+                                    <option value="all">全部</option>
+                                    <option value="first">第一周</option>
+                                    <option value="second">第二周</option>
+                                    <option value="third">第三周</option>
+                                    <option value="fourth">第四周</option>
+                                </select>
+                            </li>
+                            <li >
+                                状态：
+                                <select name="" id="apsState">
+                                    <option value="issue">已发布</option>
+                                    <option value="unissue">未发布</option>
+                                </select>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="commercePurCon proTargetPlanItem">
+                    <div class="tableItemBox">
+                        <table id="td0" class="tableItem"  title="产量计划">
+                        </table>
+                    </div>
+                    <div class="tableItemBox">
+                        <table id="td1" class="tableItem"  title="班计划">
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<!--核心插件-->
+<script src="../../js/jquery-2.2.4.min.js"></script>
+<script src="../../plugins/bootstrap/js/bootstrap.min.js"></script>
+<!--附属插件-->
+<script src="../../plugins/datetimepicker/js/bootstrap-datetimepicker.js"></script>
+<script>
+    $("#datetimepicker").datetimepicker({
+        format: 'yyyy',
+        language:  'zh-CN',  //日期
+        weekStart: 1,
+        startView: 4, //这里就设置了默认视图为年视图
+        minView: 4,
+        forceParse: 0,
+    });
+    $("#apsType").change(function(){
+        var $val = $(this).val();
+        typeLink($val);
+    });
+    function typeLink(val){
+        console.log(val);
+        if(val == "year"){
+            return;
+        }else if(val == "day"){
+            $('.week').removeClass('hide');
+        }
+        $('.month').removeClass('hide');
+    }
+</script>
+</html>

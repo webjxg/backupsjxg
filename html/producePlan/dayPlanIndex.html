@@ -11,7 +11,7 @@
     <link rel="stylesheet" href="../../plugins/easyui/themes/default/datagrid.css">
     <!--引入样式-->
     <link rel="stylesheet" href="../../css/common.css">
-    <link rel="stylesheet" href="../../css/dictionaries.css">
+    <!--<link rel="stylesheet" href="../../css/dictionaries.css">-->
     <style>
         .row {
             margin-bottom: 20px;
@@ -102,12 +102,12 @@
         <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
             <!--产量-->
             <div class="panel panel-default">
-                <div class="panel-heading" role="tablist" aria-multiselectable="true" style="font-size: 20px;background-color: #23a6c8;">
+                <div class="panel-heading" onclick="$('div.datagrid:eq(0)').toggle(500)" role="tablist" aria-multiselectable="true" style="font-size: 20px;background-color: #23a6c8;">
                     <span>产量计划</span>
                     <div id="tb" style="height:auto;float: left;">
                         <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-save',plain:true" >暂存</a>
                     </div>
-                    <a style="font-size: 25px; float: right;"  onclick="$('#yieldTable').toggle()" >
+                    <a style="font-size: 25px; float: right;"   >
                         <i class="fa fa-navicon"></i>
                     </a>
                 </div>
@@ -117,12 +117,12 @@
             </div>
             <!--班计划-->
             <div class="panel panel-default">
-                <div class="panel-heading" style="font-size: 20px;background-color: #23b6e8;">
+                <div class="panel-heading" style="font-size: 20px;background-color: #23b6e8;" onclick="$('div.datagrid:eq(1)').toggle(500)">
                     <span>班计划</span>
                     <div id="tb1" style="height:auto;float: left; ">
                         <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-save',plain:true" >暂存</a>
                     </div>
-                    <a style="font-size: 25px; float: right;" onclick="$('#shiftlan').toggle()">
+                    <a style="font-size: 25px; float: right;" >
                         <i class="fa fa-navicon"></i>
                     </a>
                 </div>
@@ -133,12 +133,12 @@
             </div>
             <!--质量指标计划-->
             <div class="panel panel-default">
-                <div class="panel-heading" style="font-size: 20px;background-color: #23c6a8;">
+                <div class="panel-heading" style="font-size: 20px;background-color: #23c6a8;" onclick="$('div.datagrid:eq(2)').toggle(500)">
                     <span>质量指标计划</span>
                     <div id="tb2" style="height:auto;float: left;">
                         <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-save',plain:true" >暂存</a>
                     </div>
-                    <a  style="font-size: 25px; float: right;" onclick="$('#qualityIndex').toggle()">
+                    <a  style="font-size: 25px; float: right;" >
                         <i class="fa fa-navicon"></i>
                     </a>
                 </div>
@@ -148,12 +148,12 @@
             </div>
             <!--技术指标计划-->
             <div class="panel panel-default">
-                <div class="panel-heading" style="font-size: 20px;background-color: #23d6a8;">
+                <div class="panel-heading" style="font-size: 20px;background-color: #23d6a8;" onclick="$('div.datagrid:eq(3)').toggle(500)">
                     <span>技术指标计划</span>
                     <div id="tb3" style="height:auto;float: left;">
                         <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-save',plain:true" >暂存</a>
                     </div>
-                    <a style="font-size: 25px; float: right;" onclick="$('#technicalIndex').toggle()">
+                    <a style="font-size: 25px; float: right;" >
                         <i class="fa fa-navicon"></i>
                     </a>
                 </div>
@@ -163,12 +163,12 @@
             </div>
             <!--各项单耗指标计划-->
             <div class="panel panel-default">
-                <div class="panel-heading" style="font-size: 20px;background-color: #23e6a8;">
+                <div class="panel-heading" style="font-size: 20px;background-color: #23e6a8;" onclick="$('div.datagrid:eq(4)').toggle(500)">
                     <span>各项单耗指标计划</span>
                     <div id="tb4" style="height:auto;float: left;">
                         <a href="javascript:void(0)" class="easyui-linkbutton" data-options="iconCls:'icon-save',plain:true" >暂存</a>
                     </div>
-                    <a style="font-size: 25px; float: right;" onclick="$('#consumption').toggle()">
+                    <a style="font-size: 25px; float: right;" >
                         <i class="fa fa-navicon"></i>
                     </a>
                 </div>

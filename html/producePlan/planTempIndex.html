@@ -24,16 +24,16 @@
         <div class="col-sm-12">
             <div class="pull-left">
                 <button class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="left"
-                        onclick="openEditDialog('新增用户','./producePlan/planTempCheckView.html','800px','300px')" title="添加"><i class="fa fa-plus"></i> 添加
+                        onclick="openEditDialog('新增模板','./producePlan/planTempCheckView.html','800px','300px')" title="添加"><i class="fa fa-plus"></i> 添加
                 </button>
 
                 <button class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="left"
-                        onclick="edit('修改用户信息','./producePlan/planTempCheckView.html','800px','300px','#treeTable')" title="修改"><i class="fa fa-file-text-o"></i> 修改
+                        onclick="edit('修改模板信息','./producePlan/planTempCheckView.html','800px','300px','#treeTable')" title="修改"><i class="fa fa-file-text-o"></i> 修改
                 </button>
-                <button class="btn btn-white btn-sm" onclick="deleteAll('确认要删除该用户吗？','/api/sys/SysOperation/delete/','#treeTable')"  data-toggle="tooltip" data-placement="top"><i
+                <button class="btn btn-white btn-sm" onclick="deleteIt('确认要删除该模板吗？','/api/aps/Template/delete/')"  data-toggle="tooltip" data-placement="top"><i
                         class="fa fa-trash-o"> 删除</i></button>
                 <button class="btn btn-white btn-sm " id="refresh-btn" data-toggle="tooltip" data-placement="left"
-                        onclick="Page.reload()" title="刷新"><i class="glyphicon glyphicon-repeat"></i> 刷新
+                        onclick="window.location.reload()" title="刷新"><i class="glyphicon glyphicon-repeat"></i> 刷新
                 </button>
             </div>
         </div>
@@ -51,7 +51,7 @@
             <th>操作</th>
         </tr>
         </thead>
-        <tbody>
+        <tbody id="tBodyId">
 
         </tbody>
     </table>
@@ -91,7 +91,7 @@
 <!--页面依赖js-->
 <script src="../../js/public.js"></script>
 <script src="../../js/jeeplus.js"></script>
-<script src="../../js/customForm.js"></script>
+<script src="../../js/customForm-aps.js"></script>
 <script src="../../js/page.js"></script>
 
 
@@ -99,9 +99,8 @@
 <script>
     $(function () {
         window.pageLoad = function () {
-            Page.init("/api/aps/Template/list",{}, true, function (tableData) {
-                console.log(tableData);
-                dataout(tableData);
+            ajaxToServer("/api/aps/Template/list",{},function (data) {
+                dataout(data.rows);
                 $('.btn-preserve').click(function () {
                     var id = $(this).parents("tr").find('.i-checks').attr('id');
                     openDialog('项目信息维护', './producePlan/planTempPreserve.html?id=' + id, '800px', '500px')
@@ -140,7 +139,7 @@
                     }
                 },
                 {"data": "name", "width": "auto"},
-                {"data": "code", "width": "auto"},
+                {"data": "type", "width": "auto"},
                 {"data": "createDate", "width": "auto"},
                 {
                     "data": null, "width": "auto",
@@ -163,6 +162,31 @@
         });
         RenderiCheckTblBody();
         $('tbody tr').attr('class','alignCenter')
+    }
+//    删除
+    function deleteIt(mess,url){
+        var str="";
+        $("#tBodyId td input.i-checks:checkbox").each(function(){
+            if(true == $(this).is(':checked')){
+                str+=$(this).attr("id");
+            }
+        });
+        console.log(str);
+        top.layer.confirm(mess, {icon: 3, title:'系统提示'},function(index){
+            ajaxToServer1(url+str,{},function(result){
+                console.log(url+str,result);
+                if(result.success == true){
+                    var frameActive = top.getActiveTab().attr("name");
+                    var obj = $('#refresh-btn', top.window.frames[frameActive].document);
+                    if(obj.length == 0){
+                        obj = $('#refresh-btn', top.window.frames[frameActive].document);
+                    }
+                    obj.trigger('click');
+                }
+            });
+            top.layer.close(index);
+        });
+        return false;
     }
 
 

@@ -17,7 +17,7 @@
 
 <body>
 <i id="btnMenu" class="icon-th-list" style="cursor:pointer;float:right;margin:10px;"></i>
-<form id="inputForm" class="form-horizontal" action="/api/sys/SysOperation/ajaxSave" method="post">
+<form id="inputForm" class="form-horizontal" action="/api/aps/Template/saveTemplate" method="post">
     <input id="id" name="id" type="hidden" />
     <table class="table table-bordered  table-condensed dataTables-example dataTable no-footer">
         <tbody>
@@ -28,9 +28,9 @@
 
                 <label id="proName-error" class="error" for="proName" style="display:none"></label>
             </td>
-            <td class="width-15 active" ><label class="pull-right">模版编码:</label></td>
+            <td class="width-15 active" ><label class="pull-right">模版类型:</label></td>
             <td class="width-35">
-                <input id="opeCode" name="code" type="text" value="" data-msg-required="" class="form-control valid" style="" aria-required="true" aria-invalid="false">
+                <input id="opeCode" name="type" type="text" value="" data-msg-required="" class="form-control valid" style="" aria-required="true" aria-invalid="false">
                 <label id="proCode-error" class="error" for="proCode" style="display:none"></label>
             </td>
         </tr>
@@ -81,7 +81,7 @@
 <script src="../../plugins/webUpLoader/webuploader.js"></script>
 <!--自定义文件-->
 <script src="../../js/jeeplus.js"></script>
-<script src="../../js/customForm.js"></script>
+<script src="../../js/customForm-aps.js"></script>
 <script src="../../js/public.js"></script>
 <script src="../../js/page.js"></script>
 
@@ -97,11 +97,11 @@
         $('#id').val(id);
         if (id) {
             /*此处后端接口  id为弹出窗口自带的id 通过浏览器方法传参得到*/
-            var url = "/api/sys/SysOperation/view/" + id;
+            var url = "/api/aps/Template/form/" + id;
             ajaxToServer(url, {}, function (result) {
                 console.log(result)//查看请求回来的参数
                 if (result.success) {
-                    renderData(result.SysOperation, $('#inputForm'));
+                    renderData(result.template, $('#inputForm'));
                 } else {
                     layer.msg(result.message);
                 }

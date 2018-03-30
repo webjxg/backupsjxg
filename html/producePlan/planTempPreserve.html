@@ -24,14 +24,20 @@
                 <div class="col-sm-12">
                     <div class="pull-left">
                         <button class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="left" title="添加" id="btn-add">
-                            <i class="fa fa-plus"></i> 添加下级项目
+                            <i class="fa fa-plus"></i> 添加指标标题
+                        </button>
+                        <button class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="left" title="添加" id="btn-addSon">
+                            <i class="fa fa-plus"></i> 添加下级指标
                         </button>
 
                         <button class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="left" title="删除" id="btn-del">
-                            <i class="fa fa-trash-o"></i> 删除此项目
+                            <i class="fa fa-trash-o"></i> 删除指标
                         </button>
                         <button class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="top" title="编辑" id="btn-update">
-                            <i class="fa fa-file-text-o"></i> 编辑此项目
+                            <i class="fa fa-file-text-o"></i> 编辑指标
+                        </button>
+                        <button class="btn btn-white btn-sm " style="visibility: hidden" id="refresh-btn" data-toggle="tooltip" data-placement="left"
+                                onclick="window.location.reload()" title="刷新"><i class="glyphicon glyphicon-repeat"></i> 刷新
                         </button>
                     </div>
                 </div>
@@ -65,19 +71,21 @@
 <!--公共样式-->
 <script src="../../js/common.js"></script>
 <script src="../../js/jeeplus.js"></script>
-<script src="../../js/customForm.js"></script>
+<script src="../../js/customForm-aps.js"></script>
 <script src="../../js/page.js"></script>
 <script src="../../js/public.js"></script>
 
 <script>
     $(document).ready(function(){
-        page='orgInner.html';
+        page ='orgInner.html';
+        var id = getQueryString('id');
         $('#officeContent').attr('src','./orgInner.html');
-        ajaxToServer('/api/sys/SysOrg/leftTree','json',zTree);
+        ajaxToServer('/api/aps/Template/formTemplateDetail/'+id,'json',zTree);
     });
 
     function zTree(da) {
-        var data=da.rows;
+        console.log(da);
+        var data=da.treeArr;
         var zTreeObj;
         // zTree 的参数配置，深入使用请参考 API 文档（setting 配置详解）
         var setting = {
@@ -95,7 +103,7 @@
             callback: {
                 onClick: function (e, treeId, node){
                     if(node.id){
-                        rendersun(node.id)
+                        rendersun(node.id,node.name)
                     }
                 }
             }
@@ -107,38 +115,109 @@
         var treeObj =$.fn.zTree.init($("#tree"), setting, zNodes);
     }
 
-        function rendersun(data) {
-//            $('#officeContent')[0].contentWindow.updatason(data);
-            $('#btn-add').click(function () {
-                openEditDialog('项目信息维护', './producePlan/planTempPreserveCV.html?Pid=' + data, '800px', '500px')
-            });
-            $('#btn-update').click(function () {
-                openEditDialog('项目信息修改', './producePlan/planTempPreserveCV.html?id=' + data, '800px', '500px')
-            });
-            $('#btn-del').click(function () {
-                deleteIt('确定要删除该项目吗', '/api/sys/SysOrg/del/', data)
-            });
-
-        }
-    function deleteIt(mess,url,id){
-        //var ids= eleP.find('input.i-checks').attr('id')
-        var data = {id:id} || {};
-        top.layer.confirm(mess, {icon: 3, title:'系统提示'},function(index){
-            ajaxToServer1(url,data,function(result){
-                console.log(url,data,result)
-                if(result.success == true){
-                    var frameActive = top.getActiveTab().attr("name");
-                    var obj = $('#search-btn', top.window.frames[frameActive].document);
-                    if(obj.length == 0){
-                        obj = $('#refresh-btn', top.window.frames[frameActive].document);
-                    }
-                    obj.trigger('click');
-                }
-            });
-            top.layer.close(index);
-        });
-        return false;
+    str="";
+    parentName="";
+    function rendersun(data,nodename) {
+        str=data;
+        parentName=nodename;
     }
+    var tempId = getQueryString('id');
+    //str为ztree的id
+
+    $('#btn-add').click(function () {
+        EditDialogTemp('添加根指标', './producePlan/planTempPreserveCV.html?id=0&tempId='+ tempId , '800px', '700px');
+    });
+
+    $('#btn-addSon').click(function () {
+        if(str===''){
+            layer.msg('请单选父级指标后再试');
+        }else{
+            EditDialogTemp('添加下级指标', './producePlan/planTempPreserveCV.html?id='+ str+'&tempId='+tempId, '800px', '500px');
+        }
+    });
+
+    $('#btn-update').click(function () {
+        if(str===''){
+            layer.msg('请单选指标后再试');
+        }else{
+            EditDialogTemp(parentName, './producePlan/planTempPreserveCVEdit.html?id=' + str, '800px', '500px')
+        }
+
+    });
+
+    $('#btn-del').click(function () {
+        if(str===''){
+            layer.msg('请单选指标后再试');
+        }else{
+            deleteItOne('确定要删除该指标吗', '/api/aps/Template/delTempDetail/'+str)
+        }
+    });
+
+
+    //        删除
+    function deleteItOne(mess,url){
+    top.layer.confirm(mess, {icon: 3, title:'系统提示'},function(index){
+        ajaxToServer1(url,{},function(result){
+            console.log(url,result)
+            if(result.success == true){
+//                var frameActive = top.getActiveTab().attr("name");
+//                var obj = $('#search-btn', top.window.frames[frameActive].document);
+//                if(obj.length == 0){
+//                    obj = $('#refresh-btn', top.window.frames[frameActive].document);
+//                }
+//                obj.trigger('click');
+                window.location.reload();
+            }
+        });
+        top.layer.close(index);
+    });
+    return false;
+}
+
+
+
+
+
+
+    function EditDialogTemp(title,url,width,height,innerCallbackFn){
+        var clickFlag = true;
+        if(navigator.userAgent.match(/(iPhone|iPod|Android|ios)/i)){//如果是移动端，就使用自适应大小弹窗
+            width='auto';
+            height='auto';
+        }else{//如果是PC端，根据用户设置的width和height显示。
+        }
+        var ind =  top.layer.open({
+            type: 2,
+            area: [width, height],
+            title: title,
+            maxmin: true, //开启最大化最小化按钮
+            content: url ,
+            btn: ['保存', '取消'],
+            yes: function(index, layero){
+                var body = top.layer.getChildFrame('body', index);  //获取子iframe
+                var iframeWin = layero.find('iframe')[0]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
+                if(clickFlag){
+                    if(!innerCallbackFn){
+                        iframeWin.contentWindow.clicksubmit(iframeWin.contentWindow,body,index);
+                    }else{
+                        innerCallbackFn.call(iframeWin.contentWindow,iframeWin.contentWindow,body,index);
+                    }
+                    clickFlag = false;
+                    setTimeout(function(){
+                        clickFlag = true;
+                    },3000);
+                }
+                top.layer.close(index);
+                window.location.reload();
+
+            },
+            cancel: function(index){
+            }
+        });
+
+    }
+
+
 
 </script>
 </body>

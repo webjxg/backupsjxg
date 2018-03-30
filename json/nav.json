@@ -125,6 +125,20 @@
           "menu_sub":"1",
           "href":"../html/producePlan/proTargetPlan.html",
           "children":[]
+        },
+        {
+          "iconName":"",
+          "name":"生产计划创建",
+          "menu_sub":"1",
+          "href":"../html/producePlan/apsCreate.html",
+          "children":[]
+        },
+        {
+          "iconName":"",
+          "name":"月计划",
+          "menu_sub":"1",
+          "href":"../html/producePlan/monthPlan.html",
+          "children":[]
         }
       ]
     },
