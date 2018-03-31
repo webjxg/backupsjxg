@@ -107,6 +107,13 @@
         },
         {
           "iconName":"",
+          "name":"年生产计划",
+          "menu_sub":"1",
+          "href":"../html/producePlan/yearPlayIndex.html",
+          "children":[]
+        },
+        {
+          "iconName":"",
           "name":"计算公式",
           "menu_sub":"1",
           "href":"../html/producePlan/computeFormula.html",

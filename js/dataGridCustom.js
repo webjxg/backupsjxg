@@ -60,6 +60,21 @@ var dataGridObj = {
                 dataGridObj.arrIndex = -1;
             }
         }
+    },
+    mergeCells:function(data,id,field){  //合并单元格功能
+        var mark=1;
+        for (var i=1; i <data.rows.length; i++) {
+            if (data.rows[i][field] == data.rows[i-1][field]) {
+                mark += 1;
+                $(id).datagrid('mergeCells',{
+                    index: i+1-mark,
+                    field: field,
+                    rowspan:mark
+                });
+            }else{
+                mark=1;
+            }
+        }
     }
 
 }

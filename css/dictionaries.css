@@ -1,12 +1,19 @@
-.btn {
-  border-radius: 3px; }
 
+.btn {
+  border-radius: 3px;
+}
+.juese{
+  position: absolute;
+  right: 127px;
+  top: 105px;
+  z-index: 99;
+}
 #menu-content {
   font-family: "open sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 13px;
   color: #676a6c;
   background-color: #f3f3f4;
-  padding: 0 20px 20px 20px; }
+  padding: -1px 20px 20px 4px; }
 
 .ibox-title {
   background-color: #ffffff;
@@ -16,20 +23,23 @@
   /*border-width: 4px 0 0;*/
   color: inherit;
   margin-bottom: 0;
-  padding: 7px 15px 7px;
+  padding: 7px 15px 0;
   min-height: 48px; }
   .ibox-title > h5 {
     display: inline-block;
     font-size: 14px;
-    margin: 0 0 7px;
+    margin:20px 8px 8px;
     padding: 0;
     text-overflow: ellipsis;
     float: left;
-    font-weight: 800; }
+    font-weight: 800;
+    color: black;
+  }
   .ibox-title > .ibox-tools {
     display: inline-block;
     float: right;
-    margin-top: 0;
+    margin-top: 20px;
+    margin-right: 8px;
     position: relative;
     padding: 0; }
     .ibox-title > .ibox-tools a {
@@ -41,7 +51,7 @@
   clear: both;
   background-color: #ffffff;
   color: inherit;
-  padding: 15px 20px 20px 20px;
+  padding:10px 20px 8px 20px;
   /*border-color: #e7eaec;*/
   /*border:1px solid #e7eaec;*/
   /*border-image: none;*/
@@ -50,29 +60,38 @@
 }
     .company {
         margin-bottom: 10px;
+      margin-top: 10px;
     }
         .form-group .company .input-group {
-            margin-right: 10px;
-
+            margin-right: 40px;
+            margin-left: 0px;
         }
         .form-group .company #companyName, .form-group .company #officeName {
-            width: 155px;
-            margin-right: 0; }
+            width: 164px;
+            margin-right: 0;
+
+        }
 
         .form-group span {
             display: inline-block;
-            width: 100px; }
-
+            width: auto;
+        }
+  .ibox{
+    background-color:white;
+  }
   .ibox-content .btn-white {
     color: inherit;
     background: white;
-    border: 1px solid #e7eaec; }
+    border: 1px solid #e7eaec;
+  }
   .ibox-content .row{
-      margin-bottom: 10px;
+      /*margin-bottom: 5px;*/
   }
   .ibox-content .btn-white:hover, .ibox-content .btn-white:focus, .ibox-content .btn-white:active, .ibox-content .btn-white.active, .ibox-content .open .dropdown-toggle.btn-white {
-    color: inherit;
-    border: 1px solid #d2d2d2; }
+    color: #80afa7;
+    /*border: 1px solid #d2d2d2;*/
+    box-shadow: 0 3px 1px 1px gainsboro;
+    }
   .ibox-content .pull-right > .btn-primary {
     border-color: #1ab394;
     border-radius: 50px;
@@ -84,34 +103,42 @@
     color: #fff; }
   .ibox-content .table.dataTable {
     clear: both;
-    margin-top: 6px !important;
+    border: 1px solid gainsboro;
+    margin-top: 10px !important;
     margin-bottom: 6px !important;
     max-width: none !important; }
-  .ibox-content table.dataTable thead th {
-    padding: 8px;
+    table.dataTable thead{
+    /*background: linear-gradient(to right,  #3d8786,#3bb6bb);*/
+    background-color: #1AB394;
+    color: white;
+  }
+.ibox-content table.dataTable thead th {
+    padding:8px;
     border-bottom: 0;
-    background-color: #F5F5F6;
-    vertical-align: middle; }
+    vertical-align: middle;
+    /*border: none;*/
+  }
   .ibox-content table.dataTable tbody td {
-    padding: 8px;
+    padding: 6px 5px 7px 5px;
     vertical-align: middle; }
-
+.ibox-content table.dataTable tbody td a{
+  margin: 2px;
+}
 table.treetable{
     border:none;
     font-size: 13px;
 }
-table.treetable thead{
-    font-size: 13px;
-}
-
 .table-bordered > tbody > tr > td, .table-bordered > tbody > tr > th, .table-bordered > tfoot > tr > td, .table-bordered > tfoot > tr > th, .table-bordered > thead > tr > td, .table-bordered > thead > tr > th {
-  border-right: 1px solid #e8eaf0;
-  border-top: 1px solid #E8EAF0;
+  /*border-right: 1px solid #e8eaf0;*/
+  /*border-top: 1px solid #E8EAF0;*/
   border-left: 0;
-  border-bottom: 0; }
+  border-bottom: 0;
+  /*border: none;*/
+  }
 
 tbody > tr:last-child > td {
-  border-bottom: 1px solid #E8EAF0; }
+  /*border-bottom: 1px solid #E8EAF0;*/
+}
 
 .ibox-content label {
   margin: 8px;
@@ -158,29 +185,75 @@ tbody > tr:last-child > td {
   .paginate_button.current :hover {
     color: black; }
 
-.table.treetable, .table.dataTable {
-  border: 1px solid #ddd; }
+/*.table.treetable, .table.dataTable {*/
+  /*border: 1px solid #ddd; }*/
   .table.treetable thead tr th, .table.dataTable thead tr th {
     border-color: #ddd;
     border-left: 0;
     font-size: 13px;
     text-align: center;
-    font-weight: bold; }
+    font-weight: bold;
+    }
 
 .form-control, .single-line {
   background-color: #FFFFFF;
+  /*margin: 0 20px;*/
   background-image: none;
-  border: 1px solid #e5e6e7;
+  /*border: 1px solid #e5e6e7;*/
+  text-align: center;
   border-radius: 1px;
   color: inherit;
   display: block;
   padding: 6px 12px;
   transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
-  width: 100%;
+  width: 80%;
   font-size: 14px;
-    box-shadow: none; }
+  box-shadow: none; }
 .form-control:focus, .single-line:focus {
     border-color: #1ab394 !important; }
+#left {
+  min-height: 400px;
+  margin: 20px 0 0 20px;
+  padding-left: 0;
+  box-sizing: border-box; }
+#left > a {
+  cursor: pointer;
+  margin: 7px 12px 20px 20px;
+}
+
+.ztree {
+  overflow: auto;
+  margin: 0;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  padding: 10px 0 10px 10px; }
+
+#right {
+  padding: 15px;
+  min-height: 650px;
+  overflow: auto;
+}
+
+.webuploader-pick {
+  background: none;
+  padding: 0;
+  overflow: inherit;
+}
+#nameImagePreview{
+  display: block;
+  height: auto;
+  width: auto;
+  position: relative;
+  margin:0 0 10px 0;
+}
+#nameImagePreview img{
+  height: 100px;
+  width: 100px;
+
+}
+a#filePicker{
+  margin-left: 25px;
+}
 
 
 /*# sourceMappingURL=dictionaries.css.map */

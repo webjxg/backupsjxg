@@ -6,24 +6,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <link rel="stylesheet" href="../../plugins/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="../../plugins/font-awesome/css/font-awesome.min.css">
-    <link rel="stylesheet" href="../../plugins/datetimepicker/css/bootstrap-datetimepicker.min.css">
+    <link rel="stylesheet" href="../../plugins/datetimepicker/css/bootstrap-datetimepicker.css">
     <!--引入样式-->
+    <link rel="stylesheet" href="../../plugins/layer/theme/default/layer.css">
+    <link rel="stylesheet" href="../../plugins/icheck/skins/square/green.css">
+    <link rel="stylesheet" href="../../plugins/datatables/css/mydatatable.css">
     <link rel="stylesheet" href="../../css/common.css">
     <link rel="stylesheet" href="../../css/customDatagrid.css">
+    <link rel="stylesheet" href="../../css/dictionaries-bak.css">
     <link rel="stylesheet" href="../../css/aps.css">
-    <style>
-        .fa-map-marker{color:#1ab394;font-size:16px;margin-right:8px;display: inline-block;vertical-align: middle;}
-        .apsType-linkage{font-size:0;display: inline-block;vertical-align: middle;}
-        .apsType-linkage li{font-size:14px;display: inline-block;vertical-align: middle;margin-right:10px;}
-        .apsType-linkage li select,.apsType-linkage li #datetimepicker{width:100px;border:1px solid #e5e6e7;background: #fff;padding:6px 12px;height:34px;border-radius: 6px;}
-        .hide{display: none;}
-        .show{display: block;}
-    </style>
 </head>
 <body>
-    <div class="wrapper wrapper-content">
+    <div class="wrapper wrapper-content bg-gray">
         <div class="ibox">
             <div class="ibox-content">
+                <div>
+                    <h1 class="titName">生产计划创建</h1>
+                </div>
                 <div class="clearfix">
                     <div class="apsType-box pull-left">
                         <i class="fa fa-map-marker" aria-hidden="true"></i>
@@ -31,6 +30,7 @@
                             <li class="year">
                                 类型：
                                 <select name="" id="apsType">
+                                    <option value="all">全部</option>
                                     <option value="year">年计划</option>
                                     <option value="month">月计划</option>
                                     <option value="day">日计划</option>
@@ -38,7 +38,7 @@
                             </li>
                             <li class="hide month">
                                 计划周期（年月）：
-                                <input type="text" value=" " id="datetimepicker" >
+                                <input type="text" value=" " id="datetimepicker" class="time-input form-control">
                             </li>
                             <li class="hide week">
                                 计划周期（周）：
@@ -55,20 +55,64 @@
                                 <select name="" id="apsState">
                                     <option value="issue">已发布</option>
                                     <option value="unissue">未发布</option>
+                                    <option value="review">审核中</option>
+                                    <option value="unissue">待审核</option>
+                                    <option value="unissue">暂存</option>
                                 </select>
                             </li>
                         </ul>
                     </div>
-                </div>
-
-                <div class="commercePurCon proTargetPlanItem">
-                    <div class="tableItemBox">
-                        <table id="td0" class="tableItem"  title="产量计划">
-                        </table>
+                    <div class="pull-right btn-box mgb-20">
+                        <button class="btn btn-search  bg-ffa82d" id="btn-search" type="button">查询</button>
+                        <button class="btn btn-add " id="btn-add" type="button">新增</button>
+                        <button class="btn btn-delete"  id = "delete-btn" data-toggle="tooltip" onclick="deleteAll('确认要删除该字典吗？','/api/sys/SysDict/delete/','#treeTable')"
+                                data-placement="top"><i class="fa fa-trash-o"> 删除</i>
+                        </button>
                     </div>
-                    <div class="tableItemBox">
-                        <table id="td1" class="tableItem"  title="班计划">
-                        </table>
+                </div>
+                <div class="aps-create-list">
+                    <!--表格区-->
+
+                    <table id="treeTable" class="table table-striped table-bordered table-hover table-condensed dataTables-example dataTable tree_table">
+                        <!--表头-->
+                        <thead>
+                        <tr role="row">
+                            <th width="45px"><input type="checkbox" class="i-checks" style="position: absolute; opacity: 0;"></th>
+                            <th>计划名称</th>
+                            <th>计划类型</th>
+                            <th>计划周期</th>
+                            <th>创建人</th>
+                            <th>创建时间</th>
+                            <th>操作</th>
+                            <th>状态</th>
+                        </tr>
+                        </thead>
+                        <!--表内容-->
+                        <tbody id="datainner">
+
+                        </tbody>
+
+                    </table>
+                    <div class="clearfix pagination-box">
+                        <div class="pagination-detail pull-left">
+                            <div class="page-info pull-left"></div>
+                            <div class="page-list pull-left">
+                                <span>每页显示</span>
+                                <select name="" id="pag-sel">
+                                    <option value="">请选择</option>
+                                    <option value="5">5</option>
+                                    <option value="10" selected>10</option>
+                                    <option value="20">20</option>
+                                    <option value="25">25</option>
+                                    <option value="30">30</option>
+                                    <option value="40">40</option>
+                                    <option value="50">50</option>
+                                    <option value="-1">all</option>
+                                </select>
+                                条记录
+                            </div>
+                        </div>
+                        <div id="pagination" class="pagination-roll pull-right"></div>
                     </div>
                 </div>
             </div>
@@ -79,28 +123,139 @@
 <script src="../../js/jquery-2.2.4.min.js"></script>
 <script src="../../plugins/bootstrap/js/bootstrap.min.js"></script>
 <!--附属插件-->
+<script src="../../plugins/layer/layer.js"></script>
+<script src="../../plugins/icheck/icheck.min.js"></script>
 <script src="../../plugins/datetimepicker/js/bootstrap-datetimepicker.js"></script>
+<script src="../../plugins/datatables/js/jquery.dataTables.min.js"></script>
+<script src="../../plugins/datatables/js/dataTables.bootstrap.js"></script>
+<script src="../../plugins/bootStrapPager/js/extendPagination.js"></script>
+<!--自定义文件-->
+<script src="../../js/customForm-aps.js"></script>
+<script src="../../js/page.js"></script>
 <script>
-    $("#datetimepicker").datetimepicker({
-        format: 'yyyy',
-        language:  'zh-CN',  //日期
-        weekStart: 1,
-        startView: 4, //这里就设置了默认视图为年视图
-        minView: 4,
-        forceParse: 0,
+    $(function(){
+        /*Page.init("/api/sys/SysDict/page",{}),true,function(tableData){
+            renderTableData(tableData)
+        });*/
+
+        $.ajax({
+            //dataType : "json",
+            url:"../../json/testCom.json",
+            success:function(result){
+                var data = result.rows;
+                renderTableData(data);
+            },
+            error:function(){
+                alert("错误！");
+            }
+        });
+
+
     });
+
+    var typeVal,getYear,getMonth;
+    var date = new Date();
     $("#apsType").change(function(){
-        var $val = $(this).val();
-        typeLink($val);
-    });
-    function typeLink(val){
-        console.log(val);
-        if(val == "year"){
-            return;
-        }else if(val == "day"){
+        typeVal = $(this).val();
+        console.log(typeVal);
+        if(typeVal == "year" || typeVal == "month"){
+            $('.month').removeClass('hide');
+            getYear = date.getFullYear();
+            $("#datetimepicker").datetimepicker({
+                format:"yyyy",
+                language:'cn',
+                weekStart: 1,
+                pickTime: false,
+                autoclose:true,
+                startView: 4, //年视图
+                minView: "4",
+                forceParse: 0,
+            });
+            $("#datetimepicker").val(getYear);
+        }else if(typeVal == "day"){
+            $('.month').removeClass('hide');
             $('.week').removeClass('hide');
+            getYear = date.getFullYear();
+            getMonth = date.getMonth()+1;
+            getMonth = (getMonth<10?"0"+getMonth:getMonth);
+            console.log(getMonth);
+            $("#datetimepicker").datetimepicker({
+                format:"yyyy-mm",
+                language:'cn',
+                weekStart: 1,
+                pickTime: false,
+                autoclose:true,
+                startView: 3, //月视图
+                minView: "3",
+                forceParse: 0,
+            });
+            $("#datetimepicker").val(getYear+"-"+getMonth);
         }
-        $('.month').removeClass('hide');
+    });
+
+    $("#btn-search").click(function(){
+       var $val = $("#apsType").val();
+       if($val == "all"){
+           layerAlert("类型选项只可选择年/月/日计划!",3);
+       }
+    });
+    //  datatables使用ajax
+    function renderTableData(tableData){
+        $('#treeTable').dataTable({
+            "bPaginate": false,
+            "bAutoWidth": false,
+            "bDestroy":true,
+            "paging": false,
+            "bProcessing": true,
+            "searching": false, //禁用aa原生搜索
+            "info": false,  //底部文字
+            "order": [],
+            "aoColumnDefs": [
+                {"bSortable": false, "aTargets": [0, 2,4,6]}
+            ],
+            "oLanguage": lang,
+            "data":tableData,
+            //定义列 宽度 以及在json中的列名
+            "aoColumns": [
+                {"data": null,"sWidth":"45px;","defaultContent":"",'sClass':"alignCenter",
+                    "render":function(data, type, row, meta) {
+                        return data = "<input type='checkbox' id=" + row.id + " class='i-checks'>"
+                    }
+                },
+                {"data": "name",'sClass':" alignCenter autoWidth"},
+                {"data": "type",'sClass':"alignCenter autoWidth"},
+                {"data": "day",'sClass':"alignCenter"},
+                {"data": "username",'sClass':"alignCenter"},
+                {"data": "time",'sClass':"alignCenter"},
+                {
+                    "data": null, "orderable": false, "defaultContent": "",'sClass':" alignCenter autoWidth",
+                    "render": function (data, type, row, meta) {
+                        console.log(row.state);
+                        if(row.state == "草稿"){
+                            return "<a class='btn btn-schedu bg-62b5e9' ><i class='fa fa-file-text'></i>排产</a >" +
+                                "<a class='btn btn-commit bg-ffa82d' ><i class='fa fa-upload'></i>提交</a >" +
+                                "<a class='btn  btn-delete bg-f75c5c' ><i class='fa fa-trash' ></i>删除</a >";
+                        }else{
+                            return "";
+                        }
+
+                    }
+                },
+                {
+                    "data": null, "orderable": false, "defaultContent": "",'sClass':" alignCenter autoWidth",
+                    "render": function (data, type, row, meta) {
+                        var classSet ="";
+                        if(row.state == "审批中"){
+                            console.log(11);
+                            classSet = 'col-1ab394';
+                        }
+                        return "<a class='btn "+classSet+"'><i class='fa fa-edit'></i>"+row.state+"</a >";
+                    }
+                },
+                ]
+        });
+        RenderiCheckTblBody();
+
     }
 </script>
 </html>

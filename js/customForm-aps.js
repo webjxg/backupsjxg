@@ -1,14 +1,9 @@
-/**
- * Created by mac on 18/1/24.
- */
 
 /*$(function(){
- RenderiCheckTblBody();
- });*/
+    RenderiCheckTblBody();
+});*/
 
 var urlPrefix = "http://114.115.165.184:8083/aps-api";
-
-
 //点击查询按钮
 $("#search-btn").click(function(){
     pageLoad();
@@ -53,6 +48,7 @@ function ajaxToServer(url, data, callbackFun){//传送的参数是josnString时
         dataType: 'json',
         contentType:'application/json',
         success: function(result){
+            console.log(result);
             layer.close(layerIndex);
             if(callbackFun){
                 callbackFun(result);
@@ -66,6 +62,7 @@ function ajaxToServer(url, data, callbackFun){//传送的参数是josnString时
 }
 function ajaxToServer1(url, data, callbackFun){  //传送的参数是string时
     var layerIndex = layer.load(2);
+    url = url.toLowerCase().indexOf("http://") == 0? url : (urlPrefix + url);
     $.ajax({
         headers:{
             Accept: "application/json; charset=utf-8",
@@ -73,7 +70,7 @@ function ajaxToServer1(url, data, callbackFun){  //传送的参数是string时
             Authorization: "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlzcyI6ImFkbWluIiwiYXVkIjoiQWRtaW4gSldUIE9ubGluZSJ9.0fEB0SHaUfc10ARex-BCLPmOxbbr5vgcMfvivQKY1Rc"
         },
         type: "post",
-        url: urlPrefix + url,
+        url: url,
         data: data,
         dataType: 'json',
         contentType:'application/x-www-form-urlencoded',
@@ -228,6 +225,7 @@ function allotCancelItem(tableId,opflag,ifAllot,dataPrama,url){
 
 //打开对话框(查看、选择上级菜单)
 function openDialog(title,url,width,height,innerCallbackFn){
+
     if(navigator.userAgent.match(/(iPhone|iPod|Android|ios)/i)){//如果是移动端，就使用自适应大小弹窗
         width='auto';
         height='auto';
@@ -255,9 +253,9 @@ function openDialog(title,url,width,height,innerCallbackFn){
                 innerCallbackFn(iframeWin.contentWindow,body,index);
             }
         },
-            layConfig. cancel = function(index){
+        layConfig. cancel = function(index){
 
-            }
+        }
     }else{
         layConfig.yes = function (index) {
             top.layer.close(index);
@@ -317,7 +315,6 @@ function doSubmit(){
             console.log(formdata);
             layer.msg('正在提交，请稍等...',{time: 1000});
             ajaxToServer(url,formdata,function(result){
-                console.log(url,formdata,result);
                 if(result.success == true){
                     layer.msg('已成功提交',{time: 1000});
                     setTimeout(function(){
@@ -351,7 +348,7 @@ function doSubmit(){
     }).form;
     if(validateFlag){
         formObj.submit();
-        // $(".layui-layer-btn0").css({"background":'red'});
+       // $(".layui-layer-btn0").css({"background":'red'});
     }
 }
 
@@ -403,12 +400,8 @@ function edit(title,url,width,height,tableId){
 function deleteItem(mess,url,id){
     //var ids= eleP.find('input.i-checks').attr('id')
     var data = {ids:id} || {};
-
-    console.log(url,data);
-
     top.layer.confirm(mess, {icon: 3, title:'系统提示'},function(index){
         ajaxToServer1(url,data,function(result){
-            console.log(url,data,result)
             if(result.success == true){
                 var frameActive = top.getActiveTab().attr("name");
                 var obj = $('#search-btn', top.window.frames[frameActive].document);
@@ -448,7 +441,6 @@ function deleteAll(tit,url,tableId){
         };
         top.layer.confirm(tit, {icon: 3, title:'系统提示'}, function(index){
             ajaxToServer1(url,data,function (result) {
-                console.log(url,data,result);
                 if(result.success == true){
                     var frameActive = top.getActiveTab().attr("name");
                     var obj = $('#search-btn', top.window.frames[frameActive].document);
@@ -484,12 +476,13 @@ function deleteCheck(result){
 
 function renderData(data,renderID){
     var arr = getJsonData(data);
+   // console.log(arr)
     for(var i = 0;i<arr.length;i++){
         var obj = arr[i];
         var eleId = obj.name.replaceAll("\\.","\\.");
         var eleDom =  $("#"+eleId);
         if(eleDom.length == 0){
-            eleDom =  $(renderID).find("*[name = '"+obj.name+"']");
+             eleDom =  $(renderID).find("*[name = '"+obj.name+"']");
         }
         if(eleDom.length>0){
             var eleType = eleDom[0].type;
@@ -511,7 +504,7 @@ function renderData(data,renderID){
 }
 
 
-function setCheckboxValue(name,values){
+ function setCheckboxValue(name,values){
     var objs=document.getElementsByName(name);
     if(objs == null || values=='') return;
     var len=objs.length;
@@ -601,6 +594,3 @@ $("#iconclear").click(function(){
 
 
 
-/**
- * Created by jiaxuguang on 2018/3/27.
- */

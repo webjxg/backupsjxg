@@ -17,9 +17,9 @@
 <div class="wrapper">
     <div class="ibox">
         <div class="ibox-content">
-            <div class="clearfix btn-box">
-                <button class="btn btn-info btn-change pull-right" type="button">修改</button>
-                <button class="btn btn-success  btn-save pull-right" type="button">保存</button>
+            <div class="clearfix btn-box mgb-20">
+                <button class="btn btn-info btn-change " type="button">修改</button>
+                <button class="btn btn-success  btn-save " type="button">保存</button>
             </div>
             <div class="commercePurCon proTargetPlanItem">
                 <div class="tableItemBox">
@@ -50,7 +50,7 @@
     var swcgzbjhArr=[],swcgzbjhArr1=[];
     $.ajax({
         dataType : "json",
-        url:"../../json/test-dic.json",
+        url:"/api/aps/DayPlan/list",
         success:function(result){
             var  swcgzbjh = result.swcgzbjh,
                 data = result.cpcl;

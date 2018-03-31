@@ -1,6 +1,143 @@
-.btn-box {
+/*向下推margin*/
+mgb-10 {
+  margin-bottom: 10px; }
+mgb-15 {
+  margin-bottom: 15px; }
+
+mgb-20 {
   margin-bottom: 20px; }
-  .btn-box .btn {
-    margin: 0 8px; }
+/*隐藏显示*/
+.hide {
+  display: none; }
+
+.show {
+  display: block; }
+/*按钮*/
+.btn {
+  margin: 0 5px;
+  width: 74px;
+  height: 30px;
+  padding: 0 5px;
+  background: #f2f2f2;
+  color: #000;
+  border: 1px solid #cacaca;
+  line-height: 28px; }
+  .btn .fa {
+    margin: 0 3px; }
+
+.btn:hover {
+  color: #fff; }
+/*背景色配送*/
+.bg-ffa82d {
+  background: #ffa82d;
+  border-color: #ffa82d;
+  color: #fff; }
+
+.bg-62b5e9 {
+  background: #62b5e9;
+  border-color: #62b5e9;
+  color: #fff; }
+
+.bg-f75c5c {
+  background: #f75c5c;
+  border-color: #f75c5c;
+  color: #fff; }
+
+.col-1ab394 {
+  color: #1ab394; }
+
+.fa-map-marker {
+  color: #1ab394;
+  font-size: 16px;
+  margin-right: 8px;
+  display: inline-block;
+  vertical-align: middle; }
+
+.apsType-linkage {
+  font-size: 0;
+  display: inline-block;
+  vertical-align: middle; }
+  .apsType-linkage li {
+    font-size: 14px;
+    display: inline-block;
+    vertical-align: middle;
+    margin-right: 10px; }
+    .apsType-linkage li select, .apsType-linkage li #datetimepicker {
+      width: 120px;
+      border: 1px solid #e5e6e7;
+      background: #fff;
+      padding: 6px 12px;
+      height: 34px;
+      border-radius: 6px; }
+
+.apsType-linkage .form-control {
+  display: inline-block;
+  vertical-align: middle; }
+
+.titName {
+  padding-left: 10px;
+  position: relative;
+  font-size: 16px;
+  height: 30px;
+  line-height: 30px;
+  margin-bottom: 15px; }
+  .titName:before {
+    content: "";
+    width: 4px;
+    height: 20px;
+    background: #1ab394;
+    position: absolute;
+    top: 50%;
+    left: 0;
+    margin-top: -10px; }
+
+
+
+
+/*jxg*/
+.ibox-content {
+  clear: both;
+  background-color: #ffffff;
+  color: inherit;
+  padding: 15px 20px 20px 20px;
+}
+/*表格头部*/
+.alignCenter,.alignCenter th{
+  height: 48px;
+  text-align: center;
+  font-weight: 400;
+  font-size:16px;
+}
+table.dataTable thead th, table.dataTable tfoot th{
+  color: white;
+  font-weight: 400;
+}
+
+/*按钮区*/
+.pull-right button{
+  float: right;
+}
+/*勾选框*/
+
+
+/*表格线条*/
+.table-bordered>tbody>tr>td, .table-bordered>tbody>tr>th,.table-bordered>thead>tr>td, .table-bordered>thead>tr>th{
+  border:none;
+}
+.table-bordered>tbody>tr>td, .table-bordered>tbody>tr>th{
+  border:1px solid #eee
+}
+/*layer弹出框样式*/
+.myskin .layui-layer-title{
+  background-color: #1ab394;
+  color: #ffffff;
+}
+
+
+
+
+
+
+
 
 /*# sourceMappingURL=aps.css.map */
