@@ -63,6 +63,7 @@ function ajaxToServer(url, data, callbackFun){//传送的参数是josnString时
 function ajaxToServer1(url, data, callbackFun){  //传送的参数是string时
     var layerIndex = layer.load(2);
     url = url.toLowerCase().indexOf("http://") == 0? url : (urlPrefix + url);
+    console.log(url);
     $.ajax({
         headers:{
             Accept: "application/json; charset=utf-8",

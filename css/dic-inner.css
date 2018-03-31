@@ -19,7 +19,9 @@ form table.dataTable.no-footer {
   border-bottom: none; }
 
 .table-bordered > tbody > tr > td {
-  border: 1px solid #e7e7e7; }
+  border: 1px solid #e7e7e7;
+  vertical-align: middle;
+}
 
 td .form-control, .single-line {
   background-color: #FFFFFF;

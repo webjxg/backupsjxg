@@ -13,7 +13,7 @@
     <link rel="stylesheet" href="../../plugins/datatables/css/mydatatable.css">
     <link rel="stylesheet" href="../../css/common.css">
     <link rel="stylesheet" href="../../css/customDatagrid.css">
-    <link rel="stylesheet" href="../../css/dictionaries-bak.css">
+    <link rel="stylesheet" href="../../css/dictionaries.css">
     <link rel="stylesheet" href="../../css/aps.css">
 </head>
 <body>
@@ -24,7 +24,7 @@
                     <h1 class="titName">生产计划创建</h1>
                 </div>
                 <div class="clearfix">
-                    <div class="apsType-box pull-left">
+                    <div class="apsType-box pull-left mgb-10">
                         <i class="fa fa-map-marker" aria-hidden="true"></i>
                         <ul class="apsType-linkage">
                             <li class="year">
@@ -43,11 +43,11 @@
                             <li class="hide week">
                                 计划周期（周）：
                                 <select name="" id="apsWeek">
-                                    <option value="all">全部</option>
-                                    <option value="first">第一周</option>
-                                    <option value="second">第二周</option>
-                                    <option value="third">第三周</option>
-                                    <option value="fourth">第四周</option>
+                                    <option value="">全部</option>
+                                    <option value="1">第一周</option>
+                                    <option value="2">第二周</option>
+                                    <option value="3">第三周</option>
+                                    <option value="4">第四周</option>
                                 </select>
                             </li>
                             <li >
@@ -63,10 +63,10 @@
                         </ul>
                     </div>
                     <div class="pull-right btn-box mgb-20">
-                        <button class="btn btn-search  bg-ffa82d" id="btn-search" type="button">查询</button>
-                        <button class="btn btn-add " id="btn-add" type="button">新增</button>
-                        <button class="btn btn-delete"  id = "delete-btn" data-toggle="tooltip" onclick="deleteAll('确认要删除该字典吗？','/api/sys/SysDict/delete/','#treeTable')"
-                                data-placement="top"><i class="fa fa-trash-o"> 删除</i>
+                        <button class="btn btn-search  bg-ffa82d" id="btn-search" type="button"><i class="fa fa-plus"></i>查询</button>
+                        <button class="btn btn-add " id="btn-add" type="button"><i class="fa fa-search"></i>新增</button>
+                        <button class="btn btn-delete bg-f75c5c"  id = "delete-btn" data-toggle="tooltip" onclick="deleteAll('确认要删除该字典吗？','/api/sys/SysDict/delete/','#treeTable')"
+                                data-placement="top"><i class="fa fa-trash"> 删除</i>
                         </button>
                     </div>
                 </div>
@@ -134,31 +134,50 @@
 <script src="../../js/page.js"></script>
 <script>
     $(function(){
-        /*Page.init("/api/sys/SysDict/page",{}),true,function(tableData){
-            renderTableData(tableData)
-        });*/
-
-        $.ajax({
-            //dataType : "json",
-            url:"../../json/testCom.json",
-            success:function(result){
-                var data = result.rows;
-                renderTableData(data);
-            },
-            error:function(){
-                alert("错误！");
-            }
-        });
-
-
+        window.pageLoad = function (){
+            var data = {
+                type: $("#type option:selected").val(),
+                description: $('#description').val()
+            };
+            Page.init("/api/sys/SysDict/page",data,true,function(tableData){
+                renderTableData(tableData);
+                $('.btn-check').click(function(){
+                    var id = $(this).parents("tr").find('.i-checks').attr('id');
+                    openDialog('查看字典','html/systemSettings/dictionaryInner.html?id='+id,'800px','500px')
+                });
+                $('.btn-change').click(function(){
+                    var id = $(this).parents("tr").find('.i-checks').attr('id');
+                    openEditDialog('修改字典','systemSettings/dictionaryInner.html?id='+id,'800px','500px');
+                });
+                $('.btn-delete').click(function(){
+                    var id = $(this).parents("tr").find('.i-checks').attr('id');
+                    deleteItem('确定要删除该字典吗','/api/sys/SysDict/delete',id)
+                });
+                $('.btn-add').click(function(){
+                    var id = $(this).parents("tr").find('.i-checks').attr('id');
+                    openEditDialog('添加键值','systemSettings/dictionaryInner.html?id='+id+'&api=addKey','800px','500px')
+                });
+                //点击重置按钮
+                $('#reset-btn').click(function(){
+                    $("#type option:first").prop("selected", 'selected');
+                    $("#description").val("");
+                    Page.reset(["type","description"]);
+                });
+            });
+        };
+        pageLoad();
+        windowclick();
+        createSelect("/api/sys/SysDict/allType","#type");  //动态添加Select的option
     });
+
 
     var typeVal,getYear,getMonth;
     var date = new Date();
     $("#apsType").change(function(){
         typeVal = $(this).val();
-        console.log(typeVal);
+        $('.week').addClass('hide');
         if(typeVal == "year" || typeVal == "month"){
+            $('.week').addClass('hide');
             $('.month').removeClass('hide');
             getYear = date.getFullYear();
             $("#datetimepicker").datetimepicker({
@@ -178,7 +197,6 @@
             getYear = date.getFullYear();
             getMonth = date.getMonth()+1;
             getMonth = (getMonth<10?"0"+getMonth:getMonth);
-            console.log(getMonth);
             $("#datetimepicker").datetimepicker({
                 format:"yyyy-mm",
                 language:'cn',
@@ -192,13 +210,48 @@
             $("#datetimepicker").val(getYear+"-"+getMonth);
         }
     });
+    function getTypeVal(){
+        var $val = $("#apsType").val(),
+            $week = $("#apsWeek").val(),
+            $weekP = $("#apsWeek").parent('li'),
+            param ;
+            if((!$weekP.hasClass("hide")) && $week == ""){
+                layerAlert('计划周期（周)不能为"全部"!',3);
+            }else{
+                param = $val == "all"?0:($val == "year"?1:($val == "month")?2:3);
+                console.log(param);
+                linkUrl(param);
+
+            }
+
+    }
+    function linkUrl(url){
+        var apsType = $("#datetimepicker").val().split("-"),
+            $year = apsType[0],
+            $month = apsType[1],
+            $week = $('#apsWeek').val();
+        switch(url){
+            case 1:
+                location.href = "./yearPlanIndex.html?year="+$year;
+                break;
+            case 2:
+                location.href = "./monthPlan.html?year="+$year;
+                break;
+            case 3:
+                location.href = "./dayPlanIndex.html?year="+$year+"&month="+$month+"&week="+$week;
+                break;
+            default:
+                layerAlert('类型不能为"全部"!',3);
+        }
+    }
 
     $("#btn-search").click(function(){
-       var $val = $("#apsType").val();
-       if($val == "all"){
-           layerAlert("类型选项只可选择年/月/日计划!",3);
-       }
+
     });
+    $("#btn-add").click(function(){
+        getTypeVal();
+    });
+
     //  datatables使用ajax
     function renderTableData(tableData){
         $('#treeTable').dataTable({
@@ -230,6 +283,20 @@
                 {
                     "data": null, "orderable": false, "defaultContent": "",'sClass':" alignCenter autoWidth",
                     "render": function (data, type, row, meta) {
+                        var classSet ="";
+                        if(row.state == "审批中" || row.state == "已发布"){
+                            classSet = 'col-1ab394';
+                        }else if(row.state == "待审批" || row.state == "已上报"){
+                            classSet = 'col-ffa82d';
+                        }else{
+                            classSet = 'col-999';
+                        }
+                        return "<a href='javascript:;' class='"+classSet+"'>"+row.state+"</a >";
+                    }
+                },
+                {
+                    "data": null, "orderable": false, "defaultContent": "",'sClass':" alignCenter autoWidth",
+                    "render": function (data, type, row, meta) {
                         console.log(row.state);
                         if(row.state == "草稿"){
                             return "<a class='btn btn-schedu bg-62b5e9' ><i class='fa fa-file-text'></i>排产</a >" +
@@ -240,19 +307,9 @@
                         }
 
                     }
-                },
-                {
-                    "data": null, "orderable": false, "defaultContent": "",'sClass':" alignCenter autoWidth",
-                    "render": function (data, type, row, meta) {
-                        var classSet ="";
-                        if(row.state == "审批中"){
-                            console.log(11);
-                            classSet = 'col-1ab394';
-                        }
-                        return "<a class='btn "+classSet+"'><i class='fa fa-edit'></i>"+row.state+"</a >";
-                    }
-                },
-                ]
+                }
+
+            ]
         });
         RenderiCheckTblBody();
 

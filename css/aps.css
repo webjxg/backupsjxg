@@ -1,12 +1,29 @@
+<<<<<<< .mine
+.mgb-10 {
+  margin-bottom: 10px; }
+
+=======
 /*向下推margin*/
 mgb-10 {
   margin-bottom: 10px; }
+>>>>>>> .r298
+<<<<<<< .mine
+.mgb-15 {
+  margin-bottom: 15px; }
+=======
 mgb-15 {
   margin-bottom: 15px; }
+>>>>>>> .r298
 
+<<<<<<< .mine
+.mgb-20 {
+  margin-bottom: 20px; }
+
+=======
 mgb-20 {
   margin-bottom: 20px; }
 /*隐藏显示*/
+>>>>>>> .r298
 .hide {
   display: none; }
 
@@ -22,29 +39,51 @@ mgb-20 {
   color: #000;
   border: 1px solid #cacaca;
   line-height: 28px; }
+  .btn:hover {
+    color: #fff; }
   .btn .fa {
     margin: 0 3px; }
 
-.btn:hover {
-  color: #fff; }
+.table .btn {
+  width: auto;
+  height: auto;
+  padding: 2px 5px;
+  border: none;
+  line-height: 22px;
+  font-size: 12px; }
 /*背景色配送*/
 .bg-ffa82d {
   background: #ffa82d;
   border-color: #ffa82d;
   color: #fff; }
+  .bg-ffa82d:hover {
+    background: #ff9000;
+    border-color: #ff9000; }
 
 .bg-62b5e9 {
   background: #62b5e9;
   border-color: #62b5e9;
   color: #fff; }
+  .bg-62b5e9:hover {
+    background: #1897e7;
+    border-color: #1897e7; }
 
 .bg-f75c5c {
   background: #f75c5c;
   border-color: #f75c5c;
   color: #fff; }
+  .bg-f75c5c:hover {
+    background: #f52f2f;
+    border-color: #f52f2f; }
 
 .col-1ab394 {
   color: #1ab394; }
+
+.col-ffa82d {
+  color: #ffa82d; }
+
+.col-999 {
+  color: #999; }
 
 .fa-map-marker {
   color: #1ab394;
@@ -79,8 +118,7 @@ mgb-20 {
   position: relative;
   font-size: 16px;
   height: 30px;
-  line-height: 30px;
-  margin-bottom: 15px; }
+  line-height: 30px; }
   .titName:before {
     content: "";
     width: 4px;

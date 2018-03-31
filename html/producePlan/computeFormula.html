@@ -8,78 +8,44 @@
     <link rel="stylesheet" href="../../plugins/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="../../plugins/font-awesome/css/font-awesome.min.css">
 
+
     <!--自定义样式-->
+    <link rel="stylesheet" href="../../plugins/datatables/css/mydatatable.css">
     <link rel="stylesheet" href="../../css/common.css">
     <link rel="stylesheet" href="../../css/dictionaries.css">
+    <link rel="stylesheet" href="../../css/aps.css">
+
 </head>
 <body>
-
 <div class="wrapper wrapper-content bg-gray">
     <div class="ibox">
         <!--头部-->
         <div class="ibox-title">
-            <h5>计算公式配置</h5>
-            <div class="ibox-tools">
-                <a class="collapse-link">
-                    <i class="fa fa-chevron-up"></i>
-                </a>
-                <a class="dropdown-toggle" data-toggle="dropdown" href="form_basic.html#" aria-expanded="false">
-                    <i class="fa fa-wrench"></i>
-                </a>
-                <ul class="dropdown-menu dropdown-user">
-                    <li><a href="#">选项1</a>
-                    </li>
-                    <li><a href="#">选项2</a>
-                    </li>
-                </ul>
-                <a class="close-link">
-                    <i class="fa fa-times"></i>
-                </a>
-            </div>
+            <h1 class="titName">计算公式配置</h1>
         </div>
         <!--内容区-->
         <div class="ibox-content">
-            <div class="row">
-                <table id="treeTable" class="table table-striped table-bordered table-hover table-condensed dataTables-example dataTable tree_table">
-                    <!--表头-->
-                    <thead>
-                    <tr role="row">
-                        <th>参数名称</th>
-                        <th>计算公式</th>
-                        <th>操作</th>
-                    </tr>
-                    </thead>
-                    <!--表内容-->
-                    <tbody id="datainner">
-                        <tr class="text-center">
-                            <td class="paramName" id="asdfs111">运行率字段</td>
-                            <td>
-                                <div>
-                                    <span>（日历天数字段 * 24 - 非正常降产折合停 - 检修时间 ）/日历天数字段h/24</span>
-                                    <input type="hidden" value="（日历天数字段 * 24 - 非正常降产折合停 - 检修时间 ）/日历天数字段h/24">
-                                </div>
-                            </td>
-                            <td>
-                                <a class='btn btn-info btn-xs btn-change' ><i class='fa fa-search-plus'></i>修改</a >
-                            </td>
-                        </tr>
-                        <tr class="text-center">
-                            <td class="paramName" id="asdfs222">运行率字段11</td>
-                            <td>
-                                <div>
-                                    <span>（日历天数字段 * 24 - 非正常降产折合停 - 检修时间 ）/日历天数字段h/24</span>
-                                    <input type="hidden" value="（日历天数字段 * 24 - 非正常降产折合停 - 检修时间 ）/日历天数字段h/24">
-                                </div>
-                            </td>
-                            <td>
-                                <a class='btn btn-info btn-xs btn-change' ><i class='fa fa-search-plus'></i>修改</a >
-                            </td>
-                        </tr>
-                    </tbody>
-
-                </table>
+            <div class="pull-right btn-box mgb-20">
+                <button class="btn btn-add " id="btn-add" type="button" onclick="openEditDialog('新增计算公式配置','producePlan/comForInner.html?id='+id,'800px','500px')"><i class="fa fa-search"></i>新增</button>
+                </button>
             </div>
+            <table id="treeTable" class="table table-striped table-bordered table-hover table-condensed dataTables-example dataTable">
+                <!--表头-->
+                <thead>
+                <tr role="row">
+                    <th>id</th>
+                    <th>参数名称</th>
+                    <th>计算公式</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <!--表内容-->
+                <tbody id="datainner">
+                </tbody>
+            </table>
+
         </div>
+
     </div>
 </div>
 
@@ -97,18 +63,59 @@
 <!--自定义文件-->
 <script src="../../js/common.js"></script>
 <script src="../../js/jeeplus.js"></script>
-<script src="../../js/customForm.js"></script>
+<script src="../../js/customForm-aps.js"></script>
 <script src="../../js/page.js"></script>
 <script>
     $(function(){
-
         $('.btn-change').click(function(){
             var id = $(this).parents("tr").find('.paramName').attr('id'),
                 paramName = $(this).parents("tr").find('.paramName').text();
             openEditDialog("计算公式："+paramName,'producePlan/comForInner.html?id='+id,'800px','500px');
         });
-
     });
+    ajaxToServer1("/api/aps/Formula/list",{},function(result){
+        if(result.success){
+            renderTableData(result.rows);
+            $('.btn-change').click(function(){
+                var id = $(this).parents("tr").find("td:first");
+                console.log(id.html());
+                openDialog('修改计算公式配置','producePlan/comForInner.html?id='+id,'800px','500px')
+            });
+        }else{
+            layer.msg(result.message);
+        }
+    });
+    //  datatables使用ajax
+    function renderTableData(tableData){
+        $('#treeTable').dataTable({
+            "ordering":false,
+            "bPaginate": false,
+            "bAutoWidth": false,
+            "bDestroy":true,
+            "paging": false,
+            "bProcessing": true,
+            "searching": false, //禁用aa原生搜索
+            "info": false,  //底部文字
+            "oLanguage": lang,
+            "data":tableData,
+            //定义列 宽度 以及在json中的列名
+            "aoColumns": [
+                {"data": "id",'sClass':"hide"},
+                {"data": "itemName",'sClass':" alignCenter autoWidth"},
+                {"data": "computeFormula",'sClass':"alignCenter autoWidth"},
+                {
+                    "data": null, "orderable": false, "defaultContent": "",'sClass':" alignCenter autoWidth",
+                    "render": function (data, type, row, meta) {
+                        return "<a class='btn btn-change bg-62b5e9'><i class='fa fa-edit'></i>修改</a >" +
+                        "<a class='btn  btn-delete bg-f75c5c' ><i class='fa fa-trash' ></i>删除</a >";
+
+                    }
+                }
+
+            ]
+        });
+
+    }
 </script>
 </body>
 </html>

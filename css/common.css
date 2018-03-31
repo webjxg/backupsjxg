@@ -195,7 +195,6 @@ table.treeTable {
   color: inherit;
   margin-bottom: 0;
   padding: 7px 15px 7px;
-  min-height: 48px;
 }
 
 .ibox-title > h5 {
@@ -226,7 +225,7 @@ table.treeTable {
   clear: both;
   background-color: #ffffff;
   color: inherit;
-  padding: 15px 20px 20px 20px;
+  padding: 15px;
   /*border-color: #e7eaec;*/
   /*border:1px solid #e7eaec;*/
   /*border-image: none;*/

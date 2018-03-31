@@ -12,7 +12,7 @@
     <!--引入样式-->
     <link rel="stylesheet" href="../../css/common.css">
     <link rel="stylesheet" href="../../css/aps.css">
-    <!--<link rel="stylesheet" href="../../css/dictionaries.css">-->
+    <link rel="stylesheet" href="../../css/customDatagrid.css">
     <style>
         .row {
             margin-bottom: 20px;
@@ -73,63 +73,28 @@
 </head>
 <body>
 <div class="wrapper wrapper-content ibox-content">
+    <div>
+        <h1 class="titName">日计划</h1>
+    </div>
     <!--按钮条-->
     <div class="row">
         <div class="col-sm-12">
             <div class="pull-left">
                 <input type="text" hidden="hidden" name="id" id="id">
-                <span>请选择部门:</span>
-                <select name="dept" id="dept">
-                <option value="采购部">采购部</option>
-                <option value="产品部">产品部</option>
-                <option value="环卫部">环卫部</option>
-                <option value="运行部">运行部</option>
-                </select>
-                <!--下拉菜单选择时间-->
-                <span>日期:</span>
-                <select name="dpYear" id="dpYear">
-                    <option value="2018">2018</option>
-                    <option value="2019">2019</option>
-                    <option value="2020">2020</option>
-                    <option value="2021">2021</option>
-                    <option value="2022">2022</option>
-                    <option value="2023">2023</option>
-                    <option value="2024">2024</option>
-                    <option value="2025">2025</option>
-                    <option value="2026">2026</option>
-                </select>
-                <span>年</span>
-                <select name="dpMonth" id="dpMonth">
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
-                    <option value="4">4</option>
-                    <option value="5">5</option>
-                    <option value="6">6</option>
-                    <option value="7">7</option>
-                    <option value="8">8</option>
-                    <option value="9">9</option>
-                    <option value="10">10</option>
-                    <option value="11">11</option>
-                    <option value="12">12</option>
-                </select>
-                <span>月</span>
-                <span>第</span>
-                <select name="dpWeek" id="dpWeek">
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
-                    <option value="4">4</option>
-                    <option value="5">5</option>
-                </select>
-                <span>周生产计划</span>
+                <input type="text" name="dept" id="dept" hidden="hidden">
+                <input type="text" name="dpYear" id="dpYear" hidden="hidden">
+                <input type="text" name="dpMonth" id="dpMonth" hidden="hidden">
+                <input type="text" name="dpWeek" id="dpWeek" hidden="hidden">
+                <button class="btn btn-primary bg-ffa82d  btn-back" id="back-btn"><i
+                        class="fa fa-check-square-o"></i> 返回
+                </button>
             </div>
             <div class="pull-right">
                 <input type="hidden" name="state" id="state" value>
                 <button class="btn btn-primary bg-ffa82d  btn-submit" id="submit-btn"><i
                         class="fa fa-check-square-o"></i> 递交
                 </button>
-                <button class="btn btn-primary bg-ffa82d btn-save" id="save-btn"><i
+                <button class="btn btn-primary bg-ffa82d btn-sav" id="save-btn"><i
                         class="fa fa-save"></i> 暂存
                 </button>
             </div>
@@ -228,130 +193,131 @@
 </body>
 <script>
     $(function () {
+        //接收url父页面参数放到input的val里
+        var dpYear=getQueryString('year'),dpMonth=getQueryString('month'),dpWeek=getQueryString('week');
+        console.log(dpYear,dpMonth,dpWeek);
+        $('#dpYear').val(dpYear);
+        $('#dpMonth').val(dpMonth);
+        $('#dpWeek').val(dpWeek);
+
+
+
         tabledatagrid();
         onchangereload('#dept');
         onchangereload('#dpYear');
         onchangereload('#dpMonth');
         onchangereload('#dpWeek');
-
-
         $('#td0,#td1,#td2,#td3,#td4').datagrid('hideColumn', 'id');
-        $(".btn-save").click(function () {
+        $(".btn-sav").click(function () {
             btnSubSave(0);
         });
         $(".btn-submit").click(function () {
             btnSubSave(1);
+
         });
+        $(".btn-back").click(function () {
+            window.location.href = "./apsCreate.html";
+        });
+
     });
 
 
     //多表格请求数据渲染方法
     function tabledatagrid() {
         //建立空数组
-        var cljh = [],
-            bjh = [],
-            zlzbjh = [],
-            jszbjh = [],
-            gxdhzbjh = []; //请求数据渲染表格 以及实现datagrid部分功能
+        var cljhArr = [],
+            bjhArr = [],
+            zlzbjhArr = [],
+            jszbjhArr = [],
+            gxdhzbjhArr = []; //请求数据渲染表格 以及实现datagrid部分功能
 
-        var dept = $('#dept').val(),
-            dpYear = $('#dpYear').val(),
+        var dpYear = $('#dpYear').val(),
             dpMonth = $('#dpMonth').val(),
             dpWeek = $('#dpWeek').val();
 
         var data0 = {
-            "dept": dept,
             "dpYear": dpYear,
             "dpMonth": dpMonth,
             "dpWeek": dpWeek
         };
         var da = JSON.stringify(data0);
-        $.ajax({
-            headers: {
-                Accept: "application/json; charset=utf-8",
-                Authorization: "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlzcyI6ImFkbWluIiwiYXVkIjoiQWRtaW4gSldUIE9ubGluZSJ9.0fEB0SHaUfc10ARex-BCLPmOxbbr5vgcMfvivQKY1Rc"
-            },
-            type: "post",
-            dataType: 'json',
-            data: da,
-            contentType: 'application/json',
-            url: urlPrefix + "/api/aps/DayPlan/form",
-            success: function (result) {
-                console.log(da,result);
-                var bjh = result.bjh,
-                    cljh = result.cljh,
-                    zlzbjh = result.zlzbjh,
-                    gxdhzbjh = result.gxdhzbjh,
-                    jszbjh = result.jszbjh;
-                //班计划
-                for (var item in bjh) {
-                    var arrItem = {
-                        'id': bjh[item].id,
-                        'itemName': bjh[item].itemName,
-                        'itemUnit': bjh[item].itemUnit,
-                        'weekPlan': bjh[item].weekPlan,
-                        'dayPlan': bjh[item].dayPlan,
-                        'classPlan': bjh[item].classPlan
-                    };
-                    bjh.push(arrItem);
-                }
-                //产量计划
-                for (var item in cljh) {
-                    var arrItem = {
-                        'id': cljh[item].id,
-                        'itemName': cljh[item].itemName,
-                        'itemUnit': cljh[item].itemUnit,
-                        'monthPlan': cljh[item].monthPlan,
-                        'weekPlan': cljh[item].weekPlan,
-                        'dayPlan': cljh[item].dayPlan
-                    };
-                    cljh.push(arrItem);
-                }
-                //质量指标计划
-                for (var item in zlzbjh) {
-                    var arrItem = {
-                        'id': zlzbjh[item].id,
-                        'pName': zlzbjh[item].pName,
-                        'itemName': zlzbjh[item].itemName,
-                        'itemUnit': zlzbjh[item].itemUnit,
-                        'weekPlan': zlzbjh[item].weekPlan,
-                        'dayPlan': zlzbjh[item].dayPlan,
-                        'classPlan': zlzbjh[item].classPlan
-                    };
-                    zlzbjh.push(arrItem);
-                }
-                //技术指标计划
-                for (var item in jszbjh) {
-                    var arrItem = {
-                        'id': jszbjh[item].id,
-                        'itemName': jszbjh[item].itemName,
-                        'itemUnit': jszbjh[item].itemUnit,
-                        'monthPlan': jszbjh[item].monthPlan,
-                        'weekPlan': jszbjh[item].weekPlan,
-                        'dayPlan': jszbjh[item].dayPlan
-                    };
-                    jszbjh.push(arrItem);
-                }
-                //各项单耗指标计划
-                for (var item in gxdhzbjh) {
-                    var arrItem = {
-                        'id': gxdhzbjh[item].id,
-                        'itemName': gxdhzbjh[item].itemName,
-                        'itemUnit': gxdhzbjh[item].itemUnit,
-                        'monthPlan': gxdhzbjh[item].monthPlan,
-                        'weekPlan': gxdhzbjh[item].weekPlan,
-                        'dayPlan': gxdhzbjh[item].dayPlan
-                    };
-                    gxdhzbjh.push(arrItem);
-                }
-                $('#td0').datagrid('loadData', bjh);
-                $('#td1').datagrid('loadData', cljh);
-                $('#td2').datagrid('loadData', zlzbjh);
-                $('#td3').datagrid('loadData', jszbjh);
-                $('#td4').datagrid('loadData', gxdhzbjh);
+        ajaxToServer("/api/aps/DayPlan/form", da, table);
+        function table(result) {
+            console.log(da, result);
+            var bjh = result.bjh,
+                cljh = result.cljh,
+                zlzbjh = result.zlzbjh,
+                gxdhzbjh = result.gxdhzbjh,
+                jszbjh = result.jszbjh;
+            //班计划
+            for (var item in bjh) {
+                var arrItem = {
+                    'id': bjh[item].id,
+                    'itemName': bjh[item].itemName,
+                    'itemUnit': bjh[item].itemUnit,
+                    'weekPlan': bjh[item].weekPlan,
+                    'dayPlan': bjh[item].dayPlan,
+                    'classPlan': bjh[item].classPlan
+                };
+                bjhArr.push(arrItem);
             }
+            //产量计划
+            for (var item in cljh) {
+                var arrItem = {
+                    'id': cljh[item].id,
+                    'itemName': cljh[item].itemName,
+                    'itemUnit': cljh[item].itemUnit,
+                    'monthPlan': cljh[item].monthPlan,
+                    'weekPlan': cljh[item].weekPlan,
+                    'dayPlan': cljh[item].dayPlan
+                };
+                cljhArr.push(arrItem);
+            }
+            //质量指标计划
+            for (var item in zlzbjh) {
+                var arrItem = {
+                    'id': zlzbjh[item].id,
+                    'pName': zlzbjh[item].pName,
+                    'itemName': zlzbjh[item].itemName,
+                    'itemUnit': zlzbjh[item].itemUnit,
+                    'weekPlan': zlzbjh[item].weekPlan,
+                    'dayPlan': zlzbjh[item].dayPlan,
+                    'classPlan': zlzbjh[item].classPlan
+                };
+                zlzbjhArr.push(arrItem);
+            }
+            //技术指标计划
+            for (var item in jszbjh) {
+                var arrItem = {
+                    'id': jszbjh[item].id,
+                    'itemName': jszbjh[item].itemName,
+                    'itemUnit': jszbjh[item].itemUnit,
+                    'monthPlan': jszbjh[item].monthPlan,
+                    'weekPlan': jszbjh[item].weekPlan,
+                    'dayPlan': jszbjh[item].dayPlan
+                };
+                jszbjhArr.push(arrItem);
+            }
+            //各项单耗指标计划
+            for (var item in gxdhzbjh) {
+                var arrItem = {
+                    'id': gxdhzbjh[item].id,
+                    'itemName': gxdhzbjh[item].itemName,
+                    'itemUnit': gxdhzbjh[item].itemUnit,
+                    'monthPlan': gxdhzbjh[item].monthPlan,
+                    'weekPlan': gxdhzbjh[item].weekPlan,
+                    'dayPlan': gxdhzbjh[item].dayPlan
+                };
+                gxdhzbjhArr.push(arrItem);
+            }
+            $('#td0').datagrid('loadData', bjh);
+            $('#td1').datagrid('loadData', cljh);
+            $('#td2').datagrid('loadData', zlzbjh);
+            $('#td3').datagrid('loadData', jszbjh);
+            $('#td4').datagrid('loadData', gxdhzbjh);
+        }
 
-        });
+
 
         //班计划
         $('#td0').datagrid({
@@ -379,7 +345,13 @@
             onAfterEdit: function (rowIndex, rowData, changes) {
                 dataGridObj.pushRowData(rowData);
                 dataGridObj.setEditIndex("#td0", undefined);
-            }
+            },
+            toolbar: [{
+                text: '存1', iconCls: 'icon-save', handler: function () {
+                    //保存时结束当前编辑的行，自动触发onAfterEdit事件如果要与后台交互可将数据通过Ajax提交后台
+                    $('#td0').datagrid('endEdit', dataGridObj.getEditIndex("#td0"));
+                }
+            }]
         });
         //产量计划
         $('#td1').datagrid({
@@ -407,7 +379,13 @@
             onAfterEdit: function (rowIndex, rowData, changes) {
                 dataGridObj.pushRowData(rowData);
                 dataGridObj.setEditIndex("#td1", undefined);
-            }
+            },
+            toolbar: [{
+                text: '存2', iconCls: 'icon-save', handler: function () {
+                    //保存时结束当前编辑的行，自动触发onAfterEdit事件如果要与后台交互可将数据通过Ajax提交后台
+                    $('#td1').datagrid('endEdit', dataGridObj.getEditIndex("#td1"));
+                }
+            }]
         });
         //质量指标计划
         $('#td2').datagrid({
@@ -436,9 +414,19 @@
             onAfterEdit: function (rowIndex, rowData, changes) {
                 dataGridObj.pushRowData(rowData);
                 dataGridObj.setEditIndex("#td2", undefined);
-            }
+                dataGridObj.mergeCells(loadedData,"#td2","pName");
+            },
+            onLoadSuccess: function(data){                      //data是默认的表格加载数据，包括rows和Total
+                loadedData = data;
+                dataGridObj.mergeCells(data,"#td2","pName");
+            },toolbar: [{
+                text: '存3', iconCls: 'icon-save', handler: function () {
+                    //保存时结束当前编辑的行，自动触发onAfterEdit事件如果要与后台交互可将数据通过Ajax提交后台
+                    $('#td2').datagrid('endEdit', dataGridObj.getEditIndex("#td2"));
+                }
+            }]
         });
-//技术指标计划
+        //技术指标计划
         $('#td3').datagrid({
             fitColumns: true,
             rownumbers: true,
@@ -464,9 +452,14 @@
             onAfterEdit: function (rowIndex, rowData, changes) {
                 dataGridObj.pushRowData(rowData);
                 dataGridObj.setEditIndex("#td3", undefined);
-            }
+            },toolbar: [{
+                text: '存4', iconCls: 'icon-save', handler: function () {
+                    //保存时结束当前编辑的行，自动触发onAfterEdit事件如果要与后台交互可将数据通过Ajax提交后台
+                    $('#td3').datagrid('endEdit', dataGridObj.getEditIndex("#td3"));
+                }
+            }]
         });
-//各项单耗指标计划
+        //各项单耗指标计划
         $('#td4').datagrid({
             fitColumns: true,
             rownumbers: true,
@@ -492,189 +485,52 @@
             onAfterEdit: function (rowIndex, rowData, changes) {
                 dataGridObj.pushRowData(rowData);
                 dataGridObj.setEditIndex("#td4", undefined);
-            }
+            },toolbar: [{
+                text: '存5', iconCls: 'icon-save', handler: function () {
+                    //保存时结束当前编辑的行，自动触发onAfterEdit事件如果要与后台交互可将数据通过Ajax提交后台
+                    $('#td4').datagrid('endEdit', dataGridObj.getEditIndex("#td4"));
+                }
+            }]
         });
+        $('#td0,#td1,#td2,#td3,#td4').datagrid('hideColumn', 'id');
     }
 
-<<<<<<< .mine
+
     //表头按钮变更重新渲染表格方法
     function onchangereload(dp){
         $(dp).change(function () {
-            tabledatagrid()
-            $('#td0,#td1,#td2,#td3,#td4').datagrid('hideColumn', 'id');
+            tabledatagrid();
         });
-=======
-});
-    var editIndex = undefined;
-    $('#yieldTable').datagrid({
-    fitColumns:true,
-    rownumbers:true,
-    collapsible:true,
-    singleSelect: true,
-    onClickRow: function(index){
-        a(index,"#yieldTable")
-    },
-    columns:[[
-        {field:'id',title:'id', hideColumn:'id'},
-        {field:'itemName',title:'项目',width:100,align:'center'},
-        {field:'itemUnit',title:'单位',width:100,align:'center'},
-        {field:'yearTarget',title:'全年基本目标',width:100,align:'center',editor:{type:'numberbox',options:{precision:1}}},
-        {field:'monthPlan',title:'月计划',editor:'numberbox',width:100,align:'center'},
-        {field:'remark',title:'备注',editor:'text',width:150,align:'center'},
-    ]],
-    onAfterEdit: function (rowIndex, rowData, changes) {
-        pushRowData(rowData);
-        editIndex = undefined;
-        editRow = undefined;
-    },
-    toolbar: '#tb',
-});
-$('#shiftlan').datagrid({
-    fitColumns:true,
-    rownumbers:true,
-    collapsible:true,
-    singleSelect: true,
-    onClickRow: function(index){
-        a(index,"#shiftlan")
-    },
-    columns:[[
-        {field:'id',title:'id', hideColumn:'id'},
-        {field:'itemName',title:'项目',width:100,align:'center'},
-        {field:'itemName1',title:'项目1',width:100,align:'center'},
-        {field:'itemUnit',title:'单位',width:100,align:'center'},
-        {field:'yearTarget',title:'全年基本目标',width:100,align:'center',editor:{type:'numberbox',options:{precision:1}}},
-        {field:'monthPlan',title:'月计划',editor:'numberbox',width:100,align:'center'},
-        {field:'remark',title:'备注',editor:'text',width:150,align:'center'},
-    ]],
-    onAfterEdit: function (rowIndex, rowData, changes) {
-        pushRowData(rowData);
-        editIndex = undefined;
-        editRow = undefined;
-    },
-    toolbar: '#tb1',
-});
-$('#qualityIndex').datagrid({
-    fitColumns:true,
-    rownumbers:true,
-    collapsible:true,
-    singleSelect: true,
-    onClickRow: function(index){
-        a(index,"#qualityIndex")
-    },
-    columns:[[
-        {field:'id',title:'id', hideColumn:'id'},
-        {field:'itemName',title:'项目',width:100,align:'center'},
-        {field:'itemUnit',title:'单位',width:100,align:'center'},
-        {field:'yearTarget',title:'全年基本目标',width:100,align:'center',editor:{type:'numberbox',options:{precision:1}}},
-        {field:'monthPlan',title:'月计划',editor:'numberbox',width:100,align:'center'},
-        {field:'remark',title:'备注',editor:'text',width:150,align:'center'},
-    ]],
-    onAfterEdit: function (rowIndex, rowData, changes) {
-        pushRowData(rowData);
-        editIndex = undefined;
-        editRow = undefined;
-    },
-    toolbar: '#tb2',
-});
-$('#technicalIndex').datagrid({
-    fitColumns:true,
-    rownumbers:true,
-    collapsible:true,
-    singleSelect: true,
-    onClickRow: function(index){
-        a(index,"#technicalIndex")
-    },
-    columns:[[
-        {field:'id',title:'id', hideColumn:'id'},
-        {field:'itemName',title:'项目',width:100,align:'center'},
-        {field:'itemUnit',title:'单位',width:100,align:'center'},
-        {field:'yearTarget',title:'全年基本目标',width:100,align:'center',editor:{type:'numberbox',options:{precision:1}}},
-        {field:'monthPlan',title:'月计划',editor:'numberbox',width:100,align:'center'},
-        {field:'remark',title:'备注',editor:'text',width:150,align:'center'},
-    ]],
-    onAfterEdit: function (rowIndex, rowData, changes) {
-        pushRowData(rowData);
-        editIndex = undefined;
-        editRow = undefined;
-    },
-    toolbar: '#tb3',
-});
-$('#consumption').datagrid({
-    fitColumns:true,
-    rownumbers:true,
-    collapsible:true,
-    singleSelect: true,
-    onClickRow: function(index){
-        a(index,"#consumption")
-    },
-    columns:[[
-        {field:'id',title:'id', hideColumn:'id'},
-        {field:'itemName',title:'项目',width:100,align:'center'},
-        {field:'itemUnit',title:'单位',width:100,align:'center'},
-        {field:'yearTarget',title:'全年基本目标',width:100,align:'center',editor:{type:'numberbox',options:{precision:1}}},
-        {field:'monthPlan',title:'月计划',editor:'numberbox',width:100,align:'center'},
-        {field:'remark',title:'备注',editor:'text',width:150,align:'center'},
-    ]],
-    onAfterEdit: function (rowIndex, rowData, changes) {
-        pushRowData(rowData);
-        editIndex = undefined;
-        editRow = undefined;
-    },
-    toolbar: '#tb4',
-});
-//编辑过的元素如果不存在就push到数组中，如果已存在新的数据会替换原有的数据
-function pushRowData(rowData){
-    if(saveItemArr.length>0){
-        filterItem(saveItemArr,rowData);
-        if(arrIndex == -1){
-            saveItemArr.push(rowData);
-        }else{
-            saveItemArr.splice(arrIndex,1,rowData);
->>>>>>> .r294
 
-    }
-
+}
     //暂存递交
     function btnSubSave(status) {
         var len = $(".tableItemBox").length;
         for (var i = 0; i < len; i++) {
             $("#td" + i).parents('.datagrid-view').siblings(".datagrid-toolbar").find(".l-btn-text").trigger('click');
         }
-        var id = '', status = status, dayPlanId = '', mouthPlan = '', weekPlan = '', dayPlan = '', classPlan = ''
+        var saveArr=[];
         var editItems = dataGridObj.saveItemArr;
-        console.log(editItems);
-        for (var i = 0; i < editItems.length; i++) {
-            id += "," + editItems[i].id;
-            dayPlanId += "," + editItems[i].template.id;
-            mouthPlan += "," + editItems[i].mouthPlan;
-            weekPlan += "," + editItems[i].weekPlan;
-            dayPlan += "," + editItems[i].dayPlan;
-            classPlan += "," + editItems[i].classPlan;
-        }
-        if (id.length > 0) {
-            var data = {
-                "id": id.substr(1),
-                "statu": status,
-                "dayPlanId": dayPlanId.substr(1),
-                "mouthPlan": mouthPlan.substr(1),
-                "weekPlan": weekPlan.substr(1),
-                "dayPlan": dayPlan.substr(1),
-                "classPlan": classPlan.substr(1),
-            };
+        $(editItems).each(function (i) {
+            saveArr.push(editItems[i])
+        });
 
-            ajaxToServer1('/api/aps/DayPlan/save', data, layermsg);
-            function layermsg(msg) {
-                console.log(msg);
-                if (msg.success) {
-                    layer.msg('提交成功')
-                } else {
-                    layer.msg(msg.massage)
-                }
+        var data={
+            dayPlans:saveArr,
+            status:status
+        };
+        console.log(data);
+        ajaxToServer('/api/aps/DayPlan/save', data, layermsg);
+        function layermsg(msg) {
+            console.log(msg);
+            if (msg.success) {
+                layer.msg('提交成功');
+                tabledatagrid();
+            } else {
+                layer.msg(msg.message)
             }
-            console.log(data);
-        } else {
-            top.layer.alert('请填写信息后再保存，目前无任何信息', {icon: 0, title: '警告'});
         }
+//        window.location.href = "./apsCreate.html";
     }
 
 

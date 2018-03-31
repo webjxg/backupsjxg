@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>计算公式配置zTree弹窗</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="stylesheet" href="../../plugins/ztree/css/metroStyle/metroStyle.css">
+</head>
+<body>
+<div id="tree" class="ztree leftBox-content">
+
+</div>
+
+<script src="../../js/jquery-2.2.4.min.js"></script>
+<script src="../../plugins/ztree/js/jquery.ztree.core.min.js"></script>
+<script src="../../plugins/layer/layer.js"></script>
+<script src="../../js/public.js"></script>
+<script src="../../js/customForm-aps.js"></script>
+<script>
+
+    ajaxToServer('/api/aps/Dict/tree',{},ztreeorgZtree2);
+
+    //user-ztree2页面使用 ajax并返回处理节点方法
+    var zTreeObj;
+    function ztreeorgZtree2(data) {
+        var da=data.rows
+        var setting = {
+            data: {
+                simpleData: {
+                    enable: true,   //设置是否使用简单数据模式(Array)
+                    idKey: "id",    //设置节点唯一标识属性名称
+                    pIdKey: "pId"      //设置父节点唯一标识属性名称
+                },
+                key: {
+                    name: "name",//zTree 节点数据保存节点名称的属性名称
+                    title: "name" //zTree 节点数据保存节点提示信息的属性名称
+                }
+            }
+        };
+        var zNodes = da;
+        zTreeObj= $.fn.zTree.init($('#tree'), setting, zNodes);
+        if(zTreeObj)
+        {return getSelectVal}
+    }
+</script>
+</body>
+</html>

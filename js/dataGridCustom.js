@@ -84,6 +84,7 @@ $(".btn-save").click(function(){
     for(var i = 0; i<len;i++){
         $("#td"+i).parents('.datagrid-view').siblings(".datagrid-toolbar").find(".l-btn-text").trigger('click');
     }
+    alert(dataGridObj.saveItemArr);
     console.log(dataGridObj.saveItemArr);
 
 });
