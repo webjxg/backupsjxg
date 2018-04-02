@@ -49,7 +49,7 @@
                         <span >是否启用</span>
                         <input id="enableId" name="enableId.id" class="form-control" type="hidden" value="">
                         <select id="enable" name="enable" class="form-control required">
-                            <option ></option>
+                            <option class="ope"></option>
                             <option value="1">启用</option>
                             <option value="2">禁用</option>
                         </select>
@@ -171,6 +171,7 @@
                     deleteItem('确定要删除该属性吗', '/api/sys/SysOperation/delete',id)
                 });
             });
+            $('.ope').text("--请选择--")
         };
 
         var treeId = getQueryString("treeId");
@@ -211,13 +212,13 @@
                         return data = "<input type='checkbox' id=" + row.id + " class='i-checks'>"
                     }
                 },
-                {"data": null, "width": "auto"},
-                {"data": "name", "width": "auto"},
-                {"data": "code", "width": "auto"},
-                {"data": "remark", "width": "auto"},
-                {"data": "sort", "width": "auto"},
+                {"data": null, "width": "5%"},
+                {"data": "name", "width": "25%"},
+                {"data": "code", "width": "25%"},
+                {"data": "remark", "width": "15%"},
+                {"data": "sort", "width": "5%"},
                 {
-                    "data": null, "width": "auto",
+                    "data": null, "width": "8%",
                     "render":function (data) {
                         if(data.enable==0){
                             return data = '否'
@@ -226,7 +227,7 @@
                         }
                     }
                 },
-                {"data": "id", "orderable": false, "defaultContent": "",
+                {"data": "id","width": "14%", "orderable": false, "defaultContent": "",
                     "render": function (data, type, row, meta) {
                         return data = "<a class='btn btn-info btn-xs  btn-check'><i class='fa fa-search-plus'></i>查看</a >" +
                             "<a class='btn btn-success btn-xs btn-change'><i class='fa fa fa-edit'></i>修改</a >" +

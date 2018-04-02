@@ -512,15 +512,15 @@
         var saveArr=[];
         var editItems = dataGridObj.saveItemArr;
         $(editItems).each(function (i) {
-            saveArr.push(editItems[i])
+            saveArr.push(editItems[i]);
         });
-
         var data={
-            dayPlans:saveArr,
-            status:status
+            "dayPlans":JSON.stringify(saveArr),
+            "status":JSON.stringify(status),
         };
+
         console.log(data);
-        ajaxToServer('/api/aps/DayPlan/save', data, layermsg);
+        ajaxToServer1('/api/aps/DayPlan/save',data, layermsg);
         function layermsg(msg) {
             console.log(msg);
             if (msg.success) {
