@@ -256,4 +256,39 @@ a#filePicker{
 }
 
 
+
+
+/*jxg*/
+.ibox-content {
+  clear: both;
+  background-color: #ffffff;
+  color: inherit;
+  padding: 15px 20px 20px 20px;
+}
+/*表格头部*/
+.alignCenter,.alignCenter th{
+  height: 48px;
+  text-align: center;
+  font-weight: 400;
+  font-size:16px;
+}
+table.dataTable thead th, table.dataTable tfoot th{
+  color: white;
+  font-weight: 400;
+}
+
+/*按钮区*/
+.pull-right button{
+  float: right;
+}
+/*表格线条*/
+.table-bordered>tbody>tr>td, .table-bordered>tbody>tr>th,.table-bordered>thead>tr>td, .table-bordered>thead>tr>th{
+  border:none;
+}
+.table-bordered>tbody>tr>td, .table-bordered>tbody>tr>th{
+  border:1px solid #eee
+}
+
+
+
 /*# sourceMappingURL=dictionaries.css.map */

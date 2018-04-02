@@ -81,7 +81,6 @@
         <div class="col-sm-12">
             <div class="pull-left">
                 <input type="text" hidden="hidden" name="id" id="id">
-                <input type="text" name="dept" id="dept" hidden="hidden">
                 <input type="text" name="dpYear" id="dpYear" hidden="hidden">
                 <input type="text" name="dpMonth" id="dpMonth" hidden="hidden">
                 <input type="text" name="dpWeek" id="dpWeek" hidden="hidden">
@@ -203,10 +202,6 @@
 
 
         tabledatagrid();
-        onchangereload('#dept');
-        onchangereload('#dpYear');
-        onchangereload('#dpMonth');
-        onchangereload('#dpWeek');
         $('#td0,#td1,#td2,#td3,#td4').datagrid('hideColumn', 'id');
         $(".btn-sav").click(function () {
             btnSubSave(0);
@@ -494,15 +489,6 @@
         });
         $('#td0,#td1,#td2,#td3,#td4').datagrid('hideColumn', 'id');
     }
-
-
-    //表头按钮变更重新渲染表格方法
-    function onchangereload(dp){
-        $(dp).change(function () {
-            tabledatagrid();
-        });
-
-}
     //暂存递交
     function btnSubSave(status) {
         var len = $(".tableItemBox").length;

@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>text</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="stylesheet" href="../../plugins/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../plugins/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../../plugins/ztree/css/metroStyle/metroStyle.css">
+    <link rel="stylesheet" href="../../plugins/datatables/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="../../plugins/icheck/skins/square/aero.css">
+    <!--引入样式-->
+    <link rel="stylesheet" href="../../css/common.css">
+    <link rel="stylesheet" href="../../css/orgCheckView.css">
+    <link rel="stylesheet" href="../../plugins/datatables/css/mydatatable.css">
+
+</head>
+<body>
+<form id="inputForm" class="form-horizontal" action="/api/aps/Dict/save" method="post" novalidate="novalidate">
+    <input id="id" name="id" type="hidden" value="">
+    <table class="table table-bordered  table-condensed dataTables-example dataTable no-footer">
+        <tbody>
+        <tr>
+            <td class="width-15"><label class="pull-right"><font color="red">*</font>上级指标:</label></td>
+            <td class="width-35">
+                <input id="parentIdH" name="parent.id" class="form-control" type="hidden" value="" >
+                <input id="_parentId" readonly="readonly" name="parentName" type="text" value=""
+                       data-msg-required="" class="form-control " style="">
+            </td>
+            <td class="width-15"><label class="pull-right"><font color="red">*</font>指标名称:</label></td>
+            <td class="width-35">
+                <!--<input id="itemNameH" name="item" class="form-control" type="hidden" value="">-->
+                <input id="itemName" name="itemName" type="text" value="" data-msg-required=""
+                class="form-control required" style="" aria-required="true">
+            </td>
+        </tr>
+        <tr>
+            <td class="width-15 active"><label class="pull-right"><font color="red">*</font>指标代码:</label></td>
+            <td class="width-35">
+                <!--<input id="itemCodeH" name="itemCode" class="form-control" type="hidden" value="" >-->
+                <input id="itemCode" name="itemCode" type="text" value=""
+                       data-msg-required="" class="form-control required" style="">
+            </td>
+            <td class="width-15"><label class="pull-right"><font color="red">*</font>单位:</label></td>
+            <td class="width-35">
+                <!--<input id="itemUnitH" name="itemUnit" class="form-control" type="hidden" value="">-->
+                <input id="itemUnit" name="itemUnit" type="text" value="" data-msg-required=""
+                       class="form-control required" style="" aria-required="true">
+            </td>
+        </tr>
+
+        <tr>
+            <td class="width-15"><label class="pull-right"><font color="red">*</font>指标值:</label></td>
+            <td class="width-35">
+                <!--<input id="itemValueH" name="itemValue" class="form-control" type="hidden" value="">-->
+                <input id="itemValue" name="itemValue" type="text" value="" data-msg-required=""
+                       class="form-control required" style="" aria-required="true">
+            </td>
+            <td class="width-15 active"><label class="pull-right"><font color="red">*</font>是否启用:</label></td>
+            <td class="width-35">
+                <!--<input id="enableId" name="enableId.id" class="form-control" type="hidden" value="">-->
+                <select id="enable" name="enable" class="form-control"  >
+                    <option value="">请选择</option>
+                    <option value="1">启用</option>
+                    <option value="2">禁用</option>
+                </select>
+            </td>
+
+        </tr>
+        </tbody>
+    </table>
+</form>
+<!--核心插件-->
+<script src="../../js/jquery-2.2.4.min.js"></script>
+<script src="../../plugins/bootstrap/js/bootstrap.min.js"></script>
+<!--附属插件-->
+<script src="../../plugins/layer/layer.js"></script>
+<script src="../../plugins/validate/jquery.validate.min.js"></script>
+<script src="../../plugins/validate/messages_zh.min.js"></script>
+<!--公共样式-->
+<script src="../../js/customForm-aps.js"></script>
+
+<script>
+    $(document).ready(function() {
+        var id = getQueryString('id');
+        $('#id').val(id);
+        if (id) {
+            var url = "/api/aps/Dict/view/" + id;
+            ajaxToServer(url, {}, function (result) {
+                console.log(url,result);
+                if (result.success) {
+                    var SysOrg = result.Dict;
+                    var parentid=SysOrg.parentId;
+                    $('#parentIdH').val(parentid);
+                    renderData(SysOrg, $('#inputForm'));
+                    /*运行把ajax数据渲染到弹出窗口中*/
+                    renderData(result, $('#inputForm'));
+
+                } else {
+                    layer.msg(result.message);
+                }
+
+            });
+        }
+
+    });
+    /*得到传后台的表单*/
+    function getSubmitFormId(){
+        return "#inputForm";
+    }
+    function layerInPersons(btn,size,url,name,id) {
+        $(btn).on('dblclick',function () {
+            top.layer.open({
+                btn: ['确定', '取消'],
+                shade: [0.4, '#000'], //0.1透明度的白色背景
+                type: 2,
+                title: '添加',
+                shadeClose: true,
+                maxmin: true, //开启最大化最小化按钮
+                area: size,
+                content: url,
+                yes: function (index, layero) {
+                    var iframeWin = layero.find('iframe')[0];
+                    var selobj = iframeWin.contentWindow.getElement();//在layer中运行当前弹出页内的getSelectVal方法
+                    if (selobj) {
+                        $(name).val(selobj.name);
+                        $(id).val(selobj.id);
+                    }
+
+                    top.layer.close(index);
+
+                }
+            })
+        })
+    }
+</script>
+
+
+
+</body>
+</html>

@@ -146,6 +146,13 @@
           "menu_sub":"1",
           "href":"../html/producePlan/monthPlan.html",
           "children":[]
+        },
+        {
+          "iconName":"",
+          "name":"字典计划",
+          "menu_sub":"1",
+          "href":"../html/producePlan/planDicIndex.html",
+          "children":[]
         }
       ]
     },

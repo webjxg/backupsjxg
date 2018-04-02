@@ -1,29 +1,15 @@
-<<<<<<< .mine
+
 .mgb-10 {
   margin-bottom: 10px; }
 
-=======
-/*向下推margin*/
-mgb-10 {
-  margin-bottom: 10px; }
->>>>>>> .r298
-<<<<<<< .mine
 .mgb-15 {
   margin-bottom: 15px; }
-=======
-mgb-15 {
-  margin-bottom: 15px; }
->>>>>>> .r298
 
-<<<<<<< .mine
 .mgb-20 {
   margin-bottom: 20px; }
 
-=======
-mgb-20 {
-  margin-bottom: 20px; }
+
 /*隐藏显示*/
->>>>>>> .r298
 .hide {
   display: none; }
 
@@ -132,44 +118,7 @@ mgb-20 {
 
 
 
-/*jxg*/
-.ibox-content {
-  clear: both;
-  background-color: #ffffff;
-  color: inherit;
-  padding: 15px 20px 20px 20px;
-}
-/*表格头部*/
-.alignCenter,.alignCenter th{
-  height: 48px;
-  text-align: center;
-  font-weight: 400;
-  font-size:16px;
-}
-table.dataTable thead th, table.dataTable tfoot th{
-  color: white;
-  font-weight: 400;
-}
 
-/*按钮区*/
-.pull-right button{
-  float: right;
-}
-/*勾选框*/
-
-
-/*表格线条*/
-.table-bordered>tbody>tr>td, .table-bordered>tbody>tr>th,.table-bordered>thead>tr>td, .table-bordered>thead>tr>th{
-  border:none;
-}
-.table-bordered>tbody>tr>td, .table-bordered>tbody>tr>th{
-  border:1px solid #eee
-}
-/*layer弹出框样式*/
-.myskin .layui-layer-title{
-  background-color: #1ab394;
-  color: #ffffff;
-}
 
 
 
