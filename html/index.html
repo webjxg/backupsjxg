@@ -17,149 +17,114 @@
 
 </head>
 <body>
-    <div id="wrapper">
-        <!-- 左侧导航开始 -->
-        <nav class="navbar-default navbar-static-side ">
-            <div class="navScrollView">
-                <ul class="sidebar-nav" id="side-menu">
-                </ul>
-            </div>
-        </nav>
-        <!-- 左侧导航结束 -->
-        <!-- 右侧部分开始 -->
-        <div class="wrapper-con bg-gray">
-            <div class="wrap-header">
-                <nav class="navbar-static-top clearfix">
-                    <div class="navbar-header pull-left">
-                        <a class="navbar-mini-btn btn" href="#">
-                            <i class="fa fa-bars"></i> 
-                        </a>
-                        <form role="search" class="search-input" method="post" action="search_results.html">
-                            <div class="form-group">
-                                <input type="text" placeholder="请输入您需要查找的内容…" class="form-control" name="top-search" id="top-search">
-                            </div>
-                        </form>
+<div id="wrapper">
+    <!--顶部导航开始-->
+    <div class="logo">
+        <div class="logo-left">
+            <img src=".././images/logo1.jpg">
+        </div>
+
+        <div class="logo-right">
+            <img src=".././images/logo2.jpg">
+
+            <ul>
+                <li><i class="fa fa-cog"></i></li>
+                <li><i class="fa fa-user"></i></li>
+                <li><i class="fa fa-user-circle"></i></li>
+                <li><i class="fa fa-envelope"></i></li>
+            </ul>
+        </div>
+    </div>
+    <!--顶部导航结束-->
+
+    <!-- 左侧导航开始 -->
+    <nav class="navbar-default navbar-static-side ">
+        <div class="navScrollView">
+            <ul class="sidebar-nav" id="side-menu">
+            </ul>
+        </div>
+    </nav>
+    <!-- 左侧导航结束 -->
+    <!-- 右侧部分开始 -->
+    <div class="wrapper-con bg-gray">
+        <div class="wrap-header">
+            <!--<nav class="navbar-static-top clearfix">-->
+            <!--&lt;!&ndash;请输入查找内容&ndash;&gt;-->
+            <!--&lt;!&ndash;<div class="navbar-header pull-left">&ndash;&gt;-->
+            <!--&lt;!&ndash;<a class="navbar-mini-btn btn" href="#">&ndash;&gt;-->
+            <!--&lt;!&ndash;<i class="fa fa-bars"></i>&ndash;&gt;-->
+            <!--&lt;!&ndash;</a>&ndash;&gt;-->
+            <!--&lt;!&ndash;&lt;!&ndash;<form role="search" class="search-input" method="post" action="search_results.html">&ndash;&gt;&ndash;&gt;-->
+            <!--&lt;!&ndash;&lt;!&ndash;<div class="form-group">&ndash;&gt;&ndash;&gt;-->
+            <!--&lt;!&ndash;&lt;!&ndash;<input type="text" placeholder="请输入您需要查找的内容…" class="form-control" name="top-search" id="top-search">&ndash;&gt;&ndash;&gt;-->
+            <!--&lt;!&ndash;&lt;!&ndash;</div>&ndash;&gt;&ndash;&gt;-->
+            <!--&lt;!&ndash;&lt;!&ndash;</form>&ndash;&gt;&ndash;&gt;-->
+            <!--&lt;!&ndash;</div>&ndash;&gt;-->
+            <!--</nav>-->
+            <div class="content-tabs">
+                <button class="tabs-lBtn tabs-btnIcon">
+                    <i class="fa fa-backward"></i>
+                </button>
+                <div class="tabs-menu">
+                    <div class="tabs-nav">
                     </div>
-                    <ul class="pull-right role-box">
-                        <li class="role-name" id="userName"></li>
-                         <li>
-                            <a href="javascript:;" class="role-quit-btn" id="quit-btn">
-                                <i class="fa fa fa-sign-out"></i>
-                                退出
-                            </a>
+                </div>
+                <button class="tabs-rBtn tabs-btnIcon">
+                    <i class="fa fa-forward"></i>
+                </button>
+                <div class="btn-group navBtns">
+                    <button class="dropdown" data-toggle="dropdown">关闭操作<span class="caret"></span>
+                    </button>
+                    <ul role="menu" class="dropdown-menu dropdown-menu-right">
+                        <li class="tabTag-fixed"><a>定位当前选项卡</a>
+                        </li>
+                        <li class="divider"></li>
+                        <li class="tabTag-closeAll"><a>关闭全部选项卡</a>
+                        </li>
+                        <li class="tabTag-closeOther"><a>关闭其他选项卡</a>
                         </li>
                     </ul>
-                </nav>
-                <div class="content-tabs">
-                    <button class="tabs-lBtn tabs-btnIcon">
-                        <i class="fa fa-backward"></i>
-                    </button>
-                    <div class="tabs-menu">
-                        <div class="tabs-nav">
-                        </div>
-                    </div>
-                    <button class="tabs-rBtn tabs-btnIcon">
-                        <i class="fa fa-forward"></i>
-                    </button>
-                    <div class="btn-group navBtns">
-                        <button class="dropdown" data-toggle="dropdown">关闭操作<span class="caret"></span>
-                        </button>
-                        <ul role="menu" class="dropdown-menu dropdown-menu-right">
-                            <li class="tabTag-fixed"><a>定位当前选项卡</a>
-                            </li>
-                            <li class="divider"></li>
-                            <li class="tabTag-closeAll"><a>关闭全部选项卡</a>
-                            </li>
-                            <li class="tabTag-closeOther"><a>关闭其他选项卡</a>
-                            </li>
-                        </ul>
-                    </div>
                 </div>
+                <!--退出部分-->
+                <ul class="pull-right role-box logout">
+                    <!--<li class="role-name" id="userName"></li>-->
+                    <li>
+                        <a href="javascript:;" class="role-quit-btn" id="quit-btn">
+                            <i class="fa fa fa-sign-out"></i>
+                            退出
+                        </a>
+                    </li>
+                </ul>
             </div>
-            <div class="wrap-con">
-                <div class="navItem-con">
-                </div>
-            </div>
-            <div class="wrap-footer"></div>
         </div>
-         <!-- 右侧部分结束 -->
-         <!-- 主题设置开始 -->
-         <div class="theme-config">
-                <div class="theme-config-box">
-                    <div class="theme-icon">
-                        <i class="fa fa-cog fa-spin"></i>
-                    </div>
-                    <div class="skin-settings">
-                        <div class="title">主题设置</div>
-                        <div class="setings-item">
-                            <span>
-                                收起左侧菜单
-                            </span>
-                            <div class="switch">
-                                <div class="onoffswitch">
-                                    <input type="checkbox" name="toggleMenu" class="onoffswitch-checkbox" id="toggleMenu">
-                                    <label class="onoffswitch-label" for="toggleMenu">
-                                        <span class="onoffswitch-inner"></span>
-                                        <span class="onoffswitch-switch"></span>
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="setings-item">
-                            <span>
-                                固定顶部
-                            </span>
-            
-                            <div class="switch">
-                                <div class="onoffswitch">
-                                    <input type="checkbox" name="fixednavbar" class="onoffswitch-checkbox" id="fixednavbar">
-                                    <label class="onoffswitch-label" for="fixednavbar">
-                                        <span class="onoffswitch-inner"></span>
-                                        <span class="onoffswitch-switch"></span>
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="setings-item">
-                            <span>
-                                固定宽度
-                            </span>
-            
-                            <div class="switch">
-                                <div class="onoffswitch">
-                                    <input type="checkbox" name="fixedlayout" class="onoffswitch-checkbox" id="fixedlayout">
-                                    <label class="onoffswitch-label" for="fixedlayout">
-                                        <span class="onoffswitch-inner"></span>
-                                        <span class="onoffswitch-switch"></span>
-                                    </label>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+        <div class="wrap-con">
+            <div class="navItem-con">
             </div>
-         <!-- 主题设置结束 -->
+        </div>
+        <!--<div class="wrap-footer"></div>-->
     </div>
+    <!-- 右侧部分结束 -->
+</div>
 
-    <!--核心插件-->
-    <script src="../js/jquery-2.2.4.min.js"></script>
-    <!--附属插件-->
-    <script src="../plugins/bootstrap/js/bootstrap.min.js"></script>
-    <script src="../plugins/metismenu-master/metisMenu.min.js"></script>
-    <script src="../plugins/slimScroll/jquery.slimscroll.min.js"></script>
-    <script src="../plugins/layer/layer.js"></script>
-    <script src="../plugins/icheck/icheck.min.js"></script>
-    <!--自定义文件-->
-    <script src="../js/common.js"></script>
-    <!--<script src="../js/checkUser.js"></script>-->
-    <script src="../js/tabsNav.js"></script>
-    <script src="../js/jeeplus.js"></script>
-    <script src="../js/customForm.js"></script>
-    <script src="../js/page.js"></script>
-    <script>
-        $(function(){
-            $("#userName").text("您好,"+unescape(getCookie('userName')));
-        })
-    </script>
+<!--核心插件-->
+<script src="../js/jquery-2.2.4.min.js"></script>
+<!--附属插件-->
+<script src="../plugins/bootstrap/js/bootstrap.min.js"></script>
+<script src="../plugins/metismenu-master/metisMenu.min.js"></script>
+<script src="../plugins/slimScroll/jquery.slimscroll.min.js"></script>
+<script src="../plugins/layer/layer.js"></script>
+<script src="../plugins/icheck/icheck.min.js"></script>
+<!--自定义文件-->
+<script src="../js/common.js"></script>
+<!--<script src="../js/checkUser.js"></script>-->
+<script src="../js/tabsNav.js"></script>
+<script src="../js/jeeplus.js"></script>
+<script src="../js/customForm.js"></script>
+<script src="../js/page.js"></script>
+<script>
+    $(function(){
+        $("#userName").text("您好,"+unescape(getCookie('userName')));
+    })
+</script>
 </body>
 </html>

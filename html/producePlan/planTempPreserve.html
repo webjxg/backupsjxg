@@ -44,7 +44,7 @@
             </div>
             <div id="content" class="row">
                 <!--左侧内容-->
-                <div id="left" style=" width: 210px; height: 100%;" class="leftBox pull-left">
+                <div id="left" style="height: 100%;" class="leftBox pull-left">
                     <div id="tree" class="ztree leftBox-content" style="height: 100%;"></div>
                 </div>
             </div>
@@ -84,7 +84,6 @@
     });
 
     function zTree(da) {
-        console.log(da);
         var data=da.treeArr;
         var zTreeObj;
         // zTree 的参数配置，深入使用请参考 API 文档（setting 配置详解）
@@ -104,6 +103,7 @@
                 onClick: function (e, treeId, node){
                     if(node.id){
                         rendersun(node.id,node.name)
+                        console.log(node.id);
                     }
                 }
             }

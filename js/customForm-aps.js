@@ -4,6 +4,7 @@
 });*/
 
 var urlPrefix = "http://114.115.165.184:8083/aps-api";
+// var urlPrefix = "http://192.168.1.115:8083/aps-api";
 //点击查询按钮
 $("#search-btn").click(function(){
     pageLoad();
@@ -48,7 +49,7 @@ function ajaxToServer(url, data, callbackFun){//传送的参数是josnString时
         dataType: 'json',
         contentType:'application/json',
         success: function(result){
-            console.log(result);
+            // console.log(result);
             layer.close(layerIndex);
             if(callbackFun){
                 callbackFun(result);
@@ -146,6 +147,24 @@ function getQueryString(name, url) {
     }
     r = url.substr(1).match(reg);
     if (r != null) return unescape(r[2]); return null;
+}
+//刷新当前选中tab对应的iframe
+
+function refreshActiveTab() {
+    var target = top.getActiveTab();
+
+    var url = target.attr('src');
+    console.log(url);
+    var t = top.layer;
+    //显示loading提示
+    var loading = t.load();
+    if(url){
+        target.attr('src', url).load(function () {
+            //关闭loading提示
+            t.close(loading);
+        })
+    }
+
 }
 
 //动态添加Select的option
@@ -329,6 +348,10 @@ function doSubmit(){
                         var obj = $('#refresh-btn', top.window.frames[frameActive].document);
                         if(obj.length == 0){
                             obj = $('#search-btn', top.window.frames[frameActive].document);
+                            if(obj.length == 0){
+                                top.refreshActiveTab();
+                            }
+
                         }
                         obj.trigger('click');
                     },1000);
@@ -405,9 +428,15 @@ function deleteItem(mess,url,id){
         ajaxToServer1(url,data,function(result){
             if(result.success == true){
                 var frameActive = top.getActiveTab().attr("name");
+                console.log(frameActive);
                 var obj = $('#search-btn', top.window.frames[frameActive].document);
+                console.log(obj.length);
                 if(obj.length == 0){
                     obj = $('#refresh-btn', top.window.frames[frameActive].document);
+                    if(obj.length == 0){
+
+                    }
+
                 }
                 obj.trigger('click');
             }

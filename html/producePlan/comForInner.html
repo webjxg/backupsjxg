@@ -8,148 +8,73 @@
     <link rel="stylesheet" href="../../plugins/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="../../plugins/font-awesome/css/font-awesome.min.css">
     <link rel="stylesheet" href="../../plugins/layer/theme/default/layer.css">
+    <link rel="stylesheet" href="../../plugins/ztree/css/metroStyle/metroStyle.css">
+
 
     <!--<link rel="stylesheet" href="../../plugins/select2/css/select2.min.css">-->
     <!--自定义样式-->
     <link rel="stylesheet" href="../../css/common.css">
-    <link rel="stylesheet" href="../../css/dic-inner.css">
-
-    <style>
-
-        #comForTextarea{
-            height:100px;
-            width:100%;
-            border:1px solid #1ab394;
-            resize: none;
-        }
-        .param-tag .btn{
-            width:32px;
-            height:32px;
-            line-height: 30px;
-            color:#1ab394;
-            border:1px solid #1ab394;
-            margin-bottom:5px;
-            margin-left:5px;
-            padding:0;
-        }
-        .btn.clearOne{
-            width:72px;
-        }
-        .param-tag .btn:hover{
-            background: #1ab394;
-            color:#fff;
-        }
-        .param-item{margin-bottom:15px;}
-        .paramName-tit,.paramName-text{
-            display: inline-block;
-            vertical-align: middle;
-        }
-        .paramName-tit{
-            width:90px;
-            text-align:right;
-            font-size:14px;
-        }
-        .bg-1ab394{
-            background:#1ab394;
-            color:#fff;
-        }
-        .paramName-text, .paramCount{
-            font-size:0;
-        }
-        .aps-innerInput{
-            display: inline-block;
-            vertical-align: middle;
-            width:180px;
-            padding:0 8px;
-            outline: none;
-            border:1px solid #ddd;
-            border-right:none;
-            height:34px;
-            font-size:12px;
-            background: #eee;
-            cursor: pointer;
-        }
-        .aps-innerBtn{
-            display: inline-block;
-            vertical-align: middle;
-            background:#1ab394;
-            color:#fff;
-        }
-        .param-choose{
-            width:158px;
-            height:32px;
-            line-height: 30px;
-            background: #f2f2f2;
-            border:1px solid #cacaca;
-            color:#000;
-            padding:0;
-        }
-        .param-record{
-            width:78%;
-            height:124px;
-            border:1px solid #cacaca;
-            padding:10px;
-            resize: none;
-            vertical-align: top;
-        }
-        .paramCount-l, .paramCount-r{
-            display: inline-block;
-            vertical-align: bottom;
-        }
-        .paramCount-l{
-            width:66%;
-        }
-        .paramCount-r{
-            width:34%;
-        }
-    </style>
+    <link rel="stylesheet" href="../../css/aps.css">
 </head>
 <body>
 <div class="wrapper wrapper-content">
-    <div class="param-item">
-        <span class="paramName-tit">参数名称：</span>
-        <div class="paramName-text" id="paramCode">
-            <input id="paramCodeInput"  class="aps-innerInput" name="itemCode" type="text" readonly="readonly" value="" data-msg-required="" style="" placeholder="双击选择">
-            <span>
-                <button type="button" id="parentNameButton" class="btn  aps-innerBtn ">
-                    <i class="fa fa-search"></i>
-                </button>
-            </span>
-        </div>
-    </div>
+    <form id="inputForm" class="form-horizontal clearfix" action="/api/aps/Formula/save" method="post" novalidate="novalidate" >
+        <div class="row">
+            <div class="col-sm-7">
+                <div class="param-item ">
+                    <span class="paramName-tit">参数名称：</span>
+                    <div class="paramName-text" id="paramCode">
+                        <input type="hidden" name="itemCode" id="itemCode">
+                        <input id="paramCodeInput"  class="aps-innerInput " name="itemName" type="text" readonly="readonly" value="" data-msg-required=""  aria-required="true"  required placeholder="双击选择" >
+                        <span>
+                        <button type="button" id="parentNameButton" class="btn  aps-innerBtn ">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </span>
+                    </div>
+                </div>
+                <div class="param-item">
+                    <div class="paramCount-r paramTag">
+                        <span class="btn  numBtn">1</span>
+                        <span class="btn  numBtn">2</span>
+                        <span class="btn  numBtn">3</span>
+                        <span class="btn  numBtn">4</span>
+                        <span class="btn  numBtn">5</span>
+                        <span class="btn  numBtn">6</span>
+                        <span class="btn  numBtn">7</span>
+                        <span class="btn  numBtn">8</span>
+                        <span class="btn  numBtn">9</span>
+                        <span class="btn  numBtn">0</span>
+                        <span class="btn  decBtn">.</span>
+                        <span class="btn  addBtn">+</span>
+                        <span class="btn  subBtn">-</span>
+                        <span class="btn  mulBtn">x</span>
+                        <span class="btn  divsBtn">/</span>
+                        <span class="btn  bracLBtn">(</span>
+                        <span class="btn  bracRBtn">)</span>
+                        <span class="btn  clearAll">C</span>
+                        <span class="btn  clearOne"><i class="fa fa-arrow-left" aria-hidden="true"></i></span>
+                    </div>
+                </div>
+                <div class="param-item">
+                    <div class="paramCount">
+                        <div class="paramCount-l">
+                            <span class="paramName-tit text-left">计算公式：</span>
+                            <div id="paramRecord" class="paramRecord"></div>
+                            <input type="text" value="" id="paramRecordShow" name="computeFormula" required  aria-required="true">
+                        </div>
 
-    <div class="param-item">
-        <span class="paramName-tit"></span>
-        <button class="btn  param-choose" >参数选择</button>
-    </div>
-    <div class="param-item">
-        <div class="paramCount">
-            <div class="paramCount-l">
-                <span class="paramName-tit">计算公式：</span>
-                <textarea name="" id="" class="param-record"></textarea>
+                    </div>
+                </div>
             </div>
-            <div class="paramCount-r param-tag">
-                <span class="btn  clearOne"><i class="fa fa-arrow-left" aria-hidden="true"></i></span>
-                <span class="btn  clearAll">C</span>
-                <span class="btn  bracLBtn">(</span>
-                <span class="btn  addBtn">+</span>
-                <span class="btn  numBtn">1</span>
-                <span class="btn  numBtn">2</span>
-                <span class="btn  numBtn">3</span>
-                <span class="btn  bracRBtn">)</span>
-                <span class="btn  subBtn">-</span>
-                <span class="btn  numBtn">4</span>
-                <span class="btn  numBtn">5</span>
-                <span class="btn  numBtn">6</span>
-                <span class="btn  decBtn">.</span>
-                <span class="btn  mulBtn">x</span>
-                <span class="btn  numBtn">7</span>
-                <span class="btn  numBtn">8</span>
-                <span class="btn  numBtn">9</span>
-                <span class="btn  divsBtn">/</span>
+
+            <div class="col-sm-5">
+                <h1>参数选择</h1>
+                <div id="tree" class="ztree leftBox-content"></div>
             </div>
         </div>
-    </div>
+        <input type="hidden" value="" id="paramRecordHide" name="computeFormulaDisplay">
+    </form>
 </div>
 
 <!--核心插件-->
@@ -157,53 +82,107 @@
 <script src="../../plugins/bootstrap/js/bootstrap.min.js"></script>
 <!--附属插件-->
 <script src="../../plugins/layer/layer.js"></script>
+<script src="../../plugins/validate/jquery.validate.min.js"></script>
+<script src="../../plugins/validate/messages_zh.min.js"></script>
 <script src="../../plugins/icheck/icheck.min.js"></script>
 <script src="../../plugins/ztree/js/jquery.ztree.core.js"></script>
 <script src="../../plugins/datatables/js/jquery.dataTables.min.js"></script>
 <script src="../../plugins/datatables/js/dataTables.bootstrap.js"></script>
-<script src="../../plugins/bootStrapPager/js/extendPagination.js"></script>
+
 <script src="../../plugins/select2/js/select2.js"></script>
 
 <!--自定义文件-->
-<script src="../../js/public.js"></script>
+
 <script src="../../js/common.js"></script>
 <script src="../../js/jeeplus.js"></script>
-<script src="../../js/customForm.js"></script>
-<script src="../../js/page.js"></script>
+<script src="../../js/customForm-aps.js"></script>
+
 <script>
+    function getSubmitFormId(){
+        return "#inputForm";
+    }
+
     $(function () {
-        $("#e1").select2({
-            placeholder: "Select a State",
-            allowClear: true
-        });
         var id = getQueryString('id');
+        var paramRecord = $("#paramRecord"),
+            html = "",htmlArr =[],inputArr = [];
+        console.log(id);
+        if(id){
+            ajaxToServer1("/api/aps/Formula/form/"+id,{},function(result){
+                if(result.success){
+                    var Formula = result.Formula,
+                        str = Formula.computeFormula;
+                    console.log(Formula);
+                    renderData(Formula, $('#inputForm'));
+                    $("#paramRecord").html(Formula.computeFormula);
+                    htmlArr = str.match(/<[^>]+>([^<]+)<\/[^>]+>/g);
 
-        function renderHtml() {
-            var previewParam = $(".previewParam"),
-                previewParamHide = $(".previewParamHide"),
-                html = "";
-            $(".comForIdent span").click(function () {
-                html += $(this).html() + " ";
-                renHtmlFn(html);
+                    formulaHiddenValue();
+                }
+            })
+        }
+        function formulaHiddenValue(){  //加载数据之后获取隐藏元素paramRecordHide的值，使用正则将匹配后的元素放入到inputArr数组中。
+            for(var i=0; i<htmlArr.length; i++){
+                var h = htmlArr[i].replace('<span>','').replace('</span>','');
+                var m = h.match(/\[(.+)\]/g);
+                if(m && m.length>0){
+                    var ss = m[0];
+                    ss = ss.substr(1, ss.length-2);
+                    inputArr.push(ss);
+                }else{
+                    inputArr.push(h);
+                }
 
-            });
-            $("#e1").change(function () {
-                html += $("#select2-e1-container").text() + " ";
-                renHtmlFn(html);
-            });
-            function renHtmlFn(html) {
-                previewParam.html(html);
-                previewParamHide.val(html);
             }
-
         }
 
+        function renderHtml() {  //像htmlArr、inputArr数组动态push元素
+            $(".paramTag span").click(function () {
+                if($(this).hasClass("clearAll")){
+                    html = "";
+                    htmlArr=[];
+                    inputArr = [];
+                    renHtmlFn(html,htmlArr);
+                }else if($(this).hasClass("clearOne")){
+                    console.log(inputArr)
+                    htmlArr.pop();
+                    inputArr.pop();
+                    html = "";
+                    var len1 = htmlArr.length;
+                    for(var i = 0;i<len1;i++) {
+                        html += "<span>" + htmlArr[i] + "</span>";
+                    }
+                    renHtmlFn(html,inputArr)
+                }else{
+                    html +="<span>"+$(this).html()+"</span>" ;
+                    htmlArr.push($(this).html());
+                    inputArr.push($(this).html());
+                    renHtmlFn(html,inputArr);
+
+                }
+
+            });
+        }
         renderHtml();
+        function renHtmlFn(html,inputArr) { //将htmlArr、inputArr数组中的元素遍历之后作为paramRecordHide、paramRecordShow的值插入。
+            paramRecord.empty().html(html);
+            var inputHtml = "";
+            var len  = inputArr.length;
+            if(len >0){
+                for(var i = 0;i<len;i++){
+                    inputHtml += inputArr[i];
+                    $("#paramRecordHide").empty().val(inputHtml);
+                }
+            }else{
+                $("#paramRecordHide").empty().val("");
+            }
+            $("#paramRecordShow").val($("#paramRecord").html());
+        }
 
         function getZtreeVal(tit,shade,url,pushValCon){
             top.layer.open({
                 btn: ['确定', '取消'],
-                shade: [0.4, '#000'], //0.1透明度的白色背景
+                shade:shade, //0.1透明度的白色背景
                 type: 2,
                 title: tit,
                 shadeClose: true,
@@ -214,8 +193,12 @@
                     var iframeWin = layero.find('iframe')[0];
                     var selobj=iframeWin.contentWindow.getSelectVal();//在layer中运行当前弹出页内的getSelectVal方法
                     if(selobj){
-                        $(pushValCon)
-                        $("#paramCodeInput").val(selobj.name);
+                        var pushCon = pushValCon.substr(1);
+                        $("#itemCode").val(selobj.itemCode);
+                        if(pushCon == "paramCodeInput"){
+                            $("#"+pushCon).val(selobj.name);
+                        }
+
                     }
 
                     top.layer.close(index);
@@ -224,10 +207,41 @@
             })
         }
 
-        getZtreeVal('#paramCode','dblclick')
+        $("#paramCode").on('dblclick',function(){
+            getZtreeVal("参数名称",[0.4, '#000'],"./producePlan/comForZtree.html","#paramCodeInput")
+        });
 
-        $("#paramCode").on('dblclick',getZtreeVal("新增","[0.4, '#000']","./producePlan/comForZtree.html","#paramCodeInput"))
+        var setting = {
+            data: {
+                simpleData: {
+                    enable: true,   //设置是否使用简单数据模式(Array)
+                    idKey: "id",    //设置节点唯一标识属性名称
+                    pIdKey: "pId"      //设置父节点唯一标识属性名称
+                },
+                key: {
+                    name: "name",//zTree 节点数据保存节点名称的属性名称
+                    title: "name" //zTree 节点数据保存节点提示信息的属性名称
+                }
 
+            },
+            callback: {
+                onClick: zTreeOnDblClick
+            },
+        };
+
+        ajaxToServer('/api/aps/Dict/tree',{},function(result){
+            if(result.success){
+                zTreeObj = $.fn.zTree.init($("#tree"), setting, result.rows);
+            }
+        });
+
+        function zTreeOnDblClick(event, treeId, treeNode) {
+            html += "<span>"+treeNode.name+"["+treeNode.itemCode+"]</span>";
+            htmlArr.push(treeNode.name+"["+treeNode.itemCode+"]");
+            inputArr.push(treeNode.itemCode);
+            renHtmlFn(html,inputArr);
+
+        }
 
     });
 

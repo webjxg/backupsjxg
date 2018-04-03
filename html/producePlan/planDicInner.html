@@ -20,7 +20,7 @@
         <div class="col-sm-12">
             <div class="pull-left">
                 <button class="btn bg-ffa82d btn-sm" id="addBtn"  data-toggle="tooltip" data-placement="left"
-                        onclick="openEditDialog('查看指标信息', './producePlan/planDicCheckView.html', '800px', '600px')"  title="添加"><i class="fa fa-plus"></i> 添加
+                        onclick="openEditDialog('查看指标信息', './producePlan/planDicCheckView.html', '800px', '300px')"  title="添加"><i class="fa fa-plus"></i> 添加
                 </button>
                 <button class="btn bg-ffa82d btn-sm " id="refresh-btn" data-toggle="tooltip" data-placement="left"
                         onclick="window.location.reload()" title="刷新"><i class="glyphicon glyphicon-repeat"></i> 刷新
@@ -65,7 +65,10 @@
         })
     }
     window.pageLoad= function () {
-            renderTableData("");
+        ajaxToServer("/api/aps/Dict/ajaxTreeJson/0",{},function(tableData){
+            renderTableData(tableData.rows);
+            clickButton();
+        })
     };
     pageLoad();
     function clickButton(node) {
@@ -75,11 +78,11 @@
 
         $('.btn-check').click(function () {
             var id = $(this).parents("tr").find('.i-Checks').attr('id');
-            openDialog('查看指标信息', './producePlan/planDicCheckView.html?id=' + id, '800px', '600px')
+            openDialog('查看指标信息', './producePlan/planDicCheckView.html?id=' + id, '800px', '300px')
         });
         $('.btn-change').click(function () {
             var id = $(this).parents("tr").find('.i-Checks').attr('id');
-            openEditDialog('修改指标信息', './producePlan/planDicCheckView.html?id=' + id, '800px', '600px')
+            openEditDialog('修改指标信息', './producePlan/planDicCheckView.html?id=' + id, '800px', '300px')
         });
         $('.btn-delete').click(function () {
             var id = $(this).parents("tr").find('.i-Checks').attr('id');
@@ -87,7 +90,7 @@
         });
         $('.btn-addson').click(function(){
             var id = $(this).parents("tr").find('.i-Checks').attr('id');
-            openEditDialog('添加下级菜单','./producePlan/planDicCheckView.html?pid='+id,'800px','600px')
+            openEditDialog('添加下级菜单','./producePlan/planDicCheckView.html?pid='+id,'800px','300px')
         });
     }
     function renderTableData(data) {

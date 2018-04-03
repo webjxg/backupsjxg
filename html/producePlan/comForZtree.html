@@ -14,33 +14,49 @@
 <script src="../../js/jquery-2.2.4.min.js"></script>
 <script src="../../plugins/ztree/js/jquery.ztree.core.min.js"></script>
 <script src="../../plugins/layer/layer.js"></script>
-<script src="../../js/public.js"></script>
 <script src="../../js/customForm-aps.js"></script>
 <script>
-
-    ajaxToServer('/api/aps/Dict/tree',{},ztreeorgZtree2);
-
-    //user-ztree2页面使用 ajax并返回处理节点方法
     var zTreeObj;
-    function ztreeorgZtree2(data) {
-        var da=data.rows
-        var setting = {
-            data: {
-                simpleData: {
-                    enable: true,   //设置是否使用简单数据模式(Array)
-                    idKey: "id",    //设置节点唯一标识属性名称
-                    pIdKey: "pId"      //设置父节点唯一标识属性名称
-                },
-                key: {
-                    name: "name",//zTree 节点数据保存节点名称的属性名称
-                    title: "name" //zTree 节点数据保存节点提示信息的属性名称
-                }
+    var setting = {
+        data: {
+            simpleData: {
+                enable: true,   //设置是否使用简单数据模式(Array)
+                idKey: "id",    //设置节点唯一标识属性名称
+                pIdKey: "pId"      //设置父节点唯一标识属性名称
+            },
+            key: {
+                name: "name",//zTree 节点数据保存节点名称的属性名称
+                title: "name" //zTree 节点数据保存节点提示信息的属性名称
             }
-        };
-        var zNodes = da;
-        zTreeObj= $.fn.zTree.init($('#tree'), setting, zNodes);
-        if(zTreeObj)
-        {return getSelectVal}
+
+        }
+    };
+
+    ajaxToServer('/api/aps/Dict/tree',{},function(result){
+        if(result.success){
+            zTreeObj = $.fn.zTree.init($("#tree"), setting, result.rows);
+        }
+    });
+
+
+
+
+
+    // ztree处理弹出层被选中的节点
+    function getSelectVal(){
+        var nodes = zTreeObj.getSelectedNodes();
+        if(nodes.length != 1){
+            layer.alert('只能选择一项', {
+                icon: 2,
+                offset: 't',
+            })
+        }
+        var id = nodes[0].id;
+        var name = nodes[0].name;
+        var pId = nodes[0].pId;
+        var itemCode = nodes[0].itemCode;
+        var selObj = {'id':id, 'name':name, 'pId':pId, 'itemCode':itemCode};
+        return selObj;
     }
 </script>
 </body>

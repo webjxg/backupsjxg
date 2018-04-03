@@ -1,3 +1,4 @@
+@charset "UTF-8";
 $dis:5px;
 $ffa82d:#ffa82d;
 .mgb-10{margin-bottom:2 * $dis;}
@@ -128,4 +129,104 @@ $ffa82d:#ffa82d;
     margin-top: -10px;
   }
 }
+
+
+
+//计算公式样式 开始
+
+.paramTag .btn{
+  width:32px;
+  height:32px;
+  line-height: 30px;
+  color:#1ab394;
+  border:1px solid #1ab394;
+  margin-bottom:5px;
+  margin-left:5px;
+  padding:0;
+  background: #fff;
+  &:hover{
+    background: #1ab394;
+    color:#fff;
+  }
+}
+.btn.clearOne{
+  width:72px;
+}
+.param-item{margin-bottom:15px;}
+.paramName-tit,.paramName-text{
+  display: inline-block;
+  vertical-align: middle;
+}
+.paramName-tit{
+  width:90px;
+  text-align:left;
+  font-size:14px;
+}
+.bg-1ab394{
+  background:#1ab394;
+  color:#fff;
+}
+.paramName-text, .paramCount{
+  font-size:0;
+  position: relative;
+}
+.aps-innerInput{
+  display: inline-block;
+  vertical-align: middle;
+  width:180px;
+  padding:0 8px;
+  outline: none;
+  border:1px solid #ddd;
+  border-right:none;
+  height:34px;
+  font-size:12px;
+  background: #eee;
+  cursor: pointer;
+}
+.aps-innerBtn{
+  display: inline-block;
+  vertical-align: middle;
+  background:#1ab394;
+  color:#fff;
+  width:34px;
+  height:34px;
+  border:none;
+  padding:0;
+  margin:0 0 0 -1px;
+}
+.paramChoose{
+  width:158px;
+  height:32px;
+  line-height: 30px;
+  background: #f2f2f2;
+  border:1px solid #cacaca;
+  color:#000;
+  padding:0;
+}
+.paramRecord{
+  height:124px;
+  border:1px solid #cacaca;
+  padding:10px;
+  vertical-align: top;
+  font-size:14px;
+}
+
+
+#paramCodeInput-error{
+  font-size:14px;
+  position: absolute;
+  top:0;
+  left:226px;
+  line-height: 34px;
+  width:100px;
+
+}
+label.error{ color:red;font-size:14px;}
+#paramRecordShow{
+  width:0;
+  font-size:0;
+  border:none;
+}
+
+//计算公式样式 结束
 

@@ -86,15 +86,19 @@
                         class="fa fa-check-square-o"></i> 返回
                 </button>
             </div>
-            <div class="pull-right">
-                <input type="hidden" name="state" id="state" value>
-                <button class="btn btn-primary bg-ffa82d  btn-submit" id="submit-btn"><i
-                        class="fa fa-check-square-o"></i> 递交
-                </button>
-                <button class="btn btn-primary bg-ffa82d btn-sav" id="save-btn"><i
-                        class="fa fa-save"></i> 暂存
-                </button>
-            </div>
+
+            <!--修改按钮预留-->
+
+
+            <!--<div class="pull-right">-->
+                <!--<input type="hidden" name="state" id="state" value>-->
+                <!--<button class="btn btn-primary bg-ffa82d  btn-submit" id="submit-btn"><i-->
+                        <!--class="fa fa-check-square-o"></i> 递交-->
+                <!--</button>-->
+                <!--<button class="btn btn-primary bg-ffa82d btn-sav" id="save-btn"><i-->
+                        <!--class="fa fa-save"></i> 暂存-->
+                <!--</button>-->
+            <!--</div>-->
         </div>
     </div>
     <!--表格区-->
@@ -194,13 +198,13 @@
         var dpYear=getQueryString('year'),dpMonth=getQueryString('month'),dpWeek=getQueryString('week');
         tabledatagrid(dpYear,dpMonth,dpWeek);
         $('#td0,#td1,#td2,#td3,#td4').datagrid('hideColumn', 'id');
-        $(".btn-sav").click(function () {
-            btnSubSave(0);
-        });
-        $(".btn-submit").click(function () {
-            btnSubSave(1);
-
-        });
+//        $(".btn-sav").click(function () {
+//            btnSubSave(0);
+//        });
+//        $(".btn-submit").click(function () {
+//            btnSubSave(1);
+//
+//        });
         $(".btn-back").click(function () {
             window.location.href = "./apsCreate.html";
         });
@@ -320,11 +324,10 @@
                     field: 'weekPlan',
                     title: '周计划',
                     width: 100,
-                    align: 'center',
-                    editor: {type: 'numberbox', options: {precision: 1}}
+                    align: 'center'
                 },
-                {field: 'dayPlan', title: '日计划', editor: 'numberbox', width: 100, align: 'center'},
-                {field: 'classPlan', title: '班计划', editor: 'text', width: 150, align: 'center'}
+                {field: 'dayPlan', title: '日计划',  width: 100, align: 'center'},
+                {field: 'classPlan', title: '班计划',  width: 150, align: 'center'}
             ]],
             onAfterEdit: function (rowIndex, rowData, changes) {
                 dataGridObj.pushRowData(rowData);
@@ -354,11 +357,10 @@
                     field: 'mouthPlan',
                     title: '月计划',
                     width: 100,
-                    align: 'center',
-                    editor: {type: 'numberbox', options: {precision: 1}}
+                    align: 'center'
                 },
-                {field: 'weekPlan', title: '周计划', editor: 'numberbox', width: 100, align: 'center'},
-                {field: 'dayPlan', title: '日计划', editor: 'text', width: 150, align: 'center'},
+                {field: 'weekPlan', title: '周计划', width: 100, align: 'center'},
+                {field: 'dayPlan', title: '日计划', width: 150, align: 'center'},
             ]],
             onAfterEdit: function (rowIndex, rowData, changes) {
                 dataGridObj.pushRowData(rowData);
@@ -389,11 +391,10 @@
                     field: 'weekPlan',
                     title: '周计划',
                     width: 100,
-                    align: 'center',
-                    editor: {type: 'numberbox', options: {precision: 1}}
+                    align: 'center'
                 },
-                {field: 'dayPlan', title: '日计划', editor: 'numberbox', width: 100, align: 'center'},
-                {field: 'classPlan', title: '班计划', editor: 'text', width: 150, align: 'center'},
+                {field: 'dayPlan', title: '日计划',  width: 100, align: 'center'},
+                {field: 'classPlan', title: '班计划', width: 150, align: 'center'},
             ]],
             onAfterEdit: function (rowIndex, rowData, changes) {
                 dataGridObj.pushRowData(rowData);
@@ -427,11 +428,10 @@
                     field: 'mouthPlan',
                     title: '月计划',
                     width: 100,
-                    align: 'center',
-                    editor: {type: 'numberbox', options: {precision: 1}}
+                    align: 'center'
                 },
-                {field: 'weekPlan', title: '周计划', editor: 'numberbox', width: 100, align: 'center'},
-                {field: 'dayPlan', title: '日计划', editor: 'text', width: 150, align: 'center'},
+                {field: 'weekPlan', title: '周计划', width: 100, align: 'center'},
+                {field: 'dayPlan', title: '日计划', width: 150, align: 'center'},
             ]],
             onAfterEdit: function (rowIndex, rowData, changes) {
                 dataGridObj.pushRowData(rowData);
@@ -460,11 +460,10 @@
                     field: 'mouthPlan',
                     title: '月计划',
                     width: 100,
-                    align: 'center',
-                    editor: {type: 'numberbox', options: {precision: 1}}
+                    align: 'center'
                 },
-                {field: 'weekPlan', title: '周计划', editor: 'numberbox', width: 100, align: 'center'},
-                {field: 'dayPlan', title: '日计划', editor: 'text', width: 150, align: 'center'},
+                {field: 'weekPlan', title: '周计划', width: 100, align: 'center'},
+                {field: 'dayPlan', title: '日计划', width: 150, align: 'center'},
             ]],
             onAfterEdit: function (rowIndex, rowData, changes) {
                 dataGridObj.pushRowData(rowData);
@@ -479,7 +478,7 @@
         $('#td0,#td1,#td2,#td3,#td4').datagrid('hideColumn', 'id');
     }
     //暂存递交
-    function btnSubSave(status) {
+    /*function btnSubSave(status) {
         var len = $(".tableItemBox").length;
         for (var i = 0; i < len; i++) {
             $("#td" + i).parents('.datagrid-view').siblings(".datagrid-toolbar").find(".l-btn-text").trigger('click');
@@ -507,7 +506,7 @@
             }
         }
         window.location.href = "./apsCreate.html";
-    }
+    }*/
 
 
 

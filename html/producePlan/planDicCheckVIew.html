@@ -5,14 +5,12 @@
     <title>text</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <link rel="stylesheet" href="../../plugins/bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="../../plugins/font-awesome/css/font-awesome.min.css">
-    <link rel="stylesheet" href="../../plugins/ztree/css/metroStyle/metroStyle.css">
-    <link rel="stylesheet" href="../../plugins/datatables/css/jquery.dataTables.min.css">
-    <link rel="stylesheet" href="../../plugins/icheck/skins/square/aero.css">
+    <!--<link rel="stylesheet" href="../../plugins/font-awesome/css/font-awesome.min.css">-->
+    <!--<link rel="stylesheet" href="../../plugins/ztree/css/metroStyle/metroStyle.css">-->
+    <!--<link rel="stylesheet" href="../../plugins/icheck/skins/square/aero.css">-->
     <!--引入样式-->
-    <link rel="stylesheet" href="../../css/common.css">
-    <link rel="stylesheet" href="../../css/orgCheckView.css">
-    <link rel="stylesheet" href="../../plugins/datatables/css/mydatatable.css">
+    <!--<link rel="stylesheet" href="../../css/common.css">-->
+    <link rel="stylesheet" href="../../css/comInnerTable.css">
 
 </head>
 <body>
@@ -23,7 +21,7 @@
         <tr>
             <td class="width-15"><label class="pull-right">上级指标:</label></td>
             <td class="width-35">
-                <input id="parentIdH" name="parent.id" class="form-control" type="hidden" value="" >
+                <input id="parentIdH" name="parent.id" class="form-control" type="hidden" value="">
                 <input id="_parentId" readonly="readonly" name="parentName" type="text" value=""
                        data-msg-required="" class="form-control " style="">
             </td>
@@ -31,11 +29,11 @@
             <td class="width-35">
                 <!--<input id="itemNameH" name="item" class="form-control" type="hidden" value="">-->
                 <input id="itemName" name="itemName" type="text" value="" data-msg-required=""
-                class="form-control required" style="" aria-required="true">
+                       class="form-control required" style="" aria-required="true">
             </td>
         </tr>
         <tr>
-            <td class="width-15 active"><label class="pull-right">指标代码:</label></td>
+            <td class="width-15"><label class="pull-right">指标代码:</label></td>
             <td class="width-35">
                 <!--<input id="itemCodeH" name="itemCode" class="form-control" type="hidden" value="" >-->
                 <input id="itemCode" name="itemCode" type="text" value=""
@@ -56,10 +54,10 @@
                 <input id="itemValue" name="itemValue" type="text" value="" data-msg-required=""
                        class="form-control required" style="" aria-required="true">
             </td>
-            <td class="width-15 active"><label class="pull-right">是否启用:</label></td>
+            <td class="width-15"><label class="pull-right">是否启用:</label></td>
             <td class="width-35">
                 <!--<input id="enableId" name="enableId.id" class="form-control" type="hidden" value="">-->
-                <select id="enable" name="enable" class="form-control"  >
+                <select id="enable" name="enable" class="form-control">
                     <option value="">请选择</option>
                     <option value="1">启用</option>
                     <option value="2">禁用</option>
@@ -81,29 +79,53 @@
 <script src="../../js/customForm-aps.js"></script>
 
 <script>
-    $(document).ready(function() {
+    $(document).ready(function () {
         var id = getQueryString('id');
-        var pId=getQueryString('pid');
+        var pId = getQueryString('pid');
         $('#id').val(id);
-            var url = "/api/aps/Dict/view/" + id;
-            ajaxToServer(url, {}, function (result) {
-                console.log(url,result,2);
-                if (result.success) {
-                    SysOrg = result.apsDict;
-                    var parentid=SysOrg.parentId;
-                    $('#parentIdH').val(parentid);
-                    renderData(SysOrg, $('#inputForm'));
-                    /*渲染parentName*/
-                    renderData(result, $('#inputForm'));
+        if (id == null && pId == null) {
 
-                } else {
-                    layer.msg(result.message);
-                }
-            });
+            console.log(id,pId,1);
+            $('#parentIdH').val(0);
+        } else {
+            if (id == null) {
+                var url = "/api/aps/Dict/view/" + pId;
+                ajaxToServer(url, {}, function (result) {
+                    console.log(url, result, 2);
+                    if (result.success) {
+                        SysOrg = result.apsDict;
+                        var id = SysOrg.id;
+                        $('#parentIdH').val(id);
+                        $('#_parentId').val(result.apsDict.itemName);
+
+                    } else {
+                        layer.msg(result.message);
+                    }
+                });
+            } else {
+                var url = "/api/aps/Dict/view/" + id;
+                ajaxToServer(url, {}, function (result) {
+                    console.log(url, result, 1);
+                    if (result.success) {
+                        SysOrg = result.apsDict;
+                        var parentid = SysOrg.parentId;
+                        $('#parentIdH').val(parentid);
+                        renderData(SysOrg, $('#inputForm'));
+                        /*渲染parentName*/
+                        renderData(result, $('#inputForm'));
+
+                    } else {
+                        layer.msg(result.message);
+                    }
+                });
+            }
+        }
     });
+    function getSubmitFormId(){
+        return "#inputForm";
+    }
 
 </script>
-
 
 
 </body>

@@ -15,34 +15,27 @@
 </head>
 
 <body>
-        <div  class="wrapper wrapper-content ibox-content">
-                <div class="ibox">
-                    <div class="ibox-content">
-                        <div class="row">
-                            <div class="col-lg-12">
-                                <div class="pull-left">
-                                    <select>
-                                        <option value="1">2016</option>
-                                        <option value="2">2017</option>
-                                        <option selected>2018</option>
-                                        <option value="3">2019</option>
-                                        <option value="3">2020</option>
-                                    </select>
-                                    <span>复晟铝业生产经营计划</span>
-                                </div>
-                                <div class="pull-right">
-                                    <button class="btn btn-save">保存</button>
-                                    <button class="btn btn-save">提交</button>
-                                </div>
-                            </div>
-                        </div>
-                      <div class="tableItemBox">
-                          <table id="td0"  class="tableItem"></table>
-                      </div>
+<div  class="wrapper wrapper-content ibox-content">
+    <div class="ibox">
+        <div class="ibox-content">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="pull-left">
+                        <span>复晟铝业年生产经营计划</span>
                     </div>
+                    <div class="pull-right">
+                        <button class="btn btn-save">保存</button>
+                        <button class="btn btn-save">提交</button>
                     </div>
                 </div>
-            <!--表格区-->
+            </div>
+            <div class="tableItemBox">
+                <table id="td0"  class="tableItem"></table>
+            </div>
+        </div>
+    </div>
+</div>
+<!--表格区-->
 
 
 
@@ -63,7 +56,7 @@
     getmsg();
     function getmsg() {
         var data={
-            adYear:$("select").val(),
+            adYear:2018,
             status:"0"
         };
         ajaxToServer1("/api/aps/ApsYearPlan/queryYearPlan",data,function (result) {
@@ -71,6 +64,7 @@
             // planarr.push(result.cpcl);
             planarr.push(result.cpxl);
             planarr.push(result.zljh);
+            planarr.push(result.zyxhzbjh);
             // planarr.push(result.zyxhzbjh);
             createTbody(planarr)
         })
@@ -78,7 +72,7 @@
     function createTbody(planarr) {
         console.log(planarr)
         for(var i=0;i<planarr.length;i++){
-           console.log(planarr[i]) //每种类型的数据，放在一个数组里边
+            console.log(planarr[i]) //每种类型的数据，放在一个数组里边
             for(var j=0;j<planarr[i].length;j++){
                 // console.log(planarr[i][j]);
                 msgobj = {
@@ -125,7 +119,7 @@
         onLoadSuccess:function (data) {
             loadedData = data;
             dataGridObj.mergeCells(data,"#td0","groupName");
-         },
+        },
         toolbar: [{
             text: '保存', iconCls: 'icon-save', handler: function () {
                 //保存时结束当前编辑的行，自动触发onAfterEdit事件如果要与后台交互可将数据通过Ajax提交后台
@@ -145,24 +139,24 @@
             addstatus(status)
         }else{
             status = "1";
-           addstatus(status)
+            addstatus(status)
         }
     })
     //将点击状态添加到数组里边
     function addstatus(status) {
         var len = $(".tableItemBox").length;
         console.log(len)
-            for(var i = 0; i<len;i++){
-                console.log($("#td"+i))
-                // 给每个虚拟btn添加点击事件
-                $("#td"+i).parents('.datagrid-view').siblings(".datagrid-toolbar").find(".l-btn-text").trigger('click');
-            }
-            console.log(status);
-            for(var i=0;i<dataGridObj.saveItemArr.length;i++){
-                dataGridObj.saveItemArr[i].status= status;
-            };
-            var data = dataGridObj.saveItemArr;
-            sendmsg(data)  //将数据发送给后台
+        for(var i = 0; i<len;i++){
+            console.log($("#td"+i))
+            // 给每个虚拟btn添加点击事件
+            $("#td"+i).parents('.datagrid-view').siblings(".datagrid-toolbar").find(".l-btn-text").trigger('click');
+        }
+        console.log(status);
+        for(var i=0;i<dataGridObj.saveItemArr.length;i++){
+            dataGridObj.saveItemArr[i].status= status;
+        };
+        var data = dataGridObj.saveItemArr;
+        sendmsg(data)  //将数据发送给后台
     }
     function sendmsg(data) {
         console.log(data);
