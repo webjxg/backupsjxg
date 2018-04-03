@@ -194,14 +194,7 @@
     $(function () {
         //接收url父页面参数放到input的val里
         var dpYear=getQueryString('year'),dpMonth=getQueryString('month'),dpWeek=getQueryString('week');
-        console.log(dpYear,dpMonth,dpWeek);
-        $('#dpYear').val(dpYear);
-        $('#dpMonth').val(dpMonth);
-        $('#dpWeek').val(dpWeek);
-
-
-
-        tabledatagrid();
+        tabledatagrid(dpYear,dpMonth,dpWeek);
         $('#td0,#td1,#td2,#td3,#td4').datagrid('hideColumn', 'id');
         $(".btn-sav").click(function () {
             btnSubSave(0);
@@ -218,7 +211,7 @@
 
 
     //多表格请求数据渲染方法
-    function tabledatagrid() {
+    function tabledatagrid(dpYear,dpMonth,dpWeek) {
         //建立空数组
         var cljhArr = [],
             bjhArr = [],
@@ -226,9 +219,9 @@
             jszbjhArr = [],
             gxdhzbjhArr = []; //请求数据渲染表格 以及实现datagrid部分功能
 
-        var dpYear = $('#dpYear').val(),
-            dpMonth = $('#dpMonth').val(),
-            dpWeek = $('#dpWeek').val();
+//        var dpYear = $('#dpYear').val(),
+//            dpMonth = $('#dpMonth').val(),
+//            dpWeek = $('#dpWeek').val();
 
         var data0 = {
             "dpYear": dpYear,
@@ -239,6 +232,7 @@
         ajaxToServer("/api/aps/DayPlan/form", da, table);
         function table(result) {
             console.log(da, result);
+            $("#id").val(result.DayPlan.id);
             var bjh = result.bjh,
                 cljh = result.cljh,
                 zlzbjh = result.zlzbjh,
@@ -502,7 +496,8 @@
         });
         var data={
             "dayPlans":JSON.stringify(saveArr),
-            "status":JSON.stringify(status),
+            "status":status,
+            "id":$('#id').val()
         };
 
         console.log(data);

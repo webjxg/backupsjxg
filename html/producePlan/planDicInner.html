@@ -19,8 +19,8 @@
     <div class="row">
         <div class="col-sm-12">
             <div class="pull-left">
-                <button class="btn bg-ffa82d btn-sm" data-toggle="tooltip" data-placement="left"
-                        onclick="openEditDialog('新增指标','./producePlan/planDicCheckView.html','800px','500px')" title="添加"><i class="fa fa-plus"></i> 添加
+                <button class="btn bg-ffa82d btn-sm" id="addBtn"  data-toggle="tooltip" data-placement="left"
+                        onclick="openEditDialog('查看指标信息', './producePlan/planDicCheckView.html', '800px', '600px')"  title="添加"><i class="fa fa-plus"></i> 添加
                 </button>
                 <button class="btn bg-ffa82d btn-sm " id="refresh-btn" data-toggle="tooltip" data-placement="left"
                         onclick="window.location.reload()" title="刷新"><i class="glyphicon glyphicon-repeat"></i> 刷新
@@ -61,14 +61,18 @@
         ajaxToServer("/api/aps/Dict/ajaxTreeJson/"+node,{},function(tableData){
             renderTableData(tableData.rows);
             console.log(tableData);
-            clickButton();
+            clickButton(node);
         })
     }
     window.pageLoad= function () {
             renderTableData("");
     };
     pageLoad();
-    function clickButton() {
+    function clickButton(node) {
+        $('#addBtn').click(function () {
+
+        });
+
         $('.btn-check').click(function () {
             var id = $(this).parents("tr").find('.i-Checks').attr('id');
             openDialog('查看指标信息', './producePlan/planDicCheckView.html?id=' + id, '800px', '600px')
@@ -81,23 +85,24 @@
             var id = $(this).parents("tr").find('.i-Checks').attr('id');
             deleteIt('确定要删除该指标吗', '/api/aps/Dict/delete/'+id)
         });
+        $('.btn-addson').click(function(){
+            var id = $(this).parents("tr").find('.i-Checks').attr('id');
+            openEditDialog('添加下级菜单','./producePlan/planDicCheckView.html?pid='+id,'800px','600px')
+        });
     }
     function renderTableData(data) {
         var tableStr = "";
         for (var i = 0; i < data.length; i++) {
-            var count = 'data-tt-id=' + data[i].id;
-            if (data[i]._parentId && data[i]._parentId != '') {
-                count += '  data-tt-parent-id=' + data[i]._parentId;
-            }
-            tableStr += "<tr class='alignCenter' " + count + " >"
+            tableStr += "<tr class='alignCenter' >"
                 + "<td class='i-Checks' id='" + data[i].id + "'>" + data[i].itemName + "</td>"
                 + "<td>" + data[i].itemCode + "</td>"
                 + "<td>" + data[i].itemValue + "</td>"
                 + "<td>" + data[i].itemUnit + "</td>"
                 + "<td class='autoWidth' >" +
-                "<a class='btn btn-info btn-xs btn-check'><i class='fa fa-search-plus'></i>查看</a>" +
-                " <a class='btn btn-success btn-xs btn-change'><i class='fa fa-edit'></i>修改</a>" +
-                " <a class='btn btn-danger btn-xs btn-delete'><i class='fa fa-trash'></i> 删除</a>"  +
+                "<a class='btn bg-ffa82d btn-check'><i class='fa fa-search-plus'></i>查看</a>" +
+                " <a class='btn bg-62b5e9 btn-change'><i class='fa fa-edit'></i>修改</a>" +
+                " <a class='btn bg-f75c5c btn-delete'><i class='fa fa-trash'></i> 删除</a>"  +
+                " <a class='btn bg-62b5e9 btn-addson'><i class='fa fa-edit'></i>添加下级指标</a>"  +
                 "</td>"
 
                 + "</tr>";
@@ -116,9 +121,9 @@
                 if(result.success == true){
                     layer.msg("删除成功");
                     var frameActive = top.getActiveTab().attr("name");
-                    var obj = $('#refresh-btn', top.window.frames[frameActive].document);
+                    var obj = $('.fa-refresh', top.window.frames[frameActive].document);
                     if(obj.length == 0){
-                        obj = $('#refresh-btn', top.window.frames[frameActive].document);
+                        obj = $('.fa-refresh', top.window.frames[frameActive].document);
                     }
                     obj.trigger('click');
                 }
