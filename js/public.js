@@ -164,29 +164,29 @@ function icheckinner() {
 
 //上传头像
 function initWebuploader(url,filePicker, ImagePreview,ImgUrl) {
-        var $list = $(ImagePreview),//获取文件列表
-            $li = $(
-                '<div id="" class="file-item thumbnail">' +
-                '<img>' +
-                '</div>'
-            );
-        $img = $li.find('img');
-        $list.append($li); // $list为容器jQuery实例
-        $img.attr('src', ImgUrl);//设置预览图
-        // console.log(BASE_URL + url);
+    var $list = $(ImagePreview),//获取文件列表
+        $li = $(
+            '<div id="" class="file-item thumbnail">' +
+            '<img>' +
+            '</div>'
+        );
+    $img = $li.find('img');
+    $list.append($li);          // $list为容器jQuery实例
+    $img.attr('src', ImgUrl);   //设置预览图
+                                // console.log(BASE_URL + url);
     var uploader = WebUploader.create({
 
-        // 选完文件后，是否自动上传。
+                                // 选完文件后，是否自动上传。
         auto: true,
 
-        // // swf文件路径
-        // swf: BASE_URL + '/plugins/webUploader/Uploader.swf',
+                                // // swf文件路径
+                                // swf: BASE_URL + '/plugins/webUploader/Uploader.swf',
 
-        // 文件接收服务端。
+                                // 文件接收服务端。
         server: BASE_URL + url,
 
-        // 选择文件的按钮。可选。
-        // 内部根据当前运行是创建，可能是input元素，也可能是flash.
+                                // 选择文件的按钮。可选。
+                                // 内部根据当前运行是创建，可能是input元素，也可能是flash.
         pick: {
             id: filePicker,
             multiple:false,
@@ -201,16 +201,8 @@ function initWebuploader(url,filePicker, ImagePreview,ImgUrl) {
         fileNumLimit: 1,
 
     });
-    // console.log(BASE_URL + url);
+                                // console.log(BASE_URL + url);
     uploader.on('fileQueued', function (file) {
-        // var $list = $(ImagePreview),//获取文件列表
-        //     $li = $(
-        //         '<div id="' + file.id + '" class="file-item thumbnail">' +
-        //         '<img>' +'<span>'+file.name+'<span>'+
-        //         '</div>'
-        //     );
-        //
-        // $list.append($li); // $list为容器jQuery实例
         // 创建缩略图
         uploader.makeThumb(file, function (error, src) {
             if (error) {
@@ -220,19 +212,9 @@ function initWebuploader(url,filePicker, ImagePreview,ImgUrl) {
             $img.attr('src', src);//设置预览图
         }, 100, 100); //100x100为缩略图尺寸
 
-        // uploader.on("uploadFinished", function () {
-        //
-        //     uploader.destroy();
-        //
-        // });
-        // uploader.on('uploadSuccess', function (file, response) {
-        //     uploader.removeFile(file);
-        //     initWebuploader(url,filePicker, ImagePreview);
-        // });
     });
     uploader.on( 'uploadSuccess', function( file,response) {
         var FileName=filename(response.saveName);//需要拿到上传接口的返回值文件名写入到页面photo的val里
     });
 
 }
-

@@ -119,8 +119,10 @@ table.dataTable thead{
   /*border: none;*/
 }
 .ibox-content table.dataTable tbody td {
-  padding: 6px 0 7px 0;
-  vertical-align: middle; }
+  padding: 6px 5px 7px 5px;
+  vertical-align: middle; 
+  text-align: center;
+  }
 .ibox-content table.dataTable tbody td a{
   margin: 2px;
 }
@@ -209,6 +211,9 @@ tbody > tr:last-child > td {
   width: 80%;
   font-size: 14px;
   box-shadow: none; }
+.input-group{
+  width:80%;
+}
 .form-control:focus, .single-line:focus {
   border-color: #1ab394 !important; }
 #left {
@@ -255,5 +260,8 @@ a#filePicker{
   margin-left: 25px;
 }
 
-
+.alignCenter{
+  text-align: center;
+}
+.autoWidth{width:1%;white-space: nowrap;}
 /*# sourceMappingURL=dictionaries.css.map */

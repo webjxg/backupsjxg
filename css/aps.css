@@ -25,10 +25,10 @@
   color: #000;
   border: 1px solid #cacaca;
   line-height: 28px; }
-  .btn:hover {
-    color: #fff; }
-  .btn .fa {
-    margin: 0 3px; }
+.btn:hover {
+  color: #fff; }
+.btn .fa {
+  margin: 0 3px; }
 
 .table .btn {
   width: auto;
@@ -42,25 +42,25 @@
   background: #ffa82d;
   border-color: #ffa82d;
   color: #fff; }
-  .bg-ffa82d:hover {
-    background: #ff9000;
-    border-color: #ff9000; }
+.bg-ffa82d:hover {
+  background: #ff9000;
+  border-color: #ff9000; }
 
 .bg-62b5e9 {
   background: #62b5e9;
   border-color: #62b5e9;
   color: #fff; }
-  .bg-62b5e9:hover {
-    background: #1897e7;
-    border-color: #1897e7; }
+.bg-62b5e9:hover {
+  background: #1897e7;
+  border-color: #1897e7; }
 
 .bg-f75c5c {
   background: #f75c5c;
   border-color: #f75c5c;
   color: #fff; }
-  .bg-f75c5c:hover {
-    background: #f52f2f;
-    border-color: #f52f2f; }
+.bg-f75c5c:hover {
+  background: #f52f2f;
+  border-color: #f52f2f; }
 
 .col-1ab394 {
   color: #1ab394; }
@@ -82,18 +82,18 @@
   font-size: 0;
   display: inline-block;
   vertical-align: middle; }
-  .apsType-linkage li {
-    font-size: 14px;
-    display: inline-block;
-    vertical-align: middle;
-    margin-right: 10px; }
-    .apsType-linkage li select, .apsType-linkage li #datetimepicker {
-      width: 120px;
-      border: 1px solid #e5e6e7;
-      background: #fff;
-      padding: 6px 12px;
-      height: 34px;
-      border-radius: 6px; }
+.apsType-linkage li {
+  font-size: 14px;
+  display: inline-block;
+  vertical-align: middle;
+  margin-right: 10px; }
+.apsType-linkage li select, .apsType-linkage li #datetimepicker {
+  width: 120px;
+  border: 1px solid #e5e6e7;
+  background: #fff;
+  padding: 6px 12px;
+  height: 34px;
+  border-radius: 6px; }
 
 .apsType-linkage .form-control {
   display: inline-block;
@@ -105,15 +105,15 @@
   font-size: 16px;
   height: 30px;
   line-height: 30px; }
-  .titName:before {
-    content: "";
-    width: 4px;
-    height: 20px;
-    background: #1ab394;
-    position: absolute;
-    top: 50%;
-    left: 0;
-    margin-top: -10px; }
+.titName:before {
+  content: "";
+  width: 4px;
+  height: 20px;
+  background: #1ab394;
+  position: absolute;
+  top: 50%;
+  left: 0;
+  margin-top: -10px; }
 
 .paramTag .btn {
   width: 32px;
@@ -125,9 +125,9 @@
   margin-left: 5px;
   padding: 0;
   background: #fff; }
-  .paramTag .btn:hover {
-    background: #1ab394;
-    color: #fff; }
+.paramTag .btn:hover {
+  background: #1ab394;
+  color: #fff; }
 
 .btn.clearOne {
   width: 72px; }

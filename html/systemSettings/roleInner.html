@@ -96,6 +96,7 @@
             api = getQueryString('api') || 'form';
             var url = "/api/sys/SysRole/" + api + "/" + id;
             ajaxToServer(url, {}, function (result) {
+                console.log(result)
                 if (result.success) {
                     var data = result.roleTypeList,
                         html="<option value =''>请选择</option>";

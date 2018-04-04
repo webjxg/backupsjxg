@@ -11,233 +11,282 @@
     <link rel="stylesheet" href="../../plugins/webUpLoader/webuploader.css">
     <!--引入样式-->
     <link rel="stylesheet" href="../../css/common.css">
-    <!--<link rel="stylesheet" href="../../css/userCheckView.css">-->
     <link rel="stylesheet" href="../../css/customDataTable.css">
 
 </head>
 <script>
-    var BASE_URL='http://114.115.165.184:8080/admin-api'
+    var BASE_URL = 'http://114.115.165.184:8080/admin-api'
 </script>
 <body>
-    <i id="btnMenu" class="icon-th-list" style="cursor:pointer;float:right;margin:10px;"></i>
-    <form id="inputForm" class="form-horizontal" action="/api/sys/SysUser/save" method="post">
-        <input id="id" name="id" type="hidden" />
-        <table class="table table-bordered  table-condensed dataTables-example dataTable no-footer">
-            <tbody>
-                <tr>
-                    <td class="width-15 active"><label class="pull-right"><font color="red">*</font>头像：</label></td>
-                    <td class="width-35">
-                        <input id="nameImage" name="photo" maxlength="255" class="input-xlarge" type="hidden" />
-                        <ol id="nameImagePreview"></ol>
-                        <a href="javascript:" id="filePicker"  class="btn btn-primary">选择</a>&nbsp;
-                        <!--<a href="javascript:"  class="btn btn-default">清除</a>-->
-                    </td>
-                    <td class="width-15" class="active"><label class="pull-right"><font color="red">*</font>归属公司:</label></td>
-                    <td class="width-35">
-                        <input id="companyId" name="company.id" class="form-control" type="hidden" value="1" aria-required="true">
-                        <div class="input-group">
-                            <input id="companyName" name="companyName" readonly="readonly" type="text" value="" data-msg-required="" class="form-control valid" style="" aria-required="true" aria-invalid="false">
-                            <span class="input-group-btn">
-	       		                <button type="button" id="companyButton" class="btn   btn-primary  "><i class="fa fa-search"></i></button>
+
+<i id="btnMenu" class="icon-th-list" style="cursor:pointer;float:right;margin:10px;"></i>
+<form id="inputForm" class="form-horizontal" action="/api/sys/SysUser/save" method="post">
+    <input id="id" name="id" type="hidden"/>
+    <table class="table table-bordered  table-condensed dataTables-example dataTable no-footer">
+        <tbody>
+        <tr>
+            <!--上传头像-->
+            <td class="width-15 active" rowspan="2"><label class="pull-right"><font color="red">*</font>头像：</label></td>
+            <td class="width-35 " rowspan="2">
+                <input id="nameImage" name="photo" maxlength="255" class="input-xlarge" type="hidden" value="0"/>
+                <ol id="nameImagePreview"></ol>
+                <a href="javascript:" id="filePicker" class="btn btn-primary">选择</a>&nbsp;
+            </td>
+
+            <!--归属公司-->
+            <td class="width-15 active" class="active"><label class="pull-right"><font color="red">*</font>归属公司:</label></td>
+            <td class="width-35" >
+                <input id="companyId" name="company.id" class="form-control" type="hidden" value="1"
+                       aria-required="true">
+                <div class="input-group changeCompany">
+                    <input id="companyName" name="companyName" readonly="readonly" type="text" value=""
+                           data-msg-required="" class="form-control valid" style="" aria-required="true"
+                           aria-invalid="false">
+                    <span class="input-group-btn">
+                        <button type="button" id="companyButton" class="btn   btn-primary  "><i
+                                class="fa fa-search"></i></button>
+                    </span>
+
+                </div>
+            </td>
+        </tr>
+        <tr>
+            <!--归属职位-->
+            <td class="width-15 active" class="active"><label class="pull-right"><font color="red">*</font>所属职位:</label></td>
+            <td class="width-35" >
+                <input type="hidden" name="jobTypeList" id="jobTypeListId">
+                <select name="jobTypeList" id="jobTypeList" class="form-control"></select>
+            </td>
+        </tr>
+        <tr>
+            <!--归属部门-->
+            <td class="active">
+                <label class="pull-right">
+                    <font color="red">*</font>归属部门:
+                </label>
+            </td>
+            <td>
+                <input id="officeId" name="office.id" class="form-control" type="hidden" value="4" aria-required="true">
+                <div class="input-group">
+                    <input id="officeName" name="roleName" readonly="readonly" type="text" value="" data-msg-required=""
+                           class="form-control valid" style="" aria-required="true" aria-invalid="false">
+                    <span class="input-group-btn">
+	       		                <button type="button" id="officeButton" class="btn   btn-primary  "><i
+                                        class="fa fa-search"></i></button>
        		                </span>
 
-                        </div>
-                        <label id="companyName-error" class="error" for="companyName" style="display:none"></label>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="active">
-                        <label class="pull-right">
-                            <font color="red">*</font>归属部门:
-                        </label>
-                    </td>
-                    <td>
-                        <input id="officeId" name="office.id" class="form-control" type="hidden" value="4" aria-required="true">
-                        <div class="input-group">
-                            <input id="officeName" name="roleName" readonly="readonly" type="text" value="" data-msg-required="" class="form-control valid" style="" aria-required="true" aria-invalid="false">
-                            <span class="input-group-btn">
-	       		                <button type="button" id="officeButton" class="btn   btn-primary  "><i class="fa fa-search"></i></button>
-       		                </span>
-
-                        </div>
-                        <label id="officeName-error" class="error" for="officeName" style="display:none"></label>
-                    </td>
-                    <td class="active">
-                        <label class="pull-right">
-                            <font color="red">*</font>工号:
-                        </label>
-                    </td>
-                    <td>
-                        <input id="no" name="no" class="form-control required" type="text" value="" maxlength="50"/>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="active">
-                        <label class="pull-right">
-                            <font color="red">*</font>姓名:
-                        </label>
-                    </td>
-                    <td>
-                        <input id="name" name="name" class="form-control required" type="text" value="" maxlength="50"/>
-                    </td>
-                    <td class="active">
-                        <label class="pull-right">
-                            <font color="red">*</font>登录名:
-                        </label>
-                    </td>
-                    <td>
-                        <input id="oldLoginName" name="oldLoginName" type="hidden" value="">
-                        <input id="loginName" name="loginName" class="form-control required userName" type="text" value="" maxlength="50"/>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="active">
-                        <label class="pull-right">密码:</label>
-                    </td>
-                    <td>
-                        <input id="newPassword" name="newPassword" type="password" value="" maxlength="50" minlength="3" class="form-control "/>
-                        <span class="help-inline">若不修改密码，请留空。</span>
-                    </td>
-                    <td class="active">
-                        <label class="pull-right">确认密码:</label>
-                    </td>
-                    <td>
-                        <input id="confirmNewPassword" name="confirmNewPassword" type="password" class="form-control " value="" maxlength="50" minlength="3" equalTo="#newPassword"/>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="active">
-                        <label class="pull-right">邮箱:</label>
-                    </td>
-                    <td>
-                        <input id="email" name="email" class="form-control email" type="text" value="" maxlength="100"/>
-                    </td>
-                    <td class="active">
-                        <label class="pull-right">电话:</label>
-                    </td>
-                    <td>
-                        <input id="phone" name="phone" class="form-control" type="text" value="" maxlength="100"/>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="active">
-                        <label class="pull-right">手机:</label>
-                    </td>
-                    <td>
-                        <input id="mobile" name="mobile" class="form-control" type="text" value="" maxlength="100"/>
-                    </td>
-                    <td class="active">
-                        <label class="pull-right">用户状态:</label>
-                    </td>
-                    <td>
-                        <select id="loginFlag" name="enable" class="form-control">
-                            <option value="1">可用</option>
-                            <option value="0">禁用</option>
-                        </select>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="active">
-                        <input type="text" name="roleName" hidden="hidden" value="">
-                        <label class="pull-right"><font color="red">*</font>用户角色:</label>
-                    </td>
-                    <td>
-                        <input id="rolenameId" name="roleNameId" class="form-control" type="hidden" value="">
-                        <div class="input-group" id="ppalert">
-                            <input id="roleName" name="roleName" type="text"
-                                   value="" data-msg-required="" readonly="readonly" class="form-control" >
-                            <span class="input-group-btn">
+                </div>
+                <label id="officeName-error" class="error" for="officeName" style="display:none"></label>
+            </td>
+            <!--工号-->
+            <td class="active">
+                <label class="pull-right">
+                    <font color="red">*</font>工号:
+                </label>
+            </td>
+            <td>
+                <input id="no" name="no" class="form-control required" type="text" value="" maxlength="50"/>
+            </td>
+        </tr>
+        <tr>
+            <!--姓名-->
+            <td class="active">
+                <label class="pull-right">
+                    <font color="red">*</font>姓名:
+                </label>
+            </td>
+            <td>
+                <input id="name" name="name" class="form-control required" type="text" value="" maxlength="50"/>
+            </td>
+            <!--登录名-->
+            <td class="active">
+                <label class="pull-right">
+                    <font color="red">*</font>登录名:
+                </label>
+            </td>
+            <td>
+                <input id="oldLoginName" name="oldLoginName" type="hidden" value="">
+                <input id="loginName" name="loginName" class="form-control required userName" type="text" value=""
+                       maxlength="50"/>
+            </td>
+        </tr>
+        <tr>
+            <!--密码-->
+            <td class="active">
+                <label class="pull-right">密码:</label>
+            </td>
+            <td>
+                <input id="newPassword" name="newPassword" type="password" value="" maxlength="50" minlength="3"
+                       class="form-control "/>
+                <span class="help-inline">若不修改密码，请留空。</span>
+            </td>
+            <!--确认密码-->
+            <td class="active">
+                <label class="pull-right">确认密码:</label>
+            </td>
+            <td>
+                <input id="confirmNewPassword" name="confirmNewPassword" type="password" class="form-control " value=""
+                       maxlength="50" minlength="3" equalTo="#newPassword"/>
+            </td>
+        </tr>
+        <tr>
+            <!--邮箱-->
+            <td class="active">
+                <label class="pull-right">邮箱:</label>
+            </td>
+            <td>
+                <input id="email" name="email" class="form-control email" type="text" value="" maxlength="100"/>
+            </td>
+            <!--电话-->
+            <td class="active">
+                <label class="pull-right">电话:</label>
+            </td>
+            <td>
+                <input id="phone" name="phone" class="form-control" type="text" value="" maxlength="100"/>
+            </td>
+        </tr>
+        <tr>
+            <!--手机-->
+            <td class="active">
+                <label class="pull-right">手机:</label>
+            </td>
+            <td>
+                <input id="mobile" name="mobile" class="form-control" type="text" value="" maxlength="100"/>
+            </td>
+            <!--用户状态-->
+            <td class="active">
+                <label class="pull-right">用户状态:</label>
+            </td>
+            <td>
+                <select id="loginFlag" name="enable" class="form-control">
+                    <option value="1">可用</option>
+                    <option value="0">禁用</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <!--用户角色-->
+            <td class="active">
+                <input type="text" name="roleName" hidden="hidden" value="">
+                <label class="pull-right"><font color="red">*</font>用户角色:</label>
+            </td>
+            <td>
+                <input id="rolenameId" name="roleNameId" class="form-control" type="hidden" value="">
+                <div class="input-group" id="ppalert">
+                    <input id="roleName" name="roleName" type="text"
+                           value="" data-msg-required="" readonly="readonly" class="form-control">
+                    <span class="input-group-btn">
 	       		        <button type="button" id="primaryPersonButton" class="btn   btn-primary  ">
                             <i class="fa fa-search"></i>
                         </button>
        		        </span>
-                        </div>
-                    </td>
-                    <td class="active">
-                        <label class="pull-right">备注:</label>
-                    </td>
-                    <td>
-                        <textarea id="remarks" name="remark" maxlength="200" class="form-control" rows="3"></textarea>
-                    </td>
-                    <td class="active">
-                        <label class="pull-right"></label>
-                    </td>
-                </tr>
-                <tr>
-                    <td class="">
-                        <label class="pull-right">创建时间:</label>
-                    </td>
-                    <td>
-                        <span class="lbl">2016年2月24日 星期三 23:27:47</span>
-                    </td>
-                    <td class="">
-                        <label class="pull-right">最后登陆:</label>
-                    </td>
-                    <td>
-                        <span class="lbl">IP: &nbsp;&nbsp;&nbsp;&nbsp;时间：</span>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </form>
-    <!--核心插件-->
-    <script src="../../js/jquery-2.2.4.min.js"></script>
-    <script src="../../plugins/bootstrap/js/bootstrap.min.js"></script>
-    <!--附属插件-->
-    <script src="../../plugins/validate/jquery.validate.min.js"></script>
-    <script src="../../plugins/validate/messages_zh.min.js"></script>
-    <script src="../../plugins/layer/layer.js"></script>
-    <script src="../../plugins/icheck/icheck.min.js"></script>
-    <script src="../../plugins/webUpLoader/webuploader.js"></script>
-    <!--自定义文件-->
-    <script src="../../js/jeeplus.js"></script>
-    <script src="../../js/customForm.js"></script>
-    <script src="../../js/public.js"></script>
-    <script src="../../js/page.js"></script>
+                </div>
+            </td>
+            <!--备注-->
+            <td class="active">
+                <label class="pull-right">备注:</label>
+            </td>
+            <td>
+                <textarea id="remarks" name="remark" maxlength="200" class="form-control" rows="3"></textarea>
+            </td>
+            <td class="active">
+                <label class="pull-right"></label>
+            </td>
+        </tr>
+        <tr>
+            <!--创建时间-->
+            <td class="active">
+                <label class="pull-right">创建时间:</label>
+            </td>
+            <td>
+                <input type="text" name="createDate" class="form-control">
+            </td>
+            <!--修改时间-->
+            <td class="active">
+                <label class="pull-right">修改时间:</label>
+            </td>
+            <td>
+                <input type="text" name="updateDate" class="form-control">
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</form>
+<!--核心插件-->
+<script src="../../js/jquery-2.2.4.min.js"></script>
+<script src="../../plugins/bootstrap/js/bootstrap.min.js"></script>
+<!--附属插件-->
+<script src="../../plugins/validate/jquery.validate.min.js"></script>
+<script src="../../plugins/validate/messages_zh.min.js"></script>
+<script src="../../plugins/layer/layer.js"></script>
+<script src="../../plugins/icheck/icheck.min.js"></script>
+<script src="../../plugins/webUpLoader/webuploader.js"></script>
+<!--自定义文件-->
+<script src="../../js/jeeplus.js"></script>
+<script src="../../js/customForm.js"></script>
+<script src="../../js/public.js"></script>
+<script src="../../js/page.js"></script>
 
 
-
-
-
-
-    <script>
-        function filename(filen){$('#nameImage').val(filen)}
-        $(document).ready(function() {
-            filename();
-            icheckinner();
-            var id = getQueryString('id');
-            $('#id').val(id);
-
-            /*api = getQueryString('api') || 'form';*/
-            if (id) {
-                /*此处后端接口  id为弹出窗口自带的id 通过浏览器方法传参得到*/
-                var url = "/api/sys/SysUser/view/" + id;
-                ajaxToServer(url, {}, function (result) {
-//                    console.log(result.sysUser);查看请求回来的参数
-                    if (result.success) {
-                        renderData(result.sysUser, $('#inputForm'));
-                        /*运行把ajax数据渲染到弹出窗口中*/
-                        renderData(result, $('#inputForm'));
-                    } else {
-                        layer.msg(result.message);
-                    }
-
-                });
-//                                  /api/img/sys/SysUpload/upimg?imgPath=img
-                    /*上传头像*/
-                    initWebuploader('/api/img/sys/SysUpload/upimg?imgPath=img',
-                            '#filePicker',
-                            "#nameImagePreview",
-                            BASE_URL+'/api/img/sys/SysUpload/showImg/'+id
-                    )
+<script>
+    function filename(filen) {
+        $('#nameImage').val(filen)
+        var str = BASE_URL + filen
+        $('#nameImage img').attr('src', str)
+    }
+    $(document).ready(function () {
+        filename();
+        icheckinner();
+        var id = getQueryString('id');
+        $('#id').val(id);
+        /*api = getQueryString('api') || 'form';*/
+        if (id) {
+            /*此处后端接口  id为弹出窗口自带的id 通过浏览器方法传参得到*/
+            var url = "/api/sys/SysUser/form/" + id;
+            ajaxToServer(url, {}, function (result) {
+                console.log(result);
+                if (result.success) {
+                    renderData(result.sysUser, $('#inputForm'));
+                    /*运行把ajax数据渲染到弹出窗口中*/
+                    renderData(result, $('#inputForm'));
+                    renderjobTypeList(result.jobTypeList)
+                } else {
+                    layer.msg(result.message);
                 }
-        });
 
-        /*清除头像*/
-        function getSubmitFormId(){
-            return "#inputForm";
+            });
         }
 
-    </script>
+        //渲染下拉菜单
+        function renderjobTypeList (data) {
+           var str='';
+            $.each(data,function (index,item) {
+            str+= '<option value="'+data[index].id+'">'+data[index].label+'</optionid>'
+            });
+            $('#jobTypeList').append(str);
+        }
+        //点击把id放到隐藏input中
+        /*$('#jobTypeList').click(function () {
+            var joblist=$('#jobTypeList option:selected').val();
+            $('#jobTypeListId').val(joblist);
+        });*/
+
+
+        /*上传头像*/
+        initWebuploader('/api/img/sys/SysUpload/upimg?imgPath=img',
+            '#filePicker',
+            "#nameImagePreview",
+            BASE_URL + '/api/img/sys/SysUpload/showImg/' + id
+        );
+        layerInZtree('.changeCompany', ['300px', '424px'], './systemSettings/userCompany.html', '1', '#companyName', '#companyId', '请选择部门');
+
+
+    })
+    /*清除头像*/
+    function getSubmitFormId() {
+        return "#inputForm";
+    }
+
+</script>
 </body>
 </html>

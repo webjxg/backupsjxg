@@ -90,6 +90,7 @@
         //查看角色信息接口
         ajaxToServer("/api/sys/SysRole/view/"+id, {}, function (result) {
             if (result.success) {
+                console.log(result)
                 var data = result.list,
                     html = "",
                     SysRole = result.SysRole;

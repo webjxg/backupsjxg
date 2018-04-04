@@ -148,13 +148,11 @@ function getQueryString(name, url) {
     r = url.substr(1).match(reg);
     if (r != null) return unescape(r[2]); return null;
 }
-//刷新当前选中tab对应的iframe
 
+//刷新当前选中tab对应的iframe
 function refreshActiveTab() {
     var target = top.getActiveTab();
-
     var url = target.attr('src');
-    console.log(url);
     var t = top.layer;
     //显示loading提示
     var loading = t.load();
@@ -428,13 +426,12 @@ function deleteItem(mess,url,id){
         ajaxToServer1(url,data,function(result){
             if(result.success == true){
                 var frameActive = top.getActiveTab().attr("name");
-                console.log(frameActive);
                 var obj = $('#search-btn', top.window.frames[frameActive].document);
-                console.log(obj.length);
                 if(obj.length == 0){
                     obj = $('#refresh-btn', top.window.frames[frameActive].document);
                     if(obj.length == 0){
 
+                        top.refreshActiveTab();
                     }
 
                 }

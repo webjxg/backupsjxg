@@ -315,7 +315,6 @@ function doSubmit(){
     var validateFlag = formObj.validate({
         submitHandler: function(form){
             var formdata = JSON.stringify(formObj.serializeJSON());
-            console.log(formdata);
             layer.msg('正在提交，请稍等...',{time: 1000});
             ajaxToServer(url,formdata,function(result){
                 console.log(url,formdata,result);

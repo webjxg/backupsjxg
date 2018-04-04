@@ -11,9 +11,10 @@
     <link rel="stylesheet" href="../../plugins/layer/theme/default/layer.css">
     <link rel="stylesheet" href="../../plugins/icheck/skins/square/green.css">
     <link rel="stylesheet" href="../../plugins/datatables/css/mydatatable.css">
+    <!--样式-->
     <link rel="stylesheet" href="../../css/common.css">
     <link rel="stylesheet" href="../../css/customDatagrid.css">
-    <link rel="stylesheet" href="../../css/dictionaries.css">
+    <link rel="stylesheet" href="../../css/customDataTable.css">
     <link rel="stylesheet" href="../../css/aps.css">
 </head>
 <body>
@@ -38,7 +39,8 @@
                             </li>
                             <li class="hide month">
                                 计划周期（年月）：
-                                <input type="text" value=" " id="datetimepicker" class="time-input form-control">
+                                <input type="text" value="" id="yMPicker" class="time-input form-control datePicker">
+                                <input type="text" value="" id="dayPicker" class="time-input form-control hide datePicker">
                             </li>
                             <li class="hide week">
                                 计划周期（周）：
@@ -80,8 +82,8 @@
                             <th>计划周期</th>
                             <th>创建人</th>
                             <th>创建时间</th>
-                            <th>操作</th>
                             <th>状态</th>
+                            <th>操作</th>
                         </tr>
                         </thead>
                         <!--表内容-->
@@ -132,14 +134,15 @@
 <script>
     $(function(){
         var typeVal,getYear,getMonth;
-        var apsType, $year, $month ,$week;
+        var $type,$year, $month ,$week,$status;
         window.pageLoad = function() {
+            getDataFn();
             var data = {
-                type: $("#apsType").val(),
+                type: $type,
                 year: $year,
                 month: $month,
                 week: $week,
-                status: $("#apsState").val()
+                status: $status
             };
             console.log(data);
             Page.init("/api/aps/ApsPlan/page",data,true,function(tableData){
@@ -162,10 +165,12 @@
             typeVal = $(this).val();
         $('.week').addClass('hide');
         if(typeVal == "YEAR" || typeVal == "MONTH"){
-            $('.week').addClass('hide');
+            $('.week,#dayPicker').addClass('hide');
             $('.month').removeClass('hide');
+            $("#yMPicker").removeClass('hide');
             getYear = date.getFullYear();
-            $("#datetimepicker").datetimepicker({
+            $("#yMPicker").val(getYear);
+            $("#yMPicker").datetimepicker({
                 format:"yyyy",
                 language:'cn',
                 weekStart: 1,
@@ -175,15 +180,15 @@
                 minView: "4",
                 forceParse: 0,
             });
-            $("#datetimepicker").val(getYear);
-        }else if(typeVal == "DAY"){
-            $('.month').removeClass('hide');
-            $('.week').removeClass('hide');
 
+        }else if(typeVal == "DAY"){
+            $('.month,.week,#dayPicker').removeClass('hide');
+            $('#yMPicker').addClass('hide');
             getYear = date.getFullYear();
             getMonth = date.getMonth()+1;
             getMonth = (getMonth<10?"0"+getMonth:getMonth);
-            $("#datetimepicker").datetimepicker({
+            $("#dayPicker").val(getYear+"-"+getMonth);
+            $("#dayPicker").datetimepicker({
                 format:"yyyy-mm",
                 language:'cn',
                 weekStart: 1,
@@ -193,29 +198,33 @@
                 minView: "3",
                 forceParse: 0,
             });
-            $("#datetimepicker").val(getYear+"-"+getMonth);
-
         }else{
             $('.week').addClass('hide');
             $('.month').addClass('hide');
         }
-        apsType = $("#datetimepicker").val().split("-"),
-        $year = apsType[0],
-        $month = apsType[1],
-        $week = $("#apsWeek").val();
-
+        getDataFn();
     });
 
+    function getDataFn(){
+        var apsType = $('.datePicker:not(.hide)').val().split("-");
+        $year = apsType[0],
+        $month = apsType[1],
+        $week = $("#apsWeek").val(),
+        $type = $("#apsType").val(),
+        $status =$("#apsState").val();
+        console.log($year,$month,$week,$type,$status)
+
+    }
+
     function getTypeVal(){
-        var $val = $("#apsType").val(),
-            $weekP = $("#apsWeek").parent('li'),
+        getDataFn();
+        var $weekP = $("#apsWeek").parent('li'),
             param ;
-        $week = $("#apsWeek").val();
 
         if((!$weekP.hasClass("hide")) && $week == ""){
             layerAlert('计划周期（周)不能为"全部"!',3);
         }else{
-            param = $val == ""?0:($val == "YEAR"?1:($val == "MONTH")?2:3);
+            param = $type == ""?0:($type == "YEAR"?1:($type == "MONTH")?2:3);
             linkUrl(param);
         }
     }
@@ -262,13 +271,13 @@
                         return data = "<input type='checkbox' id=" + row.id + " class='i-checks'>"
                     }
                 },
-                {"data": "name",'sClass':" alignCenter autoWidth"},
-                {"data": "type",'sClass':"alignCenter autoWidth"},
-                {"data": "day",'sClass':"alignCenter"},
-                {"data": "username",'sClass':"alignCenter"},
-                {"data": "time",'sClass':"alignCenter"},
+                {"data": "name",'sClass':" alignCenter "},
+                {"data": "typeLabel",'sClass':"alignCenter "},
+                {"data": "period",'sClass':"alignCenter"},
+                {"data": "createUser",'sClass':"alignCenter "},
+                {"data": "createDate",'sClass':"alignCenter "},
                 {
-                    "data": null, "orderable": false, "defaultContent": "",'sClass':" alignCenter autoWidth",
+                    "data": null, "orderable": false, "defaultContent": "",'sClass':" alignCenter ",
                     "render": function (data, type, row, meta) {
                         var classSet ="";
                         if(row.state == "审批中" || row.state == "已发布"){
@@ -284,7 +293,6 @@
                 {
                     "data": null, "orderable": false, "defaultContent": "",'sClass':" alignCenter autoWidth",
                     "render": function (data, type, row, meta) {
-                        console.log(row.state);
                         if(row.state == "草稿"){
                             return "<a class='btn btn-schedu bg-62b5e9' ><i class='fa fa-file-text'></i>排产</a >" +
                                 "<a class='btn btn-commit bg-ffa82d' ><i class='fa fa-upload'></i>提交</a >" +

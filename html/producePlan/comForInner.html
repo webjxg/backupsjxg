@@ -106,13 +106,11 @@
         var id = getQueryString('id');
         var paramRecord = $("#paramRecord"),
             html = "",htmlArr =[],inputArr = [];
-        console.log(id);
         if(id){
             ajaxToServer1("/api/aps/Formula/form/"+id,{},function(result){
                 if(result.success){
                     var Formula = result.Formula,
                         str = Formula.computeFormula;
-                    console.log(Formula);
                     renderData(Formula, $('#inputForm'));
                     $("#paramRecord").html(Formula.computeFormula);
                     htmlArr = str.match(/<[^>]+>([^<]+)<\/[^>]+>/g);
@@ -144,7 +142,6 @@
                     inputArr = [];
                     renHtmlFn(html,htmlArr);
                 }else if($(this).hasClass("clearOne")){
-                    console.log(inputArr)
                     htmlArr.pop();
                     inputArr.pop();
                     html = "";

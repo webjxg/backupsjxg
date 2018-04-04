@@ -172,7 +172,6 @@
     function updatason(node){
         var data={"deptId":node};
         Page.init("/api/sys/SysUser/page", data, true, function (tableData) {
-            console.log(tableData);
             dataout(tableData);
             clickButton()
         });

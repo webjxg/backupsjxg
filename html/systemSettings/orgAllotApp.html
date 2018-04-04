@@ -88,7 +88,7 @@
         $("#roleId").val(id);
         //查看应用信息接口
         ajaxToServer("/api/sys/SysOrg/assignApp/" + id, {}, function (result) {
-//            console.log(result);
+           console.log(result);
             if (result.success) {
                 var data = result.sysOrg,
                     html = "";
@@ -189,6 +189,7 @@
 
     //用拿到的数据渲染表格
     function renderTableData(tableData) {
+        console.log(tableData)
         $('#treeTable').dataTable({
             "bPaginate": false,
             "bAutoWidth": false,

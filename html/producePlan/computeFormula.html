@@ -12,7 +12,7 @@
     <!--自定义样式-->
     <link rel="stylesheet" href="../../plugins/datatables/css/mydatatable.css">
     <link rel="stylesheet" href="../../css/common.css">
-    <link rel="stylesheet" href="../../css/dictionaries.css">
+    <link rel="stylesheet" href="../../css/customDataTable.css">
     <link rel="stylesheet" href="../../css/aps.css">
 
 </head>
@@ -76,7 +76,6 @@
     });
     ajaxToServer1("/api/aps/Formula/list",{},function(result){
         if(result.success){
-            console.log(result.rows);
             renderTableData(result.rows);
             $('.btn-change').click(function(){
                 var id = $(this).parents("tr").find("td:first").text();

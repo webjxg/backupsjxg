@@ -89,7 +89,7 @@
         $("#roleId").val(id);
         //查看角色信息接口
         ajaxToServer("/api/sys/SysOrg/assign/" + id, {}, function (result) {
-//            console.log(result);
+           console.log(result);
             if (result.success) {
                 var data = result.userList,
                     html = "",
