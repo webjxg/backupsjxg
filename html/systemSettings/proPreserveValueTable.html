@@ -88,6 +88,7 @@
 
 
         ajaxToServer("/api/sys/SysAuthPropertyValue/ajaxTreeJson",data,function(tableData){
+            console.log(tableData)
             renderTableData(tableData.rows );
             clickButton();
         })

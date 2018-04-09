@@ -8,7 +8,6 @@
 
 var urlPrefix = "http://114.115.165.184:8080/admin-api";
 
-
 //点击查询按钮
 $("#search-btn").click(function(){
     pageLoad();
@@ -290,6 +289,7 @@ function openEditDialog(title,url,width,height,innerCallbackFn){
             if(clickFlag){
                 if(!innerCallbackFn){
                     iframeWin.contentWindow.doSubmit(iframeWin.contentWindow,body,index);
+                    window.location.reload();
                 }else{
                     //iframeWin.contentWindow[innerCallbackFn]();   //有bug  innerCallbackFn必须是字符串 待解决
                     innerCallbackFn.call(iframeWin.contentWindow,iframeWin.contentWindow,body,index);
@@ -412,6 +412,7 @@ function deleteItem(mess,url,id){
             if(result.success == true){
                 var frameActive = top.getActiveTab().attr("name");
                 var obj = $('#search-btn', top.window.frames[frameActive].document);
+                    window.location.reload();
                 if(obj.length == 0){
                     obj = $('#refresh-btn', top.window.frames[frameActive].document);
                 }

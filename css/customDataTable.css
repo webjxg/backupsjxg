@@ -218,7 +218,7 @@ tbody > tr:last-child > td {
   border-color: #1ab394 !important; }
 #left {
   min-height: 400px;
-  margin: 20px 0 0 20px;
+  margin: 20px 0 0 18px;
   padding-left: 0;
   box-sizing: border-box; }
 #left > a {

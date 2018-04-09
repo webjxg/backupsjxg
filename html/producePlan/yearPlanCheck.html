@@ -56,21 +56,20 @@
     getmsg();
     function getmsg() {
         var data={
-            adYear:getQueryString("year")
+            adYear:getQueryString("adYear")
         };
-        var datastring = JSON.stringify(data)
-        ajaxToServer("/api/aps/ApsYearPlan/queryYearPlan",datastring,function (result) {
+        ajaxToServer1("/api/aps/ApsYearPlan/queryYearPlan",data,function (result) {
+            console.log(result);
             planarr.push(result.cpcl);
             planarr.push(result.cpxl);
-            planarr.push(result.zyxhzbjh)
+            planarr.push(result.zyxhzbjh);
             createTbody(planarr)
         })
     }
     function createTbody(planarr) {
-       console.log(planarr)
-        console.log(planarr)
+        // console.log(planarr)
         for(var i=0;i<planarr.length;i++){
-            console.log(planarr[i]) //每种类型的数据，放在一个数组里边
+            // console.log(planarr[i]) //每种类型的数据，放在一个数组里边
             for(var j=0;j<planarr[i].length;j++){
                 // console.log(planarr[i][j]);
                 msgobj = {
@@ -104,9 +103,9 @@
             {field:'groupName',title:'生产计划',width:100,align:'center'},
             {field:'itemName',title:'项目',width:100,align:'center'},
             {field:'itemUnit',title:'单位',width:100,align:'center'},
-            {field:'ndyjcl',title:'2017年预计产量',editor:'text',width:100,align:'center'},
-            {field:'yjdsjdcl',title:'预计第四季度产量',editor:'text',width:100,align:'center'},
-            {field:'ncl',title:'2018年产量',editor:'text',width:100,align:'center'}
+            {field:'ndyjcl',title:'2017年预计产量',width:100,align:'center'},
+            {field:'yjdsjdcl',title:'预计第四季度产量',width:100,align:'center'},
+            {field:'ncl',title:'2018年产量',width:100,align:'center'}
         ]],
         onAfterEdit: function (rowIndex, rowData, changes) {
             dataGridObj.pushRowData(rowData);

@@ -59,7 +59,7 @@
                                 title="修改"><!--onclick="#"--><i class="fa fa-file-text-o"></i> 修改
                         </button>
                         <button class="btn btn-white btn-sm"  id = "delete-btn" data-toggle="tooltip" onclick="deleteAll('要删除该菜单及所有子菜单项吗？','/api/sys/SysMenu/ajaxDel/','#treeTable')"
-                                data-placement="top"><i class="fa fa-trash-o"> 删除</i>
+                                data-placement="top"><i class="fa fa-trash-o">删除</i>
                         </button>
                         <button  class="btn btn-white btn-sm" id="updateSort-btn" data-toggle="tooltip" data-placement="left" title="保存排序"><i class="fa fa-save"></i> 保存排序
                         </button>
@@ -115,7 +115,6 @@
 <script src="../../js/jeeplus.js"></script>
 <script src="../../js/customForm.js"></script>
 <script src="../../js/page.js"></script>
-
 <script>
     $(document).ready(function() {
         $("#updateSort-btn").click(function(){
@@ -137,7 +136,6 @@
                     sorts: sorts
                 };
                 ajaxToServer1("/api/sys/SysMenu/ajaxSort",data,function(result){
-
                     if(result.success){
                         reload();
                     }else{

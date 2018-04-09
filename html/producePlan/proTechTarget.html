@@ -30,6 +30,10 @@
                     <table id="td1" class="tableItem"  title="班计划">
                     </table>
                 </div>
+                <div class="tableItemBox">
+                    <table id="td2" class="tableItem"  title="计划">
+                    </table>
+                </div>
             </div>
         </div>
     </div>
@@ -42,10 +46,21 @@
 <!--附属插件-->
 <script src="../../plugins/layer/layer.js"></script>
 <script src="../../plugins/easyui/js/jquery.easyui.min.js"></script>
-
+<script src="../../js/customForm-aps.js"></script>
 <script src="../../js/dataGridCustom.js"></script>
 <script>
-    var swcgzbjhArr=[],swcgzbjhArr1=[];
+        $(document).ready(function(){
+            var data = {
+                adYear:2018,
+                adMonth:11
+            };
+            ajaxToServer("/api/aps/ApsMonthAdjustTech/queryMonthAdjustTech",data,function(result){
+                    console.log(result);
+                    var cpzbjh = result.clzbjh   //产品指标计划
+                    var zljh = result.zljh
+            })
+        })
+
     $.ajax({
         dataType : "json",
         url:"../../json/test-dic.json",
@@ -80,6 +95,7 @@
         }
 
     });
+        //产量计划
     $('#td0').datagrid({
         fitColumns:true,
         rownumbers:true,

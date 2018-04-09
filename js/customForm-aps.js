@@ -1,10 +1,9 @@
 
 /*$(function(){
-    RenderiCheckTblBody();
-});*/
-
+ RenderiCheckTblBody();
+ });*/
 var urlPrefix = "http://114.115.165.184:8083/aps-api";
-// var urlPrefix = "http://192.168.1.115:8083/aps-api";
+// var urlPrefix = "http://192.168.1.109:8083/aps-api";
 //点击查询按钮
 $("#search-btn").click(function(){
     pageLoad();
@@ -34,7 +33,14 @@ function RenderiCheckTblBody(){
         $('td input[class="i-checks"]').iCheck('uncheck');
     });
 }
-function ajaxToServer(url, data, callbackFun){//传送的参数是josnString时
+
+/**
+ * 后端接口中的参数是对象，前端传送的参数是josnString时
+ * @param url
+ * @param data
+ * @param callbackFun
+ */
+function ajaxToServer(url, data, callbackFun){
     var layerIndex = layer.load(2);
     url = url.toLowerCase().indexOf("http://") == 0? url : (urlPrefix + url);
     $.ajax({
@@ -61,6 +67,13 @@ function ajaxToServer(url, data, callbackFun){//传送的参数是josnString时
         }
     });
 }
+
+/**
+ * form提交方式：后端接口中的参数不是对象
+ * @param url
+ * @param data
+ * @param callbackFun
+ */
 function ajaxToServer1(url, data, callbackFun){  //传送的参数是string时
     var layerIndex = layer.load(2);
     url = url.toLowerCase().indexOf("http://") == 0? url : (urlPrefix + url);
@@ -271,9 +284,9 @@ function openDialog(title,url,width,height,innerCallbackFn){
                 innerCallbackFn(iframeWin.contentWindow,body,index);
             }
         },
-        layConfig. cancel = function(index){
+            layConfig. cancel = function(index){
 
-        }
+            }
     }else{
         layConfig.yes = function (index) {
             top.layer.close(index);
@@ -370,7 +383,7 @@ function doSubmit(){
     }).form;
     if(validateFlag){
         formObj.submit();
-       // $(".layui-layer-btn0").css({"background":'red'});
+        // $(".layui-layer-btn0").css({"background":'red'});
     }
 }
 
@@ -503,13 +516,13 @@ function deleteCheck(result){
 
 function renderData(data,renderID){
     var arr = getJsonData(data);
-   // console.log(arr)
+    // console.log(arr)
     for(var i = 0;i<arr.length;i++){
         var obj = arr[i];
         var eleId = obj.name.replaceAll("\\.","\\.");
         var eleDom =  $("#"+eleId);
         if(eleDom.length == 0){
-             eleDom =  $(renderID).find("*[name = '"+obj.name+"']");
+            eleDom =  $(renderID).find("*[name = '"+obj.name+"']");
         }
         if(eleDom.length>0){
             var eleType = eleDom[0].type;
@@ -531,7 +544,7 @@ function renderData(data,renderID){
 }
 
 
- function setCheckboxValue(name,values){
+function setCheckboxValue(name,values){
     var objs=document.getElementsByName(name);
     if(objs == null || values=='') return;
     var len=objs.length;

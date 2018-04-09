@@ -78,6 +78,7 @@
 
 <script>
     function updatason(node){
+        console.log(node)
         ajaxToServer("/api/sys/SysOrg/treeJson/"+node,{},function(tableData){
             renderTableData(tableData.rows);
             clickButton();
@@ -164,12 +165,12 @@
                     var obj = $('#search-btn', top.window.frames[frameActive].document);
                     if(obj.length == 0){
                         obj = $('#refresh-btn', top.window.frames[frameActive].document);
+                        window.location.reload();
                     }
                     obj.trigger('click');
                 }
             });
             top.layer.close(index);
-            pageload();
         });
         return false;
     }

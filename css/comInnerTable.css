@@ -7,7 +7,9 @@ html, body {
 body {
   font-family: "open sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 13px;
-  color: #676a6c; }
+  color: #676a6c;
+  table-layout:fixed
+}
 
 .form-horizontal {
   margin: 0 10px; }
@@ -19,10 +21,11 @@ form table.dataTable.no-footer {
   border-bottom: none; }
 
 .table-bordered > tbody > tr > td {
+  /*width: 100px;*/
   border: 1px solid #e7e7e7;
   vertical-align: middle;
+  word-wrap:break-word
 }
-
 td .form-control, .single-line {
   background-color: #FFFFFF;
   background-image: none;
@@ -37,8 +40,76 @@ td .form-control, .single-line {
 
 .width-15 {
   width: 15%;
-  background-color: #1AB394;
-  color: white;}
+  /*background-color: #1AB394;*/
+}
+
+/*jxg*/
+
+.width-35{
+  position: relative;
+}
+
+.thumbnail img{
+  width: 100px;
+  height: 100px;
+  background: url("../imgs/headPortrait.png") no-repeat;
+  background-size:100% 100%;
+}
+#filePicker{
+  position: absolute;
+  left: 8px;
+  bottom:8px;
+  padding: 0;
+  width: 93%;
+  height: 30px;
+}
+
+.webuploader-pick{
+  height: 30px;
+  line-height: 30px;
+  padding:0;
+  color: #000000;
+  background-color: inherit;
+  display: block;
+}
+
+
+.btn-primary,.btn-primary:active,.btn-primary:focus,.btn-primary:active:focus, .btn-primary:active:hover{
+  color: #000000;
+  border-color: #EEEEEE;
+  background: -webkit-linear-gradient(right top, #fff , #f0f0f0); /* Safari 5.1 - 6.0 */
+  background: -o-linear-gradient(bottom left, #fff , #f0f0f0); /* Opera 11.1 - 12.0 */
+  background: -moz-linear-gradient(bottom left, #fff , #f0f0f0); /* Firefox 3.6 - 15 */
+  background: linear-gradient(to bottom left,  #fff , #f0f0f0 ); /* 标准的语法 */
+}
+.btn-primary:hover{
+  color: #000000;
+  border-color: #DDDDDD;
+  background: -webkit-linear-gradient(right top, #f9f9f9 , #f0f0f0); /* Safari 5.1 - 6.0 */
+  background: -o-linear-gradient(bottom left,  #f9f9f9 , #f0f0f0); /* Opera 11.1 - 12.0 */
+  background: -moz-linear-gradient(bottom left, #f9f9f9 , #f0f0f0); /* Firefox 3.6 - 15 */
+  background: linear-gradient(to bottom left,   #f9f9f9 , #f0f0f0); /* 标准的语法 */
+}
+
+.tableFoot,.table-bordered > tbody > .tableFoot > td{
+  line-height: 20px;
+  border: none;
+}
+.tableFoot > td >span{
+  margin-top: 7px;
+}
+.tableFoot > td >.form-control{
+  width: 60%;
+  border: none;
+  outline: none;
+  box-shadow: none;
+}
+.tableFoot > td >.form-control[readonly]{
+  background-color: transparent;
+}
+/*jxg*/
+
+
 
 .width-35 {
   width: 35%; }
@@ -73,4 +144,3 @@ form > .table > tbody > tr > td, .table > tfoot > tr > td {
   .width-60>textarea{
     width:80%;
   }
-/*jxg 结束*/

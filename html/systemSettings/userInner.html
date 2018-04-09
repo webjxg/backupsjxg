@@ -17,6 +17,11 @@
     <link rel="stylesheet" href="../../css/common.css">
     <!--<link rel="stylesheet" href="../../css/userinner.css">-->
     <link rel="stylesheet" href="../../css/customDataTable.css">
+    <style>
+        .input-group{
+            width:auto;
+        }
+    </style>
 
 
 </head>
@@ -31,7 +36,7 @@
                     <div class="company col-sm-12">
                         <span>归属公司：</span>
                         <input id="companyId" name="company.id" class=" form-control input-sm " type="hidden" value="">
-                        <div class="input-group ">
+                        <div class="input-group" >
                             <input id="companyName" name="company.name" readonly="readonly" type="text" value=""
                                    data-msg-required="" class=" form-control input-sm " style="">
                             <span class="input-group-btn">
@@ -44,7 +49,7 @@
                         <label id="companyName-error" class="error" for="officeId" style="display:none"></label>
                         <span >归属部门：</span>
                         <input id="officeId" name="office.id" class=" form-control input-sm " type="hidden" value="">
-                        <div class="input-group ">
+                        <div class="input-group " >
                             <input id="officeName" name="office.name" readonly="readonly" type="text" value=""
                                    data-msg-required="" class=" form-control input-sm " style="">
                             <span class="input-group-btn">
@@ -56,7 +61,7 @@
                         <label id="officeName-error" class="error" for="officeId" style="display:none"></label>
                     </div>
                     <div class="user col-sm-12">
-                        <span>姓&nbsp;&nbsp&nbsp;&nbsp; 名：</span>
+                        <span>姓&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;名：</span>
                         <input id="name" name="name" class=" form-control input-sm" type="text" value="" maxlength="50">
                         <span >登录名：</span>
                         <input id="loginName" name="loginName" class=" form-control input-sm" type="text" value=""
@@ -72,7 +77,7 @@
         <div class="col-sm-12">
             <div class="pull-left">
                 <button class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="left"
-                        onclick="openEditDialog('新增用户','systemSettings/userCheckView.html','800px','600px')" title="添加"><i class="fa fa-plus"></i> 添加
+                        onclick="openEditDialog('新增用户','systemSettings/userCheckView.html?id=0','800px','500px')" title="添加"><i class="fa fa-plus"></i> 添加
                 </button>
 
                 <button class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="left"
@@ -261,8 +266,8 @@
                 {"data": "id", "width": "auto","orderable": false, "defaultContent": "",
                     "render": function (data, type, row, meta) {
                         return data = "<a class='btn btn-info btn-xs  btn-check'><i class='fa fa-search-plus'></i>查看</a >" +
-                            "<a class='btn btn-success btn-xs btn-change'><i class='fa fa-search-plus'></i>修改</a >" +
-                            "<a class='btn btn-danger btn-xs btn-delete'><i class='fa fa-search-plus' ></i>删除</a >"
+                            "<a class='btn btn-success btn-xs btn-change'><i class='fa fa-edit'></i>修改</a >" +
+                            "<a class='btn btn-danger btn-xs btn-delete'><i class='fa fa-trash-o' ></i>删除</a >"
                     }
                 }],
 

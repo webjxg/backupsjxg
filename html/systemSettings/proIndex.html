@@ -11,12 +11,10 @@
     <link rel="stylesheet" href="../../plugins/datatables/css/jquery.dataTables.min.css">
     <link rel="stylesheet" href="../../plugins/icheck/skins/square/aero.css">
     <link rel="stylesheet" href="../../plugins/icheck/skins/square/green.css">
-    <link rel="stylesheet" href="../../plugins/datatables/css/mydatatable.css">
-
-
+    <!--<link rel="stylesheet" href="../../plugins/datatables/css/mydatatable.css">-->
     <!--引入样式-->
     <link rel="stylesheet" href="../../css/common.css">
-    <!--<link rel="stylesheet" href="../../css/proIndex.css">-->
+    <link rel="stylesheet" href="../../css/proIndex.css">
     <link rel="stylesheet" href="../../css/customDataTable.css">
 
 
@@ -48,7 +46,7 @@
                         <input id="proDescriptionId" name="proDescriptionId" class="form-control" type="hidden" value="">
                         <input id="proDescription" name="proDescription" type="text" value="" data-msg-required=""
                                class="form-control required" style="" aria-required="true">
-                        <span >是否启用</span>
+                        <span >是&nbsp;否&nbsp;启&nbsp;用&nbsp;&nbsp;&nbsp;&nbsp;</span>
                         <input id="enableId" name="enableId.id" class="form-control" type="hidden" value="">
                         <select id="enable" name="enable" class="form-control required">
                             <option ></option>
@@ -199,6 +197,7 @@
     });
     //   ajax请求渲染datatable数据
     function dataout(data) {
+        console.log(data)
         $('#treeTable').dataTable({
             "bSort":false,
             "bPaginate": false,

@@ -171,9 +171,15 @@ function initWebuploader(url,filePicker, ImagePreview,ImgUrl) {
             '</div>'
         );
     $img = $li.find('img');
-    $list.append($li);          // $list为容器jQuery实例
-    $img.attr('src', ImgUrl);   //设置预览图
-                                // console.log(BASE_URL + url);
+    $list.append($li);// $list为容器jQuery实例
+    var cc=$('#nameImage').val();
+    console.log(cc);
+    if(cc==0){
+        $img.attr('src',null)
+    }else{
+        $img.attr('src',ImgUrl)
+    }
+                                            // console.log(BASE_URL + url);
     var uploader = WebUploader.create({
 
                                 // 选完文件后，是否自动上传。
@@ -189,7 +195,7 @@ function initWebuploader(url,filePicker, ImagePreview,ImgUrl) {
                                 // 内部根据当前运行是创建，可能是input元素，也可能是flash.
         pick: {
             id: filePicker,
-            multiple:false,
+            multiple:false
         },
 
         // 只允许选择图片文件。
@@ -198,23 +204,25 @@ function initWebuploader(url,filePicker, ImagePreview,ImgUrl) {
             extensions: 'gif,jpg,jpeg,bmp,png',
             mimeTypes: 'image/*'
         },
-        fileNumLimit: 1,
+        fileNumLimit: 1
 
     });
                                 // console.log(BASE_URL + url);
     uploader.on('fileQueued', function (file) {
         // 创建缩略图
         uploader.makeThumb(file, function (error, src) {
+            console.log(2);
             if (error) {
                 $img.replaceWith('<span>不能预览</span>');
                 return;
             }
+            console.log(src);
             $img.attr('src', src);//设置预览图
         }, 100, 100); //100x100为缩略图尺寸
 
     });
     uploader.on( 'uploadSuccess', function( file,response) {
-        var FileName=filename(response.saveName);//需要拿到上传接口的返回值文件名写入到页面photo的val里
+        console.log(1);
+        $('#nameImage').val(response.saveName);
     });
-
 }
