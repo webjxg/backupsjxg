@@ -12,8 +12,7 @@
     <link rel="stylesheet" href="../../plugins/datatables/css/mydatatable.css">
     <!--引入样式-->
     <link rel="stylesheet" href="../../css/common.css">
-    <!--<link rel="stylesheet" href="../../css/orgCheckView.css">-->
-    <link rel="stylesheet" href="../../css/customDataTable.css">
+    <link rel="stylesheet" href="../../css/comInnerTable.css">
 
 
 
@@ -24,7 +23,7 @@
     <table class="table table-bordered  table-condensed dataTables-example dataTable no-footer">
         <tbody>
         <tr>
-            <td class="width-15 active"><label class="pull-right"><font color="red">*</font>机构名称:</label></td>
+            <td class="width-15"><label class="pull-right"><font color="red">*</font>机构名称:</label></td>
             <td class="width-35">
                 <input id="orgNameId" name="orgNameId.id" class="form-control" type="hidden" value="" >
                 <input id="orgName" name="name" type="text" value=""
@@ -38,7 +37,7 @@
 
         </tr>
         <tr>
-            <td class="width-15 active"><label class="pull-right"><font color="red">*</font>上级机构:</label></td>
+            <td class="width-15"><label class="pull-right"><font color="red">*</font>上级机构:</label></td>
             <td class="width-35">
                 <input id="parentId" name="parent.id" class="form-control" type="hidden" value="">
                 <div class="input-group" id="parentalert">
@@ -60,7 +59,7 @@
             </td>
         </tr>
         <tr>
-            <td class="width-15 active"><label class="pull-right"><font color="red">*</font>机构类型:</label></td>
+            <td class="width-15"><label class="pull-right"><font color="red">*</font>机构类型:</label></td>
             <td class="width-35">
                 <input id="typeId" name="typeId.id" class="form-control" type="hidden" value="">
                 <select id="type" name="type" class="form-control required">
@@ -77,7 +76,7 @@
             </td>
         </tr>
         <tr>
-            <td class="width-15 active"><label class="pull-right">负责人:</label></td>
+            <td class="width-15"><label class="pull-right">负责人:</label></td>
             <td class="width-35">
                 <input id="masterId" name="masterId.id" class="form-control" type="hidden" value="">
                 <input id="master" name="master"  type="text" value="" data-msg-required=""
@@ -133,7 +132,7 @@
             </td>
         </tr>
         <tr>
-            <td class="width-15 active"><label class="pull-right"><font color="red">*</font>是否启用:</label></td>
+            <td class="width-15 "><label class="pull-right"><font color="red">*</font>是否启用:</label></td>
             <td class="width-35">
                 <input id="enableId" name="enableId.id" class="form-control" type="hidden" value="">
                     <select id="enable" name="enable" class="form-control"  >
@@ -197,14 +196,13 @@
                     var SysOrg = result.SysOrg;
                     renderData(SysOrg, $('#inputForm'));
                     /*运行把ajax数据渲染到弹出窗口中*/
-                    renderData(result, $('#inputForm'));
                     $('#pname').val(SysOrg.primaryPerson?SysOrg.primaryPerson.name:"");
                     $('#dname').val(SysOrg.deputyPerson?SysOrg.deputyPerson.name:"");
-
+                    $('#parentName').val(result.parentName)
+                    console.log(result);
                 } else {
                     layer.msg(result.message);
                 }
-
             });
         }
         layerInZtreeAll('#parentalert', ['300px', '424px'], './systemSettings/orgParents.html', '#parentName', '#parentId');

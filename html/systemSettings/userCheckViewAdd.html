@@ -238,9 +238,7 @@
             ajaxToServer(url, {}, function (result) {
                 console.log(url,result);
                 if (result.success) {
-                    renderData(result.sysUser, $('#inputForm'));
                     /*运行把ajax数据渲染到弹出窗口中*/
-                    renderData(result, $('#inputForm'));
                     renderjobTypeList(result.jobTypeList);
                     $('#jobTypeList').val(result.sysUser.job);
                     initWebuploader('/api/img/sys/SysUpload/upimg?imgPath=img',
@@ -257,9 +255,9 @@
 
         //渲染下拉菜单
         function renderjobTypeList (data) {
-           var str='';
+            var str='';
             $.each(data,function (index,item) {
-            str+= '<option value="'+data[index].id+'">'+data[index].label+'</optionid>'
+                str+= '<option value="'+data[index].id+'">'+data[index].label+'</optionid>'
             });
             $('#jobTypeList').append(str);
         }

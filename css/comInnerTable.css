@@ -49,6 +49,11 @@ td .form-control, .single-line {
   position: relative;
 }
 
+.thumbnail{
+  border: none;
+}
+
+
 .thumbnail img{
   width: 100px;
   height: 100px;
@@ -71,6 +76,11 @@ td .form-control, .single-line {
   color: #000000;
   background-color: inherit;
   display: block;
+}
+
+
+.table>tbody>tr>td.active{
+  background:transparent;
 }
 
 

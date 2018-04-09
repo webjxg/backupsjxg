@@ -5,19 +5,15 @@
     <title>负责人</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <link rel="stylesheet" href="../../plugins/bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="../../plugins/font-awesome/css/font-awesome.min.css">
-    <link rel="stylesheet" href="../../plugins/ztree/css/metroStyle/metroStyle.css">
     <link rel="stylesheet" href="../../plugins/datatables/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="../../plugins/icheck/skins/square/aero.css">
     <link rel="stylesheet" href="../../plugins/icheck/skins/square/green.css">
-    <link rel="stylesheet" href="../../plugins/icheck/custom.css">
     <link rel="stylesheet" href="../../plugins/datatables/css/mydatatable.css">
 
     <!--引入样式-->
     <link rel="stylesheet" href="../../css/common.css">
-    <!--<link rel="stylesheet" href="../../css/orgPersons.css">-->
+    <link rel="stylesheet" href="../../css/comInnerTable.css">
     <link rel="stylesheet" href="../../css/customDataTable.css">
-
-
 
 
 </head>
@@ -27,7 +23,6 @@
         <caption>用户列表</caption>
         <thead>
         <tr>
-
             <th></th>
             <th>登录名</th>
             <th>姓名</th>
@@ -47,11 +42,7 @@
 <script src="../../js/jquery-2.2.4.min.js"></script>
 <script src="../../plugins/bootstrap/js/bootstrap.min.js"></script>
 <!--附属插件-->
-<script src="../../plugins/ibox.2.2/ibox.js"></script>
 <script src="../../plugins/layer/layer.js"></script>
-<script src="../../plugins/metismenu-master/metisMenu.min.js"></script>
-<script src="../../plugins/slimScroll/jquery.slimscroll.min.js"></script>
-<script src="../../plugins/ztree/js/jquery.ztree.core.js"></script>
 <script src="../../plugins/datatables/js/jquery.dataTables.min.js"></script>
 <script src="../../plugins/icheck/icheck.min.js"></script>
 <script src="../../plugins/treetable/jquery.treetable.js"></script>
@@ -91,7 +82,7 @@
 //                定义列 宽度 以及在json中的列名
                 "columns": [
                     {
-                        "data": null,"width":'5%',
+                        "data": null,"width": "8%",
                         "render": function (data, type, row, meta) {
                             return data = "<input type='checkbox' id=" + row.id + " class='i-checks'>"
                         }
@@ -100,7 +91,7 @@
                     {"data": "loginName"},
                     {"data": "phone"},
                     {"data": "mobile"}
-                    ],
+                    ]
 
             });
             RenderiCheckTblBody();

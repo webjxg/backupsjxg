@@ -45,6 +45,7 @@ function ztreeIndex(da) {
 //userCompany页面使用 ajax并返回处理节点方法
 var zTreeObj;
 function ztreeCompany(data) {
+    console.log(data);
     var da=data.rows;
     var arr = [];
     da.filter(function (a) {
@@ -167,15 +168,15 @@ function initWebuploader(url,filePicker, ImagePreview,ImgUrl) {
     var $list = $(ImagePreview),//获取文件列表
         $li = $(
             '<div id="" class="file-item thumbnail">' +
-            '<img>' +
+            '<img >' +
             '</div>'
         );
     $img = $li.find('img');
+    $div =$li.find('div')
     $list.append($li);// $list为容器jQuery实例
     var cc=$('#nameImage').val();
-    console.log(cc);
     if(cc==0){
-        $img.attr('src',null)
+        $img.attr('src',null);
     }else{
         $img.attr('src',ImgUrl)
     }
@@ -211,7 +212,6 @@ function initWebuploader(url,filePicker, ImagePreview,ImgUrl) {
     uploader.on('fileQueued', function (file) {
         // 创建缩略图
         uploader.makeThumb(file, function (error, src) {
-            console.log(2);
             if (error) {
                 $img.replaceWith('<span>不能预览</span>');
                 return;
@@ -222,7 +222,6 @@ function initWebuploader(url,filePicker, ImagePreview,ImgUrl) {
 
     });
     uploader.on( 'uploadSuccess', function( file,response) {
-        console.log(1);
         $('#nameImage').val(response.saveName);
     });
 }

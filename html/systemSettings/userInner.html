@@ -77,7 +77,7 @@
         <div class="col-sm-12">
             <div class="pull-left">
                 <button class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="left"
-                        onclick="openEditDialog('新增用户','systemSettings/userCheckView.html?id=0','800px','500px')" title="添加"><i class="fa fa-plus"></i> 添加
+                        onclick="openEditDialog('新增用户','systemSettings/userCheckViewAdd.html?id=0','800px','500px')" title="添加"><i class="fa fa-plus"></i> 添加
                 </button>
 
                 <button class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="left"
@@ -175,8 +175,11 @@
 </body>
 <script>
     function updatason(node){
-        var data={"deptId":node};
+        var data={
+            "deptId":node
+        };
         Page.init("/api/sys/SysUser/page", data, true, function (tableData) {
+            console.log(data,tableData);
             dataout(tableData);
             clickButton()
         });
@@ -214,6 +217,7 @@
             treeId: $('#treeId').val()
         };
         Page.init("/api/sys/SysUser/page", data, true, function (tableData) {
+            console.log(data,tableData);
             dataout(tableData);
             clickButton()
         });
