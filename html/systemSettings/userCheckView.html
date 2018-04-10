@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="../../plugins/webUpLoader/webuploader.css">
     <!--引入样式-->
     <link rel="stylesheet" href="../../css/common.css">
+    <link rel="stylesheet" href="../../css/customDataTable.css">
     <link rel="stylesheet" href="../../css/comInnerTable.css">
 
 </head>
@@ -36,10 +37,10 @@
             <!--归属公司-->
             <td class="width-15 active" class="active"><label class="pull-right"><font color="red">*</font>归属公司:</label></td>
             <td class="width-35" >
-                <input id="companyId" name="companyId" class="form-control" type="hidden" value="1"
+                <input id="companyId" name="company.id" class="form-control" type="hidden" value="1"
                        aria-required="true">
                 <div class="input-group changeCompany">
-                    <input id="companyName" name="companyNamezzz" readonly="readonly" type="text" value=""
+                    <input id="companyName" name="companyName" readonly="readonly" type="text" value=""
                            data-msg-required="" class="form-control valid" style="" aria-required="true"
                            aria-invalid="false">
                     <span class="input-group-btn">
@@ -55,7 +56,7 @@
             <td class="width-15 active" class="active"><label class="pull-right"><font color="red">*</font>所属职位:</label></td>
             <td class="width-35" >
                 <input type="hidden" name="jobTypeList" id="jobTypeListId">
-                <select name="job" id="jobTypeList" class="form-control"></select>
+                <select name="jobTypeList" id="jobTypeList" class="form-control"></select>
             </td>
         </tr>
         <tr>
@@ -68,7 +69,7 @@
             <td>
                 <input id="officeId" name="office.id" class="form-control" type="hidden" value="4" aria-required="true">
                 <div class="input-group">
-                    <input id="officeName" name="deptName" readonly="readonly" type="text" value="" data-msg-required=""
+                    <input id="officeName" name="roleName" readonly="readonly" type="text" value="" data-msg-required=""
                            class="form-control valid" style="" aria-required="true" aria-invalid="false">
                     <span class="input-group-btn">
 	       		                <button type="button" id="officeButton" class="btn   btn-primary  "><i
@@ -116,7 +117,7 @@
                 <label class="pull-right">密码:</label>
             </td>
             <td>
-                <input id="newPassword" name="password" type="password" value="" maxlength="50" minlength="3"
+                <input id="newPassword" name="newPassword" type="password" value="" maxlength="50" minlength="3"
                        class="form-control "/>
                 <span class="help-inline">若不修改密码，请留空。</span>
             </td>
@@ -125,7 +126,7 @@
                 <label class="pull-right">确认密码:</label>
             </td>
             <td>
-                <input id="confirmNewPassword" name="password2" type="password" class="form-control " value=""
+                <input id="confirmNewPassword" name="confirmNewPassword" type="password" class="form-control " value=""
                        maxlength="50" minlength="3" equalTo="#newPassword"/>
             </td>
         </tr>
@@ -189,21 +190,18 @@
             <td>
                 <textarea id="remarks" name="remark" maxlength="200" class="form-control" rows="3"></textarea>
             </td>
-            <td class="active">
-                <label class="pull-right"></label>
-            </td>
         </tr>
         <tr class="tableFoot" >
             <td colspan="2">
                 <!--创建时间-->
                 <span class="pull-left">创建时间:</span>
-                <input type="text" name="createDate" class="form-control">
+                <input type="text" readonly="readonly" name="createDate" class="form-control">
 
             </td>
             <td colspan="2">
                 <!--修改时间-->
                 <span class="pull-left">修改时间:</span>
-                <input type="text" name="updateDate" class="form-control">
+                <input type="text" readonly="readonly" name="updateDate" class="form-control">
             </td>
         </tr>
         </tbody>
@@ -226,9 +224,15 @@
 
 
 <script>
+    function filename(filen) {
+        $('#nameImage').val(filen)
+        var str = BASE_URL + filen
+        $('#nameImage img').attr('src', str)
+    }
     $(document).ready(function () {
+        filename();
+        icheckinner();
         var id = getQueryString('id');
-        /*上传头像*/
         console.log(id)
         $('#id').val(id);
         /*api = getQueryString('api') || 'form';*/
@@ -236,18 +240,12 @@
             /*此处后端接口  id为弹出窗口自带的id 通过浏览器方法传参得到*/
             var url = "/api/sys/SysUser/form/" + id;
             ajaxToServer(url, {}, function (result) {
-                console.log(url,result);
+                console.log(result);
                 if (result.success) {
                     renderData(result.sysUser, $('#inputForm'));
                     /*运行把ajax数据渲染到弹出窗口中*/
                     renderData(result, $('#inputForm'));
-                    renderjobTypeList(result.jobTypeList);
-                    $('#jobTypeList').val(result.sysUser.job);
-                    initWebuploader('/api/img/sys/SysUpload/upimg?imgPath=img',
-                        '#filePicker',
-                        "#nameImagePreview",
-                        BASE_URL + '/api/img/sys/SysUpload/showImg/' + id
-                    );
+                    renderjobTypeList(result.jobTypeList)
                 } else {
                     layer.msg(result.message);
                 }
@@ -257,13 +255,25 @@
 
         //渲染下拉菜单
         function renderjobTypeList (data) {
-           var str='';
+            var str='';
             $.each(data,function (index,item) {
-            str+= '<option value="'+data[index].id+'">'+data[index].label+'</optionid>'
+                str+= '<option value="'+data[index].id+'">'+data[index].label+'</optionid>'
             });
             $('#jobTypeList').append(str);
         }
+        //点击把id放到隐藏input中
+        /*$('#jobTypeList').click(function () {
+            var joblist=$('#jobTypeList option:selected').val();
+            $('#jobTypeListId').val(joblist);
+        });*/
 
+
+        /*上传头像*/
+        initWebuploader('/api/img/sys/SysUpload/upimg?imgPath=img',
+            '#filePicker',
+            "#nameImagePreview",
+            BASE_URL + '/api/img/sys/SysUpload/showImg/' + id
+        );
         layerInZtree('.changeCompany', ['300px', '424px'], './systemSettings/userCompany.html', '1', '#companyName', '#companyId', '请选择部门');
 
 

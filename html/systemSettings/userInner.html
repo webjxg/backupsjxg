@@ -17,11 +17,6 @@
     <link rel="stylesheet" href="../../css/common.css">
     <!--<link rel="stylesheet" href="../../css/userinner.css">-->
     <link rel="stylesheet" href="../../css/customDataTable.css">
-    <style>
-        .input-group{
-            width:auto;
-        }
-    </style>
 
 
 </head>
@@ -36,7 +31,7 @@
                     <div class="company col-sm-12">
                         <span>归属公司：</span>
                         <input id="companyId" name="company.id" class=" form-control input-sm " type="hidden" value="">
-                        <div class="input-group" >
+                        <div class="input-group">
                             <input id="companyName" name="company.name" readonly="readonly" type="text" value=""
                                    data-msg-required="" class=" form-control input-sm " style="">
                             <span class="input-group-btn">
@@ -48,8 +43,8 @@
                         </div>
                         <label id="companyName-error" class="error" for="officeId" style="display:none"></label>
                         <span >归属部门：</span>
-                        <input id="officeId" name="office.id" class=" form-control input-sm " type="hidden" value="">
-                        <div class="input-group " >
+                        <!--<input id="officeId" name="office.id" class=" form-control input-sm " type="hidden" value="">-->
+                        <div class="input-group">
                             <input id="officeName" name="office.name" readonly="readonly" type="text" value=""
                                    data-msg-required="" class=" form-control input-sm " style="">
                             <span class="input-group-btn">
@@ -77,7 +72,7 @@
         <div class="col-sm-12">
             <div class="pull-left">
                 <button class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="left"
-                        onclick="openEditDialog('新增用户','systemSettings/userCheckViewAdd.html?id=0','800px','500px')" title="添加"><i class="fa fa-plus"></i> 添加
+                        onclick="openEditDialog('新增用户','systemSettings/userCheckView.html','800px','600px')" title="添加"><i class="fa fa-plus"></i> 添加
                 </button>
 
                 <button class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="left"
@@ -87,17 +82,17 @@
                 <button class="btn btn-white btn-sm" onclick="deleteAll('确认要删除该用户吗？','/api/sys/SysUser/delete/','#treeTable')"  data-toggle="tooltip" data-placement="top"><i
                         class="fa fa-trash-o"> 删除</i></button>
                 <!--<button id="btnImport" class="btn btn-white btn-sm " data-toggle="tooltip" data-placement="left"-->
-                        <!--title="导入"><i class="fa fa-folder-open-o"></i> 导入-->
+                <!--title="导入"><i class="fa fa-folder-open-o"></i> 导入-->
                 <!--</button>-->
                 <!--<div id="importBox" class="hide">-->
-                    <!--<form id="importForm" action="/jeeplus/a/sys/user/import" method="post"-->
-                          <!--enctype="multipart/form-data" style="padding-left:20px;text-align:center;"-->
-                          <!--onsubmit="loading('正在导入，请稍等...');"><br>-->
-                        <!--<input id="uploadFile" name="file" type="file" style="width:330px">导入文件不能超过5M，仅允许导入“xls”或“xlsx”格式文件！<br>　-->
-                    <!--</form>-->
+                <!--<form id="importForm" action="/jeeplus/a/sys/user/import" method="post"-->
+                <!--enctype="multipart/form-data" style="padding-left:20px;text-align:center;"-->
+                <!--onsubmit="loading('正在导入，请稍等...');"><br>-->
+                <!--<input id="uploadFile" name="file" type="file" style="width:330px">导入文件不能超过5M，仅允许导入“xls”或“xlsx”格式文件！<br>　-->
+                <!--</form>-->
                 <!--</div>-->
                 <!--<button id="btnExport" class="btn btn-white btn-sm " data-toggle="tooltip" data-placement="left"-->
-                        <!--title="导出"><i class="fa fa-file-excel-o"></i> 导出-->
+                <!--title="导出"><i class="fa fa-file-excel-o"></i> 导出-->
                 <!--</button>-->
                 <button class="btn btn-white btn-sm " id="refresh-btn" data-toggle="tooltip" data-placement="left"
                         onclick="window.location.reload()" title="刷新"><i class="glyphicon glyphicon-repeat"></i> 刷新
@@ -175,15 +170,12 @@
 </body>
 <script>
     function updatason(node){
-        var data={
-            "deptId":node
-        };
+        var data={"deptId":node};
         Page.init("/api/sys/SysUser/page", data, true, function (tableData) {
-            console.log(data,tableData);
             dataout(tableData);
             clickButton()
         });
-}
+    }
     function clickButton() {
         $('.btn-check').click(function () {
             var id = $(this).parents("tr").find('.i-checks').attr('id');
@@ -217,7 +209,6 @@
             treeId: $('#treeId').val()
         };
         Page.init("/api/sys/SysUser/page", data, true, function (tableData) {
-            console.log(data,tableData);
             dataout(tableData);
             clickButton()
         });

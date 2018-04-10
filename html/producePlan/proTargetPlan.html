@@ -21,7 +21,7 @@
 <div class="wrapper wrapper-content">
     <div class="ibox">
         <div class="ibox-content">
-            <h1 class="targetPlanTit"><span>2018年11月</span>全厂主要生产技术指标计划</h1>
+            <h1 class="targetPlanTit"><span></span>生产计划</h1>
             <div class="targetPlanTab">
                 <ul class="targetPlanTab-nav clearfix">
                     <li class="active">全厂主要生产技术指标计划</li>
@@ -29,7 +29,7 @@
                     <li>安全、环保、设备管理总体指标计划</li>
                 </ul>
                 <div class="targetPlanTab-con">
-                    <iframe id="targetPlanCon" src="./proTechTarget.html" name="targetPlanCon"  width="100%" height="650px" frameborder="0"></iframe>
+                    <iframe id="targetPlanCon" name="targetPlanCon"  width="100%" height="650px" frameborder="0"></iframe>
                 </div>
             </div>
         </div>
@@ -41,17 +41,24 @@
 <script src="../../plugins/bootstrap/js/bootstrap.min.js"></script>
 <!--附属插件-->
 <script src="../../plugins/layer/layer.js"></script>
+<!--自定义文件-->
+<script src="../../js/customForm-aps.js"></script>
 <script>
     $(function(){
-        var tabconUrl = ["./proTechTarget.html","./proCommercePurPlan.html","./proSafeEnviPlan.html"],
+        var year =getQueryString('year'),
+            month =getQueryString('month');
+        $('.targetPlanTit span').empty().html(year+"年"+month+"月");
+        var tabconUrl = ["./proTechTarget.html?year="+year+"&month="+month,"./proCommercePurPlan.html?year="+year+"&month="+month,"./proSafeEnviPlan.html"],
             $targetPlanTab = $(".targetPlanTab"),
             $targetPlanTabNavLi =$targetPlanTab.find(".targetPlanTab-nav").find('li'),
             $targetPlanCon = $("#targetPlanCon");
+        $targetPlanCon.attr("src",tabconUrl[0]);
         $targetPlanTabNavLi.click(function(){
             var ind = $(this).index();
             $(this).addClass('active').siblings("li").removeClass('active');
             $targetPlanCon.attr("src",tabconUrl[ind]);
         });
+
     })
 </script>
 

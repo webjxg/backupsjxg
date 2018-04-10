@@ -38,24 +38,7 @@ iframe{border:none;}
   width: 100%;
   height: 80px;
   overflow: hidden;
-}
-.logo .logo-left{
-    width: 16%;
-    height: 100%;
-    float: left;
-}
-.logo .logo-left img{
-	width: 100%;
-	height: 100%;
-}
-.logo .logo-right{
-  width: 84%;
-  height: 100%;
-  float: left;
-}
-.logo .logo-right img{
-  width: 100%;
-  height: 100%;
+  background-image: url("../images/bg49.jpg");
 }
 .logo .logo-right ul{
   position: absolute;
@@ -63,27 +46,27 @@ iframe{border:none;}
   top: 20px;
 }
 .logo .logo-right ul li{
-  width: 34px;
-  height: 35px;
+  width: 30px;
+  height: 30px;
   display: inline-block;
   background-color: white;
   text-align: center;
   border-radius: 20px;
-  line-height: 36px;
+  line-height: 30px;
   margin-right: 10px;
   cursor:pointer;
 }
 .logo .logo-right ul li i{
-  font-size: 18px;
+  font-size: 16px;
 }
 .logout{
-  width: 90px;
+  width: 70px;
   height: 40px;
   position: fixed;
   right: 1px;
   top: 81px;
   z-index: 99;
-  background-color: #e9f3f4;
+  background-color: #e6e6e6;
 }
 /*logo   end*/
 

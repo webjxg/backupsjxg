@@ -13,8 +13,8 @@
   padding:15px 20px 10px 15px;
   text-decoration: none;
   line-height: 15px;
-  margin-top: 1px;
   border-radius: 20px;
+  margin-top: 1px;
 }
 .sidebar-nav > li a:hover, .sidebar-nav > li a:focus {
   width: 100%;
@@ -166,7 +166,7 @@ body.nav-mini .wrapper-con {
 .content-tabs {
   position: relative;
   line-height: 40px;
-  background: #e9f3f4;
+  background: #e6e6e6;
   height: 42px;
   border: 1px solid #eee;
   top:0;
@@ -198,11 +198,12 @@ body.nav-mini .wrapper-con {
 .tabs-lBtn {
   left: 0;
   /*border-right: solid 1px #eee;*/
-  background-color: white;
+  background-color: #ececec;
 }
 .tabs-rBtn {
   right: 170px;
   border-left: solid 1px #eee;
+  background-color: #ececec;
 }
 .tabs-menu {
   /*height: inherit;*/
@@ -220,7 +221,7 @@ body.nav-mini .wrapper-con {
   color: black;
   padding: 0 15px;
   border-right: solid 1px #eee;
-  border-radius: 20px;
+  border-radius: 3px;
 }
 /*.tabs-nav a:hover {*/
 /*color: #777;*/
@@ -228,17 +229,20 @@ body.nav-mini .wrapper-con {
 /*}*/
 .tabs-nav a:visited {
   background: #bebebe;
+  color: black;
 }
 .tabs-nav a.active {
-  background: #8eaead;
-  color: black;
+  /*background: #8eaead;*/
+  /*color: black;*/
+  color: #1cb392;
+  background-color: #f3f3f3;
 }
-.tabs-nav a.active:hover, .tabs-nav a.active i:hover {
-  color: black;
-}
-.tabs-nav a i {
-  color: #ccc;
-}
+/*.tabs-nav a.active:hover, .tabs-nav a.active i:hover {*/
+  /*color: black;*/
+/*}*/
+/*.tabs-nav a i {*/
+  /*color: #1cb392;*/
+/*}*/
 
 .tabs-nav a i:hover {
   color: red;
@@ -256,7 +260,6 @@ body.nav-mini .wrapper-con {
   outline: none;
   border-left: solid 1px #eee;
   border-right: solid 1px #eee;
-  background-color: white;
 }
 
 /*.wrap-footer {*/

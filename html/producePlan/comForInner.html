@@ -19,6 +19,7 @@
 <body>
 <div class="wrapper wrapper-content">
     <form id="inputForm" class="form-horizontal clearfix" action="/api/aps/Formula/save" method="post" novalidate="novalidate" >
+        <input type="hidden" name="id" id="objId" value="">
         <div class="row">
             <div class="col-sm-7">
                 <div class="param-item ">
@@ -61,7 +62,7 @@
                         <div class="paramCount-l">
                             <span class="paramName-tit text-left">计算公式：</span>
                             <div id="paramRecord" class="paramRecord"></div>
-                            <input type="text" value="" id="paramRecordShow" name="computeFormula" required  aria-required="true">
+                            <input type="hidden" value="" id="paramRecordShow" name="computeFormula" required  aria-required="true">
                         </div>
 
                     </div>
@@ -107,14 +108,16 @@
         var paramRecord = $("#paramRecord"),
             html = "",htmlArr =[],inputArr = [];
         if(id){
+            $("#objId").val(id);
             ajaxToServer1("/api/aps/Formula/form/"+id,{},function(result){
+                console.log(result.Formula);
                 if(result.success){
                     var Formula = result.Formula,
                         str = Formula.computeFormula;
                     renderData(Formula, $('#inputForm'));
                     $("#paramRecord").html(Formula.computeFormula);
+                    html = str;
                     htmlArr = str.match(/<[^>]+>([^<]+)<\/[^>]+>/g);
-
                     formulaHiddenValue();
                 }
             })
@@ -132,6 +135,7 @@
                 }
 
             }
+            console.log(inputArr);
         }
 
         function renderHtml() {  //像htmlArr、inputArr数组动态push元素
@@ -146,9 +150,11 @@
                     inputArr.pop();
                     html = "";
                     var len1 = htmlArr.length;
+                    console.log(htmlArr);
                     for(var i = 0;i<len1;i++) {
-                        html += "<span>" + htmlArr[i] + "</span>";
+                        html +=  htmlArr[i];
                     }
+                    console.log(html);
                     renHtmlFn(html,inputArr)
                 }else{
                     html +="<span>"+$(this).html()+"</span>" ;
@@ -173,7 +179,7 @@
             }else{
                 $("#paramRecordHide").empty().val("");
             }
-            $("#paramRecordShow").val($("#paramRecord").html());
+            $("#paramRecordShow").val(html);
         }
 
         function getZtreeVal(tit,shade,url,pushValCon){

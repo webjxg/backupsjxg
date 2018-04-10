@@ -12,6 +12,7 @@
     <!--引入样式-->
     <link rel="stylesheet" href="../../css/common.css">
     <link rel="stylesheet" href="../../css/customDataTable.css">
+    <link rel="stylesheet" href="../../css/comInnerTable.css">
 
 </head>
 
@@ -75,34 +76,44 @@
                 <textarea id="remarks" name="remark" maxlength="200" class="form-control" rows="3"></textarea>
             </td>
         </tr>
-        <tr>
-            <td class="active">
-                <label class="pull-right">创建人:</label>
-            </td>
-            <td>
+        <tr class="tableFoot">
+            <td >
+                <span class="pull-left">创建人:</span>
                 <input id="createBy" name="createBy" class="form-control" type="text" value="" maxlength="100"/>
             </td>
-            <td class="active">
-                <label class="pull-right">创建时间:</label>
-            </td>
-            <td>
+            <td >
+                <span class="pull-left">创建时间:</span>
                 <input id="createDate" name="createDate" class="form-control" type="text" value="" maxlength="100"/>
             </td>
-        </tr>
-        <tr>
-            <td class="active">
-                <label class="pull-right">修改人:</label>
-            </td>
-            <td>
+            <td >
+                <span class="pull-left">修改人:</span>
                 <input id="updateBy" name="updateBy" class="form-control" type="text" value="" maxlength="100"/>
             </td>
-            <td class="active">
-                <label class="pull-right">修改时间:</label>
-            </td>
-            <td>
+            <td >
+                <span class="pull-left">修改时间:</span>
                 <input id="updateDate" name="updateDate" class="form-control" type="text" value="" maxlength="100"/>
             </td>
         </tr>
+        <!--<tr class="tableFoot">-->
+            <!--<td  colspan="2">-->
+                <!--<span class="pull-left">创建人:</span>-->
+                <!--<input id="createBy" name="createBy" class="form-control" type="text" value="" maxlength="100"/>-->
+            <!--</td>-->
+            <!--<td colspan="2">-->
+                <!--<span class="pull-left">创建时间:</span>-->
+                <!--<input id="createDate" name="createDate" class="form-control" type="text" value="" maxlength="100"/>-->
+            <!--</td>-->
+        <!--</tr>>-->
+        <!--<tr class="tableFoot">-->
+            <!--<td colspan="2">-->
+                <!--<span class="pull-left">修改人:</span>-->
+                <!--<input id="updateBy" name="updateBy" class="form-control" type="text" value="" maxlength="100"/>-->
+            <!--</td>-->
+            <!--<td colspan="2">-->
+                <!--<span class="pull-left">修改时间:</span>-->
+                <!--<input id="updateDate" name="updateDate" class="form-control" type="text" value="" maxlength="100"/>-->
+            <!--</td>-->
+        <!--</tr>-->
         </tbody>
     </table>
 </form>

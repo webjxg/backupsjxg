@@ -17,8 +17,6 @@
     <link rel="stylesheet" href="../../css/common.css">
     <link rel="stylesheet" href="../../css/customDataTable.css">
 
-
-
 </head>
 <!--内容-->
 <body id="menu-content">
@@ -117,7 +115,7 @@
 <script src="../../js/page.js"></script>
 <script>
     $(document).ready(function() {
-        $("#updateSort-btn").click(function(){
+        $("#updateSort-btn").click(function(){   //排序按钮
             var ids="",sorts="";
             $("input[name='sort']").each(function(ind,item){
                 var id = $(item).parents("tr").find('.i-checks').attr("id");
@@ -146,6 +144,7 @@
                 layer.msg("没有修改任何排序！")
             }
         });
+        //同步属性
         $("#sync-btn").click(function(){
             ajaxToServer1("/api/sys/SysMenu/ajaxSys",{},function(result){
                 layerAlert(result.message);
@@ -153,6 +152,7 @@
         });
         window.pageLoad = function (){
             ajaxToServer("/api/sys/SysMenu/getTreeGraidJson",{},function(tableData){
+                console.log(tableData)
                 renderTableData(tableData.rows);
                 $('.btn-check').click(function(){
                     var id = $(this).parents("tr").find('.i-checks').attr('id');
@@ -194,7 +194,7 @@
                         +"<td style='text-align: center;'><input type='checkbox' class='i-checks' id='"+data[i].id+"'></td>"
                         +"<td>"+data[i].name+"</td>"
                         +"<td>"+data[i].href+"</td>"
-                        +"<td class='autoWidth'><input type='number' name='sort' value='"+data[i].sort+"' data-val='"+data[i].sort+"' class='form-control' style='width:100px'></td>"
+                        +"<td class='autoWidth'><input type='number' name='sort' value='"+data[i].sort+"' data-val='"+data[i].sort+"' class='form-control' style='width:100px ;padding:1px 6px;height:26px;line-height: 24px;'></td>"
                         +"<td style='text-align: center;'>"+(data[i].is_show =='1'?'是':'否' )+"</td>"
                         +"<td>"+data[i].permission+"</td>"
                         +"<td class='autoWidth' ><a href='#' class='btn btn-info btn-xs btn-check'><i class='fa fa-search-plus'></i>查看</a>"+" <a href='#' class='btn btn-success btn-xs btn-change'><i class='fa fa-edit'></i>修改</a>"+"<a href='#' class='btn btn-danger btn-xs btn-delete'><i class='fa fa-trash'></i> 删除</a>"+"  <a href='#' class='btn btn-primary btn-xs btn-add'><i class='fa fa-plus'></i> 添加下级菜单</a></td>"
@@ -207,6 +207,7 @@
             $('#treeTableBody').html(tableStr);
             $("#treeTable").treetable({expandable:true,column:1 },true);  //第二个参数表示为true时强制重新初始化树。
             RenderiCheckTblBody();
+            $("#treeTable").removeClass(".treetable")
         }
 
 

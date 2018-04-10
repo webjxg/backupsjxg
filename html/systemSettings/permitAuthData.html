@@ -24,7 +24,6 @@
         .permitAuth-l{width:30%;float:left;}
         .permitAuth-r{width:65%;float:right;}
     </style>
-
 </head>
 <body>
 <!--<input type="text" value="" id="objectId">-->
@@ -111,7 +110,6 @@
         $("#permitAuthZtree").trigger("change");
     }
     var id =getQueryString('id');
-    console.log(id)
     $("#permissionId").val(id);
     var selHtml = html1 = "<option value = '' selected>请选择</option>";
     var zTreeObj,objectId,permissionId,propId;
@@ -141,7 +139,6 @@
         if(result.success){
             var data = result.SysPermission;
             var  selList = data.sysAuthClass.sysAuthProperties;
-            console.log(data,selList)
             var html = "<span>许可:["+data.name+"]</span><span>鉴权类:["+data.sysAuthClass.name+"]</span><span>操作:["+data.sysOperation.name+"]</span>";
             $('.permitAuthTit').empty().html(html);
             $('#objectId').val(data.sysAuthObject.id);

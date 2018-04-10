@@ -24,6 +24,7 @@
                     </div>
                     <div class="pull-right">
                         <button class="btn btn-save">保存</button>
+                        <button class="btn btn-save">提交</button>
                     </div>
                 </div>
             </div>
@@ -52,7 +53,7 @@
             adYear:2018,
             adMonth:11
         };
-        ajaxToServer1("/api/aps/ApsMonthAdjustAqhbjh/queryMonthAdjustAqhbjh",data,function (result) {
+        ajaxToServer("/api/aps/ApsMonthAdjustAqhbjh/queryMonthAdjustAqhbjh",JSON.stringify(data),function (result) {
             console.log(result);
            planarr = result.aqhbsbglztzbjh
            console.log(planarr)
@@ -69,6 +70,7 @@
                     "itemUnit":planarr[i].itemUnit,
                     "indexValue":planarr[i].indexValue,
                     "remark":planarr[i].remark,
+                    "mainId":planarr[i].mainId
                 };
                 arr.push(msgobj)
                 console.log(arr)
@@ -86,6 +88,7 @@
         //创建table
         columns:[[
             {field:'id',title:'id',hideColumn:'id'},
+            {field:'mainId',title:'mainId',hideColumn:'mainId'},
             {field:'itemName',title:'指标名称',width:100,align:'center'},
             {field:'itemUnit',title:'单位',width:100,align:'center'},
             {field:'indexValue',title:'指标值',editor:'text',width:100,align:'center'},
@@ -112,48 +115,51 @@
     $(function(){
         $('#td0').datagrid('hideColumn','id');
     });
+    $(function(){
+        $('#td0').datagrid('hideColumn','mainId');
+    });
     // 点击保存按钮
-    $(".btn-save").click(function () {
-        console.log(dataGridObj.saveItemArr)
-        var data = JSON.stringify(dataGridObj.saveItemArr)
-        console.log(data)
-        ajaxToServer("/api/aps/ApsMonthAdjustAqhbjh/saveAqhbjhInfo",data,function (result) {
-            console.log(result.message)
+     $(".btn-save").click(function (e) {
+            var btn = $(e.target).context.textContent;
+            console.log(btn)
+            if(btn == "保存"){
+                status = "0";
+                addstatus(status)
+            }else{
+                status = "1";
+                addstatus(status)
+            }
         })
-    })
-    
-    // $(".btn-save").click(function (e) {
-    //     var btn = $(e.target).context.textContent
-    //     if(btn == "保存"){
-    //         status = "0";
-    //         addstatus(status)
-    //     }else{
-    //         status = "1";
-    //         addstatus(status)
-    //     }
-    // })
-    // //将点击状态添加到数组里边
-    // function addstatus(status) {
-    //     var len = $(".tableItemBox").length;
-    //     console.log(len)
-    //     for(var i = 0; i<len;i++){
-    //         console.log($("#td"+i))
-    //         // 给每个虚拟btn添加点击事件
-    //         $("#td"+i).parents('.datagrid-view').siblings(".datagrid-toolbar").find(".l-btn-text").trigger('click');
-    //     }
-    //     console.log(status);
-    //     for(var i=0;i<dataGridObj.saveItemArr.length;i++){
-    //         dataGridObj.saveItemArr[i].status= status;
-    //     };
-    //     var data = dataGridObj.saveItemArr;
-    //     sendmsg(data)  //将数据发送给后台
-    // }
-    // function sendmsg(data) {
-    //     console.log(data);
-    //     var datastring = JSON.stringify(data);
-    //     ajaxToServer("/api/aps/ApsYearPlan/saveYearInfo",datastring,function (result) {
-    //         layer.msg(result.message)
-    //     });
-    // }
+        //将点击状态添加到数组里边
+        function addstatus(status) {
+            var len = $(".tableItemBox").length;
+            // console.log(len)
+            for(var i = 0; i<len;i++){
+                console.log($("#td"+i))
+                // 给每个虚拟btn添加点击事件
+                $("#td"+i).parents('.datagrid-view').siblings(".datagrid-toolbar").find(".l-btn-text").trigger('click');
+            }
+            console.log(status);
+            var savearr = [];
+            var editItems = dataGridObj.saveItemArr;
+
+            $(editItems).each(function (i) {
+                savearr.push(editItems[i]);
+            });
+            console.log(savearr,JSON.stringify(savearr))
+            var data={
+                "aqhbPlans":JSON.stringify(editItems),
+                "status":status,
+            };
+            addmsg(data)  //将数据发送给后台
+        }
+//
+//        保存将数据发送给后台
+    function addmsg(data){
+        console.log(data)
+        ajaxToServer1("/api/aps/ApsMonthAdjustAqhbjh/saveAqhbjhInfo",data,function(result){
+            console.log(result);
+        })
+    }
 </script>
 </html>

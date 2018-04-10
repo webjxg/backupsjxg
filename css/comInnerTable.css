@@ -3,23 +3,38 @@
 
 html, body {
   height: 100%; }
-
 body {
   font-family: "open sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
   font-size: 13px;
   color: #676a6c;
   table-layout:fixed
 }
-
 .form-horizontal {
   margin: 0 10px; }
-
 .table-bordered {
   border: none; }
-
+.input-group-btn{
+ width: 38px;
+  height: 34px;
+  background: linear-gradient(#ffffff,#f0f0f0);
+  border: 2px solid #E3E3E3;
+}
+#iconButton{
+  background: linear-gradient(#ffffff,#f0f0f0) !important;
+  border: 2px solid #E3E3E3;
+  color: black !important;
+}
+.input-group-btn button{
+  border: 0;
+  margin-left: 10px;
+  background: linear-gradient(#ffffff,#f0f0f0);
+}
+.input-group-btn i{
+  font-size: 16px;
+  color: black !important;
+}
 form table.dataTable.no-footer {
   border-bottom: none; }
-
 .table-bordered > tbody > tr > td {
   /*width: 100px;*/
   border: 1px solid #e7e7e7;
@@ -29,31 +44,23 @@ form table.dataTable.no-footer {
 td .form-control, .single-line {
   background-color: #FFFFFF;
   background-image: none;
-  border: 1px solid #e5e6e7;
+  /*border: 1px solid #e5e6e7;*/
   border-radius: 1px;
   color: inherit;
   display: block;
   padding: 6px 12px;
   transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
-  width: 100%;
+  width: 98%;
   font-size: 14px; }
 
 .width-15 {
-  width: 15%;
-  /*background-color: #1AB394;*/
-}
-
-/*jxg*/
-
+  width: 15%;}
 .width-35{
   position: relative;
 }
-
 .thumbnail{
   border: none;
 }
-
-
 .thumbnail img{
   width: 100px;
   height: 100px;
@@ -74,14 +81,15 @@ td .form-control, .single-line {
   line-height: 30px;
   padding:0;
   color: #000000;
-  background-color: inherit;
+  /*background-color: inherit;*/
   display: block;
+  border: 0 !important;
 }
 
 
-.table>tbody>tr>td.active{
-  background:transparent;
-}
+/*.table>tbody>tr>td.active{*/
+  /*!*background:transparent;*!*/
+/*}*/
 
 
 .btn-primary,.btn-primary:active,.btn-primary:focus,.btn-primary:active:focus, .btn-primary:active:hover{
@@ -104,6 +112,7 @@ td .form-control, .single-line {
 .tableFoot,.table-bordered > tbody > .tableFoot > td{
   line-height: 20px;
   border: none;
+  padding: 0;
 }
 .tableFoot > td >span{
   margin-top: 7px;
@@ -113,6 +122,8 @@ td .form-control, .single-line {
   border: none;
   outline: none;
   box-shadow: none;
+  text-align: left;
+  padding: 0;
 }
 .tableFoot > td >.form-control[readonly]{
   background-color: transparent;
@@ -123,31 +134,29 @@ td .form-control, .single-line {
 
 .width-35 {
   width: 35%; }
-
 .form-control:focus {
   border-color: #1ab394 !important;
   box-shadow: none !important; }
-
 form > .table > tbody > tr > td, .table > tfoot > tr > td {
   border-top: 1px solid #e7eaec;
   line-height: 1.42857;
   padding: 8px;
+  color: black;
   vertical-align: middle; }
+.btn-primary{
+  background-color: #1ab394;
+  /*border-color: #1ab394;*/
+}
+
 
 /*# sourceMappingURL=dic-inner.css.map */
-
-
-
-
 /*jxg 参数配置 paramConfigCheckView.html*/
 .table{
   margin-bottom: 0;
 }
-
-.width-35>input{
-  width: 260px;
-}
-
+/*.width-35>input{*/
+  /*width: 260px;*/
+/*}*/
 .width-60{
   width: 60%;
 }

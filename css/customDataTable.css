@@ -60,7 +60,7 @@
 }
 .company {
   margin-bottom: 10px;
-  margin-top: 10px;
+  margin-top: 20px;
 }
 .form-group .company .input-group {
   margin-right: 40px;
@@ -69,7 +69,6 @@
 .form-group .company #companyName, .form-group .company #officeName {
   width: 164px;
   margin-right: 0;
-
 }
 
 .form-group span {
@@ -90,7 +89,7 @@
 .ibox-content .btn-white:hover, .ibox-content .btn-white:focus, .ibox-content .btn-white:active, .ibox-content .btn-white.active, .ibox-content .open .dropdown-toggle.btn-white {
   color: #80afa7;
   /*border: 1px solid #d2d2d2;*/
-  box-shadow: 0 3px 1px 1px gainsboro;
+  box-shadow: 0 3px 1px 1px gainsboro !important;
 }
 .ibox-content .pull-right > .btn-primary {
   border-color: #1ab394;
@@ -108,18 +107,18 @@
   margin-bottom: 6px !important;
   max-width: none !important; }
 table.dataTable thead{
-  /*background: linear-gradient(to right,  #3d8786,#3bb6bb);*/
-  background-color: #1AB394;
+  background-color: #1AB394 !important;
   color: white;
 }
 .ibox-content table.dataTable thead th {
   padding:8px;
   border-bottom: 0;
   vertical-align: middle;
+  background-color: #1AB394 !important;
   /*border: none;*/
 }
 .ibox-content table.dataTable tbody td {
-  padding: 6px 5px 7px 5px;
+  padding: 4px 6px ;
   vertical-align: middle; 
   text-align: center;
   }
@@ -135,7 +134,7 @@ table.treetable{
   /*border-top: 1px solid #E8EAF0;*/
   border-left: 0;
   border-bottom: 0;
-  /*border: none;*/
+  vertical-align: middle;
 }
 
 tbody > tr:last-child > td {
@@ -212,7 +211,7 @@ tbody > tr:last-child > td {
   font-size: 14px;
   box-shadow: none; }
 .input-group{
-  width:80%;
+  width:98%;
 }
 .form-control:focus, .single-line:focus {
   border-color: #1ab394 !important; }
@@ -254,14 +253,12 @@ tbody > tr:last-child > td {
 #nameImagePreview img{
   height: 100px;
   width: 100px;
-
-}
-a#filePicker{
-  margin-left: 25px;
 }
 
 .alignCenter{
   text-align: center;
 }
 .autoWidth{width:1%;white-space: nowrap;}
+
+
 /*# sourceMappingURL=dictionaries.css.map */

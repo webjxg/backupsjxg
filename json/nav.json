@@ -157,6 +157,21 @@
       ]
     },
     {
+      "iconName": "fa-desktop",
+      "name": "生产调度",
+      "menu_sub": "1",
+      "href": "",
+      "children": [
+        {
+          "iconName": "",
+          "name": "创建、编辑指令",
+          "menu_sub": "1",
+          "href": "../html/proDis/createInstructionIndex.html",
+          "children": []
+        }
+      ]
+    },
+    {
       "iconName":"fa-desktop",
       "name":"OA办公11",
       "menu_sub":"1",

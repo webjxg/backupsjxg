@@ -9,122 +9,129 @@
     <link rel="stylesheet" href="../../plugins/font-awesome/css/font-awesome.min.css">
     <link rel="stylesheet" href="../../plugins/ztree/css/metroStyle/metroStyle.css">
     <link rel="stylesheet" href="../../plugins/datatables/css/jquery.dataTables.min.css">
-    <link rel="stylesheet" href="../../plugins/icheck/skins/square/aero.css">
     <link rel="stylesheet" href="../../plugins/icheck/skins/square/green.css">
-    <!--<link rel="stylesheet" href="../../plugins/datatables/css/mydatatable.css">-->
+    <link rel="stylesheet" href="../../plugins/treetable/css/jquery.treetable.theme.default.css">
+    <link rel="stylesheet" href="../../plugins/treetable/css/jquery.treetable.css">
+    <link rel="stylesheet" href="../../plugins/datatables/css/mydatatable.css">
     <!--引入样式-->
     <link rel="stylesheet" href="../../css/common.css">
-    <link rel="stylesheet" href="../../css/proIndex.css">
     <link rel="stylesheet" href="../../css/customDataTable.css">
 
-
-
 </head>
-<body>
-<div class="wrapper wrapper-content ibox">
-    <!--顶部搜索-->
-    <div class="row">
-        <div class="col-sm-12">
-            <form id="searchForm" class="form-inline" action="#" method="post">
-                <input type="hidden" id="treeId"  >
-                <div class="form-group">
-                    <div class="company col-sm-12">
-                        <span>鉴权属性名称</span>
-                        <input id="proNameId" name="proNameId" class="form-control" type="hidden" value="">
-                        <input id="proName" name="proName" type="text" value="" data-msg-required=""
-                               class="form-control required" style="" aria-required="true">
-                        <label id="companyName-error" class="error" for="officeId" style="display:none"></label>
+<body id="menu-content">
+<div class="wrapper wrapper-content">
+    <div class="ibox">
+        <!--顶部搜索-->
+        <div class="row">
+            <div class="col-sm-12">
+                <form id="searchForm" class="form-inline" action="#" method="post">
+                    <input type="hidden" id="treeId"  >
+                    <div class="form-group">
+                        <div class="company col-sm-12">
+                            <span>鉴权属性名称</span>
+                            <input id="proNameId" name="proNameId" class="form-control" type="hidden" value="">
+                            <input id="proName" name="proName" type="text" value="" data-msg-required=""
+                                   class="form-control required" style="" aria-required="true">
+                            <label id="companyName-error" class="error" for="officeId" style="display:none"></label>
 
-                        <span >鉴权属性编码</span>
-                        <input id="proCodeId" name="proCodeId" class="form-control" type="hidden" value="">
-                        <input id="proCode" name="proCode" type="text" value="" data-msg-required=""
-                               class="form-control required" style="" aria-required="true">
-                        <label id="officeName-error" class="error" for="officeId" style="display:none"></label>
+                            <span >鉴权属性编码</span>
+                            <input id="proCodeId" name="proCodeId" class="form-control" type="hidden" value="">
+                            <input id="proCode" name="proCode" type="text" value="" data-msg-required=""
+                                   class="form-control required" style="" aria-required="true">
+                            <label id="officeName-error" class="error" for="officeId" style="display:none"></label>
+                        </div>
+                        <div class="user col-sm-12">
+                            <span>鉴权属性描述</span>
+                            <input id="proDescriptionId" name="proDescriptionId" class="form-control" type="hidden" value="">
+                            <input id="proDescription" name="proDescription" type="text" value="" data-msg-required=""
+                                   class="form-control required" style="" aria-required="true">
+                            <span >是&nbsp;否&nbsp;启&nbsp;用&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                            <input id="enableId" name="enableId.id" class="form-control" type="hidden" value="">
+                            <select id="enable" name="enable" class="form-control required">
+                                <option ></option>
+                                <option value="1">启用</option>
+                                <option value="2">禁用</option>
+                            </select>
+                        </div>
                     </div>
-                    <div class="user col-sm-12">
-                        <span>鉴权属性描述</span>
-                        <input id="proDescriptionId" name="proDescriptionId" class="form-control" type="hidden" value="">
-                        <input id="proDescription" name="proDescription" type="text" value="" data-msg-required=""
-                               class="form-control required" style="" aria-required="true">
-                        <span >是&nbsp;否&nbsp;启&nbsp;用&nbsp;&nbsp;&nbsp;&nbsp;</span>
-                        <input id="enableId" name="enableId.id" class="form-control" type="hidden" value="">
-                        <select id="enable" name="enable" class="form-control required">
-                            <option ></option>
-                            <option value="1">启用</option>
-                            <option value="2">禁用</option>
-                        </select>
+                </form>
+                <br>
+            </div>
+        </div>
+        <!--按钮条-->
+            <div class="ibox-content">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <div class="pull-left">
+                            <button class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="left"
+                                    onclick="openEditDialog('新增属性','./systemSettings/proCheckView.html','800px','500px')" title="添加"><i class="fa fa-plus"></i> 添加
+                            </button>
+
+                            <button class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="left"
+                                    onclick="edit('修改用户信息','./systemSettings/proCheckView.html','800px','500px','#treeTable')" title="修改"><i
+                                    class="fa fa-file-text-o"></i> 修改
+                            </button>
+                            <button class="btn btn-white btn-sm" onclick="deleteAll('确认要删除该属性吗？','/api/sys/SysAuthProperty/delete/','#treeTable')"  data-toggle="tooltip" data-placement="top"><i
+                                    class="fa fa-trash-o"> 删除</i></button>
+                            <button class="btn btn-white btn-sm " id="refresh-btn" data-toggle="tooltip" data-placement="left"
+                                    onclick="Page.reload()" title="刷新"><i class="glyphicon glyphicon-repeat"></i> 刷新
+                            </button>
+                        </div>
+                        <div class="pull-right">
+                            <button class="btn btn-primary btn-rounded btn-outline btn-sm " id="search-btn"><i
+                                    class="fa fa-search"></i> 查询
+                            </button>
+                            <button class="btn btn-primary btn-rounded btn-outline btn-sm " id="reset-btn"><i
+                                    class="fa fa-refresh"></i> 重置
+                            </button>
+                        </div>
                     </div>
                 </div>
-            </form>
-            <br>
-        </div>
-    </div>
-    <!--按钮条-->
-    <div class="row">
+
+            </div>
+        <!--内容表格-->
         <div class="col-sm-12">
-            <div class="pull-left">
-                <button class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="left"
-                        onclick="openEditDialog('新增用户','./systemSettings/proCheckView.html','800px','500px')" title="添加"><i class="fa fa-plus"></i> 添加
-                </button>
+            <table id="treeTable"
+                   class="table table-striped table-bordered table-hover table-condensed dataTables-example dataTable">
+                <thead>
+                <tr class="alignCenter">
+                    <th><input type="checkbox" class="i-checks" style="position: absolute; opacity: 0;"></th>
+                    <th>序号	</th>
+                    <th>鉴权属性名称	</th>
+                    <th>鉴权属性编码	</th>
+                    <th>层级类型	</th>
+                    <th>是否成对显示	</th>
+                    <th>是否仅叶子节点可选</th>
+                    <th>是否启用	</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <tbody>
 
-                <button class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="left"
-                        onclick="edit('修改用户信息','./systemSettings/proCheckView.html','800px','500px','#treeTable')" title="修改"><i
-                        class="fa fa-file-text-o"></i> 修改
-                </button>
-                <button class="btn btn-white btn-sm" onclick="deleteAll('确认要删除该用户吗？','/api/sys/SysAuthProperty/delete/','#treeTable')"  data-toggle="tooltip" data-placement="top"><i
-                        class="fa fa-trash-o"> 删除</i></button>
-                <button class="btn btn-white btn-sm " id="refresh-btn" data-toggle="tooltip" data-placement="left"
-                        onclick="Page.reload()" title="刷新"><i class="glyphicon glyphicon-repeat"></i> 刷新
-                </button>
-            </div>
-            <div class="pull-right">
-                <button class="btn btn-primary btn-rounded btn-outline btn-sm " id="search-btn"><i
-                        class="fa fa-search"></i> 查询
-                </button>
-                <button class="btn btn-primary btn-rounded btn-outline btn-sm " id="reset-btn"><i
-                        class="fa fa-refresh"></i> 重置
-                </button>
-            </div>
-        </div>
-    </div>
-    <!--内容表格-->
-    <table id="treeTable"
-           class="table table-striped table-bordered table-hover table-condensed dataTables-example dataTable">
-        <thead>
-        <tr class="alignCenter">
-            <th><input type="checkbox" class="i-checks" style="position: absolute; opacity: 0;"></th>
-            <th>序号	</th>
-            <th>鉴权属性名称	</th>
-            <th>鉴权属性编码	</th>
-            <th>层级类型	</th>
-            <th>是否成对显示	</th>
-            <th>是否仅叶子节点可选</th>
-            <th>是否启用	</th>
-            <th>操作</th>
-        </tr>
-        </thead>
-        <tbody>
+                </tbody>
+            </table>
 
-        </tbody>
-    </table>
-    <div class="clearfix pagination-box">
-        <div class="pagination-detail pull-left">
-            <div class="page-info pull-left"></div>
-            <div class="page-list pull-left">
-                <span>每页显示</span>
-                <select name="" id="pag-sel">
-                    <option value="5">5</option>
-                    <option value="10" selected>10</option>
-                    <option value="20">20</option>
-                    <option value="25">25</option>
-                    <option value="30">30</option>
-                    <option value="40">40</option>
-                    <option value="50">50</option>
-                </select>
-                条记录
-            </div>
         </div>
-        <div id="pagination" class="pagination-roll pull-right"></div>
+        <div class="clearfix pagination-box">
+            <div class="pagination-detail pull-left">
+                <div class="page-info pull-left"></div>
+                <div class="page-list pull-left">
+                    <span>每页显示</span>
+                    <select name="" id="pag-sel">
+                        <option value="5">5</option>
+                        <option value="10" selected>10</option>
+                        <option value="20">20</option>
+                        <option value="25">25</option>
+                        <option value="30">30</option>
+                        <option value="40">40</option>
+                        <option value="50">50</option>
+                    </select>
+                    条记录
+                </div>
+            </div>
+            <div id="pagination" class="pagination-roll pull-right"></div>
+        </div>
+
     </div>
 </div>
 <!--核心插件-->
@@ -213,7 +220,7 @@
             //定义列 宽度 以及在json中的列名
             "columns": [
                 {
-                    "data": null, "width": "3%", "defaultContent": "",
+                    "data": null, "width": "5%", "defaultContent": "",
                     "render": function (data, type, row, meta) {
                         return data = "<input type='checkbox' id=" + row.id + " class='i-checks'>"
                     }

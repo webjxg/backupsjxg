@@ -106,13 +106,13 @@
             //定义列 宽度 以及在json中的列名
             "aoColumns": [
                 {"data": "id",'sClass':"hide"},
-                {"data": "itemName",'sClass':" alignCenter autoWidth"},
+                {"data": "itemName",'sClass':"alignCenter autoWidth"},
                 {"data": "computeFormula",'sClass':"alignCenter autoWidth"},
                 {
                     "data": null, "orderable": false, "defaultContent": "",'sClass':" alignCenter autoWidth",
                     "render": function (data, type, row, meta) {
-                        return "<a class='btn btn-change bg-62b5e9'><i class='fa fa-edit'></i>修改</a >" +
-                        "<a class='btn  btn-delete bg-f75c5c' ><i class='fa fa-trash' ></i>删除</a >";
+                        return "<a class='btn btn-change '><i class='fa fa-edit'></i>编辑</a >" +
+                        "<a class='btn  btn-delete ' ><i class='fa fa-trash' ></i>删除</a >";
 
                     }
                 }

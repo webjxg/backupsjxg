@@ -60,6 +60,7 @@
         };
         var datastring = JSON.stringify(data)
         ajaxToServer("/api/aps/ApsYearPlan/queryYearPlan",datastring,function (result) {
+            console.log(result)
             planarr.push(result.cpcl);
             planarr.push(result.cpxl);
             planarr.push(result.zyxhzbjh)
@@ -67,12 +68,9 @@
         })
     }
     function createTbody(planarr) {
-       console.log(planarr)
         console.log(planarr)
         for(var i=0;i<planarr.length;i++){
-            console.log(planarr[i]) //每种类型的数据，放在一个数组里边
             for(var j=0;j<planarr[i].length;j++){
-                // console.log(planarr[i][j]);
                 msgobj = {
                     "id":planarr[i][j].id,
                     "groupName":planarr[i][j].groupName,
