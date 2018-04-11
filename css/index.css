@@ -411,3 +411,16 @@ body.nav-mini .wrapper-con {
 .onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-switch {
   right: 0px;
 }
+/*jxg layer全局弹窗样式*/
+.innerlist .layui-layer-title{
+  background-color: #1ab394;
+  color: #fff3f3;
+}
+.innerlist .layui-layer-btn .layui-layer-btn0{
+  background-color: #ffa82d;
+  color: #FFFFFF;
+  border:0;
+}
+.innerlist .layui-layer-setwin .layui-layer-min,.innerlist .layui-layer-setwin .layui-layer-max{
+  display: none;
+}

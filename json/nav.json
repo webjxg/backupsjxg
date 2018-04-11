@@ -199,9 +199,23 @@
       "children": [
         {
           "iconName": "",
-          "name": "创建、编辑指令",
+          "name": "创建指令",
           "menu_sub": "1",
           "href": "../html/proDis/createInstructionIndex.html",
+          "children": []
+        },
+        {
+          "iconName": "",
+          "name": "调度指令",
+          "menu_sub": "1",
+          "href": "../html/proDis/disCommandsIndex.html",
+          "children": []
+        },
+        {
+          "iconName": "",
+          "name": "指令下达",
+          "menu_sub": "1",
+          "href": "../html/proDis/giveOrdersIndex.html",
           "children": []
         }
       ]

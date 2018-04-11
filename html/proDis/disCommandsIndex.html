@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>调度指令</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="stylesheet" href="../../plugins/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../plugins/font-awesome/css/font-awesome.min.css">
+    <!--引入样式-->
+    <link rel="stylesheet" href="../../plugins/layer/theme/default/layer.css">
+    <link rel="stylesheet" href="../../plugins/ztree/css/metroStyle/metroStyle.css">
+    <!--样式-->
+    <link rel="stylesheet" href="../../css/common.css">
+    <link rel="stylesheet" href="../../css/customDatagrid.css">
+    <link rel="stylesheet" href="../../css/customDataTable.css">
+    <link rel="stylesheet" href="../../css/aps.css">
+    <style>
+        .wrapper{
+            height: 1074px;
+        }
+        .ibox{
+            background-color: #f3f3f4;
+            position: relative;
+        }
+        .ibox-content:nth-of-type(1){
+            margin-bottom: 20px;
+        }
+        .ibox-content:nth-of-type(2){
+            height: 668px;
+
+        }
+    </style>
+</head>
+<body>
+<div class="wrapper wrapper-content bg-gray">
+    <div class="ibox">
+        <!--标题 按钮-->
+        <div class="ibox-content">
+            <div>
+                <h1 class="titName">创建、编辑指令</h1>
+            </div>
+            <!--按钮-->
+            <div class="clearfix">
+                <div class="apsType-box pull-left mgb-10">
+                    <ul class="apsType-linkage">
+                        <li class="job">
+                            工序：
+                            <select name="job" id="job">
+                                <option value="">请选择</option>
+                                <option value="id0001">原料</option>
+                                <option value="id0002">加工</option>
+                                <option value="id0003">生产</option>
+                                <option value="id0004">销售</option>
+                            </select>
+                        </li>
+                        <li class="rank">
+                            级别：
+                            <select name="rank" id="rank">
+                                <option value="">请选择</option>
+                                <option value="id0005">一级</option>
+                                <option value="id0006">二级</option>
+                                <option value="id0007">三级</option>
+                                <option value="id0008">四级</option>
+                            </select>
+                        </li>
+                        <li class="grade">
+                            分类：
+                            <select name="grade" id="grade">
+                                <option value="">请选择</option>
+                                <option value="id0010">调度指令</option>
+                                <option value="id0011">计划指令</option>
+                                <option value="id0012">原料加工指令</option>
+                                <option value="id0013">厉害了指令</option>
+                            </select>
+                        </li>
+                        <li class="content">
+                            内容：
+                            <select name="content" id="content">
+                                <option value="">请选择</option>
+                                <option value="id0014">指令1</option>
+                                <option value="id0015">指令2</option>
+                                <option value="id0016">指令3</option>
+                                <option value="id0017">指令4</option>
+                            </select>
+                        </li>
+                    </ul>
+                </div>
+                <div class="pull-right btn-box mgb-20">
+                    <button class="btn btn-add bg-ffa82d" id="btn-search" type="button">查询</button>
+                    <button class="btn btn-add " id="btn-add" type="button" onclick="openEditDialog('创建指令','./proDis/createInsCV.html?level=1','462px','425px')">创建指令</button>
+                </div>
+            </div>
+        </div>
+        <!--内容-->
+        <div class="ibox-content">
+            <table id="treeTable" class="table table-striped table-bordered table-hover table-condensed dataTables-example dataTable">
+                <thead>
+                <tr>
+                    <th class='autoWidth' style="border: none">工序</th>
+                    <th class='autoWidth' style="border: none">指令内容</th>
+                    <th class='autoWidth' style="border: none">指令级别</th>
+                    <th class='autoWidth' style="border: none">指令分类</th>
+                    <th class='autoWidth' >创建时间</th>
+                </tr>
+                </thead>
+                <tbody id="treeTableBody" >
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+</body>
+<script src="../../js/jquery-2.2.4.min.js"></script>
+<script src="../../plugins/bootstrap/js/bootstrap.min.js"></script>
+<!--附属插件-->
+<script src="../../plugins/layer/layer.js"></script>
+<script src="../../plugins/icheck/icheck.min.js"></script>
+<script src="../../plugins/datetimepicker/js/bootstrap-datetimepicker.js"></script>
+<script src="../../plugins/datatables/js/jquery.dataTables.min.js"></script>
+<script src="../../plugins/datatables/js/dataTables.bootstrap.js"></script>
+<script src="../../plugins/bootStrapPager/js/extendPagination.js"></script>
+<script src="../../plugins/ztree/js/jquery.ztree.core.js"></script>
+<!--自定义文件-->
+<script src="../../js/customForm-aps.js"></script>
+<script src="../../js/page.js"></script>
+
+<script>
+    $(document).ready(function(){
+        ajaxToServer("/api/aps/Dict/ajaxTreeJson/0",{},function(tableData){
+            renderTableData(tableData);
+            console.log(tableData);
+        })
+    });
+    function renderTableData(data) {
+        console.log(data);
+        //↓接口到后修改↓
+        var datas=data.rows;
+        var tableStr = "";
+        for (var i = 0; i < datas.length; i++) {
+            tableStr += "<tr class='alignCenter' >"
+                            + "<td class='i-Checks' id='" + datas[i].id + "'>" + datas[i].itemName + "</td>"
+                            + "<td>1 </td>"
+                            + "<td>" + datas[i].itemName + "</td>"
+                            + "<td>" + datas[i].itemCode + "</td>"
+                            + "<td>" + datas[i].itemName + "</td>"
+                        + "</tr>";
+        }
+        if (tableStr.length == 0) {
+            var len = $("#treeTable thead tr").children("th").length;
+            tableStr = "<tr style='text-align: center'><td colspan='" + len + "'><font color='#cd0a0a'>暂无记录，请点击左侧对应指标</font></td></tr>";
+        }
+        $('#treeTableBody').html(tableStr);
+    }
+</script>
+</html>
