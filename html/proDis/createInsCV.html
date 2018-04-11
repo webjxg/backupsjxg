@@ -20,6 +20,7 @@
             border:none;
         }
     </style>
+
 </head>
 
 <body>
@@ -85,8 +86,8 @@
 
 <script>
     $(document).ready(function() {
-        icheckinner();
         var id = getQueryString('id');
+        var level=getQueryString('level');
         $('#id').val(id);
         if (id) {
             /*此处后端接口  id为弹出窗口自带的id 通过浏览器方法传参得到*/
@@ -95,6 +96,7 @@
                 console.log(result)//查看请求回来的参数
                 if (result.success) {
                     renderData(result.Configure, $('#inputForm'));
+                    $('#rank').val('1')
                 } else {
                     layer.msg(result.message);
                 }

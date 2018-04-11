@@ -9,8 +9,6 @@
     <!--引入样式-->
     <link rel="stylesheet" href="../../css/customDataTable.css">
     <link rel="stylesheet" href="../../css/aps.css">
-
-
 </head>
 <body>
 
@@ -60,19 +58,19 @@
     function clickButton(node) {
         $('.btn-addson').click(function(){
             var id = $(this).parents("tr").find('.i-Checks').attr('id');
-            openEditDialog('添加下级菜单','./proDis/createInsCV.html?id='+id,'462px','425px')
+            openEditDialog('添加下级指令','./proDis/createInsCV.html?id='+id,'462px','425px')
         });
         $('.btn-add').click(function(){
             var id = $(this).parents("tr").find('.i-Checks').attr('id');
-            openEditDialog('添加下级菜单','./proDis/createInsCV.html?id='+id,'462px','425px')
+            openEditDialog('添加指令','./proDis/createInsCV.html?id='+id,'462px','425px')
         });
         $('.btn-change').click(function () {
             var id = $(this).parents("tr").find('.i-Checks').attr('id');
-            openEditDialog('修改指标信息', './proDis/createInsCV.html?id=' + id, '462px', '425px')
+            openEditDialog('修改指令', './proDis/createInsCV.html?id=' + id, '462px', '425px')
         });
         $('.btn-delete').click(function () {
             var id = $(this).parents("tr").find('.i-Checks').attr('id');
-            deleteIt('确定要删除该指标吗', '/api/aps/Dict/delete/'+id)
+            deleteIt('确定要删除该指令吗', '/api/aps/Dict/delete/'+id)
         });
 
     }

@@ -8,9 +8,7 @@
     <link rel="stylesheet" href="../../plugins/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="../../plugins/font-awesome/css/font-awesome.min.css">
     <link rel="stylesheet" href="../../plugins/ztree/css/metroStyle/metroStyle.css">
-    <!--<link rel="stylesheet" href="../plugins/datatables/css/jquery.dataTables.min.css">-->
     <link rel="stylesheet" href="../../plugins/icheck/skins/square/green.css">
-    <link rel="stylesheet" href="../../plugins/datatables/css/mydatatable.css">
     <!--自定义样式-->
     <link rel="stylesheet" href="../../css/common.css">
     <link rel="stylesheet" href="../../css/customDataTable.css">
@@ -22,7 +20,7 @@
     <div class="ibox">
         <!--头部-->
         <div class="ibox-title">
-            <h5>鉴权类管理</h5>
+            <h5>许可维护</h5>
             <div class="ibox-tools">
                 <a class="collapse-link">
                     <i class="fa fa-chevron-up"></i>
@@ -173,7 +171,6 @@
                 enable:$("#permitEnable").val()
             };
             Page.init("/api/sys/SysPermission/page",data,true,function(tableData){
-                console.log(tableData)
                 renderTableData(tableData);
                 $('.btn-check').click(function(){
                     var id = $(this).parents("tr").find('.i-checks').attr('id');

@@ -7,10 +7,7 @@
     <!--插件样式-->
     <link rel="stylesheet" href="../../plugins/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="../../plugins/font-awesome/css/font-awesome.min.css">
-    <link rel="stylesheet" href="../../plugins/datatables/css/jquery.dataTables.min.css">
     <link rel="stylesheet" href="../../plugins/icheck/skins/square/green.css">
-    <link rel="stylesheet" href="../../plugins/datatables/css/mydatatable.css">
-
     <!--引入样式-->
     <link rel="stylesheet" href="../../css/common.css">
     <link rel="stylesheet" href="../../css/comInnerTable.css">
@@ -40,7 +37,7 @@
                            data-msg-required="" class="form-control  valid" style="" aria-required="true"
                            aria-invalid="false">
                     <span class="input-group-btn">
-	       		 <button type="button" id="menuButton"><i class="fa fa-search"></i>
+	       		 <button type="button" class="btn btn-primary" id="menuButton"><i class="fa fa-search"></i>
 	             </button>
        		         </span>
                 </div>
@@ -80,15 +77,23 @@
                 <label >
                     <input id="isShow2" name="isShow" class="required i-checks " type="radio" value="0" aria-required="true" >隐藏
                 </label>
-                <span class="help-inline">该菜单或操作是否显示到系统菜单中</span></td>
-            <td class="width-15 active"><label class="pull-right">权限标识:</label></td>
-            <td class="width-35"><input id="permission" name="permission" class="form-control " type="text" value=""
-                                        maxlength="100">
-                <span class="help-inline">控制器中定义的权限标识，如：@RequiresPermissions("权限标识")</span></td>
+                <span class="help-inline">该菜单或操作是否显示到系统菜单中</span>
+            </td>
+            <td class="width-15 active"><label class="pull-right">所属模块:</label></td>
+            <td class="width-85">
+                <select name="module" class="form-control">
+                    <option value="">-- 请选择 --</option>
+                    <option value="MOM">MOM</option>
+                </select>
+            </td>
         </tr>
         <tr>
             <td class="width-15 active"><label class="pull-right">备注:</label></td>
-            <td class="width-85"><textarea id="remarks" name="remarks" maxlength="560" class="form-control " rows="3"  cols="4"></textarea></td>
+            <td class="width-85"><textarea id="remarks" name="remarks" maxlength="560" class="form-control " rows="3"  cols="4"></textarea>
+            </td>
+            <td class="width-15 active"><label class="pull-right"></label></td>
+            <td class="width-85">
+            </td>
         </tr>
         </tbody>
     </table>

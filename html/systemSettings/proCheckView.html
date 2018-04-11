@@ -8,12 +8,9 @@
     <link rel="stylesheet" href="../../plugins/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="../../plugins/font-awesome/css/font-awesome.min.css">
     <link rel="stylesheet" href="../../plugins/icheck/skins/square/green.css">
-    <link rel="stylesheet" href="../../plugins/webUpLoader/webuploader.css">
     <!--引入样式-->
     <link rel="stylesheet" href="../../css/common.css">
-    <link rel="stylesheet" href="../../css/customDataTable.css">
     <link rel="stylesheet" href="../../css/comInnerTable.css">
-
 </head>
 <script>
 </script>
@@ -24,14 +21,14 @@
     <table class="table table-bordered  table-condensed dataTables-example dataTable no-footer">
         <tbody>
         <tr>
-            <td class="width-15 " ><label class="pull-right">鉴权属性名称:</label></td>
+            <td class="width-15 active" ><label class="pull-right">鉴权属性名称:</label></td>
             <td class="width-35">
                 <input id="proNameId" name="proNameId" class="form-control" type="hidden" value="1" aria-required="true">
                 <input id="proName" name="name" type="text" value="" data-msg-required="" class="form-control valid" style="" aria-required="true" aria-invalid="false">
 
                 <label id="proName-error" class="error" for="proName" style="display:none"></label>
             </td>
-            <td class="width-15 " ><label class="pull-right">鉴权属性编码:</label></td>
+            <td class="width-15  active" ><label class="pull-right">鉴权属性编码:</label></td>
             <td class="width-35">
                 <input id="proCodeId" name="proCodeId" class="form-control" type="hidden" value="1" aria-required="true">
                 <input id="proCode" name="code" type="text" value="" data-msg-required="" class="form-control valid" style="" aria-required="true" aria-invalid="false">
@@ -39,22 +36,22 @@
             </td>
         </tr>
         <tr>
-            <td>
+            <td  class="width-15 active">
                 <label class="pull-right">
                     描述:
                 </label>
             </td>
-            <td>
+            <td  class="width-35 ">
                 <input id="prodesId" name="prodesId" class="form-control" type="hidden" value="1" aria-required="true">
                 <input id="prodes" name="des" type="text" value="" data-msg-required="" class="form-control valid" style="" aria-required="true" aria-invalid="false">
                 <label id="prodes-error" class="error" for="prodes" style="display:none"></label>
             </td>
-            <td >
+            <td class="width-15 active">
                 <label class="pull-right">
                     层级类型:
                 </label>
             </td>
-            <td>
+            <td class="width-35 ">
                 <input id="tierTypeId" name="tierTypeId" class="form-control" type="hidden" value="1" aria-required="true">
                 <select id="tierType" name="tierType" class="form-control">
                     <option value="1">层级维度</option>
@@ -63,23 +60,23 @@
             </td>
         </tr>
         <tr>
-            <td>
+            <td class="width-15 active">
                 <label class="pull-right">
                     是否成对显示:
                 </label>
             </td>
-            <td>
+            <td class="width-35 ">
                 <select id="isTwins" name="isTwins" class="form-control">
                     <option value="1">是</option>
                     <option value="0">否</option>
                 </select>
             </td>
-            <td >
+            <td class="width-15 active">
                 <label class="pull-right">
                     是否仅叶子节点可选:
                 </label>
             </td>
-            <td>
+            <td class="width-35 ">
                 <select id="isLeafCheck" name="isLeafCheck" class="form-control">
                     <option value="1">是</option>
                     <option value="0">否</option>
@@ -87,19 +84,19 @@
             </td>
         </tr>
         <tr>
-            <td >
+            <td class="width-15 active">
                 <label class="pull-right">是否显示:</label>
             </td>
-            <td>
+            <td class="width-35 ">
                 <select id="isVisibility" name="isVisibility" class="form-control">
                     <option value="1">是</option>
                     <option value="0">否</option>
                 </select>
             </td>
-            <td >
+            <td class="width-15 active">
                 <label class="pull-right">是否启用:</label>
             </td>
-            <td>
+            <td class="width-35">
                 <select id="enable" name="enable" class="form-control">
                     <option value="1">是</option>
                     <option value="0">否</option>
@@ -108,32 +105,18 @@
         </tr>
 
         <tr>
-            <td  >
+            <td  class="width-15 active">
                 <label class="pull-right">备注:</label>
             </td>
-            <td colspan="3">
+            <td  class="width-35">
                 <textarea  id="remarks" name="remark" maxlength="200" class="form-control" rows="3"></textarea>
             </td>
-        </tr>
-        <tr class="tableFoot">
-            <td >
-                <span class="pull-left">创建人:</span>
-                <input id="createBy" name="createBy" class="form-control" type="text" value="" maxlength="100"/>
+            <td  class="width-15 active">
+                <label class="pull-right"></label>
             </td>
-            <td >
-                <span class="pull-left">创建时间:</span>
-                <input id="createDate" name="createDate" class="form-control" type="text" value="" maxlength="100"/>
-            </td>
-            <td >
-                <span class="pull-left">修改人:</span>
-                <input id="updateBy" name="updateBy" class="form-control" type="text" value="" maxlength="100"/>
-            </td>
-            <td >
-                <span class="pull-left">修改时间:</span>
-                <input id="updateDate" name="updateDate" class="form-control" type="text" value="" maxlength="100"/>
+            <td  class="width-35">
             </td>
         </tr>
-
         </tbody>
     </table>
 </form>

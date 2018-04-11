@@ -214,8 +214,6 @@ function allotCancelItem(tableId,opflag,ifAllot,dataPrama,url){
             [dataPrama[1]]:str.substr(1),
             opflag:opflag
         };
-        console.log(data);
-        console.log(url)
         ajaxToServer1(url,data,function (result) {
             if (result.success == true) {
                 document.location.reload();

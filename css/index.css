@@ -10,11 +10,13 @@
   color: dimgrey;
   display: block;
   font-weight: bold;
-  padding:15px 20px 10px 15px;
+  padding:12px 20px 12px 15px;
   text-decoration: none;
-  line-height: 15px;
+  line-height: 16px;
   border-radius: 20px;
-  margin-top: 1px;
+}
+.sidebar-nav>li.active>a{
+  color:#fff;
 }
 .sidebar-nav > li a:hover, .sidebar-nav > li a:focus {
   width: 100%;
@@ -24,7 +26,6 @@
 }
 .sidebar-nav > li a .arrow {
   float: right;
-  margin-top: 3px;
 }
 .sidebar-nav > li a i {
   margin-right: 6px;
@@ -34,19 +35,17 @@
   border-left: 4px solid #19aa8d;
   background-color:#1AB394;
   color: white;
-  /*background-color: #0e76a8;*/
-  /*background: linear-gradient(to right, #21a4ae , #47b7c5);*/
   -webkit-transition: all .5s;
   -moz-transition: all 0.5s;
   -o-transition: all 0.5s;
   transition: all .5s;
 }
 .nav-second-level li a, .nav-level2 li a {
-  padding:10px 15px 7px 20px;
+  padding:10px 15px 10px 20px;
   /*padding-left: 52px;*/
 }
 .nav-third-level li a, .nav-level3 li a {
-  padding: 7px 15px 7px 10px;
+  padding: 7px 15px 10px 10px;
   padding-left: 62px;
 }
 .fa.arrow:before {

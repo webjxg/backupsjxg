@@ -102,11 +102,18 @@ iframe{border:none;}
 }
 .pagination-detail{
   display: none;
+  margin:8px 0;
+  font-size:14px;
+  color:#333;
+}
+#pag-sel{
+  width:60px;
+  outline:none;
 }
 .form-inline .form-control{
     width: 196px;
     margin-right:56px;
-    
+    border-radius: 3px;
     /*margin-left: 20px;*/
 }
 .btn.active.focus, .btn.active:focus, .btn.focus, .btn:active.focus, .btn:active:focus, .btn:focus{

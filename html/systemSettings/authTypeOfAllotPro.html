@@ -13,7 +13,7 @@
     <link rel="stylesheet" href="../../plugins/datatables/css/mydatatable.css">
     <!--自定义样式-->
     <link rel="stylesheet" href="../../css/common.css">
-    <link rel="stylesheet" href="../../css/dictionaries.css">
+    <link rel="stylesheet" href="../../css/customDataTable.css">
 </head>
 <!--内容-->
 <body >
@@ -21,25 +21,7 @@
 <div class="wrapper wrapper-content bg-gray">
     <div class="ibox">
         <!--头部-->
-        <div class="ibox-title">
-            <div class="ibox-tools">
-                <a class="collapse-link">
-                    <i class="fa fa-chevron-up"></i>
-                </a>
-                <a class="dropdown-toggle" data-toggle="dropdown" href="form_basic.html#" aria-expanded="false">
-                    <i class="fa fa-wrench"></i>
-                </a>
-                <ul class="dropdown-menu dropdown-user">
-                    <li><a href="#">选项1</a>
-                    </li>
-                    <li><a href="#">选项2</a>
-                    </li>
-                </ul>
-                <a class="close-link">
-                    <i class="fa fa-times"></i>
-                </a>
-            </div>
-        </div>
+
         <!--内容区-->
         <div class="ibox-content">
             <!--搜索区-->
@@ -191,7 +173,7 @@
             "info": false,  //底部文字
             "order": [],
             "aoColumnDefs": [
-                {"bSortable": false, "aTargets": [0,3,4]}
+                {"bSortable": false, "aTargets": [0,3,4,5]}
             ],
             "oLanguage": lang,
             "data":tableData,

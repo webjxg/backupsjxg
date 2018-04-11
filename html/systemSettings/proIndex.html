@@ -10,9 +10,6 @@
     <link rel="stylesheet" href="../../plugins/ztree/css/metroStyle/metroStyle.css">
     <link rel="stylesheet" href="../../plugins/datatables/css/jquery.dataTables.min.css">
     <link rel="stylesheet" href="../../plugins/icheck/skins/square/green.css">
-    <link rel="stylesheet" href="../../plugins/treetable/css/jquery.treetable.theme.default.css">
-    <link rel="stylesheet" href="../../plugins/treetable/css/jquery.treetable.css">
-    <link rel="stylesheet" href="../../plugins/datatables/css/mydatatable.css">
     <!--引入样式-->
     <link rel="stylesheet" href="../../css/common.css">
     <link rel="stylesheet" href="../../css/customDataTable.css">
@@ -21,45 +18,48 @@
 <body id="menu-content">
 <div class="wrapper wrapper-content">
     <div class="ibox">
-        <!--顶部搜索-->
-        <div class="row">
-            <div class="col-sm-12">
-                <form id="searchForm" class="form-inline" action="#" method="post">
-                    <input type="hidden" id="treeId"  >
-                    <div class="form-group">
-                        <div class="company col-sm-12">
-                            <span>鉴权属性名称</span>
-                            <input id="proNameId" name="proNameId" class="form-control" type="hidden" value="">
-                            <input id="proName" name="proName" type="text" value="" data-msg-required=""
-                                   class="form-control required" style="" aria-required="true">
-                            <label id="companyName-error" class="error" for="officeId" style="display:none"></label>
-
-                            <span >鉴权属性编码</span>
-                            <input id="proCodeId" name="proCodeId" class="form-control" type="hidden" value="">
-                            <input id="proCode" name="proCode" type="text" value="" data-msg-required=""
-                                   class="form-control required" style="" aria-required="true">
-                            <label id="officeName-error" class="error" for="officeId" style="display:none"></label>
-                        </div>
-                        <div class="user col-sm-12">
-                            <span>鉴权属性描述</span>
-                            <input id="proDescriptionId" name="proDescriptionId" class="form-control" type="hidden" value="">
-                            <input id="proDescription" name="proDescription" type="text" value="" data-msg-required=""
-                                   class="form-control required" style="" aria-required="true">
-                            <span >是&nbsp;否&nbsp;启&nbsp;用&nbsp;&nbsp;&nbsp;&nbsp;</span>
-                            <input id="enableId" name="enableId.id" class="form-control" type="hidden" value="">
-                            <select id="enable" name="enable" class="form-control required">
-                                <option ></option>
-                                <option value="1">启用</option>
-                                <option value="2">禁用</option>
-                            </select>
-                        </div>
-                    </div>
-                </form>
-                <br>
+            <div class="ibox-title">
+                <h5>属性管理</h5>
             </div>
-        </div>
-        <!--按钮条-->
             <div class="ibox-content">
+                <!--顶部搜索-->
+                <div class="row">
+                    <div class="col-sm-12">
+                        <form id="searchForm" class="form-inline" action="#" method="post">
+                            <input type="hidden" id="treeId"  >
+                            <div class="form-group">
+                                <div class="company col-sm-12">
+                                    <span>鉴权属性名称</span>
+                                    <input id="proNameId" name="proNameId" class="form-control" type="hidden" value="">
+                                    <input id="proName" name="proName" type="text" value="" data-msg-required=""
+                                           class="form-control required" style="" aria-required="true">
+                                    <label id="companyName-error" class="error" for="officeId" style="display:none"></label>
+
+                                    <span >鉴权属性编码</span>
+                                    <input id="proCodeId" name="proCodeId" class="form-control" type="hidden" value="">
+                                    <input id="proCode" name="proCode" type="text" value="" data-msg-required=""
+                                           class="form-control required" style="" aria-required="true">
+                                    <label id="officeName-error" class="error" for="officeId" style="display:none"></label>
+                                </div>
+                                <div class="user col-sm-12">
+                                    <span>鉴权属性描述</span>
+                                    <input id="proDescriptionId" name="proDescriptionId" class="form-control" type="hidden" value="">
+                                    <input id="proDescription" name="proDescription" type="text" value="" data-msg-required=""
+                                           class="form-control required" style="" aria-required="true">
+                                    <span >是&nbsp;否&nbsp;启&nbsp;用&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                                    <input id="enableId" name="enableId.id" class="form-control" type="hidden" value="">
+                                    <select id="enable" name="enable" class="form-control required">
+                                        <option ></option>
+                                        <option value="1">启用</option>
+                                        <option value="2">禁用</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </form>
+                        <br>
+                    </div>
+                </div>
+                <!--按钮条-->
                 <div class="row">
                     <div class="col-sm-12">
                         <div class="pull-left">

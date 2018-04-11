@@ -11,7 +11,6 @@
     <link rel="stylesheet" href="../../plugins/icheck/skins/square/green.css">
     <link rel="stylesheet" href="../../plugins/ztree/css/metroStyle/metroStyle.css">
     <link rel="stylesheet" href="../../plugins/ztree/css/zTreeStyle/zTreeStyle.css">
-    <link rel="stylesheet" href="../../plugins/datatables/css/mydatatable.css">
 
     <!--自定义样式-->
     <link rel="stylesheet" href="../../css/common.css">
@@ -80,6 +79,12 @@
                 <td class="width-35">
                     <span id="remark" name="remark" ></span>
                 </td>
+                <td class="width-15 active">
+                    <label class="pull-right"></label>
+                </td>
+                <td class="width-35">
+
+                </td>
             </tr>
             </tbody>
         </table>
@@ -137,9 +142,10 @@
     };
     ajaxToServer('/api/sys/SysPermission/authData/'+id,{},function(result){
         if(result.success){
-            var data = result.SysPermission;
+            var data = result.SysPermission,
+                sysOperation = data.sysOperation;
             var  selList = data.sysAuthClass.sysAuthProperties;
-            var html = "<span>许可:["+data.name+"]</span><span>鉴权类:["+data.sysAuthClass.name+"]</span><span>操作:["+data.sysOperation.name+"]</span>";
+            var html = "<span>许可:["+data.name+"]</span><span>鉴权类:["+data.sysAuthClass.name+"]</span><span>操作:["+(sysOperation?sysOperation.name:'无')+"]</span>";
             $('.permitAuthTit').empty().html(html);
             $('#objectId').val(data.sysAuthObject.id);
             for(var i=0;i<selList.length;i++){

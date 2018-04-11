@@ -29,17 +29,34 @@
                     <i class="fa fa-map-marker" aria-hidden="true"></i>
                     <ul class="apsType-linkage">
                         <li class="month">
-                            计划周期（年月）：
+                            计划周期（年）：
                             <input type="text" value="" id="yMPicker" class="time-input form-control datePicker">
+                        </li>
+                        <li class="month">
+                            计划周期（月）：
+                            <select name="" id="getMonth">
+                                <option value="">全部</option>
+                                <option value="1">1月</option>
+                                <option value="2">2月</option>
+                                <option value="3">3月</option>
+                                <option value="4">4月</option>
+                                <option value="5">5月</option>
+                                <option value="6">6月</option>
+                                <option value="7">7月</option>
+                                <option value="8">8月</option>
+                                <option value="9">9月</option>
+                                <option value="10">10月</option>
+                                <option value="11">11月</option>
+                                <option value="12">12月</option>
+                            </select>
                         </li>
                         <li >
                             状态：
                             <select name="" id="apsState">
-                                <option value="0">未发布</option>
-                                <option value="1">已发布</option>
-                                <option value="review">审核中</option>
-                                <option value="unissue">待审核</option>
-                                <option value="unissue">暂存</option>
+                                <option value="0">草稿</option>
+                                <option value="1">已提交</option>
+                                <option value="2">已审核</option>
+                                <option value="3">已发布</option>
                             </select>
                         </li>
                     </ul>
@@ -117,59 +134,43 @@
         var $type,$year,$month ,$week,$status;
         var date = new Date();
         getYear = date.getFullYear();
-        getMonth = date.getMonth()+1;
-        getMonth = (getMonth<10?"0"+getMonth:getMonth);
-        $("#yMPicker").val(getYear+"-"+getMonth);
+        $("#yMPicker").val(getYear);
         $("#yMPicker").datetimepicker({
-            format:"yyyy-mm",
+            format:"yyyy",
             language:'cn',
             weekStart: 1,
             pickTime: false,
             autoclose:true,
-            startView: 3, //月视图
-            minView: "3",
+            startView: 4, //月视图
+            minView: "4",
             forceParse: 0,
         });
         function getDataFn(){
-            var apsType = $('.datePicker').val().split("-");
-            $year = apsType[0];
-            $month = apsType[1];
+            $year = $('.datePicker').val();
+            $month = $("#getMonth").val();
             $status =$("#apsState").val();
             console.log($year,$month,$status)
         }
         window.pageLoad = function(){
             getDataFn();
             var data = {
-                year: $year,
-                month: $month,
+                adYear: $year,
+                adMonth: $month,
                 status: $status
             };
-            /*  Page.init("/api/aps/ApsPlan/page",data,true,function(tableData){
-             renderTableData(tableData);
-             $('.btn-check').click(function(){
-             var id = $(this).parents("tr").find('.i-checks').attr('id');
-             openDialog('查看字典','html/systemSettings/dictionaryInner.html?id='+id,'800px','500px')
-             });
+           /* Page.init("/api/aps/ApsMonthAdjust/page",data,true,function(tableData){
+                 renderTableData(tableData);
+                 $('.btn-check').click(function(){
+                 var id = $(this).parents("tr").find('.i-checks').attr('id');
+                 openDialog('查看字典','html/systemSettings/dictionaryInner.html?id='+id,'800px','500px')
+                 });
 
              });*/
-
             $.ajax({
-                url:"../../json/test.json",
+                url:'../../json/test.json',
                 success:function(result){
+                    console.log(result);
                     renderTableData(result.page.rows);
-                    $(".btn-check").click(function(){
-                        var id = $(this).parents("tr").find('.i-checks').attr('id'),
-                            type = $(this).parents("tr").find('.i-checks').attr('data-type'),
-                            url ="";
-                        if(type == "YEAR"){
-                            url ="yearPlanCheck.html";
-                        }else if(type == "MONTH"){
-                            url ="monthPlanCheck.html";
-                        }else if(type == "DAY"){
-                            url ="dayPlanCheckIn.html";
-                        }
-                        openDialog('查看','producePlan/'+url+'?id='+id+'&type='+type,'800px','500px')
-                    })
                 }
             })
         };
@@ -216,18 +217,19 @@
                     "render": function (data, type, row, meta) {
                         var classSet =""  ,setText;
                         if(row.status == "0"){
-                            setText = "草稿";
+//                            setText = "草稿";
                             classSet ="col-999";
                         }else if(row.status == "1" ){
-                            setText = "已提交";
-                            classSet ="col-ffa82d";
+//                            setText = "已提交";
+                            classSet ="col-51cd50";
                         }else if(row.status == "2"){
-                            setText = "已审核";
+                            classSet ="col-ffa82d";
+//                            setText = "已审核";
                         }else if(row.status == "3"){
-                            setText = "已发布";
-                            classSet ="col-1ab394";
+//                            setText = "已发布";
+                            classSet ="col-62b5e9";
                         }
-                        return "<span class='"+classSet+"'>"+setText+"</span >";
+                        return "<span class='"+classSet+"'>"+row.statusShow+"</span >";
                     }
                 },
                 {

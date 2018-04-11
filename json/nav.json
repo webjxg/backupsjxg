@@ -153,6 +153,41 @@
           "menu_sub":"1",
           "href":"../html/producePlan/planDicIndex.html",
           "children":[]
+        },
+        {
+          "iconName":"",
+          "name":"审批流程",
+          "menu_sub":"0",
+          "href":"../html/producePlan/reviewPlans.html",
+          "children":[]
+        },
+        {
+          "iconName":"",
+          "name":"年计划列表",
+          "menu_sub":"0",
+          "href":"../html/producePlan/yearPlanList.html",
+          "children":[]
+        },
+        {
+          "iconName":"",
+          "name":"月计划列表",
+          "menu_sub":"0",
+          "href":"../html/producePlan/monthPlanList.html",
+          "children":[]
+        },
+        {
+          "iconName":"",
+          "name":"日计划列表",
+          "menu_sub":"0",
+          "href":"../html/producePlan/dayPlanList.html",
+          "children":[]
+        },
+        {
+          "iconName":"",
+          "name":"月排产",
+          "menu_sub":"0",
+          "href":"../html/producePlan/monthScheduling.html",
+          "children":[]
         }
       ]
     },

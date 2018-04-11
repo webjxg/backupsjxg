@@ -55,7 +55,7 @@ function ajaxToServer(url, data, callbackFun){
         dataType: 'json',
         contentType:'application/json',
         success: function(result){
-            // console.log(result);
+            console.log(result);
             layer.close(layerIndex);
             if(callbackFun){
                 callbackFun(result);

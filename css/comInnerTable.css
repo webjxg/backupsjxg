@@ -10,28 +10,18 @@ body {
   table-layout:fixed
 }
 .form-horizontal {
-  margin: 0 10px; }
+  margin: 0 10px 10px; }
 .table-bordered {
   border: none; }
 .input-group-btn{
  width: 38px;
   height: 34px;
-  background: linear-gradient(#ffffff,#f0f0f0);
-  border: 2px solid #E3E3E3;
 }
-#iconButton{
-  background: linear-gradient(#ffffff,#f0f0f0) !important;
-  border: 2px solid #E3E3E3;
-  color: black !important;
-}
-.input-group-btn button{
-  border: 0;
-  margin-left: 10px;
-  background: linear-gradient(#ffffff,#f0f0f0);
-}
+
+
 .input-group-btn i{
   font-size: 16px;
-  color: black !important;
+
 }
 form table.dataTable.no-footer {
   border-bottom: none; }
@@ -45,21 +35,35 @@ td .form-control, .single-line {
   background-color: #FFFFFF;
   background-image: none;
   /*border: 1px solid #e5e6e7;*/
-  border-radius: 1px;
   color: inherit;
   display: block;
   padding: 6px 12px;
   transition: border-color 0.15s ease-in-out 0s, box-shadow 0.15s ease-in-out 0s;
-  width: 98%;
+  width: 100%;
+  border-radius: 2px;
   font-size: 14px; }
+.help-inline{
+  display: inline-block;
+  margin-top:5px;
+}
 
+.table .input-group{
+  width:100%;
+}
+.table textarea{
+  resize: none;
+}
 .width-15 {
-  width: 15%;}
+  width: 15%;
+  background:#f9f9f9 !important;
+  font-size:14px;
+}
 .width-35{
   position: relative;
 }
 .thumbnail{
   border: none;
+  margin: 0;
 }
 .thumbnail img{
   width: 100px;
@@ -67,63 +71,59 @@ td .form-control, .single-line {
   background: url("../imgs/headPortrait.png") no-repeat;
   background-size:100% 100%;
 }
-#filePicker{
-  position: absolute;
-  left: 8px;
-  bottom:8px;
-  padding: 0;
-  width: 93%;
-  height: 30px;
+#nameImagePreview{
+  display: inline-block;
+  vertical-align: middle;
+  position: relative;
+
+}
+#nameImagePreview img{
+  height: 100px;
+  width: 100px;
 }
 
-.webuploader-pick{
+#filePicker{
+ display: inline-block;
+  vertical-align: middle;
+  width: 76px;
   height: 30px;
-  line-height: 30px;
+  cursor: pointer;
+}
+
+
+.webuploader-pick{
+  line-height: 16px;
   padding:0;
-  color: #000000;
-  /*background-color: inherit;*/
+  color: #fff;
   display: block;
   border: 0 !important;
 }
 
-
-/*.table>tbody>tr>td.active{*/
-  /*!*background:transparent;*!*/
-/*}*/
-
-
-.btn-primary,.btn-primary:active,.btn-primary:focus,.btn-primary:active:focus, .btn-primary:active:hover{
-  color: #000000;
-  border-color: #EEEEEE;
-  background: -webkit-linear-gradient(right top, #fff , #f0f0f0); /* Safari 5.1 - 6.0 */
-  background: -o-linear-gradient(bottom left, #fff , #f0f0f0); /* Opera 11.1 - 12.0 */
-  background: -moz-linear-gradient(bottom left, #fff , #f0f0f0); /* Firefox 3.6 - 15 */
-  background: linear-gradient(to bottom left,  #fff , #f0f0f0 ); /* 标准的语法 */
-}
-.btn-primary:hover{
-  color: #000000;
-  border-color: #DDDDDD;
-  background: -webkit-linear-gradient(right top, #f9f9f9 , #f0f0f0); /* Safari 5.1 - 6.0 */
-  background: -o-linear-gradient(bottom left,  #f9f9f9 , #f0f0f0); /* Opera 11.1 - 12.0 */
-  background: -moz-linear-gradient(bottom left, #f9f9f9 , #f0f0f0); /* Firefox 3.6 - 15 */
-  background: linear-gradient(to bottom left,   #f9f9f9 , #f0f0f0); /* 标准的语法 */
+.webuploader-element-invisible{
+  opacity: 0;
 }
 
-.tableFoot,.table-bordered > tbody > .tableFoot > td{
+.table-bordered > tbody > .tableFoot > td{
   line-height: 20px;
   border: none;
   padding: 0;
 }
 .tableFoot > td >span{
-  margin-top: 7px;
+  width:100%;
+  padding:0 5px;
+  text-align: right;
+  display: inline-block;
+  vertical-align:middle;
 }
 .tableFoot > td >.form-control{
-  width: 60%;
+  width: 70%;
   border: none;
   outline: none;
   box-shadow: none;
   text-align: left;
-  padding: 0;
+  display: inline-block;
+  vertical-align:middle;
+  padding:0 5px;
 }
 .tableFoot > td >.form-control[readonly]{
   background-color: transparent;
@@ -133,7 +133,8 @@ td .form-control, .single-line {
 
 
 .width-35 {
-  width: 35%; }
+  width: 35%;
+}
 .form-control:focus {
   border-color: #1ab394 !important;
   box-shadow: none !important; }
@@ -145,7 +146,12 @@ form > .table > tbody > tr > td, .table > tfoot > tr > td {
   vertical-align: middle; }
 .btn-primary{
   background-color: #1ab394;
-  /*border-color: #1ab394;*/
+  border-color: #1ab394;
+}
+.btn-primary:hover, .btn-primary:focus, .btn-primary:active, .btn-primary.active, .open .dropdown-toggle.btn-primary{
+  background-color: #18a689;
+  border-color: #18a689;
+  color: #FFFFFF;
 }
 
 
@@ -163,3 +169,11 @@ form > .table > tbody > tr > td, .table > tfoot > tr > td {
   .width-60>textarea{
     width:80%;
   }
+
+
+.iradio_square-green{
+  display:inline-block;
+  vertical-align: middle;
+  top:-2px;
+  margin-right:5px;
+}

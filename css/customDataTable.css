@@ -19,24 +19,34 @@
   background-color: #ffffff;
   border-color: #e7eaec;
   border-image: none;
-  /*border-style: solid solid none;*/
-  /*border-width: 4px 0 0;*/
   color: inherit;
   margin-bottom: 0;
-  padding: 7px 15px 0;
-  min-height: 48px; }
+  padding: 15px 20px 5px;
+  overflow: auto;
+   }
 .ibox-title > h5 {
-  display: inline-block;
-  font-size: 14px;
-  margin:20px 8px 8px;
-  padding: 0;
   text-overflow: ellipsis;
   float: left;
   font-weight: 800;
   color: black;
+  padding-left: 10px;
+  position: relative;
+  font-size: 16px;
+  height: 30px;
+  line-height: 30px;
+}
+.ibox-title > h5:before{
+  content: "";
+  width: 4px;
+  height: 20px;
+  background: #1ab394;
+  position: absolute;
+  top: 50%;
+  left: 0;
+  margin-top: -10px;
 }
 .ibox-title > .ibox-tools {
-  display: inline-block;
+  display: none;
   float: right;
   margin-top: 20px;
   margin-right: 8px;
@@ -51,16 +61,10 @@
   clear: both;
   background-color: #ffffff;
   color: inherit;
-  padding:10px 20px 8px 20px;
-  /*border-color: #e7eaec;*/
-  /*border:1px solid #e7eaec;*/
-  /*border-image: none;*/
-  /*!*border-style: solid solid none;*!*/
-  /*border-width: 1px 0; */
+  padding:15px 20px;
 }
 .company {
   margin-bottom: 10px;
-  margin-top: 20px;
 }
 .form-group .company .input-group {
   margin-right: 40px;
@@ -105,22 +109,26 @@
   border: 1px solid gainsboro;
   margin-top: 10px !important;
   margin-bottom: 6px !important;
-  max-width: none !important; }
+  max-width: none !important;
+  border-right:none;
+}
 table.dataTable thead{
   background-color: #1AB394 !important;
   color: white;
 }
-.ibox-content table.dataTable thead th {
-  padding:8px;
+table.dataTable thead th {
+  padding:8px !important;
+  line-height: 22px;
   border-bottom: 0;
   vertical-align: middle;
   background-color: #1AB394 !important;
-  /*border: none;*/
+  border-bottom: none !important;
 }
 .ibox-content table.dataTable tbody td {
   padding: 4px 6px ;
   vertical-align: middle; 
   text-align: center;
+  line-height: 26px;
   }
 .ibox-content table.dataTable tbody td a{
   margin: 2px;
@@ -194,6 +202,7 @@ tbody > tr:last-child > td {
   font-size: 13px;
   text-align: center;
   font-weight: bold;
+  border-bottom:none;
 }
 
 .form-control, .single-line {
@@ -201,7 +210,6 @@ tbody > tr:last-child > td {
   /*margin: 0 20px;*/
   background-image: none;
   /*border: 1px solid #e5e6e7;*/
-  text-align: center;
   border-radius: 1px;
   color: inherit;
   display: block;
@@ -210,14 +218,12 @@ tbody > tr:last-child > td {
   width: 80%;
   font-size: 14px;
   box-shadow: none; }
-.input-group{
-  width:98%;
-}
+
 .form-control:focus, .single-line:focus {
   border-color: #1ab394 !important; }
 #left {
   min-height: 400px;
-  margin: 20px 0 0 18px;
+  margin: 0 0 0 18px;
   padding-left: 0;
   box-sizing: border-box; }
 #left > a {
@@ -243,22 +249,15 @@ tbody > tr:last-child > td {
   padding: 0;
   overflow: inherit;
 }
-#nameImagePreview{
-  display: block;
-  height: auto;
-  width: auto;
-  position: relative;
-  margin:0 0 10px 0;
-}
-#nameImagePreview img{
-  height: 100px;
-  width: 100px;
-}
 
 .alignCenter{
   text-align: center;
 }
 .autoWidth{width:1%;white-space: nowrap;}
+
+.dataTables_empty{
+  text-align: center;
+}
 
 
 /*# sourceMappingURL=dictionaries.css.map */

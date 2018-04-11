@@ -8,10 +8,8 @@
     <link rel="stylesheet" href="../../plugins/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="../../plugins/font-awesome/css/font-awesome.min.css">
     <link rel="stylesheet" href="../../plugins/icheck/skins/square/green.css">
-    <link rel="stylesheet" href="../../plugins/webUpLoader/webuploader.css">
     <!--引入样式-->
     <link rel="stylesheet" href="../../css/common.css">
-    <link rel="stylesheet" href="../../css/customDataTable.css">
     <link rel="stylesheet" href="../../css/comInnerTable.css">
 
 </head>
@@ -52,8 +50,8 @@
             </td>
         </tr>
         <tr>
-            <!--归属职位-->
-            <td class="width-15 active" class="active"><label class="pull-right"><font color="red">*</font>所属职位:</label></td>
+            <!--归属岗位-->
+            <td class="width-15 active" class="active"><label class="pull-right"><font color="red">*</font>所属岗位:</label></td>
             <td class="width-35" >
                 <input type="hidden" name="jobTypeList" id="jobTypeListId">
                 <select name="jobTypeList" id="jobTypeList" class="form-control"></select>
@@ -69,15 +67,7 @@
             <td>
                 <input id="officeId" name="office.id" class="form-control" type="hidden" value="4" aria-required="true">
                 <div class="input-group">
-                    <input id="officeName" name="roleName" readonly="readonly" type="text" value="" data-msg-required=""
-                           class="form-control valid" style="" aria-required="true" aria-invalid="false">
-                    <span class="input-group-btn">
-	       		                <button type="button" id="officeButton" class="btn   btn-primary  "><i
-                                        class="fa fa-search"></i></button>
-       		                </span>
-
-                </div>
-                <label id="officeName-error" class="error" for="officeName" style="display:none"></label>
+                    <input id="officeName" name="roleName" readonly="readonly" type="text" value="" data-msg-required="" class="form-control valid" aria-required="true" aria-invalid="false" style="border:none;background: #fff;">
             </td>
             <!--工号-->
             <td class="active">
@@ -192,16 +182,18 @@
             </td>
         </tr>
         <tr class="tableFoot" >
-            <td colspan="2">
-                <!--创建时间-->
+            <td class="w-15">
                 <span class="pull-left">创建时间:</span>
-                <input type="text" readonly="readonly" name="createDate" class="form-control">
-
             </td>
-            <td colspan="2">
-                <!--修改时间-->
+            <td class="w-35">
+                <input type="text" id="createDate" readonly="readonly" name="createDate" class="form-control">
+            </td>
+            <td class="w-15">
                 <span class="pull-left">修改时间:</span>
+            </td>
+            <td class="w-35">
                 <input type="text" readonly="readonly" name="updateDate" class="form-control">
+
             </td>
         </tr>
         </tbody>
@@ -229,18 +221,22 @@
         var str = BASE_URL + filen
         $('#nameImage img').attr('src', str)
     }
+    var time = new Date();
+    var m = time.getMonth() + 1;
+    var t = time.getFullYear() + "-" + m + "-"
+        + time.getDate() + " " + time.getHours() + ":"
+        + time.getMinutes() + ":" + time.getSeconds();
+    $("#createDate").val(t);
     $(document).ready(function () {
         filename();
         icheckinner();
         var id = getQueryString('id');
-        console.log(id)
         $('#id').val(id);
         /*api = getQueryString('api') || 'form';*/
         if (id) {
             /*此处后端接口  id为弹出窗口自带的id 通过浏览器方法传参得到*/
             var url = "/api/sys/SysUser/form/" + id;
             ajaxToServer(url, {}, function (result) {
-                console.log(result);
                 if (result.success) {
                     renderData(result.sysUser, $('#inputForm'));
                     /*运行把ajax数据渲染到弹出窗口中*/
