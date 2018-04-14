@@ -8,7 +8,6 @@
     <link rel="stylesheet" href="../../plugins/font-awesome/css/font-awesome.min.css">
     <!--引入样式-->
     <link rel="stylesheet" href="../../css/common.css">
-    <link rel="stylesheet" href="../../css/aps.css">
     <style>
         .targetPlanTit{font-size:18px;line-height: 30px;}
         .targetPlanTab-nav{margin:20px 0 ;}
@@ -22,11 +21,7 @@
 <div class="wrapper wrapper-content">
     <div class="ibox">
         <div class="ibox-content">
-            <h1 class="targetPlanTit">
-                <span></span>生产计划
-                <button class="btn btn-sub pull-right" id="btnSub">提交</button>
-                <button type="button" class="back-btn btn pull-right">返回上级</button>
-            </h1>
+            <h1 class="targetPlanTit"><span></span>生产计划</h1>
             <div class="targetPlanTab">
                 <ul class="targetPlanTab-nav clearfix">
                     <li class="active">全厂主要生产技术指标计划</li>
@@ -52,32 +47,10 @@
         var year =getQueryString('year'),
             month =getQueryString('month');
         $('.targetPlanTit span').empty().html(year+"年"+month+"月");
-        $(".back-btn").click(function(){
-            refreshActiveTab();
-        });
-     /*   var editPermission = {
-            proTechTarget:true,
-            proCommercePurPlan:false,
-            proSafeEnviPlan:false
-        };
         var tabconUrl = [
-            {
-                editUrl:"./proTechTarget.html?year="+year+"&month="+month,
-                viewUrl:"./proTechTargetView.html?year="+year+"&month="+month,
-            },
-            {
-                editUrl:"./proCommercePurPlan.html?year="+year+"&month="+month,
-                viewUrl:"./proCommercePurPlaniew.html?year="+year+"&month="+month,
-            },
-            {
-                editUrl:"./proSafeEnviPlan.html?year="+year+"&month="+month,
-                viewUrl:"./proSafeEnviPlanView.html?year="+year+"&month="+month,
-            }
-        ];*/
-        var tabconUrl = [
-            "./proTechTarget.html?year="+year+"&month="+month,
-            "./proCommercePurPlan.html?year="+year+"&month="+month,
-            "./proSafeEnviPlan.html?year="+year+"&month="+month,
+            "./proTechTargetView.html?year="+year+"&month="+month,
+            "./proCommercePurPlanView.html?year="+year+"&month="+month,
+            "./proSafeEnviPlanView.html?year="+year+"&month="+month
         ];
        var $targetPlanTab = $(".targetPlanTab"),
            $targetPlanTabNavLi =$targetPlanTab.find(".targetPlanTab-nav").find('li'),

@@ -167,6 +167,37 @@ function createSelect(url,appendEl){
         }
     })
 }
+
+function resetSelect(obj, blankLabel){
+    $(obj).empty();
+    blankLabel = blankLabel || '-- 全部 --';
+    $(obj).append("<option value=''>"+blankLabel+"</option>");
+}
+/**
+ * 动态添加Select的option
+ */
+function appendOptionsValue(obj, rows, valueField, labelFile){
+    if(typeof(obj) == "string"){
+        obj = $(obj);
+    }
+    if(rows && rows.length > 0){
+        var options = new Array();
+        $(rows).each(function(i,o){
+            options.push({'value':o[valueField], 'label':o[labelFile]});
+        });
+        appendOptions(obj, options);
+    }
+}
+
+// 追加select的options
+function appendOptions(obj, options){
+    if(options){
+        $(options).each(function(i,o){
+            $(obj).append("<option value='"+o.value+"'>"+o.label+"</option>");
+        });
+    }
+}
+
 //  窗口工具操作事件
 function windowclick(){
     $('.collapse-link>.fa').eq(0).click(function () {
@@ -246,13 +277,13 @@ function openDialog(title,url,width,height,innerCallbackFn){
     };
     if(innerCallbackFn) {
         layConfig.yes =  function(index, layero){
-            var body = top.layer.getChildFrame('body', index);  //获取子iframe
+            var body = parent.layer.getChildFrame('body', index);  //获取子iframe
             var iframeWin = layero.find('iframe')[0]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
             var inputForm = body.find('#inputForm');
             if(innerCallbackFn){
                 innerCallbackFn(iframeWin.contentWindow,body,index);
             }
-        },
+        };
         layConfig. cancel = function(index){
 
         }
@@ -268,13 +299,14 @@ function openDialog(title,url,width,height,innerCallbackFn){
 
 //添加、修改
 function openEditDialog(title,url,width,height,innerCallbackFn){
+    var _top = top;
     var clickFlag = true;
     if(navigator.userAgent.match(/(iPhone|iPod|Android|ios)/i)){//如果是移动端，就使用自适应大小弹窗
         width='auto';
         height='auto';
     }else{//如果是PC端，根据用户设置的width和height显示。
     }
-    var ind =  top.layer.open({
+    var ind =  _top.layer.open({
         type: 2,
         area: [width, height],
         title: title,
@@ -282,12 +314,11 @@ function openEditDialog(title,url,width,height,innerCallbackFn){
         content: url ,
         btn: ['确定', '关闭'],
         yes: function(index, layero){
-            var body = top.layer.getChildFrame('body', index);  //获取子iframe
+            var body = _top.layer.getChildFrame('body', index);  //获取子iframe
             var iframeWin = layero.find('iframe')[0]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
             if(clickFlag){
                 if(!innerCallbackFn){
                     iframeWin.contentWindow.doSubmit(iframeWin.contentWindow,body,index);
-                    window.location.reload();
                 }else{
                     //iframeWin.contentWindow[innerCallbackFn]();   //有bug  innerCallbackFn必须是字符串 待解决
                     innerCallbackFn.call(iframeWin.contentWindow,iframeWin.contentWindow,body,index);
@@ -306,6 +337,7 @@ function openEditDialog(title,url,width,height,innerCallbackFn){
 
 //回调函数，在修改和添加时，供openDialog调用提交表单。
 function doSubmit(){
+    alert(1);
     var formId = getSubmitFormId();
     var formObj =$(formId);
     // var formObj =$(formId,win?win.document:this);
@@ -598,5 +630,10 @@ $("#iconclear").click(function(){
 
 });
 
+
+/*jQuery.validator.addMethod("notblank", function(value, element) {
+    var pwdblank = /^\S*$/;
+    return this.optional(element) ||(pwdblank.test(value));
+}, "密码不可包含空格");*/
 
 

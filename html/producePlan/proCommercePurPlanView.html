@@ -15,19 +15,24 @@
 </head>
 
 <body>
-<div  class="wrapper ">
+<div class="wrapper">
     <div class="ibox">
         <div class="ibox-content">
-            <div class="clearfix btn-box mgb-20">
-                <button class="btn btn-success  btn-save pull-right" type="button">保存</button>
-            </div>
-            <div class="tableItemBox">
-                <table id="td0"  class="tableItem"></table>
+            <div class="commercePurCon proTargetPlanItem">
+                <div class="tableItemBox">
+                    <table id="td0" class="tableItem"  title="商务采购指标计划">
+                    </table>
+                </div>
+                <div class="tableItemBox">
+                    <table id="td1" class="tableItem"  title="商务采购指标计划11">
+                    </table>
+                </div>
             </div>
         </div>
     </div>
 </div>
-<!--表格区-->
+
+
 </body>
 <script src="../../js/jquery-2.2.4.min.js"></script>
 <script src="../../plugins/bootstrap/js/bootstrap.min.js"></script>
@@ -37,36 +42,40 @@
 <script src="../../js/dataGridCustom.js"></script>
 <script src="../../js/customForm-aps.js"></script>
 <script>
-    var arr = []
-    getmsg();
-    var planarr = [];
+    var arr = [];
+    var msgobj = {};
+    var status;
     var year =getQueryString('year'),
         month =getQueryString('month');
-    function getmsg(dateyear) {
+    getmsg();
+    function getmsg() {
         var data={
             adYear:year,
             adMonth:month
         };
-        ajaxToServer("/api/aps/ApsMonthAdjustAqhbjh/queryMonthAdjustAqhbjh",JSON.stringify(data),function (result) {
-           planarr = result.aqhbsbglztzbjh;
+        ajaxToServer("/api/aps/ApsMonthAdjustBus/queryMonthAdjustBus",JSON.stringify(data),function (result) {
+            var planarr = result.swcgzbjh
             createTbody(planarr);
             setFrameHeight();
         })
     }
     function createTbody(planarr) {
         for(var i=0;i<planarr.length;i++){
-             //每种类型的数据，放在一个数组里边
-                msgobj = {
-                    "id":planarr[i].id,
-                    "itemName":planarr[i].itemName,
-                    "itemUnit":planarr[i].itemUnit,
-                    "indexValue":planarr[i].indexValue,
-                    "remark":planarr[i].remark,
-                    "mainId":planarr[i].mainId
-                };
-                arr.push(msgobj)
-            }
+            msgobj = {
+                "id":planarr[i].id,
+                "mainId":planarr[i].mainId,
+                "groupName":planarr[i].groupName,
+                "itemName":planarr[i].itemName,
+                "itemUnit":planarr[i].itemUnit,
+                "adYear":planarr[i].adYear,
+                "adMonth":planarr[i].adMonth,
+                "yearTarget":planarr[i].yearTarget,
+                "monthPlan":planarr[i].monthPlan,
+                "remark":planarr[i].remark,
+            };
+            arr.push(msgobj)
             $('#td0').datagrid('loadData',arr);
+        }
 
     };
     $("#td0").datagrid({
@@ -74,16 +83,18 @@
         collapsible:true,
         singleSelect: true,
         onClickRow: function(index){
-            dataGridObj.startEditing(index,"#td0")
+            //dataGridObj.startEditing(index,"#td0")
         },
         //创建table
         columns:[[
             {field:'id',title:'id',hideColumn:'id'},
             {field:'mainId',title:'mainId',hideColumn:'mainId'},
-            {field:'itemName',title:'指标名称',width:100,align:'center'},
+            {field:'groupName',title:'生产计划',width:100,align:'center'},
+            {field:'itemName',title:'项目',width:100,align:'center'},
             {field:'itemUnit',title:'单位',width:100,align:'center'},
-            {field:'indexValue',title:'指标值',editor:'text',width:100,align:'center'},
-            {field:'remark',title:'备注',editor:'text',width:100,align:'center'},
+            {field:'yearTarget',title:'全年基本计划',editor:'text',width:100,align:'center'},
+            {field:'monthPlan',title:'月计划',editor:'text',width:100,align:'center'},
+            {field:'remark',title:'备注',editor:'text',width:100,align:'center'}
         ]],
         onAfterEdit: function (rowIndex, rowData, changes) {
             dataGridObj.pushRowData(rowData);
@@ -105,12 +116,11 @@
     //隐藏id列
     $(function(){
         $('#td0').datagrid('hideColumn','id');
-    });
-    $(function(){
         $('#td0').datagrid('hideColumn','mainId');
     });
-    // 点击保存按钮
-     $(".btn-save").click(function (e) {
+    // 点击按钮并添加点击状态
+       //点击时获取到信息
+        $(".btn-save").click(function (e) {
             var btn = $(e.target).context.textContent;
             if(btn == "保存"){
                 status = "0";
@@ -129,12 +139,11 @@
             }
             var savearr = [];
             var editItems = dataGridObj.saveItemArr;
-
             $(editItems).each(function (i) {
                 savearr.push(editItems[i]);
             });
             var data={
-                "aqhbPlans":JSON.stringify(editItems),
+                "busPlans":JSON.stringify(editItems),
                 "status":status,
             };
             addmsg(data)  //将数据发送给后台
@@ -142,7 +151,7 @@
 //
 //        保存将数据发送给后台
     function addmsg(data){
-        ajaxToServer1("/api/aps/ApsMonthAdjustAqhbjh/saveAqhbjhInfo",data,function(result){
+        ajaxToServer1("/api/aps/ApsMonthAdjustBus/saveBusInfo",data,function(result){
         })
     }
 </script>

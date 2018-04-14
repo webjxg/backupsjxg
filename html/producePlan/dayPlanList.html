@@ -18,21 +18,41 @@
     <div class="ibox">
         <div class="ibox-content">
             <div>
-                <h1 class="titName">年计划列表</h1>
+                <h1 class="titName">日计划列表</h1>
             </div>
             <div class="clearfix">
                 <div class="apsType-box pull-left mgb-10">
                     <i class="fa fa-map-marker" aria-hidden="true"></i>
                     <ul class="apsType-linkage">
+                        <li class="year">
+                            类型：
+                            <select name="" id="apsType">
+                                <option value="DAY">日计划</option>
+                            </select>
+                        </li>
                         <li class="month">
-                            计划周期（年）：
+                            计划周期（年月）：
                             <input type="text" value="" id="yMPicker" class="time-input form-control datePicker">
+                            <input type="text" value="" id="dayPicker" class="time-input form-control hide datePicker">
+                        </li>
+                        <li class="week">
+                            计划周期（周）：
+                            <select name="" id="apsWeek">
+                                <option value="">全部</option>
+                                <option value="1">第一周</option>
+                                <option value="2">第二周</option>
+                                <option value="3">第三周</option>
+                                <option value="4">第四周</option>
+                            </select>
                         </li>
                         <li >
                             状态：
                             <select name="" id="apsState">
-                                <option value="0">草稿</option>
-                                <option value="1">已提交</option>
+                                <option value="0">未发布</option>
+                                <option value="1">已发布</option>
+                                <option value="review">审核中</option>
+                                <option value="unissue">待审核</option>
+                                <option value="unissue">暂存</option>
                             </select>
                         </li>
                     </ul>
@@ -64,27 +84,6 @@
                     </tbody>
 
                 </table>
-                <!--<div class="clearfix pagination-box">-->
-                    <!--<div class="pagination-detail pull-left">-->
-                        <!--<div class="page-info pull-left"></div>-->
-                        <!--<div class="page-list pull-left">-->
-                            <!--<span>每页显示</span>-->
-                            <!--<select name="" id="pag-sel">-->
-                                <!--<option value="">请选择</option>-->
-                                <!--<option value="5">5</option>-->
-                                <!--<option value="10" selected>10</option>-->
-                                <!--<option value="20">20</option>-->
-                                <!--<option value="25">25</option>-->
-                                <!--<option value="30">30</option>-->
-                                <!--<option value="40">40</option>-->
-                                <!--<option value="50">50</option>-->
-                                <!--<option value="-1">all</option>-->
-                            <!--</select>-->
-                            <!--条记录-->
-                        <!--</div>-->
-                    <!--</div>-->
-                    <!--<div id="pagination" class="pagination-roll pull-right"></div>-->
-                <!--</div>-->
             </div>
         </div>
     </div>
@@ -107,15 +106,17 @@
         var $year,$status;
         var date = new Date();
         getYear = date.getFullYear();
-        $("#yMPicker").val(getYear);
+        getMonth = date.getMonth()+1;
+        getMonth = (getMonth<10?"0"+getMonth:getMonth);
+        $("#yMPicker").val(getYear+"-"+getMonth);
         $("#yMPicker").datetimepicker({
-            format:"yyyy",
+            format:"yyyy-mm",
             language:'cn',
             weekStart: 1,
             pickTime: false,
             autoclose:true,
-            startView: 4, //月视图
-            minView: "4",
+            startView: 3, //月视图
+            minView: "3",
             forceParse: 0
         });
         function getDataFn(){
@@ -147,12 +148,13 @@
 //            $.ajax({
 //                url:'../../json/test.json',
 //                success:function(result){
-            Page.init("/api/aps/ApsYearPlan/page", data, true, function (tableData) {
+            ajaxToServer("/api/aps/DayPlan/form", data, function (tableData) {
+                console.log(tableData);
                 renderTableData(tableData);
                 //查看
                 $(".btn-check").click(function () {
                     var attrArr = getAttr($(this));
-                    openDialog('查看月计划', 'producePlan/yearPlanIndex.html?id=' + attrArr[0] + '&year=' + attrArr[1], '800px', '500px')
+                    openDialog('查看月计划', 'producePlan/dayPlanIndex.html?id=' + attrArr[0] + '&year=' + attrArr[1], '800px', '500px')
                 });
                 //删除
                 $(".btn-delete").click(function () {
@@ -162,95 +164,82 @@
                 //编辑
                 $(".btn-edit").click(function () {
                     var attrArr = getAttr($(this));
-                    location.href = '../producePlan/yearPlanIndex.html?id=' + attrArr[0] + '&year=' + attrArr[1]
+                    location.href = '../producePlan/dayPlanIndex.html?id=' + attrArr[0] + '&year=' + attrArr[1]
                 });
-                //排产
-                $(".btn-edit").click(function () {
-                    var attrArr = getAttr($(this));
-                    location.href = '../producePlan/yearPlanIndex.html?id=' + attrArr[0] + '&year=' + attrArr[1]
-                });
+
 
             })
         }
-                pageLoad();
-                windowclick();
-                //添加
-                $("#btn-add").click(function () {
-                    getDataFn();
-                    if ($year == "") {
-                        layerAlert("请选择一个准确的年份!");
-                    } else {
-                        location.href = "./yearPlanIndex.html?year=" + $year;
-                    }
-                });
+        pageLoad();
+        windowclick();
+        //添加
+        $("#btn-add").click(function () {
+            getDataFn();
+            if ($year == "") {
+                layerAlert("请选择一个准确的年份!");
+            } else {
+                location.href = "./yearPlanIndex.html?year=" + $year;
+            }
+        });
 
 
-    //  渲染表内容
-    function renderTableData(tableData){
-        $year = $('.datePicker').val();
-        $('#treeTable').dataTable({
-            "bPaginate": false,
-            "bAutoWidth": false,
-            "bDestroy":true,
-            "paging": false,
-            "bProcessing": true,
-            "searching": false, //禁用aa原生搜索
-            "info": false,  //底部文字
-            "order": [],
-            "aoColumnDefs": [
-                {"bSortable": false, "aTargets": [0, 2,4,6]}
-            ],
-            "oLanguage": lang,
-            "data":tableData,
-            //定义列 宽度 以及在json中的列名
-            "aoColumns": [
-                {"data": "name",'sClass':"alignCenter "},
-                {"data": "typeLabel",'sClass':"alignCenter "},
-                {"data": "period",'sClass':"alignCenter"},
-                {"data": "createUser",'sClass':"alignCenter "},
-                {"data": "createDate",'sClass':"alignCenter "},
-                {
-                    "data": null, "orderable": false, "defaultContent": "",'sClass':" alignCenter ",
-                    "render": function (data, type, row, meta) {
-                        var classSet =""  ,setText;
-                        if(row.status == "0"){
+        //  渲染表内容
+        function renderTableData(tableData){
+            $year = $('.datePicker').val();
+            $('#treeTable').dataTable({
+                "bPaginate": false,
+                "bAutoWidth": false,
+                "bDestroy":true,
+                "paging": false,
+                "bProcessing": true,
+                "searching": false, //禁用aa原生搜索
+                "info": false,  //底部文字
+                "order": [],
+                "aoColumnDefs": [
+                    {"bSortable": false, "aTargets": [0, 2,4,6]}
+                ],
+                "oLanguage": lang,
+                "data":tableData,
+                //定义列 宽度 以及在json中的列名
+                "aoColumns": [
+                    {"data": "name",'sClass':"alignCenter "},
+                    {"data": "typeLabel",'sClass':"alignCenter "},
+                    {"data": "period",'sClass':"alignCenter"},
+                    {"data": "createUser",'sClass':"alignCenter "},
+                    {"data": "createDate",'sClass':"alignCenter "},
+                    {
+                        "data": null, "orderable": false, "defaultContent": "",'sClass':" alignCenter ",
+                        "render": function (data, type, row, meta) {
+                            var classSet =""  ,setText;
+                            if(row.status == "0"){
 //                            setText = "草稿";
-                            classSet ="col-999";
-                        }else if(row.status == "1" ){
+                                classSet ="col-999";
+                            }else if(row.status == "1" ){
 //                            setText = "已提交";
-                            classSet ="col-51cd50";
-                        }else if(row.status == "2"){
-                            classSet ="col-ffa82d";
+                                classSet ="col-51cd50";
+                            }else if(row.status == "2"){
+                                classSet ="col-ffa82d";
 //                            setText = "已审核";
-                        }else if(row.status == "3"){
+                            }else if(row.status == "3"){
 //                            setText = "已发布";
-                            classSet ="col-62b5e9";
+                                classSet ="col-62b5e9";
+                            }
+                            return "<span class='"+classSet+"'>"+row.statusShow+"</span >";
                         }
-                        return "<span class='"+classSet+"'>"+row.statusShow+"</span >";
+                    },
+                    {
+                        "data": null, "orderable": false, "defaultContent": "",'sClass':" alignCenter autoWidth",
+                        "render": function (data, type, row, meta) {
+                            console.log(data);
+                            var html = "<a class='btn btn-edit'><i class='fa fa-edit'></i>编辑</a >" +
+                                    "<a class='btn btn-delete'><i class='fa fa-trash'></i>删除</a >";
+                            return "<input type='hidden'  id=" + row.id + " data-type="+row.tYPE+" data-id='"+row.id+"' data-year='"+$year+"' data-status='"+row.status+"' class='i-checks'>"+
+                                "<a class='btn btn-check' ><i class='fa fa-search-plus'></i>查看</a >" +html;
+
+                        }
                     }
-                },
-                {
-                    "data": null, "orderable": false, "defaultContent": "",'sClass':" alignCenter autoWidth",
-                    "render": function (data, type, row, meta) {
-                        console.log(data);
-                        var html="";
-                        if(row.status == "0" || row.status == "-1"){
-                            html = "<a class='btn btn-edit'><i class='fa fa-edit'></i>编辑</a >" +
-                                "<a class='btn btn-delete'><i class='fa fa-trash'></i>删除</a >";
-                        }else if(row.status == "1") {
-                            html = "<a class='btn btn-review' ><i class='fa fa-check'></i>审核</a >";
-                        }else if(row.status == "2") {
-                            html = "<a class='btn btn-issue'><i class='fa fa-upload'></i>发布</a >";
-                        }else if(row.status == "3") {
-                            html = "";
-                        }
-                        return "<input type='hidden'  id=" + row.id + " data-type="+row.tYPE+" data-id='"+row.id+"' data-year='"+$year+"' data-status='"+row.status+"' class='i-checks'>"+
-                            "<a class='btn btn-check' ><i class='fa fa-search-plus'></i>查看</a >" +html;
 
-                        }
-                }
-
-                        ]
+                ]
             });
 
         }

@@ -33,20 +33,20 @@ $ffa82d:#ffa82d;
     color:#fff;
   }
   .fa{
-    margin:0 3px;
+    margin:0 2px 0 0;
   }
 }
 .table{
   .btn{
     width:auto;
     height:auto;
-    padding:2px 5px;
+    padding:2px 6px;
     border:none;
-    line-height:22px;
+    line-height:20px;
     font-size:12px;
   }
 }
-.bg-ffa82d,.btn-save{
+.bg-ffa82d,.btn-save,.btn-check{
   background: #ffa82d;
   border-color:#ffa82d;
   color:#fff;
@@ -55,7 +55,7 @@ $ffa82d:#ffa82d;
     border-color:#ff9000;
   }
 }
-.bg-62b5e9,.btn-edit{
+.bg-62b5e9,.btn-edit,.btn-issue{
   background: #62b5e9;
   border-color:#62b5e9;
   color:#fff;
@@ -72,6 +72,13 @@ $ffa82d:#ffa82d;
   &:hover{
     background: #f52f2f;
     border-color: #f52f2f;
+  }
+}
+.bg-1ab394,.btn-review{
+  background:#1ab394;
+  color:#fff;
+  &:hover{
+    background:#009c7c;
   }
 }
 .col-1ab394{
@@ -330,6 +337,5 @@ label.error{ color:red;font-size:14px;}
   color:#ff2525;display: block;
 }
 .auditing-btn{
-  width:70px;height:30px;line-height: 30px;text-align: center;position: absolute;right:16px;top:5px;
-
+  width:70px;height:30px;line-height: 30px;text-align: center;
 }

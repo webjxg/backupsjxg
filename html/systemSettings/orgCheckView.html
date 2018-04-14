@@ -185,12 +185,13 @@
 <script>
     $(document).ready(function() {
         var id = getQueryString('id');
+        var pid=getQueryString('pid')
         console.log(id)
         $('#id').val(id);
         /*api = getQueryString('api') || 'form';*/
-        if (id) {
+        if (id!==null) {
             /*此处后端接口  id为弹出窗口自带的id 通过浏览器方法传参得到*/
-            var url = "/api/sys/SysOrg/view/" + id;
+            url = "/api/sys/SysOrg/view/" + id;
             ajaxToServer(url, {}, function (result) {
                 console.log(url,result);
                 if (result.success) {
@@ -201,6 +202,18 @@
                     $('#dname').val(SysOrg.deputyPerson?SysOrg.deputyPerson.name:"");
                     $('#parentName').val(result.parentName)
                     console.log(result);
+                } else {
+                    layer.msg(result.message);
+                }
+            });
+        }else if(pid!==null){
+            url = "/api/sys/SysOrg/view/" + pid;
+            ajaxToServer(url, {}, function (result) {
+                console.log(url,result);
+                if (result.success) {
+                    var SysOrg = result.SysOrg;
+                    $('#parentName').val(SysOrg.name);
+                    $('#parentId').val(SysOrg.id)
                 } else {
                     layer.msg(result.message);
                 }

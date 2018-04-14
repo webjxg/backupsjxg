@@ -8,12 +8,8 @@
     <link rel="stylesheet" href="../../plugins/font-awesome/css/font-awesome.min.css">
     <link rel="stylesheet" href="../../plugins/datetimepicker/css/bootstrap-datetimepicker.css">
     <!--引入样式-->
-    <link rel="stylesheet" href="../../plugins/layer/theme/default/layer.css">
-    <link rel="stylesheet" href="../../plugins/icheck/skins/square/green.css">
-    <link rel="stylesheet" href="../../plugins/datatables/css/mydatatable.css">
-    <!--样式-->
+    <link rel="stylesheet" href="../../plugins/layer/theme/default/layer.css"><!--样式-->
     <link rel="stylesheet" href="../../css/common.css">
-    <link rel="stylesheet" href="../../css/customDatagrid.css">
     <link rel="stylesheet" href="../../css/customDataTable.css">
     <link rel="stylesheet" href="../../css/aps.css">
 </head>
@@ -73,7 +69,6 @@
                     <!--表头-->
                     <thead>
                     <tr role="row">
-                        <th width="45px"><input type="checkbox" class="i-checks" style="position: absolute; opacity: 0;"></th>
                         <th>计划名称</th>
                         <th>计划类型</th>
                         <th>计划周期</th>
@@ -120,7 +115,6 @@
 <script src="../../plugins/bootstrap/js/bootstrap.min.js"></script>
 <!--附属插件-->
 <script src="../../plugins/layer/layer.js"></script>
-<script src="../../plugins/icheck/icheck.min.js"></script>
 <script src="../../plugins/datetimepicker/js/bootstrap-datetimepicker.js"></script>
 <script src="../../plugins/datatables/js/jquery.dataTables.min.js"></script>
 <script src="../../plugins/datatables/js/dataTables.bootstrap.js"></script>
@@ -130,8 +124,7 @@
 <script src="../../js/page.js"></script>
 <script>
     $(function(){
-        var typeVal,getYear,getMonth;
-        var $type,$year,$month ,$week,$status;
+        var $year,$month,$status;
         var date = new Date();
         getYear = date.getFullYear();
         $("#yMPicker").val(getYear);
@@ -149,7 +142,6 @@
             $year = $('.datePicker').val();
             $month = $("#getMonth").val();
             $status =$("#apsState").val();
-            console.log($year,$month,$status)
         }
         window.pageLoad = function(){
             getDataFn();
@@ -166,11 +158,52 @@
                  });
 
              });*/
-            $.ajax({
+           function getAttr(obj){
+                   var $iChecks = obj.parents("tr").find('.i-checks'),
+                       id = $iChecks.attr('data-id'),
+                       year = $iChecks.attr('data-year'),
+                       month = $iChecks.attr('data-month'),
+                       status = $iChecks.attr('data-status');
+                   return [id,year,month,status];
+           }
+           $.ajax({
                 url:'../../json/test.json',
                 success:function(result){
-                    console.log(result);
                     renderTableData(result.page.rows);
+                    //审核
+                    $(".btn-review").click(function(){
+                        var attrArr = getAttr($(this));
+                        location.href = "../producePlan/reviewPlans.html?id="+attrArr[0]+"&adYear="+attrArr[1]+"&adMonth="+attrArr[2]+"&status="+attrArr[3];
+                    });
+                    //查看
+                    $(".btn-check").click(function(){
+                        var attrArr = getAttr($(this));
+                        openDialog('查看年计划','producePlan/proTargetPlanView.html?id='+attrArr[0]+'&year='+attrArr[1]+'&month='+attrArr[2],'800px','500px')
+                    });
+                    //删除
+                    $(".btn-delete").click(function(){
+                        var attrArr = getAttr($(this));
+                        deleteItem('确定要删除该计划','/api/aps/ApsMonthAdjust/delete',attrArr[0])
+                    });
+                    //编辑
+                    $(".btn-edit").click(function(){
+                        var attrArr = getAttr($(this));
+                        location.href = '../producePlan/proTargetPlan.html?id='+attrArr[0]+'&year='+attrArr[1]+'&month='+attrArr[2];
+                    });
+                    //发布
+                    $(".btn-issue").click(function(){
+                        var attrArr = getAttr($(this));
+                        var data = {
+                            id:attrArr[0],
+                            status:$(this).attr('data-status')
+                        };
+                        ajaxToServer("/api/aps/ApsYearPlan/update",JSON.stringify(data),function(result){
+                            if(result.success){
+                                pageLoad();
+                            }
+                        });
+                    })
+
                 }
             })
         };
@@ -178,13 +211,17 @@
         windowclick();
         $("#btn-add").click(function(){
             getDataFn();
-            location.href = "./proTargetPlan.html?year="+$year+"&month="+$month;
+            if($month == ""){
+                layerAlert("请选择一个准确的月份!");
+            }else{
+                location.href = "./proTargetPlan.html?year="+$year+"&month="+$month;
+            }
         });
 
     });
 
 
-    //  datatables使用ajax
+    //  渲染表内容
     function renderTableData(tableData){
         $('#treeTable').dataTable({
             "bPaginate": false,
@@ -202,11 +239,6 @@
             "data":tableData,
             //定义列 宽度 以及在json中的列名
             "aoColumns": [
-                {"data": null,"sWidth":"45px;","defaultContent":"",'sClass':"alignCenter",
-                    "render":function(data, type, row, meta) {
-                        return data = "<input type='checkbox' id=" + row.id + " data-type="+row.tYPE+" class='i-checks'>"
-                    }
-                },
                 {"data": "name",'sClass':"alignCenter "},
                 {"data": "typeLabel",'sClass':"alignCenter "},
                 {"data": "period",'sClass':"alignCenter"},
@@ -242,18 +274,18 @@
                         }else if(row.status == "1") {
                             html = "<a class='btn btn-review' ><i class='fa fa-check'></i>审核</a >";
                         }else if(row.status == "2") {
-                            html = "<a class='btn btn-issue' ><i class='fa fa-upload'></i>发布</a >";
+                            html = "<a class='btn btn-issue'><i class='fa fa-upload'></i>发布</a >";
                         }else if(row.status == "3") {
                             html = "";
                         }
-                        return "<a class='btn btn-check' ><i class='fa fa-search-plus'></i>查看</a >" +html;
+                        return "<input type='hidden'  id=" + row.id + " data-type="+row.tYPE+" data-id='"+row.id+"' data-year='"+row.adYear+"' data-month='"+row.adMonth+"'  data-status='"+row.status+"' class='i-checks'>"+
+                            "<a class='btn btn-check' ><i class='fa fa-search-plus'></i>查看</a >" +html;
 
                     }
                 }
 
             ]
         });
-        RenderiCheckTblBody();
 
     }
 </script>

@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="../../css/comInnerTable.css">
     <style>
         /*特殊样式*/
-        .width-35>select{
+        .width-35>select,.width-35>.form-control{
             width: 60%;
         }
         .width-60>textarea{
@@ -40,8 +40,7 @@
         <tr>
             <td class="width-15" ><label class="pull-right">级别:</label></td>
             <td class="width-35">
-                <input type="hidden" name="rankId" id="rankId">
-                <select name="rank" id="rank" class="form-control"></select>
+                <input type="text" readonly="readonly" name="rankId" id="rankId" class="form-control">
             </td>
         </tr>
         <tr>
@@ -93,10 +92,17 @@
             /*此处后端接口  id为弹出窗口自带的id 通过浏览器方法传参得到*/
             var url = "/api/aps/Configure/form/" + id;
             ajaxToServer(url, {}, function (result) {
-                console.log(result)//查看请求回来的参数
+                console.log(result); //查看请求回来的参数
                 if (result.success) {
                     renderData(result.Configure, $('#inputForm'));
-                    $('#rank').val('1')
+                    console.log(level);
+                    if(level==1){
+                        $('#rankId').val('一级菜单');
+                    }else if(level==2){
+                        $('#rankId').val('二级菜单');
+                    }else{
+                        $('#rankId').val('三级菜单');
+                    }
                 } else {
                     layer.msg(result.message);
                 }

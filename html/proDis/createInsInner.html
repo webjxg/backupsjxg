@@ -58,15 +58,19 @@
     function clickButton(node) {
         $('.btn-addson').click(function(){
             var id = $(this).parents("tr").find('.i-Checks').attr('id');
-            openEditDialog('添加下级指令','./proDis/createInsCV.html?id='+id,'462px','425px')
+            openEditDialog('添加下级指令','./proDis/createInsCV.html?level=2&id='+id,'462px','425px')
+        });
+        $('.btn-changeI').click(function () {
+            var id = $(this).parents("tr").find('.i-Checks').attr('id');
+            openEditDialog('修改指令', './proDis/createInsCV.html?level=2&id=' + id, '462px', '425px')
         });
         $('.btn-add').click(function(){
             var id = $(this).parents("tr").find('.i-Checks').attr('id');
-            openEditDialog('添加指令','./proDis/createInsCV.html?id='+id,'462px','425px')
+            openEditDialog('添加指令','./proDis/createInsCV.html?level=3&id='+id,'462px','425px')
         });
         $('.btn-change').click(function () {
             var id = $(this).parents("tr").find('.i-Checks').attr('id');
-            openEditDialog('修改指令', './proDis/createInsCV.html?id=' + id, '462px', '425px')
+            openEditDialog('修改指令', './proDis/createInsCV.html?level=3&id=' + id, '462px', '425px')
         });
         $('.btn-delete').click(function () {
             var id = $(this).parents("tr").find('.i-Checks').attr('id');
@@ -83,7 +87,7 @@
                             "<td>"+
                             " <a class='btn bg-ffa82d btn-addson'><i class='fa fa-edit'></i>添加子级</a>" +
                             " <a class='btn bg-f75c5c btn-delete'><i class='fa fa-trash'></i> 删除</a>"  +
-                            " <a class='btn bg-62b5e9 btn-change'><i class='fa fa-edit'></i>修改</a>" +
+                            " <a class='btn bg-62b5e9 btn-changeI'><i class='fa fa-edit'></i>修改</a>" +
                             "</td>"+
                       "</tr>";
         var datas=data.rows;

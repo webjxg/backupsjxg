@@ -19,8 +19,7 @@
     <div class="ibox">
         <div class="ibox-content">
             <div class="clearfix btn-box mgb-20">
-                <button class="btn btn-success  btn-save " type="button">保存</button>
-                <button class="btn btn-success  btn-save " type="button">提交</button>
+                <button class="btn btn-success pull-right btn-save " type="button">保存</button>
             </div>
             <div class="commercePurCon proTargetPlanItem">
                 <div class="tableItemBox">
@@ -49,20 +48,21 @@
     var arr = [];
     var msgobj = {};
     var status;
+    var year =getQueryString('year'),
+        month =getQueryString('month');
     getmsg();
     function getmsg() {
         var data={
-            adYear:2018,
-            adMonth:11
+            adYear:year,
+            adMonth:month
         };
         ajaxToServer("/api/aps/ApsMonthAdjustBus/queryMonthAdjustBus",JSON.stringify(data),function (result) {
-            console.log(result);
             var planarr = result.swcgzbjh
-            createTbody(planarr)
+            createTbody(planarr);
+            setFrameHeight();
         })
     }
     function createTbody(planarr) {
-        console.log(planarr)
         for(var i=0;i<planarr.length;i++){
             msgobj = {
                 "id":planarr[i].id,
@@ -125,7 +125,6 @@
        //点击时获取到信息
         $(".btn-save").click(function (e) {
             var btn = $(e.target).context.textContent;
-            console.log(btn)
             if(btn == "保存"){
                 status = "0";
                 addstatus(status)
@@ -137,20 +136,15 @@
         //将点击状态添加到数组里边
         function addstatus(status) {
             var len = $(".tableItemBox").length;
-            // console.log(len)
             for(var i = 0; i<len;i++){
-                console.log($("#td"+i))
                 // 给每个虚拟btn添加点击事件
                 $("#td"+i).parents('.datagrid-view').siblings(".datagrid-toolbar").find(".l-btn-text").trigger('click');
             }
-            console.log(status);
             var savearr = [];
             var editItems = dataGridObj.saveItemArr;
-				console.log(editItems)
             $(editItems).each(function (i) {
                 savearr.push(editItems[i]);
             });
-            console.log(savearr,JSON.stringify(savearr))
             var data={
                 "busPlans":JSON.stringify(editItems),
                 "status":status,
@@ -160,9 +154,7 @@
 //
 //        保存将数据发送给后台
     function addmsg(data){
-        console.log(data)
         ajaxToServer1("/api/aps/ApsMonthAdjustBus/saveBusInfo",data,function(result){
-            console.log(result)
         })
     }
 </script>

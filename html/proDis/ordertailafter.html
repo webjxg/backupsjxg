@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>指令跟踪</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+</head>
+<!--插件样式-->
+<link rel="stylesheet" href="../../plugins/bootstrap/css/bootstrap.min.css">
+<link rel="stylesheet" href="../../plugins/font-awesome/css/font-awesome.min.css">
+<link rel="stylesheet" href="../../plugins/datetimepicker/css/bootstrap-datetimepicker.css">
+<link rel="stylesheet" href="../../plugins/datatables/css/jquery.dataTables.min.css">
+<link rel="stylesheet" href="../../plugins/icheck/skins/square/green.css">
+<link rel="stylesheet" href="../../plugins/datatables/css/mydatatable.css">
+<!--引入样式-->
+<link rel="stylesheet" href="../../css/common.css">
+<link rel="stylesheet" href="../../css/customDataTable.css">
+<link rel="stylesheet" href="../../css/aps.css">
+<link rel="stylesheet" href="../../css/proDis.css">
+<body id="menu-content">
+<div class="wrapper wrapper-content">
+    <div class="ibox">
+        <div class="ibox-title">
+            <h1 class="titName">指令跟踪</h1>
+            <hr/>
+        </div>
+        <div class="ibox-content">
+
+            <div class="row">
+                <div class="col-sm-12">
+                    <!--输入框-->
+                    <div class="pull-left">
+                            <div class="execution time">
+                                <span>执行时间:</span>
+                                <input type="text" value="开始时间" id="startDateParam" class="time-input datePicker"><i class="fa fa-calendar"></i>
+                                &nbsp;—
+                                <input type="text" value="结束时间" id="endDateParam" class="time-input datePicker"><i class="fa fa-calendar"></i>
+                            </div>
+                        <ul class="apsType-linkage">
+                            <li >
+                                工序:
+                                <select name="" id="process">
+                                    <option>-- 全部 --</option>
+                                </select>
+                            </li>
+                            <li >
+                                分类:
+                                <select name="" id="classify">
+                                    < <option>-- 全部 --</option>
+                                </select>
+                            </li>
+                            <li>
+                                <div class="execution time">
+                                    指令:<input type="text" placeholder="请输入指令">
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <!--状态-->
+            <div class="row statu">
+                <div class="col-sm-12">
+                    <div class="pull-left">
+                        <div class="status">
+                            <ul class="apsType-linkage">
+                                <li>状态：</li>
+                                <li>
+                                    <input type='checkbox' class='i-checks'><span>停止执行</span>
+                                </li>
+                                <li>
+                                    <input type='checkbox' class='i-checks'><span>待执行</span>
+                                </li>
+                                <li>
+                                    <input type='checkbox' class='i-checks'><span>执行完成</span>
+                                </li>
+                                <li>
+                                    <input type='checkbox' class='i-checks'><span>取消执行</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="pull-right">
+                        <label>
+                            <button class="btn btn-search  bg-ffa82d" type="button">查询</button>
+                            <button class="btn" id="reset-btn">重置</button>
+                            <button class="btn">值班指令</button>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <!--表格区-->
+            <table id="treeTable" class="table table-striped table-bordered table-hover table-condensed dataTables-example dataTable tree_table">
+                <thead>
+                <tr>
+                    <th class="id">id</th>
+                    <th>一级</th>
+                    <th>二级</th>
+                    <th>三级</th>
+                    <th>下达时间</th>
+                    <th>执行人</th>
+                    <th>状态</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <tbody id="treeTableBody">
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+</div>
+</body>
+<!--核心插件-->
+<script src="../../js/jquery-2.2.4.min.js"></script>
+<script src="../../plugins/bootstrap/js/bootstrap.min.js"></script>
+<!--附属插件-->
+<script src="../../plugins/layer/layer.js"></script>
+<script src="../../plugins/icheck/icheck.min.js"></script>
+<script src="../../plugins/ztree/js/jquery.ztree.core.js"></script>
+<script src="../../plugins/datatables/js/jquery.dataTables.min.js"></script>
+<script src="../../plugins/datatables/js/dataTables.bootstrap.js"></script>
+<script src="../../plugins/bootStrapPager/js/extendPagination.js"></script>
+<script src="../../plugins/datetimepicker/js/bootstrap-datetimepicker.js"></script>
+<!--自定义文件-->
+<script src="../../js/common.js"></script>
+<script src="../../js/customForm.js"></script>
+<script>
+    //页面加载
+    $(window).load(function() {
+                //获取工序数据
+                loadProcess();
+                //获取分类数据
+                loadClassify();
+                //调用接口加载数据
+                loadData();
+    });
+            //获取年月日
+            $("#startDateParam").datetimepicker({
+                format: "yyyy-mm-dd",
+                language:'cn',
+                weekStart: 1,
+                pickTime: false,
+                autoclose:true,
+                minView: "4",
+                forceParse: 0,
+                todayBtn: true
+            }).on('change',function(ev){
+                var startDate = $('#startDateParam').val();
+                $("#endDateParam").datetimepicker('setStartDate',startDate);
+                $("#startDateParam").datetimepicker('hide');
+            });
+            $("#endDateParam").datetimepicker({
+                format: "yyyy-mm-dd",
+                language:'cn',
+                weekStart: 1,
+                pickTime: false,
+                autoclose:true,
+                minView: "4",
+                forceParse: 0,
+                todayBtn: true
+            }).on('change',function(ev){
+                var returnDate = $("#endDateParam").val();
+                $("#startDateParam").datetimepicker('setReturnDate',returnDate);
+                $("#endDateParam").datetimepicker('hide');
+            });
+
+
+        //获取工序数据
+    function loadProcess(){
+            var url_ = 'http://localhost:63342/branch/json/proDis/gongxu.json';
+            ajaxToServer(url_, {}, function(result){
+                if(result.success){
+                    var rows = result.rows;
+                    appendOptionsValue($('#process'),rows, 'code', 'name');
+                }else{
+                    layer.msg(result.message);
+                }
+            });
+        }
+        //获取分类数据
+    function loadClassify() {
+            var url_ = 'http://localhost:63342/branch/json/proDis/classify.json';
+            ajaxToServer(url_, {}, function(result){
+                if(result.success){
+                    var rows = result.rows;
+                    appendOptionsValue($('#classify'), rows, 'id', 'classify');
+                }else{
+                    layer.msg(result.message);
+                }
+            });
+        }
+
+
+    //创建table
+    function createTable(data) {
+        //  datatables使用ajax
+        $('#treeTable').dataTable({
+            "bPaginate": false,
+            "bAutoWidth": false,
+            "bDestroy": true,
+            "paging": false,
+            "bProcessing": true,
+            "searching": false, //禁用aa原生搜索
+            "info": false,  //底部文字
+            "order": [],
+            "ordering": false,
+            "oLanguage": lang,
+            "data": data,
+            //定义列 宽度 以及在json中的列名
+            "aoColumns": [
+                {"data": "id", 'sClass': "id"},//id设置为隐藏
+                {"data": "process", 'sClass': " alignCenter authName"},
+                {"data": "instruct", 'sClass': "alignCenter autoWidth"},
+                {"data": "status", 'sClass': "alignCenter"},
+                {"data": "overStatus", 'sClass': "alignCenter"},
+                {"data": "overUserName", 'sClass': "alignCenter"},
+                {
+                    "data": " ", 'order': false, "defaultContent": "", 'sClass': "alignCenter",
+                    "render": function (data, type, row, meta) {
+                        var html = "";
+                        if (row.status == "0") {
+                            var setText = "执行完成";
+                            html = "<span class='btn-primary1'><i class='fa fa-check-circle'></i>"+setText+"</span>";
+                        } else if (row.status == "1") {
+                            setText = "停止执行";
+                            html = "<span class='btn-stop'><i class='fa fa-exclamation-circle'></i>"+setText+"</span>";
+                        } else if (row.status == "2") {
+                            setText = "取消执行";
+                            html ="<span class='btn-cancel'><i class='fa fa-times-circle'></i>"+setText+"</span>";
+                        } else if (row.status == "-1") {
+                            setText = "待执行";
+                            html = "<span class='btn-await1'><i class='fa fa-times-circle'></i>"+setText+"</span>";
+                        }
+                        return html;
+                    }
+                }, //状态
+                {
+                    "data": " ", 'order': false, "defaultContent": "", 'sClass': "alignCenter",
+                    "render": function (data, type, row, meta) {
+//                    console.log(row)
+                        var html = "";
+                        if (row.status == "0") {
+                            html = ""
+                        } else if (row.status == "1") {
+                            html = ""
+                        } else if (row.status == "2") {
+                            html = ""
+                        } else if (row.status == "-1") {
+                            html = "<a class='btn btn-review stopbtn'><i class='fa fa-play'></i>停止指令</a >" +
+                                "<a class='btn btn-review cancelbtn'><i class='fa fa-power-off'></i>取消指令</a >";
+                        }
+                        return html;
+                    }
+                },
+            ]
+        });
+        RenderiCheckTblBody();
+        changeStatus()
+    }
+
+    //获取数据
+    function loadData(){
+        var arr = [];
+        var data = {
+            begin:$("#startDateParam").val(),
+            endtime:$("#endDateParam").val(),
+            process:$("#process option:selected").val(),
+            time:$("#time option:selected").val(),
+            classify:$("#classify option:selected").val()
+        };
+        console.log(data)
+        //指令查看接口地址
+        var url_ = 'http://localhost:63342/branch/json/proDis/productiondispatch.json';
+        ajaxToServer(url_,JSON.stringify(data), function(result){
+            if(result.success){
+                var sczb = result.page.rows;
+                for(var i=0;i<sczb.length;i++){
+                    var msgobj = {
+                        "id":sczb[i].id,
+                        "process":sczb[i].groupName,
+                        "instruct":sczb[i].reciveStatus,
+                        "status":sczb[i].status,
+                        "overStatus":sczb[i].overStatus,
+                        "overUserName":sczb[i].overUserName
+                    }
+                    arr.push(msgobj)
+                }
+                createTable(arr);
+            }else{
+                layer.msg(result.message);
+            }
+        });
+    }
+
+    //点击查询按钮
+    $(".btn-search").click(function (e) {
+        loadData();
+    });
+
+    //重置按钮
+    $(".reset-btn").click(function () {
+            $("#startDateParam").val("")
+            $("#endDateParam").val(""),
+            $("#process option:selected").val(""),
+            $("#time option:selected").val(""),
+            $("#classify option:selected").val("")
+    })
+
+    //修改状态
+    function changeStatus() {
+        $(".btn-review").click(function (e) {
+            if(this.textContent == "停止指令"){
+                data = {
+                    id:this.parentNode.parentNode.firstElementChild.textContent,
+                    strtus:"2"
+                };
+                sendmsg(data);
+            }else{
+                data = {
+                    id:this.parentNode.parentNode.firstElementChild.textContent,
+                    strtus:"-1"
+                };
+                sendmsg(data);
+            }
+        })
+    }
+
+    function sendmsg(obj) {
+        ajaxToServer("",obj,function (result) {
+           if(result.success){
+               loadData()
+           }else{
+               layer.msg(result.message);
+           }
+        })
+    }
+
+</script>
+</html>

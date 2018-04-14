@@ -166,6 +166,7 @@ function getQueryString(name, url) {
 function refreshActiveTab() {
     var target = top.getActiveTab();
     var url = target.attr('src');
+    console.log(url);
     var t = top.layer;
     //显示loading提示
     var loading = t.load();
@@ -256,7 +257,7 @@ function allotCancelItem(tableId,opflag,ifAllot,dataPrama,url){
 
 //打开对话框(查看、选择上级菜单)
 function openDialog(title,url,width,height,innerCallbackFn){
-
+    console.log(url);
     if(navigator.userAgent.match(/(iPhone|iPod|Android|ios)/i)){//如果是移动端，就使用自适应大小弹窗
         width='auto';
         height='auto';
@@ -631,6 +632,52 @@ $("#iconclear").click(function(){
     $("#icon").val("");
 
 });
+
+/**
+ * 动态创建iframe
+ * @param frameDivID
+ * @param frameId
+ * @param action
+ * @returns {Element}
+ */
+function createTagFrame(frameDivID,frameId,action){
+    var frameDivCont = document.getElementById(frameDivID);
+    var tabFrame = document.getElementById(frameId);
+    if(tabFrame==null || tabFrame==undefined){
+        tabFrame = document.createElement("iframe");
+        tabFrame.id=frameId;
+        tabFrame.style.width="100%";
+        tabFrame.marginWidth="0";
+        tabFrame.frameBorder="0";
+        tabFrame.frameSpacing="0";
+        tabFrame.scrolling="no";
+        tabFrame.style.overflow = "hidden";
+        frameDivCont.appendChild(tabFrame);
+    }
+    if(action!=undefined && action!='' && tabFrame.src==""){
+        tabFrame.src = action;
+    }
+   /* if(tabFrame.attachEvent){
+        tabFrame.attachEvent("onload",setFrameHeight);
+    }else{
+        tabFrame.oncload=setFrameHeight;
+    }*/
+    tabFrame.style.display="inline";
+    return frameDivCont;
+}
+
+/**
+ * 设置iFrame高度，在iframe内部页面调用
+ */
+function setFrameHeight(){
+    var frames = window.parent.document.getElementsByTagName("iframe");
+    for(var i = 0; i < frames.length; i++) {
+        var f = frames[i];
+        if (null != f && f.style.display != "none") {
+            f.style.height = (document.body.scrollHeight+50)+"px";
+        }
+    }
+}
 
 
 
