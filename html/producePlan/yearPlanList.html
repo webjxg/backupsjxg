@@ -152,7 +152,7 @@
                 //查看
                 $(".btn-check").click(function () {
                     var attrArr = getAttr($(this));
-                    openDialog('查看月计划', 'producePlan/yearPlanIndex.html?id=' + attrArr[0] + '&year=' + attrArr[1], '800px', '500px')
+                    openDialog('查看月计划', 'producePlan/yearPlanCheck.html?id=' + attrArr[0] + '&year=' + attrArr[1]+'&check=0', '800px', '500px')
                 });
                 //删除
                 $(".btn-delete").click(function () {
@@ -165,7 +165,7 @@
                     location.href = '../producePlan/yearPlanIndex.html?id=' + attrArr[0] + '&year=' + attrArr[1]
                 });
                 //排产
-                $(".btn-edit").click(function () {
+                $(".btn-review").click(function () {
                     var attrArr = getAttr($(this));
                     location.href = '../producePlan/yearPlanIndex.html?id=' + attrArr[0] + '&year=' + attrArr[1]
                 });
@@ -219,12 +219,6 @@
                         }else if(row.status == "1" ){
 //                            setText = "已提交";
                             classSet ="col-51cd50";
-                        }else if(row.status == "2"){
-                            classSet ="col-ffa82d";
-//                            setText = "已审核";
-                        }else if(row.status == "3"){
-//                            setText = "已发布";
-                            classSet ="col-62b5e9";
                         }
                         return "<span class='"+classSet+"'>"+row.statusShow+"</span >";
                     }
@@ -232,17 +226,14 @@
                 {
                     "data": null, "orderable": false, "defaultContent": "",'sClass':" alignCenter autoWidth",
                     "render": function (data, type, row, meta) {
-                        console.log(data);
                         var html="";
                         if(row.status == "0" || row.status == "-1"){
                             html = "<a class='btn btn-edit'><i class='fa fa-edit'></i>编辑</a >" +
-                                "<a class='btn btn-delete'><i class='fa fa-trash'></i>删除</a >";
+                                   "<a class='btn btn-delete'><i class='fa fa-trash'></i>删除</a >"+
+                                   "<a class='btn btn-review' ><i class='fa fa-check'></i>排产</a >";
                         }else if(row.status == "1") {
-                            html = "<a class='btn btn-review' ><i class='fa fa-check'></i>审核</a >";
-                        }else if(row.status == "2") {
-                            html = "<a class='btn btn-issue'><i class='fa fa-upload'></i>发布</a >";
-                        }else if(row.status == "3") {
-                            html = "";
+                            html = "<a class='btn btn-delete'><i class='fa fa-trash'></i>删除</a >"+
+                                    "<a class='btn btn-review' ><i class='fa fa-check'></i>排产</a >";
                         }
                         return "<input type='hidden'  id=" + row.id + " data-type="+row.tYPE+" data-id='"+row.id+"' data-year='"+$year+"' data-status='"+row.status+"' class='i-checks'>"+
                             "<a class='btn btn-check' ><i class='fa fa-search-plus'></i>查看</a >" +html;

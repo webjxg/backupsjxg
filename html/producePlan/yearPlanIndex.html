@@ -67,8 +67,13 @@
 <script src="../../js/customForm-aps.js"></script>
 <script>
     //返回按钮
+    var check=getQueryString('check');
+    if(check==0){
+        $('#back-btn').hide();
+        $('.btn-save').hide();
+    }
     $(".btn-back").click(function () {
-        window.location.href = "./YearPlanList.html";
+        window.history.back()
     });
     //渲染列表
     var planarr = [];
@@ -157,7 +162,9 @@
     });
     // 点击按钮并添加点击状态
     $(".btn-save").click(function (e) {
+        console.log(e);
         var btn = $(e.target).context.textContent;
+        console.log(btn);
         if(btn == "保存"){
             status = "0";
             addstatus(status)

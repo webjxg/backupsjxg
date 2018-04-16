@@ -191,8 +191,13 @@
 <script>
     $(function () {
         //接收url父页面参数放到input的val里
-        var dpYear=getQueryString('year'),dpMonth=getQueryString('month'),dpWeek=getQueryString('week');
+        var dpYear=getQueryString('year'),dpMonth=getQueryString('month'),dpWeek=getQueryString('week'),check=getQueryString('check');
         tabledatagrid(dpYear,dpMonth,dpWeek);
+        if(check==0){
+            $('#back-btn').hide();
+            $('#submit-btn').hide();
+            $('#save-btn').hide();
+        }
         $('#td0,#td1,#td2,#td3,#td4').datagrid('hideColumn', 'id');
         $(".btn-sav").click(function () {
             btnSubSave(0);
@@ -202,7 +207,7 @@
 
         });
         $(".btn-back").click(function () {
-            window.location.href = "./apsCreate.html";
+            window.history.back()
         });
 
     });
@@ -506,7 +511,6 @@
                 layer.msg(msg.message)
             }
         }
-        window.location.href = "./apsCreate.html";
     }
 
 

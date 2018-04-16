@@ -3,7 +3,7 @@
  RenderiCheckTblBody();
  });*/
 var urlPrefix = "http://114.115.165.184:8083/aps-api";
-// var urlPrefix = "http://192.168.1.109:8083/aps-api";
+// var urlPrefix = "http://192.168.45.91:8083/aps-api";
 //点击查询按钮
 $("#search-btn").click(function(){
     pageLoad();

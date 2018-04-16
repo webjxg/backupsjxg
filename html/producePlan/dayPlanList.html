@@ -33,7 +33,6 @@
                         <li class="month">
                             计划周期（年月）：
                             <input type="text" value="" id="yMPicker" class="time-input form-control datePicker">
-                            <input type="text" value="" id="dayPicker" class="time-input form-control hide datePicker">
                         </li>
                         <li class="week">
                             计划周期（周）：
@@ -103,7 +102,7 @@
 <script src="../../js/page.js"></script>
 <script>
     $(function(){
-        var $year,$status;
+        var $year,$month,$week,$status;
         var date = new Date();
         getYear = date.getFullYear();
         getMonth = date.getMonth()+1;
@@ -119,15 +118,26 @@
             minView: "3",
             forceParse: 0
         });
+        //得到年月周状态
         function getDataFn(){
-            $year = $('.datePicker').val();
+            $year = $('.datePicker').val().split("-")[0];
             $status =$("#apsState").val();
+            $month=$('.datePicker').val().split("-")[1];
+            $week=$('#apsWeek').val();
+
+
         }
         window.pageLoad = function() {
             getDataFn();
+            $('#apsWeek').change(function () {
+                getDataFn();
+            });
             var data = {
-                adYear: $year,
-                status: $status
+                id:0,
+                dpYear: $year,
+                status: $status,
+                dpWeek: $week,
+                dpMonth:$month
             };
             /* Page.init("/api/aps/ApsMonthAdjust/page",data,true,function(tableData){
              renderTableData(tableData);
@@ -137,24 +147,30 @@
              });
 
              });*/
+            //找到ichecks显示到
             function getAttr(obj) {
                 var $iChecks = obj.parents("tr").find('.i-checks'),
                     id = $iChecks.attr('data-id'),
                     year = $iChecks.attr('data-year'),
+                    month= $iChecks.attr('data-month'),
+                    week= $iChecks.attr('data-week'),
                     status = $iChecks.attr('data-status');
-                return [id, year, status];
+                return [id, year,month,week,status];
             }
 
 //            $.ajax({
 //                url:'../../json/test.json',
 //                success:function(result){
-            ajaxToServer("/api/aps/DayPlan/form", data, function (tableData) {
-                console.log(tableData);
+            Page.init("/api/aps/DayPlan/page", data, true, function (tableData) {
+                console.log(data,tableData);
                 renderTableData(tableData);
                 //查看
                 $(".btn-check").click(function () {
+                    getDataFn()
                     var attrArr = getAttr($(this));
-                    openDialog('查看月计划', 'producePlan/dayPlanIndex.html?id=' + attrArr[0] + '&year=' + attrArr[1], '800px', '500px')
+                    openDialog('查看日计划', 'producePlan/dayPlanIndex.html?id=' + attrArr[0] + '&year=' + attrArr[1]+'&month='+attrArr[2]+'&week='+attrArr[3]+'&status='+attrArr[4]+'&check=0', '800px', '500px')
+                        console.log(attrArr);
+
                 });
                 //删除
                 $(".btn-delete").click(function () {
@@ -163,12 +179,22 @@
                 });
                 //编辑
                 $(".btn-edit").click(function () {
+                    getDataFn()
                     var attrArr = getAttr($(this));
-                    location.href = '../producePlan/dayPlanIndex.html?id=' + attrArr[0] + '&year=' + attrArr[1]
+                    if ($year == "") {
+                        layerAlert("请选择一个准确的年份!");
+                    }else if ($month == "") {
+                        layerAlert("请选择一个准确的月份!");
+                    }else if ($week == "") {
+                        layerAlert("请选择周数!");
+                    }else {
+                    location.href = '../producePlan/dayPlanIndex.html?id=' + attrArr[0] + '&year=' + attrArr[1]+'&month='+attrArr[2]+'&week='+attrArr[3]+'&status='+attrArr[4]
+                    }
+                    console.log(attrArr);
                 });
 
-
             })
+
         }
         pageLoad();
         windowclick();
@@ -177,15 +203,18 @@
             getDataFn();
             if ($year == "") {
                 layerAlert("请选择一个准确的年份!");
-            } else {
-                location.href = "./yearPlanIndex.html?year=" + $year;
+            }else if ($month == "") {
+                layerAlert("请选择一个准确的月份!");
+            }else if ($week == "") {
+                layerAlert("请选择周数!");
+            }else {
+                location.href = "./dayPlanIndex.html?year=" + $year+'&month='+$month+'&week='+$week;
             }
         });
 
 
         //  渲染表内容
         function renderTableData(tableData){
-            $year = $('.datePicker').val();
             $('#treeTable').dataTable({
                 "bPaginate": false,
                 "bAutoWidth": false,
@@ -205,7 +234,7 @@
                     {"data": "name",'sClass':"alignCenter "},
                     {"data": "typeLabel",'sClass':"alignCenter "},
                     {"data": "period",'sClass':"alignCenter"},
-                    {"data": "createUser",'sClass':"alignCenter "},
+                    {"data": "createBy",'sClass':"alignCenter "},
                     {"data": "createDate",'sClass':"alignCenter "},
                     {
                         "data": null, "orderable": false, "defaultContent": "",'sClass':" alignCenter ",
@@ -230,10 +259,9 @@
                     {
                         "data": null, "orderable": false, "defaultContent": "",'sClass':" alignCenter autoWidth",
                         "render": function (data, type, row, meta) {
-                            console.log(data);
                             var html = "<a class='btn btn-edit'><i class='fa fa-edit'></i>编辑</a >" +
                                     "<a class='btn btn-delete'><i class='fa fa-trash'></i>删除</a >";
-                            return "<input type='hidden'  id=" + row.id + " data-type="+row.tYPE+" data-id='"+row.id+"' data-year='"+$year+"' data-status='"+row.status+"' class='i-checks'>"+
+                            return "<input type='hidden'  id='" + row.id + "' data-type="+row.tYPE+" data-id='"+row.id+"' data-year='"+$year+"' data-month='"+$month+"' data-week='"+$week+"' data-status='"+row.status+"' class='i-checks'>"+
                                 "<a class='btn btn-check' ><i class='fa fa-search-plus'></i>查看</a >" +html;
 
                         }
