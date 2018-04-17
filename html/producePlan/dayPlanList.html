@@ -168,7 +168,7 @@
                 $(".btn-check").click(function () {
                     getDataFn()
                     var attrArr = getAttr($(this));
-                    openDialog('查看日计划', 'producePlan/dayPlanIndex.html?id=' + attrArr[0] + '&year=' + attrArr[1]+'&month='+attrArr[2]+'&week='+attrArr[3]+'&status='+attrArr[4]+'&check=0', '800px', '500px')
+                    openDialog('查看日计划', 'producePlan/dayPlanCheckIn.html?id=' + attrArr[0] + '&year=' + attrArr[1]+'&month='+attrArr[2]+'&week='+attrArr[3]+'&status='+attrArr[4]+'&check=0', '800px', '500px')
                         console.log(attrArr);
 
                 });

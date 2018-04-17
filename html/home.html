@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <title>首页</title>
+    <!--插件样式-->
+    <link rel="stylesheet" href="../plugins/metismenu-master/metisMenu.css">
+    <link rel="stylesheet" href="../plugins/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../plugins/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/customDataTable.css">
+    <link rel="stylesheet" href="../plugins/datetimepicker/css/bootstrap-datetimepicker.css">
+
+    <!--自定义样式-->
+    <link rel="stylesheet" href="../css/common.css">
+    <link rel="stylesheet" href="../css/home.css">
+</head>
+<body>
+    <div class="wrapper pagh-30 bg-f3">
+        <h1 class="tit">我的工作台</h1>
+        <div class="row">
+            <ul class="nav-list clearfix mgb-15">
+                <li class="nav-item1">
+                    <div>
+                        <span><i></i></span>调度台账
+                    </div>
+                    <i class="close-icon"></i>
+                </li>
+                <li class="nav-item2">
+                    <div>
+                        <span><i></i></span>设备管理
+                    </div>
+                    <i class="close-icon"></i>
+                </li>
+                <li class="nav-item3">
+                    <div>
+                        <span><i></i></span>调度监控
+                    </div>
+                    <i class="close-icon"></i>
+                </li>
+                <li class="nav-item4">
+                    <div>
+                        <span><i></i></span>异常控制
+                    </div>
+                    <i class="close-icon"></i>
+                </li>
+                <li class="nav-item5">
+                    <div>
+                        实产产量：<b>2.8</b>万吨
+                    </div>
+                    <i class="close-icon"></i>
+                </li>
+                <li class="nav-item6">
+                    <div>
+                        焙烧产量：<b>2.7</b>万吨
+                    </div>
+                    <i class="close-icon"></i>
+                </li>
+            </ul>
+        </div>
+        <div class="row clearfix">
+            <div class="col-sm-8   ">
+                <div class="item ">
+                    <h2 class="titName">生产管控(周)</h2>
+                    <div class="scgk item-charts" id="scgk" ></div>
+                </div>
+                <div class="item">
+                    <h2 class="titName">生产管控(日)</h2>
+                    <div class="cpgk item-charts" id="cpgk" ></div>
+                </div>
+            </div>
+            <div class="col-sm-4 ">
+                <div class="item magB-15">
+                    <div class="gxBox">
+                        <div class="input-append data  dataPicker-box">
+                            日期：
+                            <input type="text" value="" id="dataPicker" class="time-input form-control datePicker">
+                        </div>
+                        <div class="dataPicker-Box">
+                            <table id="gxBox" class="table table-striped table-bordered table-hover table-condensed dataTables-example dataTable tree_table">
+                                <!--表头-->
+                                <thead>
+                                <tr role="row">
+                                    <th >工序</th>
+                                    <th >大事件</th>
+                                </tr>
+                                </thead>
+                                <!--表内容-->
+                                <tbody id="datainner">
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row clearfix">
+            <div class="col-sm-6">
+                <div class="item ">
+                    <h2 class="titName">成本管控</h2>
+                    <div id="cbgk" class="item-charts" ></div>
+                </div>
+            </div>
+            <div class="col-sm-6 ">
+                <div class="item clearfix magB-15">
+                    <h2 class="titName">主材消耗(日)</h2>
+                    <div class="col-sm-4">
+                        <div class="zc-item item-charts"  id="zc-item1" ></div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="zc-item item-charts" id="zc-item2" ></div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="zc-item item-charts" id="zc-item3"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row clearfix">
+            <div class="col-sm-6">
+                <div class="item">
+                    <h2 class="titName">辅材消耗</h2>
+                    <div id="fcxh" class="item-charts" style="width:100%;"></div>
+                </div>
+            </div>
+            <div class="col-sm-6 ">
+                <div class="item magB-15">
+                    <h2 class="titName">动力消耗(日)</h2>
+                    <div class="col-sm-4">
+                        <div class="dl-item item-charts"  id="dl-item1" ></div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="dl-item item-charts" id="dl-item2" ></div>
+                    </div>
+                    <div class="col-sm-4">
+                        <div class="dl-item item-charts" id="dl-item3" ></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+<!--核心插件-->
+<script src="../js/jquery-2.2.4.min.js"></script>
+<!--附属插件-->
+<script src="../plugins/bootstrap/js/bootstrap.min.js"></script>
+<script src="../plugins/echarts/js/echarts.js"></script>
+<script src="../plugins/datetimepicker/js/bootstrap-datetimepicker.js"></script>
+<script src="../plugins/datatables/js/jquery.dataTables.min.js"></script>
+<script src="../plugins/datatables/js/dataTables.bootstrap.js"></script>
+
+    <!--自定义文件-->
+<script src="../js/common.js"></script>
+<script src="../js/customForm-aps.js"></script>
+<script src="../js/home.js"></script>
+    <script>
+        $(function() {
+            var date = new Date(),
+            getYear = date.getFullYear(),
+            getMonth = date.getMonth()+1,
+            getDay = date.getDate();
+            getMonth = (getMonth<10?"0"+getMonth:getMonth);
+            $("#dataPicker").val(getYear+"-"+getMonth+"-"+getDay);
+            $("#dataPicker")
+                .datetimepicker({
+                format:"yyyy-mm-dd",
+                language:'cn',
+                autoclose: true,
+                todayBtn: true,
+                todayHighlight:true,
+                pickerPosition: "bottom-center",
+                weekStart: 1,
+                pickTime: false,
+                startView: 2, //月视图
+                minView: "2",
+                forceParse: 0
+            })
+                .on('hide', function(ev){
+                    getTableData();
+            });
+            //得到年月周状态
+            function getDataFn(){
+                var splitArr = $('#dataPicker').val().split("-"),
+                $year = splitArr[0],
+                $month=splitArr[1],
+                $day=splitArr[2];
+            }
+            function getTableData(){
+                getDataFn();
+                $.ajax({
+                    "url":"../json/test.json",
+                    success:function(result){
+                        renderTableData(result.rows);
+                    }
+                })
+            }
+            getTableData();
+
+        });
+        //  渲染表内容
+
+    </script>
+</body>
+</html>

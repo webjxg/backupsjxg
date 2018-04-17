@@ -27,6 +27,7 @@
         }
         .ibox-content:nth-of-type(2){
             height: 668px;
+            width: 300px;
             float:left;
             margin-right: 20px;
 
@@ -50,40 +51,31 @@
             <div class="clearfix">
                 <div class="apsType-box pull-left mgb-10">
                     <ul class="apsType-linkage">
-                        <li class="job">
-                            工作：
-                            <select name="job" id="job">
-                                <option value="">请选择</option>
-                                <option value="id0001">原料</option>
-                                <option value="id0002">加工</option>
-                                <option value="id0003">生产</option>
-                                <option value="id0004">销售</option>
-                            </select>
-                        </li>
-                        <li class="rank">
-                            指令级别：
-                            <select name="rank" id="rank">
-                                <option value="">请选择</option>
-                                <option value="id0005">一级</option>
-                                <option value="id0006">二级</option>
-                                <option value="id0007">三级</option>
-                                <option value="id0008">四级</option>
+                        <li class="proc">
+                            工序：
+                            <select name="proc" id="proc">
+                                <option value="">--请选择--</option>
                             </select>
                         </li>
                         <li class="grade">
-                            指令分类：
+                            指令级别：
                             <select name="grade" id="grade">
                                 <option value="">请选择</option>
-                                <option value="id0010">调度指令</option>
-                                <option value="id0011">计划指令</option>
-                                <option value="id0012">原料加工指令</option>
-                                <option value="id0013">厉害了指令</option>
+                                <option value="1">一级</option>
+                                <option value="2">二级</option>
+                                <option value="3">三级</option>
+                            </select>
+                        </li>
+                        <li class="kind">
+                            指令分类：
+                            <select name="kind" id="kind">
+                                <option value="">请选择</option>
                             </select>
                         </li>
                     </ul>
                 </div>
                 <div class="pull-right btn-box mgb-20">
-                    <button class="btn btn-add " id="btn-add" type="button" onclick="window.location.href='./disCommandsIndex.html'">指令添加</button>
+                    <button class="btn btn-add " id="btn-add" type="button" >指令添加</button>
                 </div>
             </div>
         </div>
@@ -120,13 +112,98 @@
 
 <script>
     $(document).ready(function(){
-//        page='orgInner.html';
         $('#officeContent').attr('src','./createInsInner.html');
-        ajaxToServer1('/api/aps/Dict/tree',{},function (da) {
+        getOption();
+        ajaxproc();
+        ajaxkind();
+        reloadZtree('#proc','/api/ctrl/BaseDirective/getZTtree');
+        reloadZtree('#kind','/api/ctrl/BaseDirective/getZTtree');
+        reloadZtree('#grade','/api/ctrl/BaseDirective/getZTtree');
+        $('#btn-add').click(function () {
+            openEditDialog('添加指令', './proDis/createInsCV.html?level=0&id=""', '462px', '425px')
+        });
+
+
+
+    });
+
+    //获取下拉菜单
+    function getOption() {
+        var procValue=$('#proc').val(), gradeValue=$('#grade').val(),kindValue=$('#kind').val();
+            data={
+            "proc":procValue,
+            "grade":gradeValue,
+            "kind":kindValue
+             };
+        var dat=JSON.stringify(data);
+        ajaxToServer('/api/ctrl/BaseDirective/getZTtree',dat,function (da) {
             zTree(da.rows)
         });
         reloadZtree();
-    });
+    }
+
+
+    //获取工序
+    function ajaxproc(){
+        ajaxToServerS('/api/sys/SysOrg/selectGx/3',{},function (result) {
+            if(result.success){
+                var rows = result.rows;
+                appendOptionsValue($('#proc'), rows, 'code', 'name');
+            }else{
+                layer.msg(result.message);
+            }
+        });
+
+    }
+
+    //获取指令分类
+    function ajaxkind() {
+        ajaxToServerS('/api/sys/SysDict/type/directiveCassifyType',{},function (result) {
+            if(result.success){
+                var rows = result.rows;
+                appendOptionsValue($('#kind'), rows, 'value', 'label');
+            }else{
+                layer.msg(result.message);
+            }
+        });
+    }
+
+    //8080 admin-api端口专用ajax
+    function ajaxToServerS(url, data, callbackFun){
+        var layerIndex = layer.load(2);
+        url = url.toLowerCase().indexOf("http://") == 0? url : ("http://114.115.165.184:8080/admin-api" + url);
+        $.ajax({
+            headers:{
+                Accept: "application/json; charset=utf-8",
+                // Authorization: getCookie("token_type")+" " +getCookie("authorization")，
+                Authorization: "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlzcyI6ImFkbWluIiwiYXVkIjoiQWRtaW4gSldUIE9ubGluZSJ9.0fEB0SHaUfc10ARex-BCLPmOxbbr5vgcMfvivQKY1Rc"
+            },
+            type: "post",
+            url: url,
+            data: data,
+            dataType: 'json',
+            contentType:'application/json',
+            success: function(result){
+                layer.close(layerIndex);
+                if(callbackFun){
+                    callbackFun(result);
+                }
+            },
+            error:function(){
+                layer.close(layerIndex);
+                layer.msg('请求服务器异常.');
+            }
+        });
+    }
+
+    //选择框变更后刷新ztree数据
+    function reloadZtree(item,url){
+        $(item).change(function () {
+            getOption();
+        });
+    }
+
+
     //ztree渲染
     function zTree(da) {
         var zTreeObj;
@@ -146,7 +223,7 @@
             callback: {
                 onClick: function (e, treeId, node){
                     if(node.id){
-                        rendersun(node.id)
+                        rendersun(node.id,node.level)
                     }
                 }
             }
@@ -159,32 +236,10 @@
 
     }
 
-    //选择框变更后ztree刷新数据
-    function reloadZtree(){
-        $('#job').change(function () {
-            ajaxToServer1('/api/aps/Dict/tree/',{},function (da) {
-                zTree(da.rows)
-            });
-        });
-        $('#rank').change(function () {
-            ajaxToServer1('/api/aps/Dict/tree/',{},function (da) {
-                zTree(da.rows)
-            });
-        });
-        $('#grade').change(function () {
-            ajaxToServer1('/api/aps/Dict/tree/',{},function (da) {
-                zTree(da.rows)
-            });
-        })
-    }
-
-
-
-
 
     //点ztree传值id
-    function rendersun(data) {
-        $('#officeContent')[0].contentWindow.updatason(data);
+    function rendersun(data,level) {
+        $('#officeContent')[0].contentWindow.updatason(data,level);
     }
 </script>
 

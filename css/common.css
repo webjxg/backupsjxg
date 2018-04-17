@@ -19,6 +19,9 @@ html,body,#wrapper{ height: 100%;}
 #wrapper{
   overflow: hidden;
 }
+.bg-f3{
+  background: #f3f3f3;
+}
 ::-webkit-scrollbar-track {
   background-color: red;
 }
@@ -30,6 +33,7 @@ html,body,#wrapper{ height: 100%;}
   border-radius: 15px;
 }
 iframe{border:none;}
+.wrapper{min-height:100%;}
 .wrapper-content{
   padding:20px 14px 14px 20px;
 }
@@ -133,6 +137,24 @@ iframe{border:none;}
 
 table.treeTable{
   font-size:14px;
+}
+
+.titName {
+  padding-left: 10px;
+  position: relative;
+  font-size: 16px;
+  height: 30px;
+  line-height: 30px;
+}
+.titName:before{
+  content: "";
+  width: 4px;
+  height: 20px;
+  background: #1ab394;
+  position: absolute;
+  top: 50%;
+  left: 0;
+  margin-top: -10px;
 }
 
 

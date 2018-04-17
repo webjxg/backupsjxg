@@ -52,6 +52,7 @@ function ajaxToServer(url, data, callbackFun){//传送的参数是josnString时
         dataType: 'json',
         contentType:'application/json',
         success: function(result){
+            console.log(result);
             layer.close(layerIndex);
             if(callbackFun){
                 callbackFun(result);

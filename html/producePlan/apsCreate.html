@@ -142,7 +142,6 @@
             $month = apsType[1];
             $week = $("#apsWeek").val();
             $status =$("#apsState").val();
-            console.log($year,$month,$week,$type,$status)
         }
         window.pageLoad = function(){
         console.log($("#apsState").val());
@@ -154,7 +153,6 @@
                 week: $week,
                 status: $status
             };
-            console.log(data);
           /*  Page.init("/api/aps/ApsPlan/page",data,true,function(tableData){
                 renderTableData(tableData);
                 $('.btn-check').click(function(){

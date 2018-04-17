@@ -10,7 +10,7 @@ $(function(){
             var str = getListHTML(navData,1);
             $("#side-menu").append(str).metisMenu();
             loadFn();
-            var sideMenu = $("#side-menu li:first"),
+            /*var sideMenu = $("#side-menu li:first"),
                 lev1Len = sideMenu.has("ul").children("ul").length;
             lev1A = sideMenu.find("a:first");
             if(lev1Len >= 1){
@@ -25,7 +25,7 @@ $(function(){
                 }
             }else{
                 lev1A.trigger('click');
-            }
+            }*/
 
         },
         error : function(err) {

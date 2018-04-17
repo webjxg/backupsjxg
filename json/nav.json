@@ -217,6 +217,34 @@
           "menu_sub": "1",
           "href": "../html/proDis/giveOrdersIndex.html",
           "children": []
+        },
+        {
+          "iconName": "",
+          "name": "交接班记录",
+          "menu_sub": "1",
+          "href": "../html/proDis/record.html",
+          "children": []
+        },
+        {
+          "iconName": "",
+          "name": "指令查看",
+          "menu_sub": "1",
+          "href": "../html/proDis/ordercheck.html",
+          "children": []
+        },
+        {
+          "iconName": "",
+          "name": "指令监控",
+          "menu_sub": "1",
+          "href": "../html/proDis/ordermonitoring.html",
+          "children": []
+        },
+        {
+          "iconName": "",
+          "name": "指令监控",
+          "menu_sub": "1",
+          "href": "../html/proDis/ordertailafter.html",
+          "children": []
         }
       ]
     },

@@ -39,62 +39,59 @@
 <script src="../../js/customForm-aps.js"></script>
 
 <script>
-    function updatason(node){
-        ajaxToServer("/api/aps/Dict/ajaxTreeJson/"+node,{},function(tableData){
+    function updatason(node,level){
+        var data={
+            "id":node
+        };
+        var da=JSON.stringify(data)
+        ajaxToServer("/api/ctrl/BaseDirective/rightList/",da,function(tableData){
             renderTableData(tableData);
-            console.log(tableData);
-            clickButton(node);
+            clickButton(node,level);
         })
     }
     window.pageLoad= function () {
-        ajaxToServer("/api/aps/Dict/ajaxTreeJson/0",{},function(tableData){
-            renderTableData(tableData);
-            console.log(tableData);
-            clickButton();
-        })
+
     };
     pageLoad();
     //按钮操作集合
-    function clickButton(node) {
+    function clickButton(node,level) {
         $('.btn-addson').click(function(){
             var id = $(this).parents("tr").find('.i-Checks').attr('id');
-            openEditDialog('添加下级指令','./proDis/createInsCV.html?level=2&id='+id,'462px','425px')
+            openEditDialog('添加下级指令','./proDis/createInsCVAdd.html?level='+level+'&pid='+id,'462px','425px')
         });
         $('.btn-changeI').click(function () {
             var id = $(this).parents("tr").find('.i-Checks').attr('id');
-            openEditDialog('修改指令', './proDis/createInsCV.html?level=2&id=' + id, '462px', '425px')
+            openEditDialog('修改指令', './proDis/createInsCV.html?level='+level+'&id=' + id, '462px', '425px')
         });
         $('.btn-add').click(function(){
             var id = $(this).parents("tr").find('.i-Checks').attr('id');
-            openEditDialog('添加指令','./proDis/createInsCV.html?level=3&id='+id,'462px','425px')
+            openEditDialog('添加指令','./proDis/createInsCVAdd.html?level='+level+'&id='+id,'462px','425px')
         });
         $('.btn-change').click(function () {
             var id = $(this).parents("tr").find('.i-Checks').attr('id');
-            openEditDialog('修改指令', './proDis/createInsCV.html?level=3&id=' + id, '462px', '425px')
+            openEditDialog('修改指令', './proDis/createInsCV.html?level='+level+'&id=' + id, '462px', '425px')
         });
         $('.btn-delete').click(function () {
-            var id = $(this).parents("tr").find('.i-Checks').attr('id');
-            deleteIt('确定要删除该指令吗', '/api/aps/Dict/delete/'+id)
+            deleteIt('确定要删除该指令吗', '/api/ctrl/BaseDirective/delete/'+node);
+            window.location.reload()
         });
 
     }
     //渲染表
     function renderTableData(data) {
-        console.log(data);
-                                                    //↓接口到后修改↓
         var tablehead="<tr>" +
-                            "<td style='border:none' >"+data.message+"</td>"+
+                            "<td class='i-Checks' style='border:none' id='" + data.pList[0].id+"'>"+data.pList[0].content+"</td>"+
                             "<td>"+
                             " <a class='btn bg-ffa82d btn-addson'><i class='fa fa-edit'></i>添加子级</a>" +
                             " <a class='btn bg-f75c5c btn-delete'><i class='fa fa-trash'></i> 删除</a>"  +
                             " <a class='btn bg-62b5e9 btn-changeI'><i class='fa fa-edit'></i>修改</a>" +
                             "</td>"+
                       "</tr>";
-        var datas=data.rows;
+        var datas=data.childList;
         var tableStr = "";
         for (var i = 0; i < datas.length; i++) {
             tableStr += "<tr class='alignCenter' >"
-                            + "<td class='i-Checks' id='" + datas[i].id + "'>" + datas[i].itemName + "</td>" +
+                            + "<td class='i-Checks' id='" + datas[i].id + "'>" + datas[i].content + "</td>" +
                             "<td>"+
                             " <a class='btn bg-ffa82d btn-add'><i class='fa fa-edit'></i>添加</a>" +
                             " <a class='btn bg-f75c5c btn-delete'><i class='fa fa-trash'></i> 删除</a>"  +

@@ -13,23 +13,6 @@
     <link rel="stylesheet" href="../../css/customDatagrid.css">
     <link rel="stylesheet" href="../../css/aps.css">
 </head>
-<style>
-    .datagrid{
-        overflow: hidden;
-    }
-    .datagrid-header-row td{
-        color: #fff;
-        background-color: #1AB394;
-        font-size: 20px;
-    }
-    .datagrid-header td.datagrid-header-over {
-        color: #fff;
-        background-color: #1AB394;
-        font-size: 20px;
-    }
-
-</style>
-
 <body>
 <div  class="wrapper wrapper-content ibox-content">
     <div class="ibox">
@@ -39,19 +22,10 @@
                     <div>
                         <h1 class="titName">复晟铝业年生产经营计划</h1>
                     </div>
-                    <div class="pull-left">
-                        <button class="btn btn-primary bg-ffa82d  btn-back" id="back-btn"><i
-                                class="fa fa-check-square-o"></i> 返回
-                        </button>
-                    </div>
-                    <div class="pull-right">
-                        <button class="btn btn-save">保存</button>
-                        <button class="btn btn-save">提交</button>
-                    </div>
                 </div>
             </div>
             <div class="tableItemBox" >
-                <table id="td0"  class="tableItem"></table>
+                <table id="td0"  class="tableItem" title="年计划"></table>
             </div>
         </div>
     </div>
@@ -70,15 +44,7 @@
 <script src="../../js/dataGridCustom.js"></script>
 <script src="../../js/customForm-aps.js"></script>
 <script>
-    //返回按钮
-    var check=getQueryString('check');
-    if(check==0){
-        $('#back-btn').hide();
-        $('.btn-save').hide();
-    }
-    $(".btn-back").click(function () {
-        window.history.back()
-    });
+
     //渲染列表
     var planarr = [];
     var arr = [];

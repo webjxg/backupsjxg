@@ -84,95 +84,48 @@
                 <input type="text" name="dpWeek" id="dpWeek" hidden="hidden">
             </div>
 
-            <!--修改按钮预留-->
-
-
-            <!--<div class="pull-right">-->
-                <!--<input type="hidden" name="state" id="state" value>-->
-                <!--<button class="btn btn-primary bg-ffa82d  btn-submit" id="submit-btn"><i-->
-                        <!--class="fa fa-check-square-o"></i> 递交-->
-                <!--</button>-->
-                <!--<button class="btn btn-primary bg-ffa82d btn-sav" id="save-btn"><i-->
-                        <!--class="fa fa-save"></i> 暂存-->
-                <!--</button>-->
-            <!--</div>-->
         </div>
     </div>
     <!--表格区-->
     <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
         <!--班计划-->
         <div class="panel panel-default ">
-            <div class="panel-heading" style="font-size: 20px;background-color: #1AB394;"
-                 onclick="$('div.datagrid:eq(0)').toggle(500)">
-                <span>班计划</span>
-                <a style="font-size: 25px; color:white; float: right;">
-                    <i class="fa fa-navicon"></i>
-                </a>
-            </div>
             <div class="tableItemBox">
                 <table id="td0"
-                       class="table-striped table-bordered table-hover table-condensed dataTables-example dataTable tableItem">
+                       class="table-striped table-bordered table-hover table-condensed dataTables-example dataTable tableItem" title="班计划">
                 </table>
             </div>
         </div>
         <!--产量-->
         <div class="panel panel-default">
-            <div class="panel-heading" onclick="$('div.datagrid:eq(1)').toggle(500)" role="tablist"
-                 aria-multiselectable="true" style="font-size: 20px;background-color: #1AB394;">
-                <span>产量计划</span>
-                <a style="font-size: 25px; color:white; float: right;">
-                    <i class="fa fa-navicon"></i>
-                </a>
-            </div>
             <div class="tableItemBox">
                 <table id="td1"
-                       class="table-striped table-bordered table-hover table-condensed dataTables-example dataTable tableItem ">
+                       class="table-striped table-bordered table-hover table-condensed dataTables-example dataTable tableItem " title="产量计划">
                 </table>
             </div>
         </div>
 
         <!--质量指标计划-->
         <div class="panel panel-default">
-            <div class="panel-heading" style="font-size: 20px;background-color: #1AB394;"
-                 onclick="$('div.datagrid:eq(2)').toggle(500)">
-                <span>质量指标计划</span>
-                <a style="font-size: 25px; color:white; float: right;">
-                    <i class="fa fa-navicon"></i>
-                </a>
-            </div>
             <div class="tableItemBox">
                 <table id="td2"
-                       class="table-striped table-bordered table-hover table-condensed dataTables-example dataTable">
+                       class="table-striped table-bordered table-hover table-condensed dataTables-example dataTable"  title="质量指标计划">
                 </table>
             </div>
         </div>
         <!--技术指标计划-->
         <div class="panel panel-default">
-            <div class="panel-heading" style="font-size: 20px;background-color: #1AB394;"
-                 onclick="$('div.datagrid:eq(3)').toggle(500)">
-                <span>技术指标计划</span>
-                <a style="font-size: 25px; color:white; float: right;">
-                    <i class="fa fa-navicon"></i>
-                </a>
-            </div>
             <div class="tableItemBox">
                 <table id="td3"
-                       class="table-striped table-bordered table-hover table-condensed dataTables-example dataTable">
+                       class="table-striped table-bordered table-hover table-condensed dataTables-example dataTable" title="技术指标计划">
                 </table>
             </div>
         </div>
         <!--各项单耗指标计划-->
         <div class="panel panel-default">
-            <div class="panel-heading" style="font-size: 20px;background-color: #1AB394;"
-                 onclick="$('div.datagrid:eq(4)').toggle(500)">
-                <span>各项单耗指标计划</span>
-                <a style="font-size: 25px; color:white; float: right;">
-                    <i class="fa fa-navicon"></i>
-                </a>
-            </div>
             <div class="tableItemBox">
                 <table id="td4"
-                       class="table-striped table-bordered table-hover table-condensed dataTables-example dataTable">
+                       class="table-striped table-bordered table-hover table-condensed dataTables-example dataTable" title="各项单耗指标计划">
                 </table>
             </div>
         </div>
@@ -195,15 +148,15 @@
         var dpYear=getQueryString('year'),dpMonth=getQueryString('month'),dpWeek=getQueryString('week');
         tabledatagrid(dpYear,dpMonth,dpWeek);
         $('#td0,#td1,#td2,#td3,#td4').datagrid('hideColumn', 'id');
-//        $(".btn-sav").click(function () {
-//            btnSubSave(0);
-//        });
-//        $(".btn-submit").click(function () {
-//            btnSubSave(1);
-//
-//        });
+        $(".btn-sav").click(function () {
+            btnSubSave(0);
+        });
+        $(".btn-submit").click(function () {
+            btnSubSave(1);
+
+        });
         $(".btn-back").click(function () {
-            window.location.href = "./apsCreate.html";
+            window.history.back()
         });
 
     });
@@ -321,10 +274,11 @@
                     field: 'weekPlan',
                     title: '周计划',
                     width: 100,
-                    align: 'center'
+                    align: 'center',
+                    editor: {type: 'numberbox', options: {precision: 1}}
                 },
-                {field: 'dayPlan', title: '日计划',  width: 100, align: 'center'},
-                {field: 'classPlan', title: '班计划',  width: 150, align: 'center'}
+                {field: 'dayPlan', title: '日计划', editor: 'numberbox', width: 100, align: 'center'},
+                {field: 'classPlan', title: '班计划', editor: 'text', width: 150, align: 'center'}
             ]],
             onAfterEdit: function (rowIndex, rowData, changes) {
                 dataGridObj.pushRowData(rowData);
@@ -354,10 +308,11 @@
                     field: 'mouthPlan',
                     title: '月计划',
                     width: 100,
-                    align: 'center'
+                    align: 'center',
+                    editor: {type: 'numberbox', options: {precision: 1}}
                 },
-                {field: 'weekPlan', title: '周计划', width: 100, align: 'center'},
-                {field: 'dayPlan', title: '日计划', width: 150, align: 'center'},
+                {field: 'weekPlan', title: '周计划', editor: 'numberbox', width: 100, align: 'center'},
+                {field: 'dayPlan', title: '日计划', editor: 'text', width: 150, align: 'center'},
             ]],
             onAfterEdit: function (rowIndex, rowData, changes) {
                 dataGridObj.pushRowData(rowData);
@@ -381,26 +336,27 @@
             },
             columns: [[
                 {field: 'id', title: 'id', hideColumn: 'id'},
-                {field: 'pName', title: '名称', width: 100, align: 'center'},
+                {field: 'pname', title: '名称', width: 100, align: 'center'},
                 {field: 'itemName', title: '项目', width: 100, align: 'center'},
                 {field: 'itemUnit', title: '单位', width: 100, align: 'center'},
                 {
                     field: 'weekPlan',
                     title: '周计划',
                     width: 100,
-                    align: 'center'
+                    align: 'center',
+                    editor: {type: 'numberbox', options: {precision: 1}}
                 },
-                {field: 'dayPlan', title: '日计划',  width: 100, align: 'center'},
-                {field: 'classPlan', title: '班计划', width: 150, align: 'center'},
+                {field: 'dayPlan', title: '日计划', editor: 'numberbox', width: 100, align: 'center'},
+                {field: 'classPlan', title: '班计划', editor: 'text', width: 150, align: 'center'},
             ]],
             onAfterEdit: function (rowIndex, rowData, changes) {
                 dataGridObj.pushRowData(rowData);
                 dataGridObj.setEditIndex("#td2", undefined);
-                dataGridObj.mergeCells(loadedData,"#td2","pName");
+                dataGridObj.mergeCells(loadedData,"#td2","pname");
             },
             onLoadSuccess: function(data){                      //data是默认的表格加载数据，包括rows和Total
                 loadedData = data;
-                dataGridObj.mergeCells(data,"#td2","pName");
+                dataGridObj.mergeCells(data,"#td2","pname");
             },toolbar: [{
                 text: '存3', iconCls: 'icon-save', handler: function () {
                     //保存时结束当前编辑的行，自动触发onAfterEdit事件如果要与后台交互可将数据通过Ajax提交后台
@@ -425,10 +381,11 @@
                     field: 'mouthPlan',
                     title: '月计划',
                     width: 100,
-                    align: 'center'
+                    align: 'center',
+                    editor: {type: 'numberbox', options: {precision: 1}}
                 },
-                {field: 'weekPlan', title: '周计划', width: 100, align: 'center'},
-                {field: 'dayPlan', title: '日计划', width: 150, align: 'center'},
+                {field: 'weekPlan', title: '周计划', editor: 'numberbox', width: 100, align: 'center'},
+                {field: 'dayPlan', title: '日计划', editor: 'text', width: 150, align: 'center'},
             ]],
             onAfterEdit: function (rowIndex, rowData, changes) {
                 dataGridObj.pushRowData(rowData);
@@ -457,10 +414,11 @@
                     field: 'mouthPlan',
                     title: '月计划',
                     width: 100,
-                    align: 'center'
+                    align: 'center',
+                    editor: {type: 'numberbox', options: {precision: 1}}
                 },
-                {field: 'weekPlan', title: '周计划', width: 100, align: 'center'},
-                {field: 'dayPlan', title: '日计划', width: 150, align: 'center'},
+                {field: 'weekPlan', title: '周计划', editor: 'numberbox', width: 100, align: 'center'},
+                {field: 'dayPlan', title: '日计划', editor: 'text', width: 150, align: 'center'},
             ]],
             onAfterEdit: function (rowIndex, rowData, changes) {
                 dataGridObj.pushRowData(rowData);
@@ -475,7 +433,7 @@
         $('#td0,#td1,#td2,#td3,#td4').datagrid('hideColumn', 'id');
     }
     //暂存递交
-    /*function btnSubSave(status) {
+    function btnSubSave(status) {
         var len = $(".tableItemBox").length;
         for (var i = 0; i < len; i++) {
             $("#td" + i).parents('.datagrid-view').siblings(".datagrid-toolbar").find(".l-btn-text").trigger('click');
@@ -502,8 +460,7 @@
                 layer.msg(msg.message)
             }
         }
-        window.location.href = "./apsCreate.html";
-    }*/
+    }
 
 
 

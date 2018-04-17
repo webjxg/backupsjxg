@@ -26,7 +26,8 @@
 <body>
 <i id="btnMenu" class="icon-th-list" style="cursor:pointer;float:right;margin:10px;"></i>
 <form id="inputForm" class="form-horizontal" action="/api/ctrl/BaseDirective/save" method="post">
-    <input id="id" name="id" type="hidden" />
+    <input id="pid" name="parentId" type="hidden" />
+    <input id="id" name="Id" type="hidden" />
     <table class="table table-bordered  table-condensed dataTables-example dataTable no-footer">
         <tbody>
         <tr>
@@ -34,7 +35,7 @@
 
             <td class="width-35">
                 <input type="hidden" name="processId" id="processId">
-                <select name="proc" id="proc" class="form-control">
+                <select name="pro" id="pro" class="form-control">
                     <option value="">--请选择--</option>
                 </select>
             </td>
@@ -92,42 +93,18 @@
     $(document).ready(function() {
         ajaxproc();
         ajaxkind();
-        var id = getQueryString('id');
-        var level=getQueryString('level');
-        $('#level').val(level);
-        console.log(id,level);
-        $('#id').val(id);
-        if (id) {
-            /*此处后端接口  id为弹出窗口自带的id 通过浏览器方法传参得到*/
-            var ids={
-                "id":id
-            };
-            var url = "/api/ctrl/BaseDirective/form/";
-            ajaxToServer(url,JSON.stringify(ids), function (result) {
-                console.log(result); //查看请求回来的参数
-                if (result.success) {
-                    renderData(result.baseDirective, $('#inputForm'));
-                    if(level==0){
-                        $('#grade').val('一级菜单');
-                    }else if(level==1){
-                        $('#grade').val('二级菜单');
-                    }else{
-                        $('#grade').val('三级菜单');
-                    }
-                } else {
-                    layer.msg(result.message);
-                }
+        var pid = getQueryString('pid');
+        var level = getQueryString('level');
 
-            });
-        }else {
-            if (level == 0) {
-                $('#grade').val('一级菜单');
-            } else if (level == 1) {
-                $('#grade').val('二级菜单');
-            } else {
-                $('#grade').val('三级菜单');
-            }
+        $('#level').val(level+1);
+        if (level == 1) {
+            $('#grade').val('一级菜单');
+        } else if (level == 2) {
+            $('#grade').val('二级菜单');
+        } else {
+            $('#grade').val('三级菜单');
         }
+        $('#pid').val(pid);
     });
 
     //8080 admin-api端口专用ajax
@@ -162,7 +139,7 @@
         ajaxToServerS('/api/sys/SysOrg/selectGx/3',{},function (result) {
             if(result.success){
                 var rows = result.rows;
-                appendOptionsValue($('#proc'), rows, 'code', 'name');
+                appendOptionsValue($('#pro'), rows, 'code', 'name');
             }else{
                 layer.msg(result.message);
             }

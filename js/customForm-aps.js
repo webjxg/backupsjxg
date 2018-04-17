@@ -55,7 +55,6 @@ function ajaxToServer(url, data, callbackFun){
         dataType: 'json',
         contentType:'application/json',
         success: function(result){
-            console.log(result);
             layer.close(layerIndex);
             if(callbackFun){
                 callbackFun(result);
@@ -178,6 +177,34 @@ function refreshActiveTab() {
     }
 
 }
+
+
+/**
+ * 动态添加Select的option
+ */
+function appendOptionsValue(obj, rows, valueField, labelFile){
+    if(typeof(obj) == "string"){
+        obj = $(obj);
+    }
+    if(rows && rows.length > 0){
+        var options = new Array();
+        $(rows).each(function(i,o){
+            options.push({'value':o[valueField], 'label':o[labelFile]});
+        });
+        appendOptions(obj, options);
+    }
+}
+
+// 追加select的options
+function appendOptions(obj, options){
+    if(options){
+        $(options).each(function(i,o){
+            $(obj).append("<option value='"+o.value+"'>"+o.label+"</option>");
+        });
+    }
+}
+
+
 
 //动态添加Select的option
 function createSelect(url,appendEl){

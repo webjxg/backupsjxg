@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="../../plugins/font-awesome/css/font-awesome.min.css">
     <link rel="stylesheet" href="../../plugins/datetimepicker/css/bootstrap-datetimepicker.css">
     <!--引入样式-->
-    <link rel="stylesheet" href="../../plugins/layer/theme/default/layer.css"><!--样式-->
+    <link rel="stylesheet" href="../../plugins/layer/theme/default/layer.css">
     <link rel="stylesheet" href="../../css/common.css">
     <link rel="stylesheet" href="../../css/customDataTable.css">
     <link rel="stylesheet" href="../../css/aps.css">
@@ -150,14 +150,43 @@
                 adMonth: $month,
                 status: $status
             };
-           /* Page.init("/api/aps/ApsMonthAdjust/page",data,true,function(tableData){
+            Page.init("/api/aps/ApsMonthAdjust/page",data,true,function(tableData){
                  renderTableData(tableData);
-                 $('.btn-check').click(function(){
-                 var id = $(this).parents("tr").find('.i-checks').attr('id');
-                 openDialog('查看字典','html/systemSettings/dictionaryInner.html?id='+id,'800px','500px')
-                 });
+                //审核
+                $(".btn-review").click(function(){
+                    var attrArr = getAttr($(this));
+                    location.href = "../producePlan/reviewPlans.html?id="+attrArr[0]+"&adYear="+attrArr[1]+"&adMonth="+attrArr[2]+"&status="+attrArr[3];
+                });
+                //查看
+                $(".btn-check").click(function(){
+                    var attrArr = getAttr($(this));
+                    openDialog('查看月计划','producePlan/proTargetPlanView.html?id='+attrArr[0]+'&year='+attrArr[1]+'&month='+attrArr[2],'800px','500px')
+                });
+                //删除
+                $(".btn-delete").click(function(){
+                    var attrArr = getAttr($(this));
+                    deleteItem('确定要删除该计划','/api/aps/ApsMonthAdjust/delete',attrArr[0])
+                });
+                //编辑
+                $(".btn-edit").click(function(){
+                    var attrArr = getAttr($(this));
+                    location.href = '../producePlan/proTargetPlan.html?id='+attrArr[0]+'&year='+attrArr[1]+'&month='+attrArr[2];
+                });
+                //发布
+                $(".btn-issue").click(function(){
+                    var attrArr = getAttr($(this));
+                    var data = {
+                        id:attrArr[0],
+                        status:$(this).attr('data-status')
+                    };
+                    ajaxToServer("/api/aps/ApsYearPlan/update",JSON.stringify(data),function(result){
+                        if(result.success){
+                            pageLoad();
+                        }
+                    });
+                })
 
-             });*/
+             });
            function getAttr(obj){
                    var $iChecks = obj.parents("tr").find('.i-checks'),
                        id = $iChecks.attr('data-id'),
@@ -166,46 +195,6 @@
                        status = $iChecks.attr('data-status');
                    return [id,year,month,status];
            }
-           $.ajax({
-                url:'../../json/test.json',
-                success:function(result){
-                    renderTableData(result.page.rows);
-                    //审核
-                    $(".btn-review").click(function(){
-                        var attrArr = getAttr($(this));
-                        location.href = "../producePlan/reviewPlans.html?id="+attrArr[0]+"&adYear="+attrArr[1]+"&adMonth="+attrArr[2]+"&status="+attrArr[3];
-                    });
-                    //查看
-                    $(".btn-check").click(function(){
-                        var attrArr = getAttr($(this));
-                        openDialog('查看年计划','producePlan/proTargetPlanView.html?id='+attrArr[0]+'&year='+attrArr[1]+'&month='+attrArr[2],'800px','500px')
-                    });
-                    //删除
-                    $(".btn-delete").click(function(){
-                        var attrArr = getAttr($(this));
-                        deleteItem('确定要删除该计划','/api/aps/ApsMonthAdjust/delete',attrArr[0])
-                    });
-                    //编辑
-                    $(".btn-edit").click(function(){
-                        var attrArr = getAttr($(this));
-                        location.href = '../producePlan/proTargetPlan.html?id='+attrArr[0]+'&year='+attrArr[1]+'&month='+attrArr[2];
-                    });
-                    //发布
-                    $(".btn-issue").click(function(){
-                        var attrArr = getAttr($(this));
-                        var data = {
-                            id:attrArr[0],
-                            status:$(this).attr('data-status')
-                        };
-                        ajaxToServer("/api/aps/ApsYearPlan/update",JSON.stringify(data),function(result){
-                            if(result.success){
-                                pageLoad();
-                            }
-                        });
-                    })
-
-                }
-            })
         };
         pageLoad();
         windowclick();
