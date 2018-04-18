@@ -3,8 +3,375 @@
 <head>
     <meta charset="UTF-8">
     <title>月排产页面</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="stylesheet" href="../../plugins/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../plugins/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../../plugins/easyui/themes/default/easyui.css">
+    <link rel="stylesheet" href="../../plugins/easyui/themes/default/datagrid.css">
+    <link rel="stylesheet" href="../../plugins/layer/theme/default/layer.css">
+
+
+    <!--引入样式-->
+    <link rel="stylesheet" href="../../css/common.css">
+    <link rel="stylesheet" href="../../css/customDatagrid.css">
+    <link rel="stylesheet" href="../../css/aps.css">
+    <style>
+        .panel-body{
+            border-top: none;
+            border-top-left-radius: 5px;
+            border-top-right-radius: 5px;
+        }
+        .datagrid-header-inner{
+            background: #1ab394;
+        }
+        .datagrid-header-row td{
+            color:#fff;
+        }
+    </style>
 </head>
 <body>
+<div class="wrapper wrapper-content">
+    <div class="ibox">
+        <div class="ibox-content">
+            <div class="scheduling-option clearfix mgb-15">
+                <div class="pull-right btn-box">
+                    <button class="btn bg-ffa82d" id="btn-build" type="button" data-status="0">排产</button>
+                    <button class="btn " id="btn-save" type="button" data-status="1">提交</button>
 
+                </div>
+                <div class="schOp-item schOp-sc">
+                    <cite><i></i></cite>
+                    <span>
+                        <input type="number" id="scValue" value="" placeholder="">
+                        实产合计
+                    </span>
+                </div>
+                <div class="schOp-item schOp-ps">
+                    <cite><i></i></cite>
+                    <span>
+                        <input type="number" id="psValue" value="" placeholder="">
+                        焙烧合计
+                    </span>
+                </div>
+            </div>
+            <div class="dataGridList">
+                <div class="tableItemBox">
+                    <h1 class="titName">装置运转计划</h1>
+                    <table id="td0" class="tableItem" >
+                    </table>
+                </div>
+                <div class="tableItemBox">
+                    <h1 class="titName">原料计划</h1>
+                    <table id="td1" class="tableItem" >
+                    </table>
+                </div>
+                <div class="tableItemBox">
+                    <h1 class="titName">消耗计划</h1>
+                    <table id="td2" class="tableItem" >
+                    </table>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+<!--核心插件-->
+<script src="../../js/jquery-2.2.4.min.js"></script>
+<script src="../../plugins/bootstrap/js/bootstrap.min.js"></script>
+<!--附属插件-->
+<script src="../../plugins/layer/layer.js"></script>
+<script src="../../plugins/easyui/js/jquery.easyui.min.js"></script>
+<!--自定义文件-->
+<script src="../../js/customForm-aps.js"></script>
+<script src="../../js/dataGridCustom.js"></script>
+<script>
+    var year =getQueryString('year');
+    var zzyzjhArr =[],yljhArr = [],xhjhArr=[];  //分别对应装置运转计划、原料计划、消耗计划
+    $(document).ready(function(){
+        var data = {
+            mYear:year
+        };
+        ajaxToServer("/api/aps/ApsMonthPc/queryMonthPc",JSON.stringify(data),function(result){
+            var zzyzjh = result.zzyzjh;
+            var yljh  =result.yljh;
+            var xhjh = result.xhjh;
+          	//装置运转计划
+            for(var i=0;i<zzyzjh.length;i++){
+                var itemmsg = {
+                    "id":zzyzjh[i].id,
+                    "mainId":zzyzjh[i].mainId,
+                    "itemName":zzyzjh[i].itemName,
+                    "value1":zzyzjh[i].value1,
+                    "value2":zzyzjh[i].value2,
+                    "value3":zzyzjh[i].value3,
+                    "value4":zzyzjh[i].value4,
+                    "value5":zzyzjh[i].value5,
+                    "value6":zzyzjh[i].value6,
+                    "value7":zzyzjh[i].value7,
+                    "value8":zzyzjh[i].value8,
+                    "value9":zzyzjh[i].value9,
+                    "value10":zzyzjh[i].value10,
+                    "value11":zzyzjh[i].value11,
+                    "value12":zzyzjh[i].value12,
+                    "valueSum":zzyzjh[i].valueSum
+                };
+             zzyzjhArr.push(itemmsg);
+            }
+            //原料计划
+            for(var i=0;i<yljh.length;i++){
+                var itemmsg = {
+                    "id":yljh[i].id,
+                    "mainId":yljh[i].mainId,
+                    "pName":yljh[i].pName,
+                    "itemName":yljh[i].itemName,
+                    "value1":zzyzjh[i].value1,
+                    "value2":zzyzjh[i].value2,
+                    "value3":zzyzjh[i].value3,
+                    "value4":zzyzjh[i].value4,
+                    "value5":zzyzjh[i].value5,
+                    "value6":zzyzjh[i].value6,
+                    "value7":zzyzjh[i].value7,
+                    "value8":zzyzjh[i].value8,
+                    "value9":zzyzjh[i].value9,
+                    "value10":zzyzjh[i].value10,
+                    "value11":zzyzjh[i].value11,
+                    "value12":zzyzjh[i].value12,
+                    "valueSum":zzyzjh[i].valueSum
+                };
+                yljhArr.push(itemmsg);
+            }
+            //消耗计划
+            for(var i=0;i<xhjh.length;i++){
+                var itemmsg = {
+                    "id":xhjh[i].id,
+                    "mainId":xhjh[i].mainId,
+                    "pName":xhjh[i].pName,
+                    "itemName":xhjh[i].itemName,
+                    "value1":xhjh[i].value1,
+                    "value2":xhjh[i].value2,
+                    "value3":xhjh[i].value3,
+                    "value4":xhjh[i].value4,
+                    "value5":xhjh[i].value5,
+                    "value6":xhjh[i].value6,
+                    "value7":xhjh[i].value7,
+                    "value8":xhjh[i].value8,
+                    "value9":xhjh[i].value9,
+                    "value10":xhjh[i].value10,
+                    "value11":xhjh[i].value11,
+                    "value12":xhjh[i].value12,
+                    "valueSum":xhjh[i].valueSum
+                };
+                xhjhArr.push(itemmsg);
+            }
+            $('#td0').datagrid('loadData',zzyzjhArr);
+            $('#td1').datagrid('loadData',yljhArr);
+            $('#td2').datagrid('loadData',xhjhArr);
+            $("#btn-save").click(function(){
+                var rows = [];
+                $(".tableItemBox").each(function(index,item){
+                    rows = rows.concat($("#td"+index).datagrid("getRows"));
+                });
+                var data={
+                    status:$(this).attr('data-status'),
+                    pcPlans:rows
+                };
+                console.log(data);
+                ajaxToServer("/api/aps/ApsMonthPc/saveMonthInfo",data,function(result){
+                    if(result.success){
+                        refreshActiveTab();
+                    }
+                });
+            });
+            $("#btn-build").click(function(){
+                var $scValue = $.trim($("#scValue").val()), $psValue = $.trim($("#psValue").val());
+                if($scValue !=="" &&  $psValue !==""){
+                    var data = {
+                        mYear:mYear,
+                        scTotal:$scValue,
+                        psTotal:$psValue
+                    };
+                    ajaxToServer1("/api/aps/ApsMonthPc/pcJs",data,function(result){
+                        if(result.success){
+                            location.reload();
+                        }
+                    })
+                }else{
+                    layerAlert("实产合计或焙烧合计数值不能为空!")
+                }
+            });
+        });
+    });
+
+    //装置运转计划
+    $("#td0").datagrid({
+        fitColumns:true,
+        collapsible:true,
+        singleSelect: true,
+        onClickRow: function(index){
+            dataGridObj.startEditing(index,"#td0")
+        },
+        columns:[[
+            {field:'id',title:'id',hideColumn:'id'},
+            {field:'mainId',title:'mainId',hideColumn:'mainId'},
+            {field:'itemName',title:'',width:200,align:'center'},
+            {field:'value1',title:'1月',width:100,align:'center'},
+            {field:'value2',title:'2月',width:100,align:'center'},
+            {field:'value3',title:'3月',width:100,align:'center'},
+            {field:'value4',title:'4月',width:100,align:'center'},
+            {field:'value5',title:'5月',width:100,align:'center'},
+            {field:'value6',title:'6月',width:100,align:'center'},
+            {field:'value7',title:'7月',width:100,align:'center'},
+            {field:'value8',title:'8月',width:100,align:'center'},
+            {field:'value9',title:'9月',width:100,align:'center'},
+            {field:'value10',title:'10月',width:100,align:'center'},
+            {field:'value11',title:'11月',width:100,align:'center'},
+            {field:'value12',title:'12月',width:100,align:'center'},
+            {field:'valueSum',title:'合计',width:100,align:'center'}
+
+        ]],
+        onAfterEdit: function (rowIndex, rowData, changes) {
+            dataGridObj.pushRowData(rowData);
+            dataGridObj.setEditIndex("#td0",undefined);
+        },
+        toolbar: [{
+            text: '保存', iconCls: 'icon-save', handler: function () {
+                //保存时结束当前编辑的行，自动触发onAfterEdit事件如果要与后台交互可将数据通过Ajax提交后台
+                $('#td0').datagrid('endEdit',dataGridObj.getEditIndex("#td0"));
+            }
+        }]
+    });
+    //原料计划
+    $("#td1").datagrid({
+        fitColumns:true,
+        collapsible:true,
+        singleSelect: true,
+        onClickRow: function(index){
+            dataGridObj.startEditing(index,"#td1")
+        },
+        //创建table
+        columns:[[
+            {field:'id',title:'id',hideColumn:'id'},
+            {field:'mainId',title:'mainId',hideColumn:'mainId'},
+            {field:'pName',title:'',width:220,align:'center'},
+            {field:'itemName',title:'',width:150,align:'center'},
+            {field:'value1',title:'1月',width:110,align:'center'},
+            {field:'value2',title:'2月',width:110,align:'center'},
+            {field:'value3',title:'3月',width:110,align:'center'},
+            {field:'value4',title:'4月',width:110,align:'center'},
+            {field:'value5',title:'5月',width:110,align:'center'},
+            {field:'value6',title:'6月',width:110,align:'center'},
+            {field:'value7',title:'7月',width:110,align:'center'},
+            {field:'value8',title:'8月',width:110,align:'center'},
+            {field:'value9',title:'9月',width:110,align:'center'},
+            {field:'value10',title:'10月',width:110,align:'center'},
+            {field:'value11',title:'11月',width:110,align:'center'},
+            {field:'value12',title:'12月',width:110,align:'center'},
+            {field:'valueSum',title:'合计',width:130,align:'center'}
+        ]],
+        onAfterEdit: function (rowIndex, rowData, changes) {
+            dataGridObj.pushRowData(rowData);
+            dataGridObj.setEditIndex("#td1",undefined);
+            dataGridObj.mergeCells(loadedData,"#td1","pName");
+        },
+        //合并单元格
+        onLoadSuccess:function (data) {
+            loadedData = data;
+            dataGridObj.mergeCells(data,"#td1","pName");
+        },
+        toolbar: [{
+            text: '保存', iconCls: 'icon-save', handler: function () {
+                //保存时结束当前编辑的行，自动触发onAfterEdit事件如果要与后台交互可将数据通过Ajax提交后台
+                $('#td1').datagrid('endEdit',dataGridObj.getEditIndex("#td1"));
+            }
+        }]
+    });
+    // 消耗计划
+    $("#td2").datagrid({
+        fitColumns:true,
+        collapsible:true,
+        singleSelect: true,
+        onClickRow: function(index){
+            dataGridObj.startEditing(index,"#td2")
+        },
+        //创建table
+        columns:[[
+            {field:'id',title:'id',hideColumn:'id'},
+            {field:'mainId',title:'mainId',hideColumn:'mainId'},
+            {field:'pName',title:'',width:130,align:'center'},
+            {field:'itemName',title:'',width:150,align:'center'},
+            {field:'value1',title:'1月',width:110,align:'center'},
+            {field:'value2',title:'2月',width:110,align:'center'},
+            {field:'value3',title:'3月',width:110,align:'center'},
+            {field:'value4',title:'4月',width:110,align:'center'},
+            {field:'value5',title:'5月',width:110,align:'center'},
+            {field:'value6',title:'6月',width:110,align:'center'},
+            {field:'value7',title:'7月',width:110,align:'center'},
+            {field:'value8',title:'8月',width:110,align:'center'},
+            {field:'value9',title:'9月',width:110,align:'center'},
+            {field:'value10',title:'10月',width:110,align:'center'},
+            {field:'value11',title:'11月',width:110,align:'center'},
+            {field:'value12',title:'12月',width:110,align:'center'},
+            {field:'valueSum',title:'合计',width:120,align:'center'}
+        ]],
+        onAfterEdit: function (rowIndex, rowData, changes) {
+            dataGridObj.pushRowData(rowData);
+            dataGridObj.setEditIndex("#td2",undefined);
+        },
+        toolbar: [{
+            text: '保存', iconCls: 'icon-save', handler: function () {
+                //保存时结束当前编辑的行，自动触发onAfterEdit事件如果要与后台交互可将数据通过Ajax提交后台
+                $('#td2').datagrid('endEdit',dataGridObj.getEditIndex("#td2"));
+            }
+        }]
+    });
+
+
+
+    $(function(){
+        $('#td0,#td1,#td2').datagrid('hideColumn','id');
+        $('#td0,#td1,#td2').datagrid('hideColumn','mainId');
+    });
+    //
+    //点击时获取到信息
+    $(".btn-save").click(function (e) {
+        var btn = $(e.target).context.textContent;
+        if(btn == "保存"){
+            status = "0";
+            addstatus(status)
+        }else{
+            status = "1";
+            addstatus(status)
+        }
+    })
+    //将点击状态添加到数组里边
+    function addstatus(status) {
+        var len = $(".tableItemBox").length;
+        for(var i = 0; i<len;i++){
+            // 给每个虚拟btn添加点击事件
+            $("#td"+i).parents('.datagrid-view').siblings(".datagrid-toolbar").find(".l-btn-text").trigger('click');
+        }
+        var savearr = [];
+        var editItems = dataGridObj.saveItemArr;
+
+        $(editItems).each(function (i) {
+            savearr.push(editItems[i]);
+        });
+        var data={
+            "techPlans":JSON.stringify(editItems),
+            "status":status,
+        };
+        addmsg(data)  //将数据发送给后台
+    }
+    //
+    //        保存将数据发送给后台
+    function addmsg(data){
+        ajaxToServer1("/api/aps/ApsMonthAdjustTech/saveTechInfo",data,function(result){
+        })
+    }
+
+
+
+
+</script>
 </body>
 </html>

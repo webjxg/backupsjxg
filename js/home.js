@@ -493,9 +493,9 @@ myChart3.setOption(option3);
 
 
 function renderTableData(tableData){
-    $('#gxBox').dataTable({
+    $('#treeTable').dataTable({
         "bPaginate": false,
-        "bAutoWidth": true,
+        "bAutoWidth": false,
         "bDestroy":true,
         "paging": false,
         "bProcessing": true,

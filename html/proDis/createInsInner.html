@@ -46,18 +46,14 @@
         var da=JSON.stringify(data)
         ajaxToServer("/api/ctrl/BaseDirective/rightList/",da,function(tableData){
             renderTableData(tableData);
-            clickButton(node,level);
+            clickButton(level);
         })
     }
-    window.pageLoad= function () {
-
-    };
-    pageLoad();
     //按钮操作集合
-    function clickButton(node,level) {
+    function clickButton(level) {
         $('.btn-addson').click(function(){
             var id = $(this).parents("tr").find('.i-Checks').attr('id');
-            openEditDialog('添加下级指令','./proDis/createInsCVAdd.html?level='+level+'&pid='+id,'462px','425px')
+            openEditDialog('添加下级指令','./proDis/createInsCVAdd.html?&pid='+id,'462px','425px')
         });
         $('.btn-changeI').click(function () {
             var id = $(this).parents("tr").find('.i-Checks').attr('id');
@@ -65,15 +61,15 @@
         });
         $('.btn-add').click(function(){
             var id = $(this).parents("tr").find('.i-Checks').attr('id');
-            openEditDialog('添加指令','./proDis/createInsCVAdd.html?level='+level+'&id='+id,'462px','425px')
+            openEditDialog('添加指令','./proDis/createInsCVAdd.html?&id='+id,'462px','425px')
         });
         $('.btn-change').click(function () {
             var id = $(this).parents("tr").find('.i-Checks').attr('id');
             openEditDialog('修改指令', './proDis/createInsCV.html?level='+level+'&id=' + id, '462px', '425px')
         });
         $('.btn-delete').click(function () {
-            deleteIt('确定要删除该指令吗', '/api/ctrl/BaseDirective/delete/'+node);
-            window.location.reload()
+            var id = $(this).parents("tr").find('.i-Checks').attr('id');
+            deleteIt('确定要删除该指令吗', '/api/ctrl/BaseDirective/delete/'+id);
         });
 
     }
@@ -109,9 +105,9 @@
     function deleteIt(mess,url){
         top.layer.confirm(mess, {icon: 3, title:'系统提示'},function(index){
             ajaxToServer1(url,{},function(result){
-                console.log(url,result)
                 if(result.success == true){
                     layer.msg("删除成功");
+                    window.location.reload();
                     var frameActive = top.getActiveTab().attr("name");
                     var obj = $('.fa-refresh', top.window.frames[frameActive].document);
                     if(obj.length == 0){
@@ -123,6 +119,10 @@
             top.layer.close(index);
         });
         return false;
+    }
+
+    function tablehide(){
+        $('#treeTableBody').html();
     }
 
 

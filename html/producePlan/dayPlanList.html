@@ -124,8 +124,6 @@
             $status =$("#apsState").val();
             $month=$('.datePicker').val().split("-")[1];
             $week=$('#apsWeek').val();
-
-
         }
         window.pageLoad = function() {
             getDataFn();
@@ -139,14 +137,6 @@
                 dpWeek: $week,
                 dpMonth:$month
             };
-            /* Page.init("/api/aps/ApsMonthAdjust/page",data,true,function(tableData){
-             renderTableData(tableData);
-             $('.btn-check').click(function(){
-             var id = $(this).parents("tr").find('.i-checks').attr('id');
-             openDialog('查看字典','html/systemSettings/dictionaryInner.html?id='+id,'800px','500px')
-             });
-
-             });*/
             //找到ichecks显示到
             function getAttr(obj) {
                 var $iChecks = obj.parents("tr").find('.i-checks'),
@@ -158,18 +148,14 @@
                 return [id, year,month,week,status];
             }
 
-//            $.ajax({
-//                url:'../../json/test.json',
-//                success:function(result){
             Page.init("/api/aps/DayPlan/page", data, true, function (tableData) {
-                console.log(data,tableData);
+                console.log(tableData);
                 renderTableData(tableData);
                 //查看
                 $(".btn-check").click(function () {
-                    getDataFn()
+                    getDataFn();
                     var attrArr = getAttr($(this));
                     openDialog('查看日计划', 'producePlan/dayPlanCheckIn.html?id=' + attrArr[0] + '&year=' + attrArr[1]+'&month='+attrArr[2]+'&week='+attrArr[3]+'&status='+attrArr[4]+'&check=0', '800px', '500px')
-                        console.log(attrArr);
 
                 });
                 //删除
@@ -179,23 +165,14 @@
                 });
                 //编辑
                 $(".btn-edit").click(function () {
-                    getDataFn()
+                    getDataFn();
                     var attrArr = getAttr($(this));
-                    if ($year == "") {
-                        layerAlert("请选择一个准确的年份!");
-                    }else if ($month == "") {
-                        layerAlert("请选择一个准确的月份!");
-                    }else if ($week == "") {
-                        layerAlert("请选择周数!");
-                    }else {
                     location.href = '../producePlan/dayPlanIndex.html?id=' + attrArr[0] + '&year=' + attrArr[1]+'&month='+attrArr[2]+'&week='+attrArr[3]+'&status='+attrArr[4]
-                    }
-                    console.log(attrArr);
                 });
 
             })
 
-        }
+        };
         pageLoad();
         windowclick();
         //添加
@@ -261,7 +238,7 @@
                         "render": function (data, type, row, meta) {
                             var html = "<a class='btn btn-edit'><i class='fa fa-edit'></i>编辑</a >" +
                                     "<a class='btn btn-delete'><i class='fa fa-trash'></i>删除</a >";
-                            return "<input type='hidden'  id='" + row.id + "' data-type="+row.tYPE+" data-id='"+row.id+"' data-year='"+$year+"' data-month='"+$month+"' data-week='"+$week+"' data-status='"+row.status+"' class='i-checks'>"+
+                            return "<input type='hidden'  id='" + row.id + "' data-type="+row.tYPE+" data-id='"+row.id+"' data-year='"+row.dpYear+"' data-month='"+row.dpMonth+"' data-week='"+row.dpWeek+"' data-status='"+row.status+"' class='i-checks'>"+
                                 "<a class='btn btn-check' ><i class='fa fa-search-plus'></i>查看</a >" +html;
 
                         }

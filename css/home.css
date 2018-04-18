@@ -143,11 +143,16 @@
   height: 30px;
   line-height: 30px; }
 
-#gxBox {
+#treeTable {
   margin: 0; }
 
 .gxBox {
   height: 818px;
   overflow-y: auto; }
+
+.dataPicker-Box .row {
+  margin: 0; }
+  .dataPicker-Box .row .col-sm-12 {
+    padding: 0 !important; }
 
 /*# sourceMappingURL=home.css.map */

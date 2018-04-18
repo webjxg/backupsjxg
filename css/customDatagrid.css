@@ -33,8 +33,13 @@
   font-size: 14px;
   line-height: 30px;
 }
+.datagrid-btable tbody td .datagrid-cell{
+  white-space: normal;
+  word-break: break-all;
+  word-wrap: break-word;
+}
 
-.datagrid-btable tbody tr td:last-child, .datagrid-btable tr td:last-child {
+.datagrid-btable tbody tr td:last-child, .datagrid-btable tr td:last-child,.datagrid-header-row td:last-child{
   border-right: 0;
 }
 

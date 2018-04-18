@@ -23,14 +23,13 @@
                     <div>
                         <h1 class="titName">复晟铝业年生产经营计划</h1>
                     </div>
-                    <div class="pull-left">
-                        <button class="btn btn-primary bg-ffa82d  btn-back" id="back-btn"><i
+                    <div class="clearfix btn-box">
+
+                        <button class="btn btn-save pull-right">提交</button>
+                        <button class="btn btn-save pull-right">保存</button>
+                        <button class="btn btn-back pull-right" id="back-btn"><i
                                 class="fa fa-check-square-o"></i> 返回
                         </button>
-                    </div>
-                    <div class="pull-right">
-                        <button class="btn btn-save">保存</button>
-                        <button class="btn btn-save">提交</button>
                     </div>
                 </div>
             </div>
@@ -75,15 +74,13 @@
         };
         var datastring = JSON.stringify(data)
         ajaxToServer("/api/aps/ApsYearPlan/queryYearPlan",datastring,function (result) {
-            console.log(result)
             planarr.push(result.cpcl);
             planarr.push(result.cpxl);
-            planarr.push(result.zyxhzbjh)
-            createTbody(planarr)
+            planarr.push(result.zyxhzbjh);
+            createTbody(planarr);
         })
     }
     function createTbody(planarr) {
-        console.log(planarr)
         for(var i=0;i<planarr.length;i++){
             for(var j=0;j<planarr[i].length;j++){
                 msgobj = {
@@ -100,14 +97,12 @@
                     "mainId":planarr[i][j].mainId
 
                 };
-                // console.log(msgobj)
                 arr.push(msgobj)
             }
             $('#td0').datagrid('loadData',arr);
         }
     };
     var $yearupdata =getQueryString('year');
-    console.log($yearupdata);
     $("#td0").datagrid({
         fitColumns:true,
         collapsible:true,
@@ -118,13 +113,14 @@
         //创建table
         columns:[[
             {field:'id',title:'id',hideColumn:'id'},
+            {field:'mainId',title:'mainId',hideColumn:'mainId'},
             {field:'groupName',title:'生产计划',width:100,align:'center'},
             {field:'itemName',title:'项目',width:100,align:'center'},
             {field:'itemUnit',title:'单位',width:100,align:'center'},
             {field:'ndyjcl',title:$yearupdata-1+'年预计产量',editor:'text',width:100,align:'center'},
             {field:'yjdsjdcl',title:'预计第四季度产量',editor:'text',width:100,align:'center'},
-            {field:'ncl',title:$yearupdata+'年产量',editor:'text',width:100,align:'center'},
-            {field:'mainId',title:'mainId',hideColumn:'mainId'}
+            {field:'ncl',title:$yearupdata+'年产量',editor:'text',width:100,align:'center'}
+
         ]],
         onAfterEdit: function (rowIndex, rowData, changes) {
             dataGridObj.pushRowData(rowData);
@@ -150,9 +146,7 @@
     });
     // 点击按钮并添加点击状态
     $(".btn-save").click(function (e) {
-        console.log(e);
         var btn = $(e.target).context.textContent;
-        console.log(btn);
         if(btn == "保存"){
             status = "0";
             addstatus(status)
@@ -164,13 +158,10 @@
     //将点击状态添加到数组里边
     function addstatus(status) {
         var len = $(".tableItemBox").length;
-        // console.log(len)
         for(var i = 0; i<len;i++){
-            console.log($("#td"+i))
             // 给每个虚拟btn添加点击事件
             $("#td"+i).parents('.datagrid-view').siblings(".datagrid-toolbar").find(".l-btn-text").trigger('click');
         }
-        console.log(status);
         var savearr = [];
         var editItems = dataGridObj.saveItemArr;
 
@@ -187,7 +178,6 @@
 
     function sendmsg(data) {
         ajaxToServer1("/api/aps/ApsYearPlan/saveYearInfo",data,function (result) {
-            console.log(data,result);
         });
     }
 </script>

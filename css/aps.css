@@ -393,4 +393,50 @@ label.error {
   line-height: 30px;
   text-align: center; }
 
+.schOp-item {
+  padding: 40px 24px;
+  height: 76px;
+  overflow: hidden;
+  -webkit-box-sizing: content-box;
+  -moz-box-sizing: content-box;
+  box-sizing: content-box;
+  background: #f7f7f7;
+  color: #333;
+  text-align: center;
+  float: left;
+  margin-right: 20px; }
+  .schOp-item i {
+    display: block;
+    width: 38px;
+    height: 38px;
+    background-image: url(../images/proPlanSprite.png);
+    background-repeat: no-repeat;
+    margin: 19px auto; }
+  .schOp-item.schOp-sc cite {
+    background: #72b6c3; }
+  .schOp-item.schOp-sc i {
+    background-position: 0 0; }
+  .schOp-item.schOp-ps cite {
+    background: #25c9c1; }
+  .schOp-item.schOp-ps i {
+    background-position: -38px 0; }
+  .schOp-item cite {
+    display: inline-block;
+    vertical-align: middle;
+    width: 76px;
+    height: 76px;
+    border-radius: 50%;
+    margin-right: 5px; }
+  .schOp-item span {
+    font-size: 14px;
+    display: inline-block;
+    vertical-align: middle; }
+    .schOp-item span input {
+      width: 134px;
+      height: 33px;
+      padding: 2px 8px;
+      display: block;
+      font-size: 28px;
+      margin-bottom: 5px; }
+
 /*# sourceMappingURL=aps.css.map */

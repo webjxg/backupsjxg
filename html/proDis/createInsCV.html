@@ -42,8 +42,12 @@
         <tr>
             <td class="width-15" ><label class="pull-right">级别:</label></td>
             <td class="width-35">
-                <input type="text" readonly="readonly" name="level" id="grade" class="form-control">
-                <input type="hidden" readonly="readonly" name="grade" id="level">
+                <select name="grade" id="grade" class="form-control" disabled="disabled">
+                    <option value="">--请选择--</option>
+                    <option value="1">一级菜单</option>
+                    <option value="2">二级菜单</option>
+                    <option value="3">三级菜单</option>
+                </select>
             </td>
         </tr>
         <tr>
@@ -93,9 +97,6 @@
         ajaxproc();
         ajaxkind();
         var id = getQueryString('id');
-        var level=getQueryString('level');
-        $('#level').val(level);
-        console.log(id,level);
         $('#id').val(id);
         if (id) {
             /*此处后端接口  id为弹出窗口自带的id 通过浏览器方法传参得到*/
@@ -104,29 +105,13 @@
             };
             var url = "/api/ctrl/BaseDirective/form/";
             ajaxToServer(url,JSON.stringify(ids), function (result) {
-                console.log(result); //查看请求回来的参数
                 if (result.success) {
                     renderData(result.baseDirective, $('#inputForm'));
-                    if(level==0){
-                        $('#grade').val('一级菜单');
-                    }else if(level==1){
-                        $('#grade').val('二级菜单');
-                    }else{
-                        $('#grade').val('三级菜单');
-                    }
                 } else {
                     layer.msg(result.message);
                 }
 
             });
-        }else {
-            if (level == 0) {
-                $('#grade').val('一级菜单');
-            } else if (level == 1) {
-                $('#grade').val('二级菜单');
-            } else {
-                $('#grade').val('三级菜单');
-            }
         }
     });
 
@@ -162,7 +147,7 @@
         ajaxToServerS('/api/sys/SysOrg/selectGx/3',{},function (result) {
             if(result.success){
                 var rows = result.rows;
-                appendOptionsValue($('#proc'), rows, 'code', 'name');
+                appendOptionsValue($('#proc'), rows, 'name', 'name');
             }else{
                 layer.msg(result.message);
             }
@@ -175,7 +160,7 @@
         ajaxToServerS('/api/sys/SysDict/type/directiveCassifyType',{},function (result) {
             if(result.success){
                 var rows = result.rows;
-                appendOptionsValue($('#kind'), rows, 'value', 'label');
+                appendOptionsValue($('#kind'), rows, 'label', 'label');
             }else{
                 layer.msg(result.message);
             }

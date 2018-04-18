@@ -99,66 +99,17 @@
           "children":[]
         },
         {
-          "iconName":"",
-          "name":"日生产计划",
-          "menu_sub":"1",
-          "href":"../html/producePlan/dayPlanIndex.html",
-          "children":[]
-        },
-        {
-          "iconName":"",
-          "name":"年生产计划",
-          "menu_sub":"1",
-          "href":"../html/producePlan/yearPlanIndex.html",
-          "children":[]
-        },
-        {
-          "iconName":"",
-          "name":"计算公式",
-          "menu_sub":"1",
-          "href":"../html/producePlan/computeFormula.html",
-          "children":[]
-        },
-        {
-          "iconName":"",
-          "name":"生产计划",
-          "menu_sub":"1",
-          "href":"../html/producePlan/producePlan.html",
-          "children":[]
-        },
-        {
-          "iconName":"",
-          "name":"生产指标计划",
-          "menu_sub":"1",
-          "href":"../html/producePlan/proTargetPlan.html",
-          "children":[]
-        },
-        {
-          "iconName":"",
-          "name":"生产计划创建",
-          "menu_sub":"1",
-          "href":"../html/producePlan/apsCreate.html",
-          "children":[]
-        },
-        {
-          "iconName":"",
-          "name":"月计划",
-          "menu_sub":"1",
-          "href":"../html/producePlan/monthPlan.html",
-          "children":[]
+          "iconName": "",
+          "name": "计算公式",
+          "menu_sub": "1",
+          "href": "../html/producePlan/computeFormula.html",
+          "children": []
         },
         {
           "iconName":"",
           "name":"字典计划",
           "menu_sub":"1",
           "href":"../html/producePlan/planDicIndex.html",
-          "children":[]
-        },
-        {
-          "iconName":"",
-          "name":"审批流程",
-          "menu_sub":"0",
-          "href":"../html/producePlan/reviewPlans.html",
           "children":[]
         },
         {
@@ -187,6 +138,13 @@
           "name":"月排产",
           "menu_sub":"0",
           "href":"../html/producePlan/monthScheduling.html",
+          "children":[]
+        },
+        {
+          "iconName":"",
+          "name":"月调整",
+          "menu_sub":"1",
+          "href":"../html/producePlan/monthAdjust.html",
           "children":[]
         }
       ]

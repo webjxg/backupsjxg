@@ -27,7 +27,7 @@
 <i id="btnMenu" class="icon-th-list" style="cursor:pointer;float:right;margin:10px;"></i>
 <form id="inputForm" class="form-horizontal" action="/api/ctrl/BaseDirective/save" method="post">
     <input id="pid" name="parentId" type="hidden" />
-    <input id="id" name="Id" type="hidden" />
+    <input id="id" name="id" type="hidden" />
     <table class="table table-bordered  table-condensed dataTables-example dataTable no-footer">
         <tbody>
         <tr>
@@ -35,7 +35,7 @@
 
             <td class="width-35">
                 <input type="hidden" name="processId" id="processId">
-                <select name="pro" id="pro" class="form-control">
+                <select name="proc" id="proc" class="form-control">
                     <option value="">--请选择--</option>
                 </select>
             </td>
@@ -43,8 +43,13 @@
         <tr>
             <td class="width-15" ><label class="pull-right">级别:</label></td>
             <td class="width-35">
-                <input type="text" readonly="readonly" name="level" id="grade" class="form-control">
-                <input type="hidden" readonly="readonly" name="grade" id="level">
+                <input type="hidden" id="gradeVal" name="grade" value="">
+                <select name="grade" id="grade" class="form-control" disabled="disabled">
+                    <option value=""></option>
+                    <option value="1">一级菜单</option>
+                    <option value="2">二级菜单</option>
+                    <option value="3">三级菜单</option>
+                </select>
             </td>
         </tr>
         <tr>
@@ -93,18 +98,48 @@
     $(document).ready(function() {
         ajaxproc();
         ajaxkind();
+        var id=getQueryString('id');
         var pid = getQueryString('pid');
         var level = getQueryString('level');
-
-        $('#level').val(level+1);
-        if (level == 1) {
-            $('#grade').val('一级菜单');
-        } else if (level == 2) {
-            $('#grade').val('二级菜单');
-        } else {
-            $('#grade').val('三级菜单');
+        if(level){
+            $('#grade').val(1)
+            $('#gradeVal').val($('#grade').val())
         }
         $('#pid').val(pid);
+        if(pid){
+            var ids={
+                "id":pid
+            };
+
+            var url = "/api/ctrl/BaseDirective/form/";
+            ajaxToServer(url,JSON.stringify(ids), function (result) {
+                if (result.success) {
+                    $('#grade').val(parseInt(result.baseDirective.grade)+1)
+                    $('#gradeVal').val($('#grade').val())
+                } else {
+                    layer.msg(result.message);
+                }
+
+            });
+        }
+        $('#id').val(id);
+        if (id) {
+            /*此处后端接口  id为弹出窗口自带的id 通过浏览器方法传参得到*/
+            var ids={
+                "id":id
+            };
+
+            var url = "/api/ctrl/BaseDirective/form/";
+            ajaxToServer(url,JSON.stringify(ids), function (result) {
+                if (result.success) {
+                    $('#grade').val(result.baseDirective.grade)
+                    $('#gradeVal').val($('#grade').val())
+                } else {
+                    layer.msg(result.message);
+                }
+
+            });
+        }
     });
 
     //8080 admin-api端口专用ajax
@@ -139,7 +174,7 @@
         ajaxToServerS('/api/sys/SysOrg/selectGx/3',{},function (result) {
             if(result.success){
                 var rows = result.rows;
-                appendOptionsValue($('#pro'), rows, 'code', 'name');
+                appendOptionsValue($('#proc'), rows, 'name', 'name');
             }else{
                 layer.msg(result.message);
             }
@@ -152,7 +187,7 @@
         ajaxToServerS('/api/sys/SysDict/type/directiveCassifyType',{},function (result) {
             if(result.success){
                 var rows = result.rows;
-                appendOptionsValue($('#kind'), rows, 'value', 'label');
+                appendOptionsValue($('#kind'), rows, 'label', 'label');
             }else{
                 layer.msg(result.message);
             }

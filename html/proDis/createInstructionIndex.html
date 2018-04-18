@@ -54,7 +54,7 @@
                         <li class="proc">
                             工序：
                             <select name="proc" id="proc">
-                                <option value="">--请选择--</option>
+                                <option value="">请选择</option>
                             </select>
                         </li>
                         <li class="grade">
@@ -76,6 +76,7 @@
                 </div>
                 <div class="pull-right btn-box mgb-20">
                     <button class="btn btn-add " id="btn-add" type="button" >指令添加</button>
+                    <button hidden="hidden" class="fa-refresh" onclick="window.location.reload()"></button>
                 </div>
             </div>
         </div>
@@ -120,14 +121,14 @@
         reloadZtree('#kind','/api/ctrl/BaseDirective/getZTtree');
         reloadZtree('#grade','/api/ctrl/BaseDirective/getZTtree');
         $('#btn-add').click(function () {
-            openEditDialog('添加指令', './proDis/createInsCV.html?level=0&id=""', '462px', '425px')
+            openEditDialog('添加指令', './proDis/createInsCVAdd.html?level=1&id=""', '462px', '425px')
         });
 
 
 
     });
 
-    //获取下拉菜单
+    //获取tree
     function getOption() {
         var procValue=$('#proc').val(), gradeValue=$('#grade').val(),kindValue=$('#kind').val();
             data={
@@ -136,7 +137,7 @@
             "kind":kindValue
              };
         var dat=JSON.stringify(data);
-        ajaxToServer('/api/ctrl/BaseDirective/getZTtree',dat,function (da) {
+        ajaxToServer('/api/ctrl/BaseDirective/getZTree',dat,function (da) {
             zTree(da.rows)
         });
         reloadZtree();
@@ -197,9 +198,10 @@
     }
 
     //选择框变更后刷新ztree数据
-    function reloadZtree(item,url){
+    function reloadZtree(item){
         $(item).change(function () {
             getOption();
+            $('#officeContent')[0].contentWindow.tablehide();
         });
     }
 

@@ -128,14 +128,6 @@
                 adYear: $year,
                 status: $status
             };
-            /* Page.init("/api/aps/ApsMonthAdjust/page",data,true,function(tableData){
-             renderTableData(tableData);
-             $('.btn-check').click(function(){
-             var id = $(this).parents("tr").find('.i-checks').attr('id');
-             openDialog('查看字典','html/systemSettings/dictionaryInner.html?id='+id,'800px','500px')
-             });
-
-             });*/
             function getAttr(obj) {
                 var $iChecks = obj.parents("tr").find('.i-checks'),
                     id = $iChecks.attr('data-id'),
@@ -143,10 +135,6 @@
                     status = $iChecks.attr('data-status');
                 return [id, year, status];
             }
-
-//            $.ajax({
-//                url:'../../json/test.json',
-//                success:function(result){
             Page.init("/api/aps/ApsYearPlan/page", data, true, function (tableData) {
                 renderTableData(tableData);
                 //查看
@@ -167,7 +155,7 @@
                 //排产
                 $(".btn-review").click(function () {
                     var attrArr = getAttr($(this));
-                    location.href = '../producePlan/yearPlanIndex.html?id=' + attrArr[0] + '&year=' + attrArr[1]
+                    location.href = '../producePlan/monthScheduling.html?id=' + attrArr[0] + '&year=' + attrArr[1]
                 });
 
             })
@@ -227,16 +215,14 @@
                     "data": null, "orderable": false, "defaultContent": "",'sClass':" alignCenter autoWidth",
                     "render": function (data, type, row, meta) {
                         var html="";
-                        if(row.status == "0" || row.status == "-1"){
-                            html = "<a class='btn btn-edit'><i class='fa fa-edit'></i>编辑</a >" +
-                                   "<a class='btn btn-delete'><i class='fa fa-trash'></i>删除</a >"+
-                                   "<a class='btn btn-review' ><i class='fa fa-check'></i>排产</a >";
-                        }else if(row.status == "1") {
-                            html = "<a class='btn btn-delete'><i class='fa fa-trash'></i>删除</a >"+
-                                    "<a class='btn btn-review' ><i class='fa fa-check'></i>排产</a >";
+                        if(row.status == "0" || row.status == "-1" ) {
+                            html = "<a class='btn btn-review' ><i class='fa fa-check'></i>排产</a >";
                         }
                         return "<input type='hidden'  id=" + row.id + " data-type="+row.tYPE+" data-id='"+row.id+"' data-year='"+$year+"' data-status='"+row.status+"' class='i-checks'>"+
-                            "<a class='btn btn-check' ><i class='fa fa-search-plus'></i>查看</a >" +html;
+                            "<a class='btn btn-edit'><i class='fa fa-edit'></i>编辑</a >" +
+                            "<a class='btn btn-delete'><i class='fa fa-trash'></i>删除</a >"+
+                            "<a class='btn btn-check' ><i class='fa fa-search-plus'></i>查看</a >"
+                            +html;
 
                         }
                 }

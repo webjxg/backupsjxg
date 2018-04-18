@@ -170,8 +170,6 @@
             zlzbjhArr = [],
             jszbjhArr = [],
             gxdhzbjhArr = []; //请求数据渲染表格 以及实现datagrid部分功能
-
-
         var data0 = {
             "dpYear": dpYear,
             "dpMonth": dpMonth,
@@ -180,7 +178,6 @@
         var da = JSON.stringify(data0);
         ajaxToServer("/api/aps/DayPlan/form", da, table);
         function table(result) {
-            console.log(da, result);
             $("#id").val(result.DayPlan.id);
             var bjh = result.bjh,
                 cljh = result.cljh,
@@ -260,7 +257,6 @@
         //班计划
         $('#td0').datagrid({
             fitColumns: true,
-            rownumbers: true,
             collapsible: true,
             singleSelect: true,
             onClickRow: function (index) {
@@ -294,7 +290,6 @@
         //产量计划
         $('#td1').datagrid({
             fitColumns: true,
-            rownumbers: true,
             collapsible: true,
             singleSelect: true,
             onClickRow: function (index) {
@@ -328,7 +323,6 @@
         //质量指标计划
         $('#td2').datagrid({
             fitColumns: true,
-            rownumbers: true,
             collapsible: true,
             singleSelect: true,
             onClickRow: function (index) {
@@ -367,7 +361,6 @@
         //技术指标计划
         $('#td3').datagrid({
             fitColumns: true,
-            rownumbers: true,
             collapsible: true,
             singleSelect: true,
             onClickRow: function (index) {
@@ -400,7 +393,6 @@
         //各项单耗指标计划
         $('#td4').datagrid({
             fitColumns: true,
-            rownumbers: true,
             collapsible: true,
             singleSelect: true,
             onClickRow: function (index) {
@@ -449,10 +441,8 @@
             "id":$('#id').val()
         };
 
-        console.log(data);
         ajaxToServer1('/api/aps/DayPlan/save',data, layermsg);
         function layermsg(msg) {
-            console.log(msg);
             if (msg.success) {
                 layer.msg('提交成功');
                 tabledatagrid();

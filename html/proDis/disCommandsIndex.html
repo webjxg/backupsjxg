@@ -45,48 +45,34 @@
                     <ul class="apsType-linkage">
                         <li class="job">
                             工序：
-                            <select name="job" id="job">
+                            <select name="proc" id="proc">
                                 <option value="">请选择</option>
-                                <option value="id0001">原料</option>
-                                <option value="id0002">加工</option>
-                                <option value="id0003">生产</option>
-                                <option value="id0004">销售</option>
+
                             </select>
                         </li>
                         <li class="rank">
                             级别：
-                            <select name="rank" id="rank">
+                            <select name="grade" id="grade">
                                 <option value="">请选择</option>
-                                <option value="id0005">一级</option>
-                                <option value="id0006">二级</option>
-                                <option value="id0007">三级</option>
-                                <option value="id0008">四级</option>
+                                <option value="1">一级</option>
+                                <option value="2">二级</option>
+                                <option value="3">三级</option>
                             </select>
                         </li>
                         <li class="grade">
                             分类：
-                            <select name="grade" id="grade">
+                            <select name="kind" id="kind">
                                 <option value="">请选择</option>
-                                <option value="id0010">调度指令</option>
-                                <option value="id0011">计划指令</option>
-                                <option value="id0012">原料加工指令</option>
-                                <option value="id0013">厉害了指令</option>
                             </select>
                         </li>
                         <li class="content">
-                            内容：
-                            <select name="content" id="content">
-                                <option value="">请选择</option>
-                                <option value="id0014">指令1</option>
-                                <option value="id0015">指令2</option>
-                                <option value="id0016">指令3</option>
-                                <option value="id0017">指令4</option>
-                            </select>
+                            指令内容：
+                            <input type="text" name="contentParam" id="contentParam" value>
                         </li>
                     </ul>
                 </div>
                 <div class="pull-right btn-box mgb-20">
-                    <button class="btn btn-add " id="btn-search" type="button">查询</button>
+                    <button class="btn btn-add " id="btn-search" type="button" onclick="getOption()">查询</button>
                     <button class="btn btn-add " id="btn-add" type="button" onclick="window.location.href='./createInstructionIndex.html'">创建指令</button>
                 </div>
             </div>
@@ -129,23 +115,25 @@
 
 <script>
     $(document).ready(function(){
-        ajaxToServer("/api/aps/Dict/ajaxTreeJson/0",{},function(tableData){
+        ajaxproc();
+        ajaxkind();
+        Page.init("/api/ctrl/BaseDirective/page",{},true,function(tableData){
             renderTableData(tableData);
-            console.log(tableData);
         })
     });
+
+    //渲染表格
     function renderTableData(data) {
-        console.log(data);
         //↓接口到后修改↓
-        var datas=data.rows;
+        var datas=data;
         var tableStr = "";
         for (var i = 0; i < datas.length; i++) {
             tableStr += "<tr class='alignCenter' >"
-                            + "<td class='i-Checks' id='" + datas[i].id + "'>" + datas[i].itemName + "</td>"
-                            + "<td>1 </td>"
-                            + "<td>" + datas[i].itemName + "</td>"
-                            + "<td>" + datas[i].itemCode + "</td>"
-                            + "<td>" + datas[i].itemName + "</td>"
+                            + "<td class='i-Checks' id='" + datas[i].id + "'>" + datas[i].proc + "</td>"
+                            + "<td>"+data[i].content+"</td>"
+                            + "<td>" + data[i].grade+"级指令</td>"
+                            + "<td>" + datas[i].kind + "</td>"
+                            + "<td>" + datas[i].createDate + "</td>"
                         + "</tr>";
         }
         if (tableStr.length == 0) {
@@ -153,6 +141,73 @@
             tableStr = "<tr style='text-align: center'><td colspan='" + len + "'><font color='#cd0a0a'>暂无记录，请点击左侧对应指标</font></td></tr>";
         }
         $('#treeTableBody').html(tableStr);
+    }
+
+    //获取工序
+    function ajaxproc(){
+        ajaxToServerS('/api/sys/SysOrg/selectGx/3',{},function (result) {
+            if(result.success){
+                var rows = result.rows;
+                appendOptionsValue($('#proc'), rows, 'name', 'name');
+            }else{
+                layer.msg(result.message);
+            }
+        });
+
+    }
+
+    //获取指令分类
+    function ajaxkind() {
+        ajaxToServerS('/api/sys/SysDict/type/directiveCassifyType',{},function (result) {
+            if(result.success){
+                var rows = result.rows;
+                appendOptionsValue($('#kind'), rows, 'label', 'label');
+            }else{
+                layer.msg(result.message);
+            }
+        });
+    }
+
+    //8080 admin-api端口专用ajax
+    function ajaxToServerS(url, data, callbackFun){
+        var layerIndex = layer.load(2);
+        url = url.toLowerCase().indexOf("http://") == 0? url : ("http://114.115.165.184:8080/admin-api" + url);
+        $.ajax({
+            headers:{
+                Accept: "application/json; charset=utf-8",
+                // Authorization: getCookie("token_type")+" " +getCookie("authorization")，
+                Authorization: "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlzcyI6ImFkbWluIiwiYXVkIjoiQWRtaW4gSldUIE9ubGluZSJ9.0fEB0SHaUfc10ARex-BCLPmOxbbr5vgcMfvivQKY1Rc"
+            },
+            type: "post",
+            url: url,
+            data: data,
+            dataType: 'json',
+            contentType:'application/json',
+            success: function(result){
+                layer.close(layerIndex);
+                if(callbackFun){
+                    callbackFun(result);
+                }
+            },
+            error:function(){
+                layer.close(layerIndex);
+                layer.msg('请求服务器异常.');
+            }
+        });
+    }
+
+    //得到下拉菜单的值
+    function getOption() {
+        var procValue=$('#proc').val(), gradeValue=$('#grade').val(),kindValue=$('#kind').val(),contentParme=$('#contentParam').val();
+        data={
+            "proc":procValue,
+            "grade":gradeValue,
+            "kind":kindValue,
+            "contentParam":contentParme
+        };
+        Page.init("/api/ctrl/BaseDirective/page",data,true,function(tableData){
+            renderTableData(tableData);
+        })
     }
 </script>
 </html>
