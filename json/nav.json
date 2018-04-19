@@ -203,6 +203,13 @@
           "menu_sub": "1",
           "href": "../html/proDis/ordertailafter.html",
           "children": []
+        },
+        {
+          "iconName": "",
+          "name": "操作交接班日志",
+          "menu_sub": "1",
+          "href": "../html/proDis/opeShiftLogIndex.html",
+          "children": []
         }
       ]
     },

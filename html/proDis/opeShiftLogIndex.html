@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>指令下达</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="stylesheet" href="../../plugins/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../plugins/font-awesome/css/font-awesome.min.css">
+    <!--引入样式-->
+    <link rel="stylesheet" href="../../plugins/layer/theme/default/layer.css">
+    <link rel="stylesheet" href="../../plugins/ztree/css/metroStyle/metroStyle.css">
+    <!--样式-->
+    <link rel="stylesheet" href="../../css/common.css">
+    <link rel="stylesheet" href="../../css/customDatagrid.css">
+    <link rel="stylesheet" href="../../css/customDataTable.css">
+    <link rel="stylesheet" href="../../css/aps.css">
+    <style>
+        /*页面布局*/
+        .wrapper {
+            height: 1999px;
+        }
+        .ibox {
+            background-color: #f3f3f4;
+            position: relative;
+        }
+        .ibox > .ibox-content:nth-of-type(1) {
+            margin-bottom: 20px;
+        }
+        .ibox > .ibox-content:nth-of-type(2) {
+            /*height:999px;*/
+            width: 100%;
+            float: left;
+            margin-right: 20px;
+
+        }
+        .ibox > .ibox-content > .ibox-content {
+            width: 100%;
+            height: 100%;
+        }
+        .content-head {
+            border-bottom: 1px solid #fff;
+        }
+        /*时间轴 整体样式设置*/
+        .outerbox {
+            position: relative;
+            margin-bottom: 30px;
+        }
+        .outerbox:after {
+            position: absolute;
+            left: 31px;
+            content: "";
+            width: 0;
+            height: 0;
+            display: block;
+            border-style: solid;
+            border-width: 5px;
+            border-color: #1ab394 transparent transparent transparent;
+        }
+        .ibox-content > .pull-left {
+            position: relative;
+        }
+        .linebox {
+            width: 100%;
+            margin-left: 41px;
+            margin-bottom: 30px;
+            position: relative;
+            border-left: 1px solid #ddd;
+        }
+        .clearBoth {
+            clear: both;
+        }
+
+        /*头部*/
+        div.safe, div.production, div.else {
+            position: relative;
+            height: 10px;
+        }
+        div.safe > span, div.production > span, div.else > span {
+            position: absolute;
+            top: -12px;
+            left: 30px;
+        }
+        i.smallimg {
+            display: block;
+            width: 11px;
+            height: 11px;
+            background-image: url(../../images/shift-smallbtn.jpg);
+
+        }
+        i.headbigimg {
+            position: absolute;
+            left: -8px;
+            top: -8px;
+            width: 15px;
+            height: 15px;
+            background-image: url(../../images/shift-bigbtn.jpg);
+
+        }
+        .safebox, .probox, .elsebox {
+            margin-bottom: 45px;
+        }
+
+        /*内容区*/
+        .newbox {
+            position: relative;
+            width: 80%;
+            height: 75px;
+            margin-top: 20px;
+        }
+        .newbox > textarea {
+            padding: 5px;
+            margin-left: 34px;
+            width: 100%;
+            height: 100%;
+            border: 1px solid #cacaca;
+            border-radius: 3px;
+            resize: none;
+        }
+        .newbox > textarea:focus {
+            outline: none;
+        }
+        .newbox .smallimg {
+            position: absolute;
+            left: -6px;
+            top: 34px;
+        }
+        .newbox > .btn {
+            font-size: 25px;
+            width: 33px;
+            height: 33px;
+        }
+        .newbox > .btnadd {
+            position: absolute;
+            top: 21px;
+            right: -90px;
+
+        }
+        .newbox > .btnremove {
+            position: absolute;
+            top: 21px;
+            right: -140px;
+
+        }
+
+        /*输入框三角重叠*/
+        .newbox:before {
+            content: '';
+            position: absolute;
+            left: 15px;
+            top: 29px;
+            width: 0;
+            height: 0;
+            border-width: 10px;
+            border-style: solid;
+            border-color: transparent;
+            margin-bottom: -15px;
+            border-right-width: 10px;
+            border-right-color: currentColor;
+            color: #cacaca;
+        }
+        .newbox:after {
+            content: '';
+            position: absolute;
+            left: 16px;
+            top: 29px;
+            width: 0;
+            height: 0;
+            border-width: 10px;
+            border-style: solid;
+            border-color: transparent;
+            margin-bottom: -15px;
+            border-right-width: 10px;
+            border-right-color: currentColor;
+            color: #fff;
+        }
+
+        /*table*/
+
+    </style>
+
+</head>
+<body>
+<div class="wrapper wrapper-content bg-gray">
+    <div class="ibox">
+        <!--标题 按钮-->
+        <div class="ibox-content">
+            <div>
+                <h1 class="titName">操作交接班日志</h1>
+            </div>
+            <!--班信息-->
+            <div>
+                <span> 日期 : </span><span style="margin-right: 15px" class="date"></span>
+                <span> 班次 : </span><span style="margin-right: 15px" class="shiftName"></span>
+                <span> 班组 : </span><span class="groupName"></span>
+            </div>
+            <!--按钮-->
+            <div class="clearfix">
+                <div class="apsType-box pull-right mgb-10">
+                    <button class="joinWork btn bg-ffa82d">接班</button>
+                    <button class="giveWork btn bg-1ab394">交班</button>
+                </div>
+            </div>
+        </div>
+        <!--内容区-->
+        <div class="ibox-content">
+            <div class="content-head">
+                <h1 class="titName pull-left">本班日志</h1>
+                <a href="#" class="pull-right checkupclass">查看上一班 <i class="fa fa-angle-double-right"></i></a>
+            </div>
+            <!--左侧里程碑-->
+            <div class="ibox-content pull-left lefttimeline ">
+                <form id="inputForm" class="form-horizontal" action="######" method="post">
+                    <div class="btn bg-1ab394 outerbox">岗位记事</div>
+                    <div class="clearBoth linebox">
+                        <div class="safebox">
+                            <div class="col-1ab394 safe">
+                                <i class="headbigimg"></i>
+                                <span>安全</span>
+                            </div>
+                            <div class=" newbox">
+                                <i class="smallimg"></i>
+                                <textarea name="safe"></textarea>
+                                <button class="btn bg-1ab394 btnadd">+</button>
+                                <button class="btn btnremove">-</button>
+                            </div>
+                            <div class=" newbox">
+                                <i class="smallimg"></i>
+                                <textarea name="safe"></textarea>
+                                <button class="btn bg-1ab394 btnadd">+</button>
+                                <button class="btn btnremove">-</button>
+                            </div>
+                        </div>
+                        <div class="probox">
+                            <div class="col-1ab394 production">
+                                <i class="headbigimg"></i>
+                                <span>生产</span>
+                            </div>
+                            <div class=" newbox">
+                                <i class="smallimg"></i>
+                                <textarea name="safe"></textarea>
+                                <button class="btn bg-1ab394 btnadd">+</button>
+                                <button class="btn btnremove">-</button>
+                            </div>
+                            <div class=" newbox">
+                                <i class="smallimg"></i>
+                                <textarea name="safe"></textarea>
+                                <button class="btn bg-1ab394 btnadd">+</button>
+                                <button class="btn btnremove">-</button>
+                            </div>
+                            <div class=" newbox">
+                                <i class="smallimg"></i>
+                                <textarea name="safe"></textarea>
+                                <button class="btn bg-1ab394 btnadd">+</button>
+                                <button class="btn btnremove">-</button>
+                            </div>
+                        </div>
+                        <div class="elsebox">
+                            <div class="col-1ab394 else">
+                                <i class="headbigimg"></i>
+                                <span>其他</span>
+                            </div>
+                            <div class=" newbox">
+                                <i class="smallimg"></i>
+                                <textarea name="safe"></textarea>
+                                <button class="btn bg-1ab394 btnadd">+</button>
+                                <button class="btn btnremove">-</button>
+                            </div>
+                            <div class=" newbox">
+                                <i class="smallimg"></i>
+                                <textarea name="safe"></textarea>
+                                <button class="btn bg-1ab394 btnadd">+</button>
+                                <button class="btn btnremove">-</button>
+                            </div>
+                            <div class=" newbox">
+                                <i class="smallimg"></i>
+                                <textarea name="safe"></textarea>
+                                <button class="btn bg-1ab394 btnadd">+</button>
+                                <button class="btn btnremove">-</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="btn bg-1ab394 outerbox">交班记事</div>
+                    <div class="clearBoth linebox">
+                        <div class="safebox">
+                            <div class=" newbox">
+                                <i class="smallimg"></i>
+                                <textarea name="safe"></textarea>
+                                <button class="btn bg-1ab394 btnadd">+</button>
+                                <button class="btn btnremove">-</button>
+                            </div>
+                            <div class=" newbox">
+                                <i class="smallimg"></i>
+                                <textarea name="safe"></textarea>
+                                <button class="btn bg-1ab394 btnadd">+</button>
+                                <button class="btn btnremove">-</button>
+                            </div>
+                            <div class=" newbox">
+                                <i class="smallimg"></i>
+                                <textarea name="safe"></textarea>
+                                <button class="btn bg-1ab394 btnadd">+</button>
+                                <button class="btn btnremove">-</button>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+                <div>
+                    <span> 日期 : </span><span style="margin-right: 15px" class="giveworker"></span>
+                    <span> 班次 : </span><span style="margin-right: 15px" class="shiftworker"></span>
+                </div>
+            </div>
+            <!--隐藏表格区-->
+            <div class="ibox-content pull-right hidden tablecontent">
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+</body>
+<script src="../../js/jquery-2.2.4.min.js"></script>
+<script src="../../plugins/bootstrap/js/bootstrap.min.js"></script>
+<!--附属插件-->
+<script src="../../plugins/layer/layer.js"></script>
+<script src="../../plugins/icheck/icheck.min.js"></script>
+<script src="../../plugins/datetimepicker/js/bootstrap-datetimepicker.js"></script>
+<script src="../../plugins/datatables/js/jquery.dataTables.min.js"></script>
+<script src="../../plugins/datatables/js/dataTables.bootstrap.js"></script>
+<script src="../../plugins/bootStrapPager/js/extendPagination.js"></script>
+<script src="../../plugins/ztree/js/jquery.ztree.core.js"></script>
+<!--自定义文件-->
+<script src="../../js/customForm-aps.js"></script>
+<script src="../../js/page.js"></script>
+
+<script>
+    $(document).ready(function () {
+        renderclass();
+        btnonclick()
+    });
+    function btnonclick() {
+        $('.checkupclass').click(function () {
+            $('.lefttimeline').css('width','55%');
+        })
+    }
+
+
+    //写入班信息
+    function renderclass() {
+        $('.date').text(getNowFormatDate());
+        var data = {};
+        ajaxTo('/api/ctrl/DirectiveIssued/list', JSON.stringify(data), function (data) {
+            console.log(data);
+            var startTime = data.rows[0].shift.startTime, endTime = data.rows[0].shift.endTime;
+            $('.groupName').text(data.rows[0].name);
+            $('.shiftName').text(startTime + "-" + endTime);
+            $('.giveworker').text(data.rows[0].issuedUser);
+            $('.shiftworker').text(data.rows[0].issuedUser);
+        });
+    }
+    //获得当前日期
+    function getNowFormatDate() {
+        var date = new Date();
+        var seperator1 = "-";
+        var year = date.getFullYear();
+        var month = date.getMonth() + 1;
+        var strDate = date.getDate();
+        if (month >= 1 && month <= 9) {
+            month = "0" + month;
+        }
+        if (strDate >= 0 && strDate <= 9) {
+            strDate = "0" + strDate;
+        }
+        var currentdate = year + seperator1 + month + seperator1 + strDate;
+        return currentdate;
+    }
+    function ajaxTo(url, data, callbackFun) {
+        var layerIndex = layer.load(2);
+        url = url.toLowerCase().indexOf("http://") == 0 ? url : (urlPrefix + url);
+        $.ajax({
+            headers: {
+                Accept: "application/json; charset=utf-8",
+                // Authorization: getCookie("token_type")+" " +getCookie("authorization")，
+                Authorization: "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJqdGkiOiIwMzIyMjcxNmFiNzU0MTIxOTU5Yjg1ODU1YmFhZWRjZSIsInN1YiI6IjIyIiwiaXNzIjoiYWRtaW4iLCJhdWQiOiJBZG1pbiBKV1QgT25saW5lIn0.c_MLl8tCitpuSa6d-RzAFWJq7k-H3XBAQePTep4q4IM"
+            },
+            type: "post",
+            url: url,
+            data: data,
+            dataType: 'json',
+            contentType: 'application/json',
+            success: function (result) {
+                layer.close(layerIndex);
+                if (callbackFun) {
+                    callbackFun(result);
+                }
+            },
+            error: function () {
+                layer.close(layerIndex);
+                layer.msg('请求服务器异常.');
+            }
+        });
+    }
+
+
+</script>
+
+
+</html>
