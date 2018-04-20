@@ -12,9 +12,9 @@
 
 
     <!--引入样式-->
-    <link rel="stylesheet" href="../../css/common.css">
     <link rel="stylesheet" href="../../css/customDatagrid.css">
     <link rel="stylesheet" href="../../css/aps.css">
+    <link rel="stylesheet" href="../../css/common.css">
     <style>
         .panel-body{
             border-top: none;
@@ -35,8 +35,12 @@
         <div class="ibox-content">
             <div class="scheduling-option clearfix mgb-15">
                 <div class="pull-right btn-box">
-                    <button class="btn bg-ffa82d" id="btn-build" type="button" data-status="0">排产</button>
-                    <button class="btn " id="btn-save" type="button" data-status="1">提交</button>
+                    <button class="btn btn-white" id="btn-build" type="button" data-status="0">
+                        <i class="fa fa-file-text"></i>
+                        排产</button>
+                    <button class="btn btn-white" id="btn-save" type="button" data-status="1">
+                        <i class="fa fa-upload"></i>
+                        提交</button>
 
                 </div>
                 <div class="schOp-item schOp-sc">
@@ -166,6 +170,7 @@
             $('#td0').datagrid('loadData',zzyzjhArr);
             $('#td1').datagrid('loadData',yljhArr);
             $('#td2').datagrid('loadData',xhjhArr);
+            //提交按钮
             $("#btn-save").click(function(){
                 var rows = [];
                 $(".tableItemBox").each(function(index,item){
@@ -175,18 +180,18 @@
                     status:$(this).attr('data-status'),
                     pcPlans:rows
                 };
-                console.log(data);
                 ajaxToServer("/api/aps/ApsMonthPc/saveMonthInfo",data,function(result){
                     if(result.success){
                         refreshActiveTab();
                     }
                 });
             });
+            //排产按钮
             $("#btn-build").click(function(){
                 var $scValue = $.trim($("#scValue").val()), $psValue = $.trim($("#psValue").val());
                 if($scValue !=="" &&  $psValue !==""){
                     var data = {
-                        mYear:mYear,
+                        mYear:year,
                         scTotal:$scValue,
                         psTotal:$psValue
                     };

@@ -9,9 +9,9 @@
     <link rel="stylesheet" href="../../plugins/datetimepicker/css/bootstrap-datetimepicker.css">
     <!--引入样式-->
     <link rel="stylesheet" href="../../plugins/layer/theme/default/layer.css">
-    <link rel="stylesheet" href="../../css/common.css">
     <link rel="stylesheet" href="../../css/customDataTable.css">
     <link rel="stylesheet" href="../../css/aps.css">
+    <link rel="stylesheet" href="../../css/common.css">
 </head>
 <body>
 <div class="wrapper wrapper-content bg-gray">
@@ -58,8 +58,8 @@
                     </ul>
                 </div>
                 <div class="pull-right btn-box mgb-20">
-                    <button class="btn btn-search  bg-ffa82d" id="search-btn" type="button"><i class="fa fa-search"></i>查询</button>
-                    <button class="btn btn-add " id="btn-add" type="button"><i class="fa fa-plus"></i>新增</button>
+                    <button class="btn btn-search  btn-white" id="search-btn" type="button"><i class="fa fa-search"></i>查询</button>
+                    <button class="btn btn-white" id="btn-add" type="button"><i class="fa fa-plus"></i>新增</button>
                     </button>
                 </div>
             </div>
@@ -258,7 +258,7 @@
                     "render": function (data, type, row, meta) {
                         var html="";
                         if(row.status == "0" || row.status == "-1"){
-                            html = "<a class='btn btn-edit'><i class='fa fa-edit'></i>编辑</a >" +
+                            html = "<a class='btn btn-edit btn-compile'><i class='fa fa-edit'></i>编辑</a >" +
                                 "<a class='btn btn-delete'><i class='fa fa-trash'></i>删除</a >";
                         }else if(row.status == "1") {
                             html = "<a class='btn btn-review' ><i class='fa fa-check'></i>审核</a >";
@@ -268,7 +268,7 @@
                             html = "";
                         }
                         return "<input type='hidden'  id=" + row.id + " data-type="+row.tYPE+" data-id='"+row.id+"' data-year='"+row.adYear+"' data-month='"+row.adMonth+"'  data-status='"+row.status+"' class='i-checks'>"+
-                            "<a class='btn btn-check' ><i class='fa fa-search-plus'></i>查看</a >" +html;
+                            "<a class='btn btn-check btn-info' ><i class='fa fa-search-plus'></i>查看</a >" +html;
 
                     }
                 }

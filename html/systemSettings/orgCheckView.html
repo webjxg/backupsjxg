@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>text</title>
+    <title>组织机构</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <link rel="stylesheet" href="../../plugins/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="../../plugins/font-awesome/css/font-awesome.min.css">
@@ -11,9 +11,6 @@
     <!--引入样式-->
     <link rel="stylesheet" href="../../css/common.css">
     <link rel="stylesheet" href="../../css/comInnerTable.css">
-
-
-
 </head>
 <body>
 <form id="inputForm" class="form-horizontal" action="/api/sys/SysOrg/save" method="post" novalidate="novalidate">
@@ -43,7 +40,7 @@
                            value="" data-msg-required="" class="form-control" style="" placeholder="双击选择">
                     <span class="input-group-btn">
 	       		        <button type="button" id="parentNameButton" class="btn   btn-primary  ">
-                            <i class="fa fa-search"></i>
+                            <i class="fa fa-search color"></i>
                         </button>
        		        </span>
                 </div>
@@ -61,9 +58,8 @@
             <td class="width-35">
                 <input id="typeId" name="typeId.id" class="form-control" type="hidden" value="">
                 <select id="type" name="type" class="form-control required">
-                    <option selected="selected" value="">--请选择--</option>
+                    <option value="">--请选择--</option>
                     <option value="1">公司</option>
-                    <option value="2">部门</option>
                 </select>
             </td>
             <td class="width-15"><label class="pull-right"><font color="red">*</font>机构等级:</label></td>
@@ -110,7 +106,7 @@
                            value="" data-msg-required="" readonly="readonly" class="form-control" style="" placeholder="双击选择"><!--这里传给后台的是 弹出框反选的名字-->
                     <span class="input-group-btn">
 	       		        <button type="button" id="primaryPersonButton" class="btn   btn-primary  ">
-                            <i class="fa fa-search"></i>
+                            <i class="fa fa-search color"></i>
                         </button>
        		        </span>
                 </div>
@@ -123,7 +119,7 @@
                            value="" data-msg-required=""  readonly="readonly" class="form-control" style="" placeholder="双击选择"><!--这里传给后台的是 弹出框反选的名字-->
                     <span class="input-group-btn">
 	       		        <button type="button" id="deputyPersonButton" class="btn   btn-primary  ">
-                            <i class="fa fa-search"></i>
+                            <i class="fa fa-search color"></i>
                         </button>
        		        </span>
                 </div>
@@ -185,13 +181,12 @@
 <script>
     $(document).ready(function() {
         var id = getQueryString('id');
-        var pid=getQueryString('pid')
-        console.log(id)
+        var pid=getQueryString('pid');
         $('#id').val(id);
         /*api = getQueryString('api') || 'form';*/
         if (id!==null) {
             /*此处后端接口  id为弹出窗口自带的id 通过浏览器方法传参得到*/
-            url = "/api/sys/SysOrg/view/" + id;
+            var url = "/api/sys/SysOrg/view/" + id;
             ajaxToServer(url, {}, function (result) {
                 console.log(url,result);
                 if (result.success) {
@@ -200,20 +195,20 @@
                     /*运行把ajax数据渲染到弹出窗口中*/
                     $('#pname').val(SysOrg.primaryPerson?SysOrg.primaryPerson.name:"");
                     $('#dname').val(SysOrg.deputyPerson?SysOrg.deputyPerson.name:"");
-                    $('#parentName').val(result.parentName)
-                    console.log(result);
+                    $('#parentName').val(result.parentName);
+                    setOrgTypeList(result.orgTypeList);
                 } else {
                     layer.msg(result.message);
                 }
             });
         }else if(pid!==null){
-            url = "/api/sys/SysOrg/view/" + pid;
+            var url = "/api/sys/SysOrg/view/" + pid;
             ajaxToServer(url, {}, function (result) {
-                console.log(url,result);
                 if (result.success) {
                     var SysOrg = result.SysOrg;
                     $('#parentName').val(SysOrg.name);
-                    $('#parentId').val(SysOrg.id)
+                    $('#parentId').val(SysOrg.id);
+                    setOrgTypeList(result.orgTypeList);
                 } else {
                     layer.msg(result.message);
                 }
@@ -223,6 +218,16 @@
         layerInPersons('#ppalert', ['800px', '600px'], './systemSettings/orgPersons.html', '#pname', '#pnameId');
         layerInPersons('#dpalert', ['800px', '600px'], './systemSettings/orgPersons.html', '#dname', '#dnameId');
     });
+    //装配组织机构类型
+    function setOrgTypeList(orgTypeList){
+        if(orgTypeList){
+            for(var i = 0;i<orgTypeList.length;i++){
+                var orgType = orgTypeList[i];
+                $('#type').append("<option value = "+orgType.value+">"+orgType.label+"</option>");
+            }
+        }
+    }
+
     /*得到传后台的表单*/
     function getSubmitFormId(){
         return "#inputForm";

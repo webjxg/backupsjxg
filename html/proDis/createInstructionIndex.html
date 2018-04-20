@@ -75,7 +75,9 @@
                     </ul>
                 </div>
                 <div class="pull-right btn-box mgb-20">
-                    <button class="btn btn-add " id="btn-add" type="button" >指令添加</button>
+                    <button class="btn  btn-white btn-instruct" id="btn-add" type="button" >
+                        <i class="fa icon-instruct"></i>
+                        指令添加</button>
                     <button hidden="hidden" class="fa-refresh" onclick="window.location.reload()"></button>
                 </div>
             </div>
@@ -237,7 +239,6 @@
         var treeObj =$.fn.zTree.init($("#tree"), setting, zNodes);
 
     }
-
 
     //点ztree传值id
     function rendersun(data,level) {

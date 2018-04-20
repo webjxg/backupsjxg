@@ -32,7 +32,7 @@
                             <input id="companyName" name="company.name" readonly="readonly" type="text" value=""
                                    data-msg-required="" class=" form-control input-sm " style="">
                             <span class="input-group-btn">
-                                 <button type="button" id="companyButton" class="btn  btn-sm   btn-primary  "><i
+                                 <button type="button" id="companyButton" class="btn  btn-sm btn-sousuo"><i
                                          class="fa fa-search"></i>
                                  </button>
                             </span>
@@ -45,7 +45,7 @@
                             <input id="officeName" name="office.name" readonly="readonly" type="text" value=""
                                    data-msg-required="" class=" form-control input-sm " style="">
                             <span class="input-group-btn">
-                                 <button type="button" id="officeButton" class="btn  btn-sm   btn-primary  "><i
+                                 <button type="button" id="officeButton" class="btn  btn-sm btn-sousuo"><i
                                          class="fa fa-search"></i>
                                  </button>
                             </span>
@@ -96,10 +96,10 @@
                 </button>
             </div>
             <div class="pull-right">
-                <button class="btn btn-primary btn-rounded btn-outline btn-sm " id="search-btn"><i
+                <button class="btn btn-white btn-rounded btn-outline btn-sm " id="search-btn"><i
                         class="fa fa-search"></i> 查询
                 </button>
-                <button class="btn btn-primary btn-rounded btn-outline btn-sm " id="reset-btn"><i
+                <button class="btn btn-white btn-rounded btn-outline btn-sm " id="reset-btn"><i
                         class="fa fa-refresh"></i> 重置
                 </button>
             </div>
@@ -169,8 +169,8 @@
     function updatason(node){
         var data={"deptId":node};
         Page.init("/api/sys/SysUser/page", data, true, function (tableData) {
-            dataout(tableData);
-            clickButton()
+            dataout(tableData); //创建table
+            clickButton()       //加载点击事件
         });
     }
     function clickButton() {
@@ -186,6 +186,8 @@
             var id = $(this).parents("tr").find('.i-checks').attr('id');
             deleteItem('确定要删除该用户吗', '/api/sys/SysUser/delete/',id)
         });
+
+        //重置按钮
         $('#reset-btn').click(function(){
             // $("#authEnable option:first").prop("selected", 'selected');
             $("#name").val(""),
@@ -258,7 +260,7 @@
                 {"data": "id", "width": "auto","orderable": false, "defaultContent": "",
                     "render": function (data, type, row, meta) {
                         return data = "<a class='btn btn-info btn-xs  btn-check'><i class='fa fa-search-plus'></i>查看</a >" +
-                            "<a class='btn btn-success btn-xs btn-change'><i class='fa fa-edit'></i>修改</a >" +
+                            "<a class='btn btn-success btn-xs btn-change'><i class='fa icon-change'></i>修改</a >" +
                             "<a class='btn btn-danger btn-xs btn-delete'><i class='fa fa-trash-o' ></i>删除</a >"
                     }
                 }],

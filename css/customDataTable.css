@@ -82,13 +82,11 @@
 .ibox{
   background-color:white;
 }
-.ibox-content .btn-white {
-  color: inherit;
-  background: white;
-  border: 1px solid #e7eaec;
-}
 .ibox-content .row{
   /*margin-bottom: 5px;*/
+}
+.btn-white fa{
+  color: #999999 !important;
 }
 .ibox-content .btn-white:hover, .ibox-content .btn-white:focus, .ibox-content .btn-white:active, .ibox-content .btn-white.active, .ibox-content .open .dropdown-toggle.btn-white {
   color: #80afa7;
@@ -137,6 +135,10 @@ table.treetable{
   border:none;
   font-size: 13px;
 }
+table td{
+  word-wrap: break-word;
+  word-break: break-all;
+}
 .table-bordered > tbody > tr > td, .table-bordered > tbody > tr > th, .table-bordered > tfoot > tr > td, .table-bordered > tfoot > tr > th, .table-bordered > thead > tr > td, .table-bordered > thead > tr > th {
   /*border-right: 1px solid #e8eaf0;*/
   /*border-top: 1px solid #E8EAF0;*/
@@ -152,30 +154,6 @@ tbody > tr:last-child > td {
 .ibox-content label {
   margin: 8px;
   font-weight: inherit; }
-
-.btn-info, .btn-info:hover, .btn-success, .btn-success:hover, .btn-primary, .btn-primary:hover {
-  color: #fff; }
-
-.btn-info {
-  background-color: #23c6c8;
-  border-color: #23c6c8; }
-.btn-info:hover {
-  background-color: #21b9bb;
-  border-color: #21b9bb; }
-
-.btn-success {
-  background-color: #1c84c6;
-  border-color: #1c84c6; }
-.btn-success:hover {
-  background-color: #1a7bb9;
-  border-color: #1a7bb9; }
-
-.btn-primary {
-  background-color: #1ab394;
-  border-color: #1ab394; }
-.btn-primary:hover {
-  background-color: #18a689;
-  border-color: #18a689; }
 
 #treeTable_paginate a {
   line-height: 1.428571429;
@@ -204,7 +182,6 @@ tbody > tr:last-child > td {
   font-weight: bold;
   border-bottom:none;
 }
-
 .form-control, .single-line {
   background-color: #FFFFFF;
   /*margin: 0 20px;*/

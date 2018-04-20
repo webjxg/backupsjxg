@@ -14,9 +14,8 @@
     <link rel="stylesheet" href="../../plugins/treetable/css/jquery.treetable.css">
     <link rel="stylesheet" href="../../plugins/datatables/css/mydatatable.css">
     <!--引入样式-->
-    <link rel="stylesheet" href="../../css/common.css">
     <link rel="stylesheet" href="../../css/customDataTable.css">
-
+    <link rel="stylesheet" href="../../css/common.css">
 </head>
 <!--内容-->
 <body id="menu-content">
@@ -197,7 +196,7 @@
                         +"<td class='autoWidth'><input type='number' name='sort' value='"+data[i].sort+"' data-val='"+data[i].sort+"' class='form-control' style='width:100px ;padding:1px 6px;height:26px;line-height: 24px;'></td>"
                         +"<td style='text-align: center;'>"+(data[i].is_show =='1'?'是':'否' )+"</td>"
                         +"<td>"+data[i].permission+"</td>"
-                        +"<td class='autoWidth' ><a href='#' class='btn btn-info btn-xs btn-check'><i class='fa fa-search-plus'></i>查看</a>"+" <a href='#' class='btn btn-success btn-xs btn-change'><i class='fa fa-edit'></i>修改</a>"+"<a href='#' class='btn btn-danger btn-xs btn-delete'><i class='fa fa-trash'></i> 删除</a>"+"  <a href='#' class='btn btn-primary btn-xs btn-add'><i class='fa fa-plus'></i> 添加下级菜单</a></td>"
+                        +"<td class='autoWidth' ><a href='#' class='btn btn-info btn-xs btn-check'><i class='fa fa-search-plus'></i>查看</a>"+" <a href='#' class='btn btn-success btn-xs btn-change'><i class='fa icon-change'></i>修改</a>"+"<a href='#' class='btn btn-danger btn-xs btn-delete'><i class='fa fa-trash'></i> 删除</a>"+"  <a href='#' class='btn btn-primary btn-xs btn-add'><i class='fa fa-th-large'></i> 添加下级菜单</a></td>"
                     +"</tr>";
             }
             if(tableStr.length==0){

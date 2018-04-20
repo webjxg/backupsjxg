@@ -82,8 +82,8 @@
                 <input type="text" name="dpYear" id="dpYear" hidden="hidden">
                 <input type="text" name="dpMonth" id="dpMonth" hidden="hidden">
                 <input type="text" name="dpWeek" id="dpWeek" hidden="hidden">
-                <button class="btn btn-primary bg-ffa82d  btn-back" id="back-btn"><i
-                        class="fa fa-check-square-o"></i> 返回
+                <button class="btn btn-white btn-back" id="back-btn"><i
+                        class="fa fa-reply"></i> 返回
                 </button>
             </div>
             <div class="pull-right">
@@ -92,7 +92,7 @@
                         class="fa fa-check-square-o"></i> 递交
                 </button>
                 <button class="btn btn-primary bg-ffa82d btn-sav" id="save-btn"><i
-                        class="fa fa-save"></i> 暂存
+                        class="fa fa-check-circle"></i> 暂存
                 </button>
             </div>
         </div>
@@ -167,7 +167,7 @@
 
         });
         $(".btn-back").click(function () {
-            window.history.back()
+            refreshActiveTab()
         });
 
     });
@@ -289,7 +289,7 @@
                     editor: {type: 'numberbox', options: {precision: 1}}
                 },
                 {field: 'dayPlan', title: '日计划', editor: 'numberbox', width: 100, align: 'center'},
-                {field: 'classPlan', title: '班计划', editor: 'text', width: 150, align: 'center'}
+                {field: 'classPlan', title: '班计划', editor: 'numberbox', width: 150, align: 'center'}
             ]],
             onAfterEdit: function (rowIndex, rowData, changes) {
                 dataGridObj.pushRowData(rowData);
@@ -323,7 +323,7 @@
                     editor: {type: 'numberbox', options: {precision: 1}}
                 },
                 {field: 'weekPlan', title: '周计划', editor: 'numberbox', width: 100, align: 'center'},
-                {field: 'dayPlan', title: '日计划', editor: 'text', width: 150, align: 'center'},
+                {field: 'dayPlan', title: '日计划', editor: 'numberbox', width: 150, align: 'center'},
             ]],
             onAfterEdit: function (rowIndex, rowData, changes) {
                 dataGridObj.pushRowData(rowData);
@@ -358,7 +358,7 @@
                     editor: {type: 'numberbox', options: {precision: 1}}
                 },
                 {field: 'dayPlan', title: '日计划', editor: 'numberbox', width: 100, align: 'center'},
-                {field: 'classPlan', title: '班计划', editor: 'text', width: 150, align: 'center'},
+                {field: 'classPlan', title: '班计划', editor: 'numberbox', width: 150, align: 'center'},
             ]],
             onAfterEdit: function (rowIndex, rowData, changes) {
                 dataGridObj.pushRowData(rowData);
@@ -396,7 +396,7 @@
                     editor: {type: 'numberbox', options: {precision: 1}}
                 },
                 {field: 'weekPlan', title: '周计划', editor: 'numberbox', width: 100, align: 'center'},
-                {field: 'dayPlan', title: '日计划', editor: 'text', width: 150, align: 'center'},
+                {field: 'dayPlan', title: '日计划', editor: 'numberbox', width: 150, align: 'center'},
             ]],
             onAfterEdit: function (rowIndex, rowData, changes) {
                 dataGridObj.pushRowData(rowData);
@@ -429,7 +429,7 @@
                     editor: {type: 'numberbox', options: {precision: 1}}
                 },
                 {field: 'weekPlan', title: '周计划', editor: 'numberbox', width: 100, align: 'center'},
-                {field: 'dayPlan', title: '日计划', editor: 'text', width: 150, align: 'center'},
+                {field: 'dayPlan', title: '日计划', editor: 'numberbox', width: 150, align: 'center'},
             ]],
             onAfterEdit: function (rowIndex, rowData, changes) {
                 dataGridObj.pushRowData(rowData);
@@ -454,23 +454,29 @@
         $(editItems).each(function (i) {
             saveArr.push(editItems[i]);
         });
-        var data={
-            "dayPlans":JSON.stringify(saveArr),
-            "status":status,
-            "id":$('#id').val()
-        };
-
-        console.log(data);
-        ajaxToServer1('/api/aps/DayPlan/save',data, layermsg);
-        function layermsg(msg) {
-            console.log(msg);
-            if (msg.success) {
-                layer.msg('提交成功');
-                tabledatagrid();
-            } else {
-                layer.msg(msg.message)
+        if(saveArr==''){
+            layer.alert('数据无变化，请改动数据后再进行保存')
+        }else{
+            var data={
+                "dayPlans":JSON.stringify(saveArr),
+                "status":status,
+                "id":$('#id').val()
+            };
+            console.log(data);
+            ajaxToServer1('/api/aps/DayPlan/save',data, layermsg);
+            function layermsg(msg) {
+                console.log(msg);
+                if (msg.success) {
+                    layer.msg('提交成功');
+                    refreshActiveTab()
+                } else {
+                    layer.msg(msg.message)
+                }
             }
         }
+
+
+
     }
 
 

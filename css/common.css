@@ -156,8 +156,141 @@ table.treeTable{
   left: 0;
   margin-top: -10px;
 }
+.btn-info, .btn-info:hover, .btn-success, .btn-success:hover, .btn-primary, .btn-primary:hover {
+  color: #fff;
+  font-family: "微软雅黑";
+}
+.btn-allotApp{
+  background-color: white;
+  border-color: #ff7836;
+  color: #ff7836;
+}
+.btn-allotApp:hover{
+  background-color: #ff7836;
+  border-color: #ff7836;
+  color: white;
+}
+.btn-info {
+  background-color: white;
+  border-color: #ffa82d;
+  color: #ffa82d}
+.btn-info:hover {
+  background-color: #ffa82d;
+  border-color: #ffa82d; }
+.btn-warning{
+  background-color: white;
+  border-color: #07c2d3;
+  color: #07c2d3;
+}
+.btn-warning:hover{
+  background-color: #07c2d3;
+  color: white;
+  border-color: #07c2d3;
+}
+.btn-success {
+  background-color: white;
+  border-color: #62b5e9;
+  color: #62b5e9;
+}
+.btn-add{
+  color: #ff7836 !important;
+}
+.btn-add:hover{
+  background-color: #ff7836 !important;
+  color: white !important;
+}
 
+.btn-success:hover {
+  background-color: #1a7bb9;
+  border-color: white;
+}
+.btn-primary {
+  background-color: white;
+  border-color: #ff7836;
+  color: #ff7836;
+}
+.btn-primary:hover {
+  background-color: #ff7836;
+  border-color: #ff7836;
+  color: white;
+  }
+.btn-danger{
+  background-color: white;
+  border-color: #f75c5c;
+  color: #f75c5c;
+}
+.btn{
+  background-repeat: no-repeat;
+}
+.btn-change i{
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  font-size: 12px;
+  background-image: url("../images/icon.png");
+  background-repeat: no-repeat;
+}
+.btn-empower{
+  background-color: white;
+  color: #51cd50;
+  border-color: #51cd50;
+}
+.color{
+  color: white !important;
+}
+.input-group-btn{
+  background-color: #1ab394 !important;
+}
+.input-group-btn .btn-sousuo{
+  background-color: #1ab394 !important;
+  color: white !important;
+}
+.btn-empower:hover{
+  background-color: #51cd50;
+  color: white;
+}
+.btn-empower i{
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  font-size: 10px;
+  background-image: url("../images/icon.png");
+  background-repeat: no-repeat;
+}
+.icon-accredit{
+  background-position: -448px  -10px;
+}
+.btn-empower:hover .icon-accredit{
+  background-position: -448px  -32px;
+}
+.btn-mainProVal{
+  color: #ff7836;
+}
+.btn-mainProVal i{
+  display: inline-block;
+  width: 12px;
+  height: 12px;
+  font-size: 10px;
+  background-image: url("../images/icon.png");
+  background-repeat: no-repeat;
+}
+ .icon-change{
+  background-position: -24px -10px;
+}
+ .icon-maintain{
+   background-position: -412px -10px;
+ }
+.btn-change:hover  .icon-change{
+  background-position: -24px -32px;
+}
+.btn-mainProVal:hover .icon-maintain{
+  background-position: -412px -32px;
+}
 
-
-
-
+.ibox-content .btn-white {
+  font-family: Microsoft YaHei !important;
+  color: inherit;
+  background: white;
+  font-size: 12px;
+  border: 1px solid #e7e7e7;
+}

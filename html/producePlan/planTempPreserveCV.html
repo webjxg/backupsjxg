@@ -116,7 +116,7 @@
                                 "<a class='btn btn-success btn-xs btn-preserve btn-up'><i class='fa fa-edit' ></i>上移</a >"+
                                 "<a class='btn btn-success btn-xs btn-preserve btn-down' ><i class='fa fa-edit' ></i>下移</a >"
                         }
-                    }],
+                    }]
 
 
             });
@@ -164,20 +164,22 @@
             var data = {
                 "templateId":templateId,
                 "parentId":parentId,
-                "itemCodes":itemCodes.substr(1),
+                "itemCodes":itemCodes.substr(1)
             };
-            ajaxToServer1(url,data,function (result) {
-                console.log(url,data,result);
-                if(result.success == true){
-                    top.layer.msg('保存成功');
-                    top.layer.close(index);
-                }else{
-                    top.layer.msg(result.message);
-                    top.layer.close(index);
-                }
-            });
-
-
+            if(itemCodes==''){
+                layer.alert('请勾选指令后再进行保存')
+            }else{
+                ajaxToServer1(url,data,function (result) {
+                    console.log(url,data,result);
+                    if(result.success == true){
+                        top.layer.msg('保存成功');
+                        top.layer.close(index);
+                    }else{
+                        top.layer.msg(result.message);
+                        top.layer.close(index);
+                    }
+                });
+            }
 
     }
 

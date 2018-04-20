@@ -177,7 +177,9 @@
         };
         var da = JSON.stringify(data0);
         ajaxToServer("/api/aps/DayPlan/form", da, table);
+
         function table(result) {
+            console.log(da,result);
             $("#id").val(result.DayPlan.id);
             var bjh = result.bjh,
                 cljh = result.cljh,

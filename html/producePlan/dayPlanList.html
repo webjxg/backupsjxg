@@ -9,9 +9,9 @@
     <link rel="stylesheet" href="../../plugins/datetimepicker/css/bootstrap-datetimepicker.css">
     <!--引入样式-->
     <link rel="stylesheet" href="../../plugins/layer/theme/default/layer.css"><!--样式-->
-    <link rel="stylesheet" href="../../css/common.css">
     <link rel="stylesheet" href="../../css/customDataTable.css">
     <link rel="stylesheet" href="../../css/aps.css">
+    <link rel="stylesheet" href="../../css/common.css">
 </head>
 <body>
 <div class="wrapper wrapper-content bg-gray">
@@ -57,8 +57,8 @@
                     </ul>
                 </div>
                 <div class="pull-right btn-box mgb-20">
-                    <button class="btn btn-search  bg-ffa82d" id="search-btn" type="button"><i class="fa fa-search"></i>查询</button>
-                    <button class="btn btn-add " id="btn-add" type="button"><i class="fa fa-plus"></i>新增</button>
+                    <button class="btn btn-search btn-white " id="search-btn" type="button"><i class="fa fa-search"></i>查询</button>
+                    <button class="btn  btn-white" id="btn-add" type="button"><i class="fa fa-plus"></i>新增</button>
                     </button>
                 </div>
             </div>
@@ -161,7 +161,8 @@
                 //删除
                 $(".btn-delete").click(function () {
                     var attrArr = getAttr($(this));
-                    deleteItem('确定要删除该计划', '/api/aps/ApsYearPlan/delete', attrArr[0])
+                    console.log(attrArr[0]);
+                    deleteOne('确定要删除该计划', '/api/aps/DayPlan/delete', attrArr[0])
                 });
                 //编辑
                 $(".btn-edit").click(function () {
@@ -188,6 +189,34 @@
                 location.href = "./dayPlanIndex.html?year=" + $year+'&month='+$month+'&week='+$week;
             }
         });
+
+        //删除单条数据
+        function deleteOne(mess,url,id){
+            //var ids= eleP.find('input.i-checks').attr('id')
+            var data = {id:id} || {};
+            top.layer.confirm(mess, {icon: 3, title:'系统提示'},function(index){
+                ajaxToServer(url,JSON.stringify(data),function(result){
+                    console.log(data,url);
+                    if(result.success == true){
+                        var frameActive = top.getActiveTab().attr("name");
+                        var obj = $('#search-btn', top.window.frames[frameActive].document);
+                        if(obj.length == 0){
+                            obj = $('#refresh-btn', top.window.frames[frameActive].document);
+                            if(obj.length == 0){
+
+                                top.refreshActiveTab();
+                            }
+
+                        }
+                        obj.trigger('click');
+                    }
+                });
+                top.layer.close(index);
+            });
+            return false;
+        }
+
+
 
 
         //  渲染表内容
@@ -236,10 +265,17 @@
                     {
                         "data": null, "orderable": false, "defaultContent": "",'sClass':" alignCenter autoWidth",
                         "render": function (data, type, row, meta) {
-                            var html = "<a class='btn btn-edit'><i class='fa fa-edit'></i>编辑</a >" +
+                            var setText="";
+                            if(row.status == "0"){
+                                setText="<a class='btn btn-edit btn-compile'><i class='fa fa-edit'></i>编辑</a >";
+                            }else if(row.status == "1" ){
+                                classSet ="col-51cd50";
+                                setText="";
+                            }
+                            var html = setText +
                                     "<a class='btn btn-delete'><i class='fa fa-trash'></i>删除</a >";
                             return "<input type='hidden'  id='" + row.id + "' data-type="+row.tYPE+" data-id='"+row.id+"' data-year='"+row.dpYear+"' data-month='"+row.dpMonth+"' data-week='"+row.dpWeek+"' data-status='"+row.status+"' class='i-checks'>"+
-                                "<a class='btn btn-check' ><i class='fa fa-search-plus'></i>查看</a >" +html;
+                                "<a class='btn btn-check btn-info' ><i class='fa fa-search-plus'></i>查看</a >" +html;
 
                         }
                     }

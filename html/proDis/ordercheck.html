@@ -28,15 +28,15 @@
 
             <div class="row">
                 <div class="col-sm-12">
-                    <div class="pull-left">
                         <label>
                             <div class="execution time">
                                 <span>执行时间:</span>
-                                <input type="text" value="开始时间" id="startDateParam" class="time-input datePicker"><i class="fa fa-calendar"></i>
+                                <input type="text" value="" placeholder="开始时间" id="startDateParam" class="time-input datePicker"><i class="fa fa-calendar"></i>
                                 &nbsp;—
-                                <input type="text" value="结束时间" id="endDateParam" class="time-input datePicker"><i class="fa fa-calendar"></i>
+                                <input type="text" value="" placeholder="结束时间" id="endDateParam" class="time-input datePicker"><i class="fa fa-calendar"></i>
                             </div>
                         </label>
+                    <label>
                         <ul class="apsType-linkage">
                             <li class="year">
                                 班次:
@@ -47,54 +47,63 @@
                             <li>
                                 班组:
                                 <select name="" id="team">
-                                    <option>-- 全部 --</option>
+                                    <option value="">-- 全部 --</option>
                                 </select>
                             </li>
                             <li >
                                 工序:
                                 <select name="" id="process">
-                                    <option>-- 全部 --</option>
+                                    <option value="">-- 全部 --</option>
                                 </select>
                             </li>
                             <li >
                                 级别:
                                 <select name="" id="rank">
-                                    <option>-- 全部 --</option>
+                                    <option value="">-- 全部 --</option>
                                 </select>
                             </li>
                             <li >
                                 分类:
                                 <select name="" id="classify">
-                                    <option>-- 全部 --</option>
+                                    <option value="">-- 全部 --</option>
                                 </select>
                             </li>
                         </ul>
+                    </label>
+                </div>
+            </div>
+            <!--状态-->
+            <div class="row distance">
+                <div class="col-sm-12">
+                    <div class="pull-left">
+                        <div class="status">
+                            <ul class="apsType-linkage">
+                                <li>状态：</li>
+                                <li>
+                                    <input type='checkbox' name="status" class='i-checks' value="2"><span>停止执行</span>
+                                </li>
+                                <li>
+                                    <input type='checkbox' name="status" class='i-checks' value="0"><span>待执行</span>
+                                </li>
+                                <li>
+                                    <input type='checkbox' name="status" class='i-checks' value="1"><span>执行完成</span>
+                                </li>
+                                <li>
+                                    <input type='checkbox' name="status" class='i-checks' value="-1"><span>取消执行</span>
+                                </li>
+                            </ul>
+                        </div>
                     </div>
                     <div class="pull-right">
                         <label>
-                            <button class="btn bg-ffa82d btn-search" type="button">查询</button>
+                            <button class="btn bg-ffa82d btn-search" type="button">
+                                <i class="fa fa-search"></i>
+                                查询</button>
                         </label>
                     </div>
                 </div>
             </div>
-            <!--状态-->
-            <div class="status">
-                <ul class="apsType-linkage">
-                    <li>状态：</li>
-                    <li>
-                        <input type='checkbox' class='i-checks'><span>停止执行</span>
-                    </li>
-                    <li>
-                        <input type='checkbox' class='i-checks'><span>待执行</span>
-                    </li>
-                    <li>
-                        <input type='checkbox' class='i-checks'><span>执行完成</span>
-                    </li>
-                    <li>
-                        <input type='checkbox' class='i-checks'><span>取消执行</span>
-                    </li>
-                </ul>
-            </div>
+
 
             <!--表格区-->
             <table id="treeTable" class="table table-striped table-bordered table-hover table-condensed dataTables-example dataTable tree_table">
@@ -152,26 +161,34 @@
 <!--自定义文件-->
 <script src="../../js/common.js"></script>
 <script src="../../js/customForm.js"></script>
+<script src="../../js/customForm-aps.js"></script>
+<script src="../../js/page.js"></script>
 <script>
-    //页面加载
-    $(window).load(function() {
-        //获取工序数据
+    
+    
+    $(function () {
+        window.pageLoad = function () {
+            var data = {};
+            Page.init("/api/ctrl/DirectiveDetail/page",data,true,function (result) {
+                console.log(result)
+                createTable(result);
+            })
+        }
+        //     //获取工序数据
         loadProcess();
-        //获取班次数据
+        //     //获取班次数据
         loadShift();
-        //获取班组数据
+        //     //获取班组数据
         loadGroups();
-        //获取分类数据
+        //     //获取分类数据
         loadClassify();
-       //获取级别数据
+        //    //获取级别数据
         loadRank();
-        //调用接口加载数据
-        loadData();;
-
-    });
+        pageLoad()
+    })
     //获取年月日
     $("#startDateParam").datetimepicker({
-        format: "yyyy-mm-dd",
+        format: "yyyy-mm-dd hh:mm:ss",
         language:'cn',
         weekStart: 1,
         pickTime: false,
@@ -185,7 +202,7 @@
         $("#startDateParam").datetimepicker('hide');
     });
     $("#endDateParam").datetimepicker({
-        format: "yyyy-mm-dd",
+        format: "yyyy-mm-dd hh:mm:ss",
         language:'cn',
         weekStart: 1,
         pickTime: false,
@@ -202,11 +219,11 @@
 
     //获取工序数据
     function loadProcess(){
-        var url_ = 'http://localhost:63342/branch/json/proDis/gongxu.json';
+        var url_ = 'http://114.115.165.184:8080/admin-api/api/sys/SysOrg/selectGx/3';
         ajaxToServer(url_, {}, function(result){
             if(result.success){
                 var rows = result.rows;
-                appendOptionsValue($('#process'), rows, 'code', 'name');
+                appendOptionsValue($('#process'), rows, 'name', 'name');
             }else{
                 layer.msg(result.message);
             }
@@ -214,11 +231,11 @@
     }
     //获取分类数据
     function loadClassify() {
-        var url_ = 'http://localhost:63342/branch/json/proDis/classify.json';
+        var url_ = 'http://114.115.165.184:8080/admin-api/api/sys/SysDict/type/directiveCassifyType';
         ajaxToServer(url_, {}, function(result){
             if(result.success){
                 var rows = result.rows;
-                appendOptionsValue($('#classify'), rows, 'id', 'classify');
+                appendOptionsValue($('#classify'), rows,'id','label');
             }else{
                 layer.msg(result.message);
             }
@@ -226,7 +243,7 @@
     }
     //获取班次数据
     function loadShift(){
-        var url_ = 'http://localhost:63342/branch/json/proDis/banci.json';
+        var url_ = '/api/ctrl/Shift/list';
         ajaxToServer(url_, {}, function(result){
             if(result.success){
                 var rows = result.rows;
@@ -244,11 +261,16 @@
     }
     //获取班组数据
     function loadGroups(){
-        var url_ = 'http://localhost:63342/branch/json/proDis/banzu.json';
+        var url_ = '/api/aps/Groups/list';
         ajaxToServer(url_, {}, function(result){
             if(result.success){
                 var rows = result.rows;
-                appendOptionsValue($('#team'), rows, 'id', 'name');
+                var options = new Array();
+                $(rows).each(function(i,o){
+                    var label = o['name'];
+                    options.push({'value':o['id'], 'label':label});
+                });
+                appendOptions($('#team'), options);
             }else{
                 layer.msg(result.message);
             }
@@ -256,12 +278,11 @@
     }
     //获取级别数据
     function loadRank(){
-        var url_ = 'http://localhost:63342/branch/json/proDis/jibie.json';
+        var url_ = 'http://114.115.165.184:8080/admin-api/api/sys/SysDict/type/directiveLeaveyType';
         ajaxToServer(url_, {}, function(result){
-            console.log(result)
             if(result.success){
                 var rows = result.rows;
-                appendOptionsValue($('#rank'), rows, 'id', 'rank');
+                appendOptionsValue($('#rank'),rows,'value','label');
             }else{
                 layer.msg(result.message);
             }
@@ -286,10 +307,10 @@
             "data": data,
             //定义列 宽度 以及在json中的列名
             "aoColumns": [
-                {"data": "process", 'sClass': " alignCenter authName"},
-                {"data": "instruct", 'sClass': "alignCenter autoWidth"},
-                {"data": "overStatus", 'sClass': "alignCenter"},
-                {"data": "overUserName", 'sClass': "alignCenter"},
+                {"data": "proc", 'sClass': " alignCenter authName"},
+                {"data": "content", 'sClass': "alignCenter autoWidth"},
+                {"data": "shiftName", 'sClass': "alignCenter"},
+                {"data": "groupName", 'sClass': "alignCenter"},
                 {"data": "id", "orderable": false, "defaultContent": "", 'sClass': "alignCenter autoWidth",
                     "render":function (data,type,row,meta) {
                         var html = "";
@@ -309,38 +330,42 @@
                         return html;
                     }
                 },
-                {"data": "overUserName", 'sClass': "alignCenter"}
+                {"data": "issuedTime", 'sClass': "alignCenter"}
             ]
         });
         RenderiCheckTblBody();
     }
-
-
-
-
     //获取数据
     function loadData(){
         var arr = [];
         var data = {
-            begin:$("#startDateParam").val(),
-            endtime:$("#endDateParam").val(),
-            process:$("#process option:selected").val(),
-            time:$("#time option:selected").val(),
-            classify:$("#classify option:selected").val()
+            proc:$("#process option:selected").text()=="-- 全部 --"?"":$("#process option:selected").text(), //工序
+            grade:$("#rank option:selected").text()=="-- 全部 --"?"":$("#rank option:selected").text(),   //级别
+            kind:$("#classify option:selected").text()=="-- 全部 --"?"":$("#classify option:selected").text(), //分类
+            startIssuedTime:$("#startDateParam").val(),
+            endIssuedTime:$("#endDateParam").val(),
+            main:{
+                groupsId:$("#team option:selected").val(),
+                shiftId:$("#time option:selected").val(),
+                status:getcheck()
+            }
         };
+        console.log(data)
         //指令查看接口地址
-        var url_ = 'http://localhost:63342/branch/json/proDis/productiondispatch.json';
+        var url_ = '/api/ctrl/DirectiveDetail/page';
         ajaxToServer(url_,JSON.stringify(data), function(result){
             if(result.success){
+                console.log(result)
                 var sczb = result.page.rows;
                 for(var i=0;i<sczb.length;i++){
                     var msgobj = {
                         "id":sczb[i].id,
-                        "process":sczb[i].groupName,
-                        "instruct":sczb[i].reciveStatus,
-                        "status":sczb[i].status,
-                        "overStatus":sczb[i].overStatus,
-                        "overUserName":sczb[i].overUserName
+                        "proc":sczb[i].proc,  //工序
+                        "content":sczb[i].content, //指令内容
+                        "status":sczb[i].status,   //状态
+                        "shiftName":sczb[i].shiftName, //班次
+                        "groupName":sczb[i].groupName, //班组
+                        "issuedTime":sczb[i].issuedTime
                     }
                     arr.push(msgobj)
                 }
@@ -356,9 +381,19 @@
         loadData();
     });
 
-
-
-
+    //获取复选框选中状态
+    function getcheck() {
+        var checkarr = [];
+        var checkbox = document.getElementsByName("status");
+        var textcontent = "";
+        for(var i=0;i<checkbox.length;i++){
+            if(checkbox[i].checked == true){
+                checkarr.push(checkbox[i].value)
+            }
+        }
+        textcontent = checkarr.join(",");
+        return textcontent
+    }
 
 </script>
 </html>

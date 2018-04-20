@@ -199,7 +199,7 @@
         },
         {
           "iconName": "",
-          "name": "指令监控",
+          "name": "指令跟踪",
           "menu_sub": "1",
           "href": "../html/proDis/ordertailafter.html",
           "children": []

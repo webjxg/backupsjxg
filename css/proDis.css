@@ -22,7 +22,9 @@
   background-color: transparent;
   border: 1px solid  #999999 !important;
   border-radius: 3px; }
-
+.distance{
+  padding-top: 20px;
+}
 .btn-await1 {
   padding: 3px 10px;
   width: 10px !important;
@@ -32,10 +34,16 @@
   background-color: transparent;
   border: 1px solid  #ffa82d !important;
   border-radius: 3px; }
-
 .id {
   display: none; }
-
+.btn-search{
+  background-color: #ffa82d;
+  color: white;
+  border-color: #ffa82d;
+}
+.btn-search:hover{
+  color: black;
+}
 .stopbtn {
   color: white !important;
   background-color: #f65c5c !important; }
@@ -46,17 +54,10 @@
 
 .show {
   display: block; }
-.statu{
-  margin-top: 20px;
-}
-.fa-calendar{
-  margin-left: -18px;
-  color: #fda92d;
-}
-.execution{
-  display: inline-block;
-}
 .execution input{
-  width: 120px;
+  height: 34px;
+  border-radius: 6px;
+  border: 1px solid #e5e6e7;
+  margin: 0 5px;
 }
 /*# sourceMappingURL=proDis.css.map */

@@ -20,7 +20,7 @@
             <td class="width-15" ><label class="pull-right">参数:</label></td>
 
             <td class="width-35">
-                <input id="opeName" name="paramCode" type="text" value="" data-msg-required="" class="form-control valid" style="" aria-required="true" aria-invalid="false">
+                <input id="opeName" maxlength="100" required="required" name="paramCode" type="text" value="" data-msg-required="" class="form-control valid" style="" aria-required="true" aria-invalid="false">
                 <label id="proName-error" class="error" for="proName" style="display:none"></label>
             </td>
 
@@ -30,7 +30,7 @@
             <td class="width-15" ><label class="pull-right">数值:</label></td>
 
             <td class="width-35">
-                <input id="opeCode" name="value" type="text" value="" data-msg-required="" class="form-control valid" style="" aria-required="true" aria-invalid="false">
+                <input id="opeCode" maxlength="100" required="required" name="value" type="text" value="" data-msg-required="" class="form-control valid" style="" aria-required="true" aria-invalid="false">
                 <label id="proCode-error" class="error" for="proCode" style="display:none"></label>
             </td>
         </tr>
@@ -42,7 +42,7 @@
                 </label>
             </td>
             <td class="width-60">
-                <textarea id="remarks" name="remark" maxlength="200" class="form-control" rows="6 "></textarea>
+                <textarea id="remarks" required="required" name="remark" maxlength="100" class="form-control" rows="6 "></textarea>
             </td>
         </tr>
         </tbody>

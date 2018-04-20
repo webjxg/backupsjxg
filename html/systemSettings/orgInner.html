@@ -24,7 +24,7 @@
         <div class="col-sm-12">
             <div class="pull-left">
                 <button class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="left"
-                        onclick="openEditDialog('新增用户','./systemSettings/orgCheckView.html','800px','500px')" title="添加"><i class="fa fa-plus"></i> 添加
+                        onclick="openEditDialog('新增组织机构','./systemSettings/orgCheckView.html','800px','500px')" title="添加"><i class="fa fa-plus"></i> 添加
                 </button>
                 <button class="btn btn-white btn-sm " id="refresh-btn" data-toggle="tooltip" data-placement="left"
                         onclick="window.location.reload()" title="刷新"><i class="glyphicon glyphicon-repeat"></i> 刷新
@@ -95,11 +95,11 @@
     function clickButton() {
         $('.btn-check').click(function () {
             var id = $(this).parents("tr").find('.i-Checks').attr('id');
-            openDialog('查看用户信息', './systemSettings/orgCheckView.html?id=' + id, '800px', '600px')
+            openDialog('查看组织机构信息', './systemSettings/orgCheckView.html?id=' + id, '800px', '600px')
         });
         $('.btn-change').click(function () {
             var id = $(this).parents("tr").find('.i-Checks').attr('id');
-            openEditDialog('修改用户信息', './systemSettings/orgCheckView.html?id=' + id, '800px', '600px')
+            openEditDialog('修改组织机构信息', './systemSettings/orgCheckView.html?id=' + id, '800px', '600px')
         });
         $('.btn-delete').click(function () {
             var id = $(this).parents("tr").find('.i-Checks').attr('id');
@@ -134,11 +134,11 @@
                 + "<td >" + (data[i].delFlag == 0 ? '否' : '是') + "</td>"
                 + "<td class='autoWidth' >" +
                 "<a class='btn btn-info btn-xs btn-check'><i class='fa fa-search-plus'></i>查看</a>" +
-                " <a class='btn btn-success btn-xs btn-change'><i class='fa fa-edit'></i>修改</a>" +
+                " <a class='btn btn-success btn-xs btn-change'><i class='fa icon-change'></i>修改</a>" +
                 " <a class='btn btn-danger btn-xs btn-delete'><i class='fa fa-trash'></i> 删除</a>" + " " +
                 " <a class='btn btn-primary btn-xs btn-add'><i class='fa fa-plus'></i> 添加下级机构</a> </br>" +
-                "<a class='btn  btn-warning btn-xs btn-allot'><i class='fa fa-plus'></i> 分配用户</a> " +
-                "<a class='btn  btn-info btn-xs btn-allotApp'><i class='fa fa-plus'></i> 分配应用</a>" +
+                "<a class='btn  btn-warning btn-xs btn-allot'><i class='fa fa-user'></i> 分配用户</a> " +
+                "<a class='btn   btn-xs btn-allotApp'><i class='fa fa-pie-chart'></i> 分配应用</a>" +
                 "</td>"
 
                 + "</tr>";

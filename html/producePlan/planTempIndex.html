@@ -17,23 +17,23 @@
     <link rel="stylesheet" href="../../css/aps.css">
     <link rel="stylesheet" href="../../css/customDataTable.css">
     <style>
-        .btn{
-            width:auto;
-            background: #ffa82d;
-            border-color: #ffa82d;
-            color: #fff;
-        }
-        .bg-62b5e9 {
-            width:74px;
-            background: #62b5e9;
-            border-color: #62b5e9;
-            color: #fff; }
+        /*.btn{*/
+            /*width:auto;*/
+            /*background: #ffa82d;*/
+            /*border-color: #ffa82d;*/
+            /*color: #fff;*/
+        /*}*/
+        /*.bg-62b5e9 {*/
+            /*width:74px;*/
+            /*background: #62b5e9;*/
+            /*border-color: #62b5e9;*/
+            /*color: #fff; }*/
 
-        .bg-f75c5c {
-            width:74px;
-            background: #f75c5c;
-            border-color: #f75c5c;
-            color: #fff; }
+        /*.bg-f75c5c {*/
+            /*width:74px;*/
+            /*background: #f75c5c;*/
+            /*border-color: #f75c5c;*/
+            /*color: #fff; }*/
     </style>
 
 </head>
@@ -46,17 +46,17 @@
     <div class="row">
         <div class="col-sm-12">
             <div class="pull-left">
-                <button class=" bg-62b5e9 btn" data-toggle="tooltip" data-placement="left"
+                <button class="btn-white btn" data-toggle="tooltip" data-placement="left"
                         onclick="openEditDialog('新增模板','./producePlan/planTempCheckView.html','800px','300px')" title="添加"><i class="fa fa-plus"></i> 添加
                 </button>
 
-                <button class=" bg-f75c5c btn" data-toggle="tooltip" data-placement="left"
+                <button class="btn-white btn" data-toggle="tooltip" data-placement="left"
                         onclick="edit('修改模板信息','./producePlan/planTempCheckView.html','800px','300px','#treeTable')" title="修改"><i class="fa fa-file-text-o"></i> 修改
                 </button>
-                <button class=" bg-f75c5c btn" onclick="deleteIt('确认要删除该模板吗？','/api/aps/Template/delete/')"  data-toggle="tooltip" data-placement="top"><i
+                <button class="btn-white btn" onclick="deleteIt('确认要删除该模板吗？','/api/aps/Template/delete/')"  data-toggle="tooltip" data-placement="top"><i
                         class="fa fa-trash-o"> 删除</i>
                 </button>
-                <button class=" bg-62b5e9 btn" id="refresh-btn" data-toggle="tooltip" data-placement="left"
+                <button class="btn-white btn" id="refresh-btn" data-toggle="tooltip" data-placement="left"
                         onclick="window.location.reload()" title="刷新"><i class="glyphicon glyphicon-repeat"></i> 刷新
                 </button>
             </div>
@@ -178,7 +178,7 @@
                 {"data": "id", "orderable": false, "defaultContent": "",
                     "render": function (data, type, row, meta) {
                         return data =
-                            "<a class='.bg-ffa82d btn btn-preserve'><i class='fa fa-edit' ></i>项目信息维护</a >"
+                            "<a class='btn-maintain btn btn-preserve'><i class='fa icon-maintain' ></i>项目信息维护</a >"
                     }
                 }],
 

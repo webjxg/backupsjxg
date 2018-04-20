@@ -14,6 +14,7 @@
     <link rel="stylesheet" href="../../css/customDatagrid.css">
     <link rel="stylesheet" href="../../css/customDataTable.css">
     <link rel="stylesheet" href="../../css/aps.css">
+    <link rel="stylesheet" href="../../css/proDis.css">
     <style>
         .wrapper{
             height: 1074px;
@@ -72,8 +73,12 @@
                     </ul>
                 </div>
                 <div class="pull-right btn-box mgb-20">
-                    <button class="btn btn-add " id="btn-search" type="button" onclick="getOption()">查询</button>
-                    <button class="btn btn-add " id="btn-add" type="button" onclick="window.location.href='./createInstructionIndex.html'">创建指令</button>
+                    <button class="btn btn-search btn-white" id="btn-search" type="button" onclick="getOption()">
+                        <i class="fa fa-search"></i>
+                        查询</button>
+                    <button class="btn btn-white btn-instruct" id="btn-add" type="button" onclick="window.location.href='./createInstructionIndex.html'">
+                        <i class="fa icon-create"></i>
+                        创建指令</button>
                 </div>
             </div>
         </div>

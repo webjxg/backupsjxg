@@ -9,9 +9,9 @@
     <link rel="stylesheet" href="../../plugins/datetimepicker/css/bootstrap-datetimepicker.css">
     <!--引入样式-->
     <link rel="stylesheet" href="../../plugins/layer/theme/default/layer.css"><!--样式-->
-    <link rel="stylesheet" href="../../css/common.css">
     <link rel="stylesheet" href="../../css/customDataTable.css">
     <link rel="stylesheet" href="../../css/aps.css">
+    <link rel="stylesheet" href="../../css/common.css">
 </head>
 <body>
 <div class="wrapper wrapper-content bg-gray">
@@ -38,8 +38,8 @@
                     </ul>
                 </div>
                 <div class="pull-right btn-box mgb-20">
-                    <button class="btn btn-search  bg-ffa82d" id="search-btn" type="button"><i class="fa fa-search"></i>查询</button>
-                    <button class="btn btn-add " id="btn-add" type="button"><i class="fa fa-plus"></i>新增</button>
+                    <button class="btn btn-search btn-white" id="search-btn" type="button"><i class="fa fa-search"></i>查询</button>
+                    <button class="btn   btn-white" id="btn-add" type="button"><i class="fa fa-plus"></i>新增</button>
                     </button>
                 </div>
             </div>
@@ -137,15 +137,16 @@
             }
             Page.init("/api/aps/ApsYearPlan/page", data, true, function (tableData) {
                 renderTableData(tableData);
+                console.log(tableData);
                 //查看
                 $(".btn-check").click(function () {
                     var attrArr = getAttr($(this));
-                    openDialog('查看月计划', 'producePlan/yearPlanCheck.html?id=' + attrArr[0] + '&year=' + attrArr[1]+'&check=0', '800px', '500px')
+                    openDialog('查看年计划', 'producePlan/yearPlanCheck.html?id=' + attrArr[0] + '&year=' + attrArr[1]+'&check=0', '800px', '500px')
                 });
                 //删除
                 $(".btn-delete").click(function () {
                     var attrArr = getAttr($(this));
-                    deleteItem('确定要删除该计划', '/api/aps/ApsYearPlan/delete', attrArr[0])
+                    deleteOne('确定要删除该计划', '/api/aps/ApsYearPlan/delete', attrArr[0])
                 });
                 //编辑
                 $(".btn-edit").click(function () {
@@ -169,9 +170,34 @@
                         layerAlert("请选择一个准确的年份!");
                     } else {
                         location.href = "./yearPlanIndex.html?year=" + $year;
+                        console.log($year);
                     }
                 });
+//删除单条数据
+        function deleteOne(mess,url,id){
+            //var ids= eleP.find('input.i-checks').attr('id')
+            var data = {id:id} || {};
+            top.layer.confirm(mess, {icon: 3, title:'系统提示'},function(index){
+                ajaxToServer(url,JSON.stringify(data),function(result){
+                    console.log(data,url);
+                    if(result.success == true){
+                        var frameActive = top.getActiveTab().attr("name");
+                        var obj = $('#search-btn', top.window.frames[frameActive].document);
+                        if(obj.length == 0){
+                            obj = $('#refresh-btn', top.window.frames[frameActive].document);
+                            if(obj.length == 0){
 
+                                top.refreshActiveTab();
+                            }
+
+                        }
+                        obj.trigger('click');
+                    }
+                });
+                top.layer.close(index);
+            });
+            return false;
+        }
 
     //  渲染表内容
     function renderTableData(tableData){
@@ -214,15 +240,18 @@
                 {
                     "data": null, "orderable": false, "defaultContent": "",'sClass':" alignCenter autoWidth",
                     "render": function (data, type, row, meta) {
+                        console.log(row);
                         var html="";
                         if(row.status == "0" || row.status == "-1" ) {
-                            html = "<a class='btn btn-review' ><i class='fa fa-check'></i>排产</a >";
+                            html = "<a class='btn btn-review' ><i class='fa fa-file-text'></i>排产</a >"+
+                            "<a class='btn btn-edit btn-compile'><i class='fa fa-edit'></i>编辑</a >";
+                        }else if(row.status == "1"){
+                            html = "<a class='btn btn-review' ><i class='fa fa-file-text'></i>排产</a >"
                         }
-                        return "<input type='hidden'  id=" + row.id + " data-type="+row.tYPE+" data-id='"+row.id+"' data-year='"+$year+"' data-status='"+row.status+"' class='i-checks'>"+
-                            "<a class='btn btn-edit'><i class='fa fa-edit'></i>编辑</a >" +
-                            "<a class='btn btn-delete'><i class='fa fa-trash'></i>删除</a >"+
-                            "<a class='btn btn-check' ><i class='fa fa-search-plus'></i>查看</a >"
-                            +html;
+                        return "<input type='hidden'  id=" + row.id + " data-type="+row.tYPE+" data-id='"+row.id+"' data-year='"+row.adYear+"' data-status='"+row.status+"' class='i-checks'>"+
+                            "<a class='btn btn-check btn-info' ><i class='fa fa-search-plus'></i>查看</a >"
+                            +html+"<a class='btn btn-delete'><i class='fa fa-trash'></i>删除</a >"
+                            ;
 
                         }
                 }

@@ -200,6 +200,7 @@
                 if(clickFlag){
                     if(!innerCallbackFn){
                         iframeWin.contentWindow.clicksubmit(iframeWin.contentWindow,body,index);
+
                     }else{
                         innerCallbackFn.call(iframeWin.contentWindow,iframeWin.contentWindow,body,index);
                     }
@@ -208,9 +209,6 @@
                         clickFlag = true;
                     },3000);
                 }
-                top.layer.close(index);
-                window.location.reload();
-
             },
             cancel: function(index){
             }

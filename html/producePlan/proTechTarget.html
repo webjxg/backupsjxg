@@ -18,8 +18,10 @@
     <div class="ibox">
         <div class="ibox-content">
             <div class="clearfix btn-box mgb-20">
-                <button class="btn btn-paichan pull-right" type="button">排产</button>
-                <button class="btn btn-success  btn-save pull-right" type="button">保存</button>
+                <button class="btn btn-adjust pull-right btn-white" id="btn-adjust" type="button">调整</button>
+                <button class="btn btn-success btn-instruct btn-save pull-right" type="button">
+                    <i class="fa icon-save"></i>
+                    保存</button>
             </div>
             <div class="commercePurCon proTargetPlanItem">
                 <div class="tableItemBox">
@@ -121,10 +123,34 @@
             		zlzbjhs.push(itemmsg);
             	 }
             	 $('#td0').datagrid('loadData',clzbjhs);
-            	  $('#td1').datagrid('loadData',gxdhzbjhs);
-            	   $('#td2').datagrid('loadData',jszbjhs);
-            	   $('#td3').datagrid('loadData',zlzbjhs);
-                  setFrameHeight();
+                 $('#td1').datagrid('loadData',gxdhzbjhs);
+                 $('#td2').datagrid('loadData',jszbjhs);
+                 $('#td3').datagrid('loadData',zlzbjhs);
+                 setFrameHeight();
+                 function aa(){
+
+                 }
+                 $("#btn-adjust").click(function(){
+                    function test(title,url,width,height,){
+                        top.layer.open({
+                            type: 2,
+                            area: [width, height],
+                            title: title,
+                            maxmin: true, //开启最大化最小化按钮
+                            content: url ,
+                            btn: ['确定', '关闭'],
+                            yes: function(index, layero){
+                               var iframeInnerWin = layero.find('iframe')[0].contentWindow;
+                               console.log(layero.find('iframe')[0]);
+                               //console.log(iframeInnerWin.getInnerVal());
+                               var data = iframeInnerWin.getInnerVal();
+                            },
+                            cancel: function(index){
+                            }
+                        });
+                    }
+                    test(year+"年月计划调整","producePlan/monthAdjust.html?year="+year+"&month="+month,"1000px","500px",)
+                 });
          })
 })
                 
@@ -141,8 +167,8 @@
                {field:'mainId',title:'mainId',hideColumn:'mainId'},
               {field:'itemName',title:'项目',width:100,align:'center'},
                 {field:'itemUnit',title:'单位',width:100,align:'center'},
-                {field:'yearTarget',title:'全年基本目标',editor:'text',width:100,align:'center'},
-                {field:'monthPlan',title:month+'月计划',editor:'text',width:100,align:'center'},
+                {field:'yearTarget',title:'全年基本目标',editor:'numberbox',width:100,align:'center'},
+                {field:'monthPlan',title:month+'月计划',editor:'numberbox',width:100,align:'center'},
                 {field:'remark',title:'备注',editor:'text',width:100,align:'center'}
             ]],
             onAfterEdit: function (rowIndex, rowData, changes) {
@@ -177,8 +203,8 @@
               {field:'mainId',title:'mainId',hideColumn:'mainId'},
               {field:'groupName',title:'项目',width:100,align:'center'},
                 {field:'itemUnit',title:'单位',width:100,align:'center'},
-                {field:'yearTarget',title:'全年基本目标',editor:'text',width:100,align:'center'},
-                {field:'monthPlan',title:month+'月计划',editor:'text',width:100,align:'center'},
+                {field:'yearTarget',title:'全年基本目标',editor:'numberbox',width:100,align:'center'},
+                {field:'monthPlan',title:month+'月计划',editor:'numberbox',width:100,align:'center'},
                 {field:'remark',title:'备注',editor:'text',width:100,align:'center'}
             ]],
             onAfterEdit: function (rowIndex, rowData, changes) {
@@ -212,8 +238,8 @@
               {field:'mainId',title:'mainId',hideColumn:'mainId'},
               {field:'groupName',title:'项目',width:100,align:'center'},
                 {field:'itemUnit',title:'单位',width:100,align:'center'},
-                {field:'yearTarget',title:'全年基本目标',editor:'text',width:100,align:'center'},
-                {field:'monthPlan',title:month+'月计划',editor:'text',width:100,align:'center'},
+                {field:'yearTarget',title:'全年基本目标',editor:'numberbox',width:100,align:'center'},
+                {field:'monthPlan',title:month+'月计划',editor:'numberbox',width:100,align:'center'},
                 {field:'remark',title:'备注',editor:'text',width:100,align:'center'}
             ]],
             onAfterEdit: function (rowIndex, rowData, changes) {
@@ -247,8 +273,8 @@
               {field:'mainId',title:'mainId',hideColumn:'mainId'},
               {field:'groupName',title:'项目',width:100,align:'center'},
                 {field:'itemUnit',title:'单位',width:100,align:'center'},
-                {field:'yearTarget',title:'全年基本目标',editor:'text',width:100,align:'center'},
-                {field:'monthPlan',title:month+'月计划',editor:'text',width:100,align:'center'},
+                {field:'yearTarget',title:'全年基本目标',editor:'numberbox',width:100,align:'center'},
+                {field:'monthPlan',title:month+'月计划',editor:'numberbox',width:100,align:'center'},
                 {field:'remark',title:'备注',editor:'text',width:100,align:'center'}
             ]],
             onAfterEdit: function (rowIndex, rowData, changes) {
@@ -279,15 +305,8 @@
 //
         //点击时获取到信息
         $(".btn-save").click(function (e) {
-            var btn = $(e.target).context.textContent;
-            if(btn == "保存"){
-                status = "0";
-                addstatus(status)
-            }else{
-                status = "1";
-                addstatus(status)
-            }
-        })
+            addstatus("0");
+        });
         //将点击状态添加到数组里边
         function addstatus(status) {
             var len = $(".tableItemBox").length;
