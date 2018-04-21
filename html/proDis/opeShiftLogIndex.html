@@ -129,7 +129,7 @@
             width: 33px;
             height: 33px;
         }
-        .newbox > .btnadd {
+        .newbox > .btnaddr {
             position: absolute;
             top: 21px;
             right: -90px;
@@ -175,7 +175,13 @@
         }
 
         /*table*/
-
+        .wrapper>.ibox>.ibox-content>.tablecontent{
+            width: 50%;
+            clear: none;
+            margin-top: 80px;
+            display: none;
+            float:left;
+        }
     </style>
 
 </head>
@@ -196,23 +202,23 @@
             <!--按钮-->
             <div class="clearfix">
                 <div class="apsType-box pull-right mgb-10">
-                    <button class="joinWork btn bg-ffa82d">接班</button>
-                    <button class="giveWork btn bg-1ab394">交班</button>
+
+
                 </div>
             </div>
         </div>
         <!--内容区-->
-        <div class="ibox-content">
+        <div class="ibox-content content">
             <div class="content-head">
                 <h1 class="titName pull-left">本班日志</h1>
                 <a href="#" class="pull-right checkupclass">查看上一班 <i class="fa fa-angle-double-right"></i></a>
             </div>
             <!--左侧里程碑-->
             <div class="ibox-content pull-left lefttimeline ">
-                <form id="inputForm" class="form-horizontal" action="######" method="post">
+                <form id="inputForm" class="form-horizontal" action="" method="post">
                     <div class="btn bg-1ab394 outerbox">岗位记事</div>
                     <div class="clearBoth linebox">
-                        <div class="safebox">
+                        <div class="safebox parentbox" id="AQ">
                             <div class="col-1ab394 safe">
                                 <i class="headbigimg"></i>
                                 <span>安全</span>
@@ -220,85 +226,44 @@
                             <div class=" newbox">
                                 <i class="smallimg"></i>
                                 <textarea name="safe"></textarea>
-                                <button class="btn bg-1ab394 btnadd">+</button>
-                                <button class="btn btnremove">-</button>
-                            </div>
-                            <div class=" newbox">
-                                <i class="smallimg"></i>
-                                <textarea name="safe"></textarea>
-                                <button class="btn bg-1ab394 btnadd">+</button>
-                                <button class="btn btnremove">-</button>
+                                <input type="button" class="btn bg-1ab394 btnaddr" value="+">
+                                <input class="btn btnremove" value="-">
                             </div>
                         </div>
-                        <div class="probox">
+                        <div class="probox parentbox" id="SC">
                             <div class="col-1ab394 production">
                                 <i class="headbigimg"></i>
                                 <span>生产</span>
                             </div>
                             <div class=" newbox">
                                 <i class="smallimg"></i>
-                                <textarea name="safe"></textarea>
-                                <button class="btn bg-1ab394 btnadd">+</button>
-                                <button class="btn btnremove">-</button>
-                            </div>
-                            <div class=" newbox">
-                                <i class="smallimg"></i>
-                                <textarea name="safe"></textarea>
-                                <button class="btn bg-1ab394 btnadd">+</button>
-                                <button class="btn btnremove">-</button>
-                            </div>
-                            <div class=" newbox">
-                                <i class="smallimg"></i>
-                                <textarea name="safe"></textarea>
-                                <button class="btn bg-1ab394 btnadd">+</button>
-                                <button class="btn btnremove">-</button>
+                                <textarea name="production"></textarea>
+                                <input type="button" class="btn bg-1ab394 btnaddr" value="+">
+                                <input class="btn btnremove" value="-">
                             </div>
                         </div>
-                        <div class="elsebox">
+                        <div class="elsebox parentbox" id="QT">
                             <div class="col-1ab394 else">
                                 <i class="headbigimg"></i>
                                 <span>其他</span>
                             </div>
                             <div class=" newbox">
                                 <i class="smallimg"></i>
-                                <textarea name="safe"></textarea>
-                                <button class="btn bg-1ab394 btnadd">+</button>
-                                <button class="btn btnremove">-</button>
+                                <textarea name="else"></textarea>
+                                <input type="button" class="btn bg-1ab394 btnaddr" value="+">
+                                <input class="btn btnremove" value="-">
                             </div>
-                            <div class=" newbox">
-                                <i class="smallimg"></i>
-                                <textarea name="safe"></textarea>
-                                <button class="btn bg-1ab394 btnadd">+</button>
-                                <button class="btn btnremove">-</button>
-                            </div>
-                            <div class=" newbox">
-                                <i class="smallimg"></i>
-                                <textarea name="safe"></textarea>
-                                <button class="btn bg-1ab394 btnadd">+</button>
-                                <button class="btn btnremove">-</button>
-                            </div>
+
                         </div>
                     </div>
                     <div class="btn bg-1ab394 outerbox">交班记事</div>
                     <div class="clearBoth linebox">
-                        <div class="safebox">
+                        <div class="safebox parentbox giveworktext" id="JBJS">
                             <div class=" newbox">
                                 <i class="smallimg"></i>
-                                <textarea name="safe"></textarea>
-                                <button class="btn bg-1ab394 btnadd">+</button>
-                                <button class="btn btnremove">-</button>
-                            </div>
-                            <div class=" newbox">
-                                <i class="smallimg"></i>
-                                <textarea name="safe"></textarea>
-                                <button class="btn bg-1ab394 btnadd">+</button>
-                                <button class="btn btnremove">-</button>
-                            </div>
-                            <div class=" newbox">
-                                <i class="smallimg"></i>
-                                <textarea name="safe"></textarea>
-                                <button class="btn bg-1ab394 btnadd">+</button>
-                                <button class="btn btnremove">-</button>
+                                <textarea name="giveworktext"></textarea>
+                                <input type="button" class="btn bg-1ab394 btnaddr" value="+">
+                                <input class="btn btnremove" value="-">
                             </div>
                         </div>
                     </div>
@@ -309,8 +274,27 @@
                 </div>
             </div>
             <!--隐藏表格区-->
-            <div class="ibox-content pull-right hidden tablecontent">
+            <div class="ibox-content pull-right tablecontent">
+                <table id="treeTable1" title="岗位记事" class="table table-striped table-bordered table-hover table-condensed dataTables-example dataTable">
+                    <thead>
+                        <tr>
+                            <th colspan="2" style="text-align: left;font-weight:300; background-color: #F5F5F5 !important;color: #000000">岗位记事</th>
+                        </tr>
+                    </thead>
+                    <tbody id="treeTableBody1" >
 
+                    </tbody>
+                </table>
+                <table id="treeTable2" title="岗位记事" class="table table-striped table-bordered table-hover table-condensed dataTables-example dataTable">
+                    <thead>
+                        <tr>
+                            <th colspan="2" style="text-align: left;font-weight:300; background-color: #F5F5F5 !important;color: #000000">交班记事</th>
+                        </tr>
+                    </thead>
+                    <tbody id="treeTableBody2" >
+
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>
@@ -335,21 +319,97 @@
 <script>
     $(document).ready(function () {
         renderclass();
-        btnonclick()
+        var cz={
+            "bigKind":"CZ"
+        };
+        ajaxTo('/api/ctrl/ShiftMain/form/CZ',JSON.stringify(cz),function (result) {
+            btnonclick(result);
+            renderTableData(result);
+            if(result.shiftMain.overStatus==0||result.shiftMain.overStatus==''){
+                $('.apsType-box').append('<input type="button" class="giveWork btn bg-1ab394" value="交班">')
+            }else{
+                $('.apsType-box').append('<input type="button"  class="joinWork btn bg-ffa82d" value="接班" >')
+            }
+        });
+
     });
-    function btnonclick() {
-        $('.checkupclass').click(function () {
-            $('.lefttimeline').css('width','55%');
+
+    /*所有按钮操作*/
+    function btnonclick(result) {
+        /*隐藏按钮*/
+        $('.content').on('click','.checkupclass',function () {
+            $('.lefttimeline').css('width','45%');
+            $('.tablecontent').css('display','block');
+
+        });
+        /*加减按钮*/
+        $('.parentbox').on('click','.btnaddr',function () {
+            var str = "<div class='newbox'>" +
+                "<i class='smallimg'></i>" +
+                "<textarea name='safe'></textarea>" +
+                "<input type='button' class='btn bg-1ab394 btnaddr' value='+'>" +
+                "<input class='btn btnremove' value='-'>" +
+                "</div>";
+            $(this).parents('.newbox').after(str);
+        });
+        $('.parentbox').on('click','.btnremove',function () {
+            $(this).parents('.newbox').remove();
+        });
+        /*交班*/
+        var data={
+            bigKind:"CZ",
+            shiftId:result.shiftMain.shift.id,
+            shiftMainId:result.shiftMain.id,
+            overStatus:"1",
+            groupName:result.shiftMain.groupName,
+            shiftDate:result.shiftMain.shiftDate
+        };
+        var keyArr = ["AQ","SC","QT","JBJS"];
+        $('.apsType-box').on('click','.giveWork',function () {
+            for(var i=0;i<keyArr.length;i++){
+                data[keyArr[i]+"_dataArr"]=JSON.stringify([{
+                        middleKing:keyArr[i],
+                        main:{"id":result.shiftMain.id},
+                        content:getItemArrJson($('#'+keyArr[i]))
+                    }])
+
+            }
+            ajaxTo1('/api/ctrl/ShiftMain/over',data,function (result) {
+                console.log(data,result);
+            })
+        })
+        /*接班*/
+        $('.apsType-box').on('click','.joinWork',function () {
+            data.overStatus="0";
+            for(var i=0;i<keyArr.length;i++){
+                data[keyArr[i]+"_dataArr"]=JSON.stringify(
+                    [{
+                        middleKing:keyArr[i],
+                        main:{"id":result.shiftMain.id},
+                        content:getItemArrJson($('#'+keyArr[i]))
+                    }]
+                )
+            }
+            ajaxTo1('/api/ctrl/ShiftMain/recive',data,function (result) {
+                console.log(data,result);
+            })
         })
     }
 
+    /*拿到所有填写内容返回*/
+    function getItemArrJson(obj){
+        var jsonArr = new Array();
+        $(obj).find('textarea').each(function(i, r){
+            jsonArr.push($(r).val());
+        });
+        return jsonArr;
+    }
 
     //写入班信息
     function renderclass() {
         $('.date').text(getNowFormatDate());
         var data = {};
         ajaxTo('/api/ctrl/DirectiveIssued/list', JSON.stringify(data), function (data) {
-            console.log(data);
             var startTime = data.rows[0].shift.startTime, endTime = data.rows[0].shift.endTime;
             $('.groupName').text(data.rows[0].name);
             $('.shiftName').text(startTime + "-" + endTime);
@@ -357,6 +417,7 @@
             $('.shiftworker').text(data.rows[0].issuedUser);
         });
     }
+
     //获得当前日期
     function getNowFormatDate() {
         var date = new Date();
@@ -373,6 +434,7 @@
         var currentdate = year + seperator1 + month + seperator1 + strDate;
         return currentdate;
     }
+
     function ajaxTo(url, data, callbackFun) {
         var layerIndex = layer.load(2);
         url = url.toLowerCase().indexOf("http://") == 0 ? url : (urlPrefix + url);
@@ -400,7 +462,55 @@
         });
     }
 
+    function ajaxTo1(url, data, callbackFun) {
+        var layerIndex = layer.load(2);
+        url = url.toLowerCase().indexOf("http://") == 0 ? url : (urlPrefix + url);
+        $.ajax({
+            headers: {
+                Accept: "application/json; charset=utf-8",
+                // Authorization: getCookie("token_type")+" " +getCookie("authorization")，
+                Authorization: "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJqdGkiOiIwMzIyMjcxNmFiNzU0MTIxOTU5Yjg1ODU1YmFhZWRjZSIsInN1YiI6IjIyIiwiaXNzIjoiYWRtaW4iLCJhdWQiOiJBZG1pbiBKV1QgT25saW5lIn0.c_MLl8tCitpuSa6d-RzAFWJq7k-H3XBAQePTep4q4IM"
+            },
+            type: "post",
+            url: url,
+            data: data,
+            dataType: 'json',
+            contentType:'application/x-www-form-urlencoded',
+            success: function (result) {
+                layer.close(layerIndex);
+                if (callbackFun) {
+                    callbackFun(result);
+                }
+            },
+            error: function () {
+                layer.close(layerIndex);
+                layer.msg('请求服务器异常.');
+            }
+        });
+    }
 
+    function renderTableData(data) {
+        console.log(data);
+        var aq=data.ShiftMainMap.AQ,sc=data.ShiftMainMap.SC,qt=data.ShiftMainMap.QT,jbjs=data.ShiftMainMap.JBJS;
+        renders(aq,"htmlaq","安全","#treeTableBody1");
+        renders(sc,"htmlsc","生产","#treeTableBody1");
+        renders(qt,"htmlqt","其他","#treeTableBody1");
+        renders(jbjs,"htmljbjs","交班记事","#treeTableBody2");
+
+    }
+    function renders(item,htmlname,content,innerid) {
+//        var pattern =new RegExp(\"[]);
+
+        $(item).each(function (i) {
+            row = i + 1;
+                htmlname = "<tr>" +
+                                "<td  class='firsttd' width='50%'>"+content+"</td>"
+                                 +"<td class='twotd' width='50%'>"+item[i].content+"</td>"
+                            +"</tr>";
+            $(innerid).append(htmlname);
+        });
+
+    }
 </script>
 
 
