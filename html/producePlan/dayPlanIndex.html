@@ -167,7 +167,7 @@
 
         });
         $(".btn-back").click(function () {
-            refreshActiveTab()
+           refreshActiveTab()
         });
 
     });
@@ -445,38 +445,24 @@
     }
     //暂存递交
     function btnSubSave(status) {
-        var len = $(".tableItemBox").length;
-        for (var i = 0; i < len; i++) {
-            $("#td" + i).parents('.datagrid-view').siblings(".datagrid-toolbar").find(".l-btn-text").trigger('click');
-        }
-        var saveArr=[];
-        var editItems = dataGridObj.saveItemArr;
-        $(editItems).each(function (i) {
-            saveArr.push(editItems[i]);
-        });
-        if(saveArr==''){
+        var editItems = dataGridObj.getSaveItemArr();
+        if(editItems==''){
             layer.alert('数据无变化，请改动数据后再进行保存')
         }else{
             var data={
-                "dayPlans":JSON.stringify(saveArr),
+                "dayPlans":JSON.stringify(editItems),
                 "status":status,
                 "id":$('#id').val()
             };
-            console.log(data);
-            ajaxToServer1('/api/aps/DayPlan/save',data, layermsg);
-            function layermsg(msg) {
-                console.log(msg);
-                if (msg.success) {
+            ajaxToServer1('/api/aps/DayPlan/save',data, function(result){
+                if (result.success) {
                     layer.msg('提交成功');
-                    refreshActiveTab()
+                    refreshActiveTab();
                 } else {
-                    layer.msg(msg.message)
+                    layer.msg(result.message)
                 }
-            }
+            });
         }
-
-
-
     }
 
 

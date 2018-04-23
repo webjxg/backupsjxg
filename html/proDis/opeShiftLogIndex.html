@@ -223,35 +223,19 @@
                                 <i class="headbigimg"></i>
                                 <span>安全</span>
                             </div>
-                            <div class=" newbox">
-                                <i class="smallimg"></i>
-                                <textarea name="safe"></textarea>
-                                <input type="button" class="btn bg-1ab394 btnaddr" value="+">
-                                <input class="btn btnremove" value="-">
-                            </div>
+
                         </div>
                         <div class="probox parentbox" id="SC">
                             <div class="col-1ab394 production">
                                 <i class="headbigimg"></i>
                                 <span>生产</span>
                             </div>
-                            <div class=" newbox">
-                                <i class="smallimg"></i>
-                                <textarea name="production"></textarea>
-                                <input type="button" class="btn bg-1ab394 btnaddr" value="+">
-                                <input class="btn btnremove" value="-">
-                            </div>
+
                         </div>
                         <div class="elsebox parentbox" id="QT">
                             <div class="col-1ab394 else">
                                 <i class="headbigimg"></i>
                                 <span>其他</span>
-                            </div>
-                            <div class=" newbox">
-                                <i class="smallimg"></i>
-                                <textarea name="else"></textarea>
-                                <input type="button" class="btn bg-1ab394 btnaddr" value="+">
-                                <input class="btn btnremove" value="-">
                             </div>
 
                         </div>
@@ -259,12 +243,7 @@
                     <div class="btn bg-1ab394 outerbox">交班记事</div>
                     <div class="clearBoth linebox">
                         <div class="safebox parentbox giveworktext" id="JBJS">
-                            <div class=" newbox">
-                                <i class="smallimg"></i>
-                                <textarea name="giveworktext"></textarea>
-                                <input type="button" class="btn bg-1ab394 btnaddr" value="+">
-                                <input class="btn btnremove" value="-">
-                            </div>
+
                         </div>
                     </div>
                 </form>
@@ -277,9 +256,9 @@
             <div class="ibox-content pull-right tablecontent">
                 <table id="treeTable1" title="岗位记事" class="table table-striped table-bordered table-hover table-condensed dataTables-example dataTable">
                     <thead>
-                        <tr>
-                            <th colspan="2" style="text-align: left;font-weight:300; background-color: #F5F5F5 !important;color: #000000">岗位记事</th>
-                        </tr>
+                    <tr>
+                        <th colspan="2" style="text-align: left;font-weight:300; background-color: #F5F5F5 !important;color: #000000">岗位记事</th>
+                    </tr>
                     </thead>
                     <tbody id="treeTableBody1" >
 
@@ -287,9 +266,9 @@
                 </table>
                 <table id="treeTable2" title="岗位记事" class="table table-striped table-bordered table-hover table-condensed dataTables-example dataTable">
                     <thead>
-                        <tr>
-                            <th colspan="2" style="text-align: left;font-weight:300; background-color: #F5F5F5 !important;color: #000000">交班记事</th>
-                        </tr>
+                    <tr>
+                        <th colspan="2" style="text-align: left;font-weight:300; background-color: #F5F5F5 !important;color: #000000">交班记事</th>
+                    </tr>
                     </thead>
                     <tbody id="treeTableBody2" >
 
@@ -323,17 +302,54 @@
             "bigKind":"CZ"
         };
         ajaxTo('/api/ctrl/ShiftMain/form/CZ',JSON.stringify(cz),function (result) {
+            renderleft(result);
             btnonclick(result);
             renderTableData(result);
-            if(result.shiftMain.overStatus==0||result.shiftMain.overStatus==''){
+
+            if(result.shiftMain.overStatus=="0"){/*||result.shiftMain.overStatus==''*/
                 $('.apsType-box').append('<input type="button" class="giveWork btn bg-1ab394" value="交班">')
-            }else{
+            }else if(result.lastShiftMain.reciveStatus=="0"){/*||result.lastShiftMain.reciveStatus==''*/
                 $('.apsType-box').append('<input type="button"  class="joinWork btn bg-ffa82d" value="接班" >')
             }
         });
 
     });
 
+    /*判断有没有数据 没有数据自动创建textarea*/
+    function renderleft(data) {
+        var keyArr = ["AQ","SC","QT","JBJS"];
+        if(data.ShiftMainMap.length==0){
+            for (var i=0;i<keyArr.length;i++) {
+                var str = "<div class='newbox'>" +
+                    "<i class='smallimg'></i>" +
+                    "<textarea name='safe'></textarea>" +
+                    "<input type='button' class='btn bg-1ab394 btnaddr' value='+'>" +
+                    "<input class='btn btnremove' value='-'>" +
+                    "</div>";
+                $('#'+keyArr[i]+'').append(str);
+            }
+        }else{
+            NewNodeRow(keyArr,data)
+        }
+    }
+    /*有数据的时候渲染到textarea里*/
+    function NewNodeRow(keyArr,data) {
+        var ShiftMainMap = data.ShiftMainMap;
+        for (var i=0;i<keyArr.length;i++) {
+            var shiftLogList = ShiftMainMap[keyArr[i]];
+            for (var j = 0; j < shiftLogList.length; j++) {
+                var _html = "<div class='newbox'>" +
+                    "<i class='smallimg'></i>" +
+                    "<textarea name='safe'>"+shiftLogList[j].content+"</textarea>" +
+                    "<input type='button' class='btn bg-1ab394 btnaddr' value='+'>" +
+                    "<input class='btn btnremove' value='-'>" +
+                    "</div>"
+            $("#" + keyArr[i]).append($(_html));
+        }
+        }
+    }
+    
+    
     /*所有按钮操作*/
     function btnonclick(result) {
         /*隐藏按钮*/
@@ -356,23 +372,22 @@
             $(this).parents('.newbox').remove();
         });
         /*交班*/
-        var data={
-            bigKind:"CZ",
-            shiftId:result.shiftMain.shift.id,
-            shiftMainId:result.shiftMain.id,
-            overStatus:"1",
-            groupName:result.shiftMain.groupName,
-            shiftDate:result.shiftMain.shiftDate
-        };
-        var keyArr = ["AQ","SC","QT","JBJS"];
-        $('.apsType-box').on('click','.giveWork',function () {
-            for(var i=0;i<keyArr.length;i++){
-                data[keyArr[i]+"_dataArr"]=JSON.stringify([{
-                        middleKing:keyArr[i],
-                        main:{"id":result.shiftMain.id},
-                        content:getItemArrJson($('#'+keyArr[i]))
-                    }])
 
+        var keyArr = ["AQ","SC","QT","JBJS"];
+
+        $('.apsType-box').on('click','.giveWork',function () {
+            var data={
+                bigKind:"CZ",
+                shiftId:result.shiftMain.shift.id,
+                shiftMainId:result.shiftMain.id,
+                overStatus:"1",
+                groupName:result.shiftMain.groupName,
+                shiftDate:result.shiftMain.shiftDate
+
+            };
+            $("#reciveStatus").val("1");
+            for (var i=0;i<keyArr.length;i++) {
+                data[keyArr[i]+"_dataArr"] = JSON.stringify(getItemArrJson($('#'+keyArr[i]+''),keyArr[i],result));
             }
             ajaxTo1('/api/ctrl/ShiftMain/over',data,function (result) {
                 console.log(data,result);
@@ -380,27 +395,28 @@
         })
         /*接班*/
         $('.apsType-box').on('click','.joinWork',function () {
-            data.overStatus="0";
-            for(var i=0;i<keyArr.length;i++){
-                data[keyArr[i]+"_dataArr"]=JSON.stringify(
-                    [{
-                        middleKing:keyArr[i],
-                        main:{"id":result.shiftMain.id},
-                        content:getItemArrJson($('#'+keyArr[i]))
-                    }]
-                )
+            var data={
+                bigKind:"CZ",
+                reciveStatus:"1",
+                lastShiftMainId:result.lastShiftMain.id
+            };
+            for (var i=0;i<keyArr.length;i++) {
+                data[keyArr[i]+"_dataArr"] = JSON.stringify(getItemArrJson($('#'+keyArr[i]+''),keyArr[i],result));
             }
             ajaxTo1('/api/ctrl/ShiftMain/recive',data,function (result) {
                 console.log(data,result);
             })
         })
     }
-
-    /*拿到所有填写内容返回*/
-    function getItemArrJson(obj){
+    /*用于交班、接班*/
+    function getItemArrJson(obj,keyArr,result){
         var jsonArr = new Array();
         $(obj).find('textarea').each(function(i, r){
-            jsonArr.push($(r).val());
+            jsonArr.push({
+                middleKing:keyArr,
+                main:{"id":result.shiftMain.id},
+                content:$(r).val()
+            });
         });
         return jsonArr;
     }
@@ -442,7 +458,8 @@
             headers: {
                 Accept: "application/json; charset=utf-8",
                 // Authorization: getCookie("token_type")+" " +getCookie("authorization")，
-                Authorization: "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJqdGkiOiIwMzIyMjcxNmFiNzU0MTIxOTU5Yjg1ODU1YmFhZWRjZSIsInN1YiI6IjIyIiwiaXNzIjoiYWRtaW4iLCJhdWQiOiJBZG1pbiBKV1QgT25saW5lIn0.c_MLl8tCitpuSa6d-RzAFWJq7k-H3XBAQePTep4q4IM"
+                /*Authorization: "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJqdGkiOiIwMzIyMjcxNmFiNzU0MTIxOTU5Yjg1ODU1YmFhZWRjZSIsInN1YiI6IjIyIiwiaXNzIjoiYWRtaW4iLCJhdWQiOiJBZG1pbiBKV1QgT25saW5lIn0.c_MLl8tCitpuSa6d-RzAFWJq7k-H3XBAQePTep4q4IM"*/    //乙班
+                Authorization: "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJqdGkiOiIwNGEzOTJkZGIwNWE0YTJmYTE2NDE4MGMwMWNkYmJmNCIsInN1YiI6IjMzIiwiaXNzIjoiYWRtaW4iLCJhdWQiOiJBZG1pbiBKV1QgT25saW5lIn0.Byouxvl_hsAYtVQ6PQ0TCHTeyfzkG6ojuGfyyc4-880"   /*丙班*/
             },
             type: "post",
             url: url,
@@ -489,28 +506,41 @@
         });
     }
 
+    /*渲染隐藏表*/
     function renderTableData(data) {
         console.log(data);
-        var aq=data.ShiftMainMap.AQ,sc=data.ShiftMainMap.SC,qt=data.ShiftMainMap.QT,jbjs=data.ShiftMainMap.JBJS;
+        var aq=data.lastShiftMainMap.AQ,sc=data.lastShiftMainMap.SC,qt=data.lastShiftMainMap.QT,jbjs=data.lastShiftMainMap.JBJS;
         renders(aq,"htmlaq","安全","#treeTableBody1");
         renders(sc,"htmlsc","生产","#treeTableBody1");
         renders(qt,"htmlqt","其他","#treeTableBody1");
         renders(jbjs,"htmljbjs","交班记事","#treeTableBody2");
-
+        rowspanadd('#treeTableBody1');
+        rowspanadd('#treeTableBody2');
     }
+    //渲染表
     function renders(item,htmlname,content,innerid) {
-//        var pattern =new RegExp(\"[]);
-
         $(item).each(function (i) {
-            row = i + 1;
+            if(item[i].content!==''){
                 htmlname = "<tr>" +
-                                "<td  class='firsttd' width='50%'>"+content+"</td>"
-                                 +"<td class='twotd' width='50%'>"+item[i].content+"</td>"
-                            +"</tr>";
-            $(innerid).append(htmlname);
+                    "<td class='firsttd' width='50%'>"+content+"</td>"
+                    +"<td class='twotd' width='50%'>"+item[i].content+"</td>"
+                    +"</tr>";
+                $(innerid).append(htmlname);
+            }
         });
 
+
     }
+    //合并单元格
+    function rowspanadd(parentId) {
+        var num=$(parentId+''+'tr').length;
+        $(parentId+">tr:not(:first)>.firsttd").remove();
+        $('.firsttd').attr('rowspan',num);
+
+    }
+
+
+
 </script>
 
 

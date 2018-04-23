@@ -49,6 +49,7 @@
                     <!--表头-->
                     <thead>
                     <tr role="row">
+                        <th class="id"></th>
                         <th>计划名称</th>
                         <th>计划类型</th>
                         <th>计划周期</th>
@@ -129,24 +130,31 @@
                 status: $status
             };
             function getAttr(obj) {
+                console.log(obj)
                 var $iChecks = obj.parents("tr").find('.i-checks'),
-                    id = $iChecks.attr('data-id'),
-                    year = $iChecks.attr('data-year'),
-                    status = $iChecks.attr('data-status');
+                    id= obj.parents("tr").find('.id').text(),
+                    // id = $iChecks.attr('data-id'),
+                    // year = $iChecks.attr('data-year'),
+                    year = data.adYear,
+                    status = data.status
+                    // status = $iChecks.attr('data-status');
                 return [id, year, status];
             }
-            Page.init("/api/aps/ApsYearPlan/page", data, true, function (tableData) {
+            console.log(data);
+            Page.init("/api/aps/ApsYearPlan/page",data, true, function (tableData) {
                 renderTableData(tableData);
                 console.log(tableData);
                 //查看
                 $(".btn-check").click(function () {
                     var attrArr = getAttr($(this));
-                    openDialog('查看年计划', 'producePlan/yearPlanCheck.html?id=' + attrArr[0] + '&year=' + attrArr[1]+'&check=0', '800px', '500px')
+                    console.log(attrArr);
+                    openDialog('查看月计划', 'producePlan/yearPlanCheck.html?id=' + attrArr[0] + '&year=' + attrArr[1]+'&check=0', '800px', '500px')
                 });
                 //删除
                 $(".btn-delete").click(function () {
                     var attrArr = getAttr($(this));
-                    deleteOne('确定要删除该计划', '/api/aps/ApsYearPlan/delete', attrArr[0])
+                    console.log(attrArr)
+                    deleteItem('确定要删除该计划', '/api/aps/ApsYearPlan/delete', attrArr[0])
                 });
                 //编辑
                 $(".btn-edit").click(function () {
@@ -218,6 +226,7 @@
             "data":tableData,
             //定义列 宽度 以及在json中的列名
             "aoColumns": [
+                {"data":"id","sClass":"id alignCenter"},
                 {"data": "name",'sClass':"alignCenter "},
                 {"data": "typeLabel",'sClass':"alignCenter "},
                 {"data": "period",'sClass':"alignCenter"},
@@ -237,25 +246,19 @@
                         return "<span class='"+classSet+"'>"+row.statusShow+"</span >";
                     }
                 },
-                {
-                    "data": null, "orderable": false, "defaultContent": "",'sClass':" alignCenter autoWidth",
-                    "render": function (data, type, row, meta) {
-                        console.log(row);
-                        var html="";
-                        if(row.status == "0" || row.status == "-1" ) {
-                            html = "<a class='btn btn-review' ><i class='fa fa-file-text'></i>排产</a >"+
-                            "<a class='btn btn-edit btn-compile'><i class='fa fa-edit'></i>编辑</a >";
-                        }else if(row.status == "1"){
-                            html = "<a class='btn btn-review' ><i class='fa fa-file-text'></i>排产</a >"
+                {"data":null,"orderable":false,"defaultContent":"",'sClass':"alignCenter",
+                    "render":function (data,type,row,meta) {
+                        var html = "";
+                        if(row.status == "0"){
+                            html="<a class='btn btn-edit btn-compile'><i class='fa fa-edit'></i>编辑</a >" +
+                                "<a class='btn btn-delete'><i class='fa fa-trash'></i>删除</a >";
+                        }else{
+                            html = "<a class='btn btn-review' ><i class='fa fa-file-text'></i>排产</a >";
                         }
-                        return "<input type='hidden'  id=" + row.id + " data-type="+row.tYPE+" data-id='"+row.id+"' data-year='"+row.adYear+"' data-status='"+row.status+"' class='i-checks'>"+
-                            "<a class='btn btn-check btn-info' ><i class='fa fa-search-plus'></i>查看</a >"
-                            +html+"<a class='btn btn-delete'><i class='fa fa-trash'></i>删除</a >"
-                            ;
-
-                        }
+                        return  "<a class='btn btn-check btn-info' ><i class='fa fa-search-plus'></i>查看</a >"+
+                                html;
+                    }
                 }
-
                         ]
             });
 

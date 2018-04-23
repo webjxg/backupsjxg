@@ -25,7 +25,7 @@
             </div>
             <div class="commercePurCon proTargetPlanItem">
                 <div class="tableItemBox">
-                    <table id="td0" class="tableItem"  title="产量计划">
+                    <table id="td0" class="tableItem"  title="产量指标计划">
                     </table>
                 </div>
                 <div class="tableItemBox">
@@ -127,9 +127,6 @@
                  $('#td2').datagrid('loadData',jszbjhs);
                  $('#td3').datagrid('loadData',zlzbjhs);
                  setFrameHeight();
-                 function aa(){
-
-                 }
                  $("#btn-adjust").click(function(){
                     function test(title,url,width,height,){
                         top.layer.open({
@@ -141,9 +138,13 @@
                             btn: ['确定', '关闭'],
                             yes: function(index, layero){
                                var iframeInnerWin = layero.find('iframe')[0].contentWindow;
-                               console.log(layero.find('iframe')[0]);
-                               //console.log(iframeInnerWin.getInnerVal());
+                               top.layer.close(index);
                                var data = iframeInnerWin.getInnerVal();
+                               var ParameArr =["scscwd","bsbswd"];
+
+                               $(ParameArr).each(function(index,item){
+                                   $('#td0').datagrid('updateRow',{ index: index, row: {  yearTarget: data.colSumVal[item],  monthPlan: data.colMonthVal[item] }});
+                               });
                             },
                             cancel: function(index){
                             }
@@ -155,7 +156,7 @@
 })
                 
 //    //产量计划
-      $("#td0").datagrid({
+    $("#td0").datagrid({
           fitColumns:true,
           collapsible:true,
           singleSelect: true,
@@ -167,7 +168,7 @@
                {field:'mainId',title:'mainId',hideColumn:'mainId'},
               {field:'itemName',title:'项目',width:100,align:'center'},
                 {field:'itemUnit',title:'单位',width:100,align:'center'},
-                {field:'yearTarget',title:'全年基本目标',editor:'numberbox',width:100,align:'center'},
+                {field:'yearTarget',title:'全年基本目标',editor:'numberbox',width:100,align:'center',className:"aa"},
                 {field:'monthPlan',title:month+'月计划',editor:'numberbox',width:100,align:'center'},
                 {field:'remark',title:'备注',editor:'text',width:100,align:'center'}
             ]],
@@ -298,36 +299,24 @@
 
     $(function(){
         $('#td0,#td1,#td2,#td3').datagrid('hideColumn','id');
-	 });
-	     $(function(){
         $('#td0,#td1,#td2,#td3').datagrid('hideColumn','mainId');
 	 });
-//
-        //点击时获取到信息
-        $(".btn-save").click(function (e) {
-            addstatus("0");
-        });
-        //将点击状态添加到数组里边
-        function addstatus(status) {
-            var len = $(".tableItemBox").length;
-            for(var i = 0; i<len;i++){
-                // 给每个虚拟btn添加点击事件
-                $("#td"+i).parents('.datagrid-view').siblings(".datagrid-toolbar").find(".l-btn-text").trigger('click');
-            }
-            var savearr = [];
-            var editItems = dataGridObj.saveItemArr;
 
-            $(editItems).each(function (i) {
-                savearr.push(editItems[i]);
-            });
-            var data={
-                "techPlans":JSON.stringify(editItems),
-                "status":status,
-            };
-            addmsg(data)  //将数据发送给后台
-        }
-//
-//        保存将数据发送给后台
+    //点击时获取到信息
+    $(".btn-save").click(function (e) {
+        addstatus("0");
+    });
+    //将点击状态添加到数组里边
+    function addstatus(status) {
+        var editItems = dataGridObj.getSaveItemArr();
+        var data={
+            "techPlans":JSON.stringify(editItems),
+            "status":status,
+        };
+        addmsg(data)  //将数据发送给后台
+    }
+
+    //保存将数据发送给后台
     function addmsg(data){
         ajaxToServer1("/api/aps/ApsMonthAdjustTech/saveTechInfo",data,function(result){
         })

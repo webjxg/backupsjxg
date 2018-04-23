@@ -75,16 +75,17 @@ var dataGridObj = {
                 mark=1;
             }
         }
+    },
+    getSaveItemArr:function(){  //获取修改过的数据的集合
+        var len = $(".tableItemBox").length;
+        for(var i = 0; i<len;i++){
+            //触发每个table隐藏的保存按钮，从而获取到表格中最后一条被修改的数据并将其放入到saveItemArr中。
+            $("#td"+i).parents('.datagrid-view').siblings(".datagrid-toolbar").find(".l-btn-text").trigger('click');
+        }
+        return dataGridObj.saveItemArr;
     }
 
 }
 
-$(".btn-save").click(function(){
-    var len = $(".tableItemBox").length;
-    for(var i = 0; i<len;i++){
-        $("#td"+i).parents('.datagrid-view').siblings(".datagrid-toolbar").find(".l-btn-text").trigger('click');
-    }
-    alert(dataGridObj.saveItemArr);
-    console.log(dataGridObj.saveItemArr);
 
-});
+

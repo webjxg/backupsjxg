@@ -55,7 +55,8 @@
         var data={
             adYear:getQueryString("year")
         };
-        var datastring = JSON.stringify(data)
+        var datastring = JSON.stringify(data);
+        console.log(data)
         ajaxToServer("/api/aps/ApsYearPlan/queryYearPlan",datastring,function (result) {
             console.log(result)
             planarr.push(result.cpcl);
@@ -144,20 +145,7 @@
     })
     //将点击状态添加到数组里边
     function addstatus(status) {
-        var len = $(".tableItemBox").length;
-        // console.log(len)
-        for(var i = 0; i<len;i++){
-            console.log($("#td"+i))
-            // 给每个虚拟btn添加点击事件
-            $("#td"+i).parents('.datagrid-view').siblings(".datagrid-toolbar").find(".l-btn-text").trigger('click');
-        }
-        console.log(status);
-        var savearr = [];
-        var editItems = dataGridObj.saveItemArr;
-
-        $(editItems).each(function (i) {
-            savearr.push(editItems[i]);
-        });
+        var editItems = dataGridObj.getSaveItemArr();
         var data={
             "yearPlans":JSON.stringify(editItems),
             "status":status

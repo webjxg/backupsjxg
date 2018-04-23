@@ -19,6 +19,9 @@ html,body,#wrapper{ height: 100%;}
 #wrapper{
   overflow: hidden;
 }
+.id{
+  display: none;
+}
 .bg-f3{
   background: #f3f3f3;
 }

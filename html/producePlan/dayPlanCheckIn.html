@@ -428,30 +428,20 @@
     }
     //暂存递交
     function btnSubSave(status) {
-        var len = $(".tableItemBox").length;
-        for (var i = 0; i < len; i++) {
-            $("#td" + i).parents('.datagrid-view').siblings(".datagrid-toolbar").find(".l-btn-text").trigger('click');
-        }
-        var saveArr=[];
-        var editItems = dataGridObj.saveItemArr;
-        $(editItems).each(function (i) {
-            saveArr.push(editItems[i]);
-        });
+        var editItems = dataGridObj.getSaveItemArr();
         var data={
-            "dayPlans":JSON.stringify(saveArr),
+            "dayPlans":JSON.stringify(editItems),
             "status":status,
             "id":$('#id').val()
         };
-
-        ajaxToServer1('/api/aps/DayPlan/save',data, layermsg);
-        function layermsg(msg) {
-            if (msg.success) {
+        ajaxToServer1('/api/aps/DayPlan/save',data,function(result){
+            if (result.success) {
                 layer.msg('提交成功');
-                tabledatagrid();
+                refreshActiveTab();
             } else {
-                layer.msg(msg.message)
+                layer.msg(result.message)
             }
-        }
+        });
     }
 
 

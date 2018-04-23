@@ -118,37 +118,27 @@
         $('#td0').datagrid('hideColumn','id');
         $('#td0').datagrid('hideColumn','mainId');
     });
-    // 点击按钮并添加点击状态
-       //点击时获取到信息
-        $(".btn-save").click(function (e) {
-            var btn = $(e.target).context.textContent;
-            if(btn == "保存"){
-                status = "0";
-                addstatus(status)
-            }else{
-                status = "1";
-                addstatus(status)
-            }
-        })
-        //将点击状态添加到数组里边
-        function addstatus(status) {
-            var len = $(".tableItemBox").length;
-            for(var i = 0; i<len;i++){
-                // 给每个虚拟btn添加点击事件
-                $("#td"+i).parents('.datagrid-view').siblings(".datagrid-toolbar").find(".l-btn-text").trigger('click');
-            }
-            var savearr = [];
-            var editItems = dataGridObj.saveItemArr;
-            $(editItems).each(function (i) {
-                savearr.push(editItems[i]);
-            });
-            var data={
-                "busPlans":JSON.stringify(editItems),
-                "status":status,
-            };
-            addmsg(data)  //将数据发送给后台
+   //点击时获取到信息
+    $(".btn-save").click(function (e) {
+        var btn = $(e.target).context.textContent;
+        if(btn == "保存"){
+            status = "0";
+            addstatus(status)
+        }else{
+            status = "1";
+            addstatus(status)
         }
-//
+    })
+    //将点击状态添加到数组里边
+    function addstatus(status) {
+        var editItems = dataGridObj.getSaveItemArr();
+        var data={
+            "busPlans":JSON.stringify(editItems),
+            "status":status,
+        };
+        addmsg(data)  //将数据发送给后台
+    }
+
 //        保存将数据发送给后台
     function addmsg(data){
         ajaxToServer1("/api/aps/ApsMonthAdjustBus/saveBusInfo",data,function(result){

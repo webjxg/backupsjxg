@@ -97,18 +97,19 @@
 <script>
     var year =getQueryString('year'),month = getQueryString('month');
     var zzyzjhArr =[],yljhArr = [],xhjhArr=[];  //分别对应装置运转计划、原料计划、消耗计划
-    var getMonthArr ={mYear:2018,flag:4};
+    var getMonthArr ={mYear:2018,flag:month};
     var itemCode =[];
+    var editEleArr=["scjxsj","scrlts","scfzcjczhsj","scshsc","xsps","sczhb","bsjxsj","bsfzcjczhsj"];
+    var colMonthVal,colSumVal;
     $(document).ready(function(){
         var data = {
             mYear:year
         };
         ajaxToServer("/api/aps/ApsMonthPc/queryMonthPc",JSON.stringify(data),function(result){
-            var zzyzjh = result.zzyzjh;
-            var yljh  =result.yljh;
-            var xhjh = result.xhjh;
-            console.log(zzyzjh);
-            //装置运转计划
+            var zzyzjh = result.zzyzjh,
+                yljh  =result.yljh,
+                xhjh = result.xhjh;
+            //装置运转计划  筛选#td0需要的数据，并将tr中所需要的数据存放在临时的对象中然后push到zzyzjhArr中。
             for(var i=0;i<zzyzjh.length;i++){
                 itemCode.push(zzyzjh[i].itemCode);
                 var itemmsg = {
@@ -130,20 +131,34 @@
                 zzyzjhArr.push(itemmsg);
             }
 
-            console.log(itemCode);
             var tBodyHtml = "";
-            zzyzjhArr.forEach(function(item,index){
+            var colMonthVal_ ={},colSumVal_={};
+            //遍历数据，将数据渲染到#td0表单中
+            $(zzyzjhArr).each(function(index,item){
                     tBodyHtml += "<tr id='"+itemCode[index]+"'>";
-                    var ind= -1;
+                    var ind= 0;
                     for(var key in item){
-                        ind ++;
-                        if(ind == 4){
-                            tBodyHtml += "<td class='"+itemCode[index]+"-"+key +"'><input class='changeVla' type='number' name='"+itemCode[index]+"' value='"+item[key]+"'></td>";
+                        if(ind == month){
+                            colMonthVal_[itemCode[index]] = item[key];
+                            var eleInd = editEleArr.indexOf(itemCode[index]);
+                            if(eleInd == (-1)){
+                                tBodyHtml += "<td>"+item[key]+"</td>";
+                            }else{
+                                tBodyHtml += "<td><input class='changeVla' type='number' name='"+itemCode[index]+"' value='"+item[key]+"'></td>";
+                            }
+
                         }else{
-                            tBodyHtml += "<td class='"+itemCode[index]+"-"+key+"'>"+item[key]+"</td>";
+                            tBodyHtml += "<td>"+item[key]+"</td>";
+                            if(ind == 13){
+                                colSumVal_[itemCode[index]] = item[key];
+                            }
                         }
+                        ind ++;
                     }
+
                     tBodyHtml +="</tr>";
+                    colMonthVal = colMonthVal_;
+                    colSumVal = colSumVal_;
             });
             $("#renderTable tbody").append(tBodyHtml);
 
@@ -193,7 +208,6 @@
                 };
                 xhjhArr.push(itemmsg);
             }
-//            $('#td0').datagrid('loadData',zzyzjhArr);
             $('#td1').datagrid('loadData',yljhArr);
             $('#td2').datagrid('loadData',xhjhArr);
             //
@@ -209,42 +223,40 @@
                 });
                 var changeVlaArr =[];
                 changeVlaArr.push(getMonthArr);
-                console.log(JSON.stringify(changeVlaArr));
                 ajaxToServer("/api/aps/ApsMonthPc/dtpcJs",JSON.stringify(changeVlaArr),function(result){
-                   if(result.success){
-//                       debugger;
-                       var colMonthVal = result.value,
-                           colSum = result.valueSum;
-                       console.log(colMonthVal);
-                       console.log(colSum);
-                       $(itemCode).each(function(index,item){
-                           var colMonthEle = itemCode[index],
-                               colEleSum = colSum[index];
-                           if(colMonthVal.length>0){
-                               var currentEle= colMonthVal[index]
-                                for(var key in currentEle){
-                                    console.log(currentEle[colMonthEle]);
-                                   // $("#"+colMonthEle).find("input[name='"+colMonthEle+"']").val(colMonthVal[colMonthEle]);
+                    if(result.success) {
+                        var colMonthValArr = result.value,
+                            colSumArr = result.valueSum;
+                        if(colMonthValArr && colMonthValArr.length>0 && colSumArr && colSumArr.length>0 ){
+                            $("#renderTable tbody tr").each(function(index,item){
+                                colMonthVal = colMonthValArr[0];
+                                colSumVal = colSumArr[0];
+                                var eleId = $(this).attr("id"),
+                                    eleMonthVal = colMonthVal[eleId],
+                                    eleSumVal = colSumVal[eleId];
+                                var tdObj = $(this).find("td").eq(month),
+                                    tdInputObj = $(tdObj).find('input');
+                                if(tdInputObj.length > 0){
+                                    tdInputObj.val(eleMonthVal);
+                                }else{
+                                    tdObj.text(eleMonthVal);
                                 }
-                           }
-                           if(colSum.length>0){
-                                for(var key1 in colEleSum){
-                                    console.log(colEleSum[colMonthEle]);
-                                    $("#"+colMonthEle).find("."+colMonthEle+"-valueSum").text(colEleSum[colMonthEle]);
-                                }
-                           }
-                       });
-                   }else{
-                       alert(result.message);
-                   }
+                                //合计
+                                $(this).find("td:last").text(eleSumVal);
+
+                            });
+                        }
+                    }else{
+                        alert(result.message);
+                    }
                 });
             });
 
         });
     });
-   /* function getInnerVal(){
-        return arr;
-    }*/
+    function getInnerVal(){
+        return {'colMonthVal':colMonthVal,'colSumVal':colSumVal};
+    }
 
     //装置运转计划
     /*$("#td0").datagrid({
@@ -387,27 +399,17 @@
             status = "1";
             addstatus(status)
         }
-    })
+    });
     //将点击状态添加到数组里边
     function addstatus(status) {
-        var len = $(".tableItemBox").length;
-        for(var i = 0; i<len;i++){
-            // 给每个虚拟btn添加点击事件
-            $("#td"+i).parents('.datagrid-view').siblings(".datagrid-toolbar").find(".l-btn-text").trigger('click');
-        }
-        var savearr = [];
-        var editItems = dataGridObj.saveItemArr;
-
-        $(editItems).each(function (i) {
-            savearr.push(editItems[i]);
-        });
+        var editItems = dataGridObj.getSaveItemArr();
         var data={
             "techPlans":JSON.stringify(editItems),
             "status":status,
         };
         addmsg(data)  //将数据发送给后台
     }
-    //
+
     //        保存将数据发送给后台
     function addmsg(data){
         ajaxToServer1("/api/aps/ApsMonthAdjustTech/saveTechInfo",data,function(result){

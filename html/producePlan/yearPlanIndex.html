@@ -62,7 +62,7 @@
         $('.btn-save').hide();
     }
     $(".btn-back").click(function () {
-        window.history.back()
+        refreshActiveTab();
     });
     //渲染列表
     var planarr = [];
@@ -158,17 +158,7 @@
     });
     //将点击状态添加到数组里边
     function addstatus(status) {
-        var len = $(".tableItemBox").length;
-        for(var i = 0; i<len;i++){
-            // 给每个虚拟btn添加点击事件
-            $("#td"+i).parents('.datagrid-view').siblings(".datagrid-toolbar").find(".l-btn-text").trigger('click');
-        }
-        var savearr = [];
-        var editItems = dataGridObj.saveItemArr;
-
-        $(editItems).each(function (i) {
-            savearr.push(editItems[i]);
-        });
+        var editItems = dataGridObj.getSaveItemArr();
         var data={
             "yearPlans":JSON.stringify(editItems),
             "status":status
@@ -179,7 +169,7 @@
 
 
     function sendmsg(data) {
-        ajaxToServer1("/api/aps/ApsYearPlan/saveYearInfo",data,function (result) {
+        ajaxToServer1("/api/aps/ApsYearPlan/saveYearInfo",data,function(result) {
             refreshActiveTab()
         });
     }
