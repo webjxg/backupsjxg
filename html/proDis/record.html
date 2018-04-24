@@ -111,7 +111,7 @@
                             条记录
                         </div>
                     </div>
-                    <div id="pagination" class="pagination-roll pull-right"></div>
+                    <div id="pagination" class="pagination-roll pull-right"> <ul class="pagination"> <li class="previous"><a href="#">«</a></li><li class="disabled hidden"><a href="#">...</a></li> <li class="active"><a href="#">1</a></li><li class="disabled hidden"><a href="#">...</a></li><li class="next"><a href="#">»</a></li></ul></div>
                 </div>
             </div>
         </div>
@@ -150,6 +150,21 @@
                         },
                     };
                     Page.init("/api/ctrl/ShiftMain/page",data,true,function (tableDta) {
+                       console.log(tableDta)
+                       //  var tablearr = [];
+                       // for(var i=0;i<tableDta.length;i++){
+                       //     console.log(tableDta[i]);
+                       //     var msgobj = {
+                       //         process:tableDta[i].process,
+                       //         shiftName:tableDta[i].shift.name,
+                       //         groupName:tableDta[i].groupName,
+                       //         overUserName:tableDta[i].overUserName,
+                       //         reciveUserName:tableDta[i].reciveUserName,
+                       //         overDate:tableDta[i].overDate,
+                       //         createDate:tableDta[i].createDate
+                       //     };
+                       //     tablearr.push(msgobj)
+                       // }
                         createTable(tableDta)
                     })
                 }
@@ -250,7 +265,7 @@
                 //定义列 宽度 以及在json中的列名
                 "aoColumns": [
                     {"data": "process", 'sClass': " alignCenter authName"},
-                    {"data": "shift.name", 'sClass': "alignCenter autoWidth"},
+                    {"data": "shiftName", 'sClass': "alignCenter autoWidth"},
                     {"data": "groupName", 'sClass': "alignCenter"},
                     {"data": "overUserName", 'sClass': "alignCenter"},
                     {"data": "reciveUserName", 'sClass': "alignCenter"},
@@ -271,7 +286,6 @@
                  startOverDate:$("#startDateParam").val(),   //开始时间
                  endOverDate:$("#endDateParam").val()           //结束时间
         };
-             console.log(data);
         //指令查看接口地址
         var url_ = '/api/ctrl/ShiftMain/page';
         ajaxToServer(url_, JSON.stringify(data), function(result){

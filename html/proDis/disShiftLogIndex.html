@@ -43,11 +43,14 @@
         /*时间轴 整体样式设置*/
         .outerbox {
             position: relative;
-            margin-bottom: 30px;
+            left:-24px;
+            margin-bottom: 10px;
+            width: 120px;
+            text-align: center;
         }
         .outerbox:after {
             position: absolute;
-            left: 31px;
+            left: 54px;
             content: "";
             width: 0;
             height: 0;
@@ -87,16 +90,8 @@
             background-image: url(../../images/shift-smallbtn.jpg);
 
         }
-        i.headbigimg {
-            position: absolute;
-            left: -8px;
-            top: -8px;
-            width: 15px;
-            height: 15px;
-            background-image: url(../../images/shift-bigbtn.jpg);
 
-        }
-        .safebox, .probox, .elsebox {
+        .safebox{
             margin-bottom: 45px;
         }
 
@@ -198,7 +193,7 @@
         <!--标题 按钮-->
         <div class="ibox-content">
             <div>
-                <h1 class="titName">操作交接班日志</h1>
+                <h1 class="titName">调度交接班日志</h1>
             </div>
             <!--班信息-->
             <div>
@@ -223,33 +218,45 @@
             <!--左侧里程碑-->
             <div class="ibox-content pull-left lefttimeline ">
                 <form id="inputForm" class="form-horizontal" action="" method="post">
-                    <div class="btn bg-1ab394 outerbox">岗位记事</div>
+                    <div class="btn bg-1ab394 outerbox">生产运行情况</div>
                     <div class="clearBoth linebox">
-                        <div class="safebox parentbox" id="AQ">
-                            <div class="col-1ab394 safe">
-                                <i class="headbigimg"></i>
-                                <span>安全</span>
-                            </div>
-
-                        </div>
-                        <div class="probox parentbox" id="SC">
-                            <div class="col-1ab394 production">
-                                <i class="headbigimg"></i>
-                                <span>生产</span>
-                            </div>
-
-                        </div>
-                        <div class="elsebox parentbox" id="QT">
-                            <div class="col-1ab394 else">
-                                <i class="headbigimg"></i>
-                                <span>其他</span>
-                            </div>
+                        <div class="safebox parentbox giveworktext" id="SCYXQK">
 
                         </div>
                     </div>
-                    <div class="btn bg-1ab394 outerbox">交班记事</div>
+                    <div class="btn bg-1ab394 outerbox">指标情况</div>
                     <div class="clearBoth linebox">
-                        <div class="safebox parentbox giveworktext" id="JBJS">
+                        <div class="safebox parentbox giveworktext" id="ZBQK">
+
+                        </div>
+                    </div>
+                    <div class="btn bg-1ab394 outerbox">设备运行情况</div>
+                    <div class="clearBoth linebox">
+                        <div class="safebox parentbox giveworktext" id="SBYXQK">
+
+                        </div>
+                    </div>
+                    <div class="btn bg-1ab394 outerbox">安全方面</div>
+                    <div class="clearBoth linebox">
+                        <div class="safebox parentbox giveworktext" id="AQFM">
+
+                        </div>
+                    </div>
+                    <div class="btn bg-1ab394 outerbox">工具是否完好</div>
+                    <div class="clearBoth linebox">
+                        <div class="safebox parentbox giveworktext" id="GJSFWH">
+
+                        </div>
+                    </div>
+                    <div class="btn bg-1ab394 outerbox">卫生情况</div>
+                    <div class="clearBoth linebox">
+                        <div class="safebox parentbox giveworktext" id="WSQK">
+
+                        </div>
+                    </div>
+                    <div class="btn bg-1ab394 outerbox">临时安排工作</div>
+                    <div class="clearBoth linebox">
+                        <div class="safebox parentbox giveworktext" id="LSAPGZ">
 
                         </div>
                     </div>
@@ -264,21 +271,11 @@
                 <table id="treeTable1" title="岗位记事" class="table table-striped table-bordered table-hover table-condensed dataTables-example dataTable">
                     <thead>
                     <tr>
-                        <th colspan="2" style="text-align: left;font-weight:300; background-color: #F5F5F5 !important;color: #000000">岗位记事
+                        <th colspan="2" style="text-align: left;font-weight:300; background-color: #F5F5F5 !important;color: #000000">
                             <input type="button" class="btn hidd" style="float:right; font-size: 14px;line-height: 20px;" value="隐藏表格"></th>
                     </tr>
                     </thead>
                     <tbody id="treeTableBody1" >
-
-                    </tbody>
-                </table>
-                <table id="treeTable2" title="岗位记事" class="table table-striped table-bordered table-hover table-condensed dataTables-example dataTable">
-                    <thead>
-                    <tr>
-                        <th colspan="2" style="text-align: left;font-weight:300; background-color: #F5F5F5 !important;color: #000000">交班记事</th>
-                    </tr>
-                    </thead>
-                    <tbody id="treeTableBody2" >
 
                     </tbody>
                 </table>
@@ -307,9 +304,9 @@
     $(document).ready(function () {
         renderclass();
         var cz={
-            "bigKind":"CZ"
+            "bigKind":"DD"
         };
-        ajaxTo('/api/ctrl/ShiftMain/form/CZ',JSON.stringify(cz),function (result) {
+        ajaxTo('/api/ctrl/ShiftMain/form/DD',JSON.stringify(cz),function (result) {
             if(result.success==true){
                 console.log(result);
                 renderleft(result);
@@ -333,7 +330,7 @@
     /*判断有没有数据 没有数据自动创建textarea*/
     function renderleft(data) {
         var ShiftMainMap = data.ShiftMainMap;
-        var keyArr = ["AQ","SC","QT","JBJS"];
+        var keyArr = ["SCYXQK","ZBQK","SBYXQK","AQFM","GJSFWH","WSQK","LSAPGZ"];
         if(data.ShiftMainMap==null){
             for (var i=0;i<keyArr.length;i++) {
                 var str = "<div class='newbox'>" +
@@ -354,12 +351,12 @@
             var shiftLogList = ShiftMainMap[keyArr[i]];
             if(shiftLogList==null){
                 var _html = "<div class='newbox'>" +
-                        "<i class='smallimg'></i>" +
-                        "<textarea name='safe'></textarea>" +
-                        "<input type='button' class='btn bg-1ab394 btnaddr' value='+'>" +
-                        "<input class='btn btnremove' value='-'>" +
-                        "</div>"
-                    $("#" + keyArr[i]).append($(_html));
+                    "<i class='smallimg'></i>" +
+                    "<textarea name='safe'></textarea>" +
+                    "<input type='button' class='btn bg-1ab394 btnaddr' value='+'>" +
+                    "<input class='btn btnremove' value='-'>" +
+                    "</div>"
+                $("#" + keyArr[i]).append($(_html));
 
             }else{
                 for (var j = 0; j < shiftLogList.length; j++) {
@@ -369,13 +366,13 @@
                         "<input type='button' class='btn bg-1ab394 btnaddr' value='+'>" +
                         "<input class='btn btnremove' value='-'>" +
                         "</div>"
-                $("#" + keyArr[i]).append($(_html));
+                    $("#" + keyArr[i]).append($(_html));
                 }
             }
         }
     }
-    
-    
+
+
     /*所有按钮操作*/
     function btnonclick(result) {
         /*取消隐藏按钮*/
@@ -407,11 +404,11 @@
         });
         /*交班*/
 
-        var keyArr = ["AQ","SC","QT","JBJS"];
+        var keyArr = ["SCYXQK","ZBQK","SBYXQK","AQFM","GJSFWH","WSQK","LSAPGZ"];
 
         $('.apsType-box').on('click','.giveWork',function () {
             var data={
-                bigKind:"CZ",
+                bigKind:"DD",
                 shiftId:result.shiftMain.shift.id,
                 shiftMainId:result.shiftMain.id,
                 overStatus:"1",
@@ -430,7 +427,7 @@
         /*接班*/
         $('.apsType-box').on('click','.joinWork',function () {
             var data={
-                bigKind:"CZ",
+                bigKind:"DD",
                 reciveStatus:"1",
                 lastShiftMainId:result.lastShiftMain.id
             };
@@ -504,11 +501,13 @@
             headers: {
                 Accept: "application/json; charset=utf-8",
                 // Authorization: getCookie("token_type")+" " +getCookie("authorization")，
-                /*Authorization: "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJqdGkiOiIwNGQ2MjI3ZTQwMTI0YWY4YTZiMzhhZTExMTMzMTBkMSIsInN1YiI6IjQ0IiwiaXNzIjoiYWRtaW4iLCJhdWQiOiJBZG1pbiBKV1QgT25saW5lIn0.Q1xsSdrr__A8xBiMJOrXFYEZTBRQCgjGrwrJKp4ZQT4"*/  /*丁*/
 
-                Authorization: "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJqdGkiOiIwMjgyNzJiNDE2Njg0NDc4YmRiMzZhOTI3ZGQ5MDhiZCIsInN1YiI6IjExIiwiaXNzIjoiYWRtaW4iLCJhdWQiOiJBZG1pbiBKV1QgT25saW5lIn0.2FEUoTT96E350SAXijdtAGVncELyd4rkImjMjhaWTck"     //甲
 
                 /*Authorization: "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJqdGkiOiIwMzIyMjcxNmFiNzU0MTIxOTU5Yjg1ODU1YmFhZWRjZSIsInN1YiI6IjIyIiwiaXNzIjoiYWRtaW4iLCJhdWQiOiJBZG1pbiBKV1QgT25saW5lIn0.c_MLl8tCitpuSa6d-RzAFWJq7k-H3XBAQePTep4q4IM"*/    //乙班
+
+                Authorization: "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJqdGkiOiIwNGQ2MjI3ZTQwMTI0YWY4YTZiMzhhZTExMTMzMTBkMSIsInN1YiI6IjQ0IiwiaXNzIjoiYWRtaW4iLCJhdWQiOiJBZG1pbiBKV1QgT25saW5lIn0.Q1xsSdrr__A8xBiMJOrXFYEZTBRQCgjGrwrJKp4ZQT4"  /*丁*/
+
+                /*Authorization: "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJqdGkiOiIwMjgyNzJiNDE2Njg0NDc4YmRiMzZhOTI3ZGQ5MDhiZCIsInN1YiI6IjExIiwiaXNzIjoiYWRtaW4iLCJhdWQiOiJBZG1pbiBKV1QgT25saW5lIn0.2FEUoTT96E350SAXijdtAGVncELyd4rkImjMjhaWTck" */    //甲
 
                 /*Authorization: "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJqdGkiOiIwNGEzOTJkZGIwNWE0YTJmYTE2NDE4MGMwMWNkYmJmNCIsInN1YiI6IjMzIiwiaXNzIjoiYWRtaW4iLCJhdWQiOiJBZG1pbiBKV1QgT25saW5lIn0.Byouxvl_hsAYtVQ6PQ0TCHTeyfzkG6ojuGfyyc4-880" */  /*丙班*/
             },
@@ -559,60 +558,36 @@
 
     /*渲染隐藏表*/
     function renderTableData(data) {
-        if(data.lastShiftMainMap==null){
-            var keyArr = ["AQ","SC","QT","JBJS"];
+        var keyArr = ["SCYXQK","ZBQK","SBYXQK","AQFM","GJSFWH","WSQK","LSAPGZ"];
+        var lastShiftMainMap=data.lastShiftMainMap;
+        if(lastShiftMainMap=="{}"){
             NewNodeRow(keyArr,data)
         }else{
-            console.log(data);
-            var aq=data.lastShiftMainMap.AQ,sc=data.lastShiftMainMap.SC,qt=data.lastShiftMainMap.QT,jbjs=data.lastShiftMainMap.JBJS;
-            renders(aq,"htmlaq","安全","#treeTableBody1");
-            renders(sc,"htmlsc","生产","#treeTableBody1");
-            renders(qt,"htmlqt","其他","#treeTableBody1");
-            renders(jbjs,"htmljbjs","交班记事","#treeTableBody2");
-            rowspanadd('#treeTableBody1',1);
-            rowspanadd('#treeTableBody2',1);
+            for(var i=0;i<lastShiftMainMap.length;i++){
+                renders(lastShiftMainMap[i],'html'+keyArr[i],'#treeTableBody1')
+            }
         }
 
     }
     //渲染表
-    function renders(item,htmlname,content,innerid) {
-        $(item).each(function (i) {
-            if(item[i].content!==''){
-                htmlname = "<tr>" +
-                    "<td class='firsttd' width='50%'>"+content+"</td>"
-                    +"<td class='twotd' width='50%'>"+item[i].content+"</td>"
-                    +"</tr>";
-                $(innerid).append(htmlname);
-            }
+    function renders(item,htmlname,innerid) {
+        $(item).each(function (i,e) {
+            console.log(e);
+
+//            for(var j=0;j<item[i].length;j++){
+//                if(item[i].content!==''){
+//                    htmlname = "<tr>" +
+//                        "<td width='100%'>"+item[i]+"</td>"
+//                        +"</tr>"
+//                        +"<tr>" +
+//                        "<td width='100%'>"+item[i].content+"</td>"
+//                        +"</tr>";
+//                    $(innerid).append(htmlname);
+//                }
+//            }
+
         });
 
-
-    }
-    //合并单元格 参数从1开始
-    function rowspanadd(table_id,table_colnum) {
-            table_firsttd = "";
-            table_currenttd = "";
-            table_SpanNum = 0;
-            table_Obj = $(table_id + " tr td:nth-child(" + table_colnum + ")");
-            table_Obj.each(function (i) {
-                if (i == 0) {
-                    table_firsttd = $(this);
-                    table_SpanNum = 1;
-                } else {
-                    table_currenttd = $(this);
-                    if (table_firsttd.text() == table_currenttd.text()) { //这边注意不是val（）属性，而是text（）属性
-                        //td内容为空的不合并
-                        if(table_firsttd.text() !=""){
-                            table_SpanNum++;
-                            table_currenttd.hide(); //remove();
-                            table_firsttd.attr("rowSpan", table_SpanNum);
-                        }
-                    } else {
-                        table_firsttd = $(this);
-                        table_SpanNum = 1;
-                    }
-                }
-            });
 
     }
 

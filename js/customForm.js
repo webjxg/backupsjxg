@@ -338,7 +338,6 @@ function openEditDialog(title,url,width,height,innerCallbackFn){
 
 //回调函数，在修改和添加时，供openDialog调用提交表单。
 function doSubmit(){
-    alert(1);
     var formId = getSubmitFormId();
     var formObj =$(formId);
     // var formObj =$(formId,win?win.document:this);
@@ -347,8 +346,8 @@ function doSubmit(){
         submitHandler: function(form){
             var formdata = JSON.stringify(formObj.serializeJSON());
             layer.msg('正在提交，请稍等...',{time: 1000});
+            console.log(formdata);
             ajaxToServer(url,formdata,function(result){
-                console.log(url,formdata,result);
                 if(result.success == true){
                     layer.msg('已成功提交',{time: 1000});
                     setTimeout(function(){
@@ -434,16 +433,11 @@ function edit(title,url,width,height,tableId){
 function deleteItem(mess,url,id){
     //var ids= eleP.find('input.i-checks').attr('id')
     var data = {ids:id} || {};
-
-    console.log(url,data);
-
     top.layer.confirm(mess, {icon: 3, title:'系统提示'},function(index){
         ajaxToServer1(url,data,function(result){
-            console.log(url,data,result)
             if(result.success == true){
                 var frameActive = top.getActiveTab().attr("name");
                 var obj = $('#search-btn', top.window.frames[frameActive].document);
-                    window.location.reload();
                 if(obj.length == 0){
                     obj = $('#refresh-btn', top.window.frames[frameActive].document);
                 }
@@ -480,7 +474,6 @@ function deleteAll(tit,url,tableId){
         };
         top.layer.confirm(tit, {icon: 3, title:'系统提示'}, function(index){
             ajaxToServer1(url,data,function (result) {
-                console.log(url,data,result);
                 if(result.success == true){
                     var frameActive = top.getActiveTab().attr("name");
                     var obj = $('#search-btn', top.window.frames[frameActive].document);

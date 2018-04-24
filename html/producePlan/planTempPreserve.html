@@ -161,12 +161,6 @@
         ajaxToServer1(url,{},function(result){
             console.log(url,result)
             if(result.success == true){
-//                var frameActive = top.getActiveTab().attr("name");
-//                var obj = $('#search-btn', top.window.frames[frameActive].document);
-//                if(obj.length == 0){
-//                    obj = $('#refresh-btn', top.window.frames[frameActive].document);
-//                }
-//                obj.trigger('click');
                 window.location.reload();
             }
         });
@@ -200,15 +194,16 @@
                 if(clickFlag){
                     if(!innerCallbackFn){
                         iframeWin.contentWindow.clicksubmit(iframeWin.contentWindow,body,index);
-
+                        window.location.reload();
                     }else{
                         innerCallbackFn.call(iframeWin.contentWindow,iframeWin.contentWindow,body,index);
                     }
                     clickFlag = false;
                     setTimeout(function(){
                         clickFlag = true;
-                    },3000);
+                    },1500);
                 }
+
             },
             cancel: function(index){
             }

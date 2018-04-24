@@ -56,7 +56,6 @@
             adYear:getQueryString("year")
         };
         var datastring = JSON.stringify(data);
-        console.log(data)
         ajaxToServer("/api/aps/ApsYearPlan/queryYearPlan",datastring,function (result) {
             console.log(result)
             planarr.push(result.cpcl);
@@ -66,7 +65,6 @@
         })
     }
     function createTbody(planarr) {
-        console.log(planarr)
         for(var i=0;i<planarr.length;i++){
             for(var j=0;j<planarr[i].length;j++){
                 msgobj = {
@@ -132,9 +130,7 @@
     });
     // 点击按钮并添加点击状态
     $(".btn-save").click(function (e) {
-        console.log(e);
         var btn = $(e.target).context.textContent;
-        console.log(btn);
         if(btn == "保存"){
             status = "0";
             addstatus(status)

@@ -65,27 +65,6 @@
                     </tbody>
 
                 </table>
-                <!--<div class="clearfix pagination-box">-->
-                    <!--<div class="pagination-detail pull-left">-->
-                        <!--<div class="page-info pull-left"></div>-->
-                        <!--<div class="page-list pull-left">-->
-                            <!--<span>每页显示</span>-->
-                            <!--<select name="" id="pag-sel">-->
-                                <!--<option value="">请选择</option>-->
-                                <!--<option value="5">5</option>-->
-                                <!--<option value="10" selected>10</option>-->
-                                <!--<option value="20">20</option>-->
-                                <!--<option value="25">25</option>-->
-                                <!--<option value="30">30</option>-->
-                                <!--<option value="40">40</option>-->
-                                <!--<option value="50">50</option>-->
-                                <!--<option value="-1">all</option>-->
-                            <!--</select>-->
-                            <!--条记录-->
-                        <!--</div>-->
-                    <!--</div>-->
-                    <!--<div id="pagination" class="pagination-roll pull-right"></div>-->
-                <!--</div>-->
             </div>
         </div>
     </div>
@@ -130,30 +109,22 @@
                 status: $status
             };
             function getAttr(obj) {
-                console.log(obj)
                 var $iChecks = obj.parents("tr").find('.i-checks'),
                     id= obj.parents("tr").find('.id').text(),
-                    // id = $iChecks.attr('data-id'),
-                    // year = $iChecks.attr('data-year'),
                     year = data.adYear,
-                    status = data.status
-                    // status = $iChecks.attr('data-status');
+                    status = data.status;
                 return [id, year, status];
             }
-            console.log(data);
             Page.init("/api/aps/ApsYearPlan/page",data, true, function (tableData) {
                 renderTableData(tableData);
-                console.log(tableData);
                 //查看
                 $(".btn-check").click(function () {
                     var attrArr = getAttr($(this));
-                    console.log(attrArr);
                     openDialog('查看月计划', 'producePlan/yearPlanCheck.html?id=' + attrArr[0] + '&year=' + attrArr[1]+'&check=0', '800px', '500px')
                 });
                 //删除
                 $(".btn-delete").click(function () {
                     var attrArr = getAttr($(this));
-                    console.log(attrArr)
                     deleteItem('确定要删除该计划', '/api/aps/ApsYearPlan/delete', attrArr[0])
                 });
                 //编辑
@@ -178,16 +149,15 @@
                         layerAlert("请选择一个准确的年份!");
                     } else {
                         location.href = "./yearPlanIndex.html?year=" + $year;
-                        console.log($year);
                     }
                 });
-//删除单条数据
-        function deleteOne(mess,url,id){
+
+        //删除单条数据
+         /* function deleteOne(mess,url,id){
             //var ids= eleP.find('input.i-checks').attr('id')
             var data = {id:id} || {};
             top.layer.confirm(mess, {icon: 3, title:'系统提示'},function(index){
                 ajaxToServer(url,JSON.stringify(data),function(result){
-                    console.log(data,url);
                     if(result.success == true){
                         var frameActive = top.getActiveTab().attr("name");
                         var obj = $('#search-btn', top.window.frames[frameActive].document);
@@ -205,7 +175,7 @@
                 top.layer.close(index);
             });
             return false;
-        }
+        }*/
 
     //  渲染表内容
     function renderTableData(tableData){

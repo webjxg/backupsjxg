@@ -325,10 +325,8 @@
             "contentParam":$(".name").val(),  //指令
             "status":getcheck()                      //状态
         };
-        console.log(data);
         //指令查看接口地址
         ajaxToServer("/api/ctrl/DirectiveDetail/queryPage",JSON.stringify(data), function(result){
-            console.log(result);
             if(result.success){
                 var sczb = result.page.rows;
                 for(var i=0;i<sczb.length;i++){
@@ -376,7 +374,6 @@
         })
     }
     function sendmsg(obj) {
-        console.log(obj)
         ajaxToServer("/api/ctrl/DirectiveDetail/updStatus",JSON.stringify(obj),function (result) {
            if(result.success){
                loadData();
@@ -389,7 +386,6 @@
     //值班指令
     $("#duty").click(function () {
         ajaxToServer1("/api/ctrl/DirectiveDetail/queryZbzlPage",{},function (result) {
-            console.log(result);
             var data = result.page.rows;
             createTable(data)
         })

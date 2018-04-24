@@ -89,7 +89,7 @@ function loadFn(){
         //通过遍历给菜单项加上data-index属性
         $(".navItem-tit").each(function (index) {
             if (!$(this).attr('data-index')) {
-                $(this).attr('data-index', index);
+                $(this).attr('data-index', (index+1));
             }
         });
         $(".navScrollView").slimScroll({

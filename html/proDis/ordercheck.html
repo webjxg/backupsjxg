@@ -171,7 +171,7 @@
             var data = {};
             Page.init("/api/ctrl/DirectiveDetail/page",data,true,function (result) {
                 console.log(result)
-                createTable(result);
+                loadData()
             })
         }
         //     //获取工序数据
@@ -365,7 +365,7 @@
                         "status":sczb[i].status,   //状态
                         "shiftName":sczb[i].shiftName, //班次
                         "groupName":sczb[i].groupName, //班组
-                        "issuedTime":sczb[i].issuedTime
+                        "issuedTime":sczb[i].main.issuedTime
                     }
                     arr.push(msgobj)
                 }

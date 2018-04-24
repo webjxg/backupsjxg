@@ -132,20 +132,6 @@
           "menu_sub":"0",
           "href":"../html/producePlan/dayPlanList.html",
           "children":[]
-        },
-        {
-          "iconName":"",
-          "name":"月排产",
-          "menu_sub":"0",
-          "href":"../html/producePlan/monthScheduling.html",
-          "children":[]
-        },
-        {
-          "iconName":"",
-          "name":"月调整",
-          "menu_sub":"1",
-          "href":"../html/producePlan/monthAdjust.html",
-          "children":[]
         }
       ]
     },
@@ -209,6 +195,12 @@
           "name": "操作交接班日志",
           "menu_sub": "1",
           "href": "../html/proDis/opeShiftLogIndex.html",
+          "children": []
+        },{
+          "iconName": "",
+          "name": "调度交接班日志",
+          "menu_sub": "1",
+          "href": "../html/proDis/disShiftLogIndex.html",
           "children": []
         }
       ]

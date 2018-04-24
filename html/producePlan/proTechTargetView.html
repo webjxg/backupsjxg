@@ -104,9 +104,11 @@
             		jszbjhs.push(itemmsg);
             	 }
             	 //质量指标计划
+                  console.log(zlzbjh)
             	 for(var i=0;i<zlzbjh.length;i++){
             	 		var itemmsg = {
             			"id":zlzbjh[i].id,
+                          "pName":  zlzbjh[i].pName,
             			"mainId":zlzbjh[i].mainId,
             			"groupName":zlzbjh[i].itemName,
             			"itemUnit":zlzbjh[i].itemUnit,
@@ -115,6 +117,7 @@
             			"remark":zlzbjh[i].remark
             		}
             		zlzbjhs.push(itemmsg);
+            	 		console.log(zlzbjhs)
             	 }
             	 $('#td0').datagrid('loadData',clzbjh);
             	  $('#td1').datagrid('loadData',gxdhzbjhs);
@@ -241,6 +244,7 @@
           columns:[[
               {field:'id',title:'id',hideColumn:'id'},
               {field:'mainId',title:'mainId',hideColumn:'mainId'},
+              {field:'pName',title:"名称",width:100,align:'center'},
               {field:'groupName',title:'项目',width:100,align:'center'},
                 {field:'itemUnit',title:'单位',width:100,align:'center'},
                 {field:'yearTarget',title:'全年基本目标',editor:'numberbox',width:100,align:'center'},
@@ -250,12 +254,12 @@
             onAfterEdit: function (rowIndex, rowData, changes) {
                 dataGridObj.pushRowData(rowData);
                 dataGridObj.setEditIndex("#td3",undefined);
-                dataGridObj.mergeCells(loadedData,"#td3","groupName");
+                dataGridObj.mergeCells(loadedData,"#td3","pName");
             },
             //合并单元格
             onLoadSuccess:function (data) {
                 loadedData = data;
-                dataGridObj.mergeCells(data,"#td3","groupName");
+                dataGridObj.mergeCells(data,"#td3","pName");
             },
             toolbar: [{
                 text: '保存', iconCls: 'icon-save', handler: function () {

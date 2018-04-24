@@ -22,28 +22,32 @@
         <div class="ibox">
             <div class="ibox-title">
                 <h1 class="titName">指令监控</h1>
+                <!--<button id="connect" onclick="connect()">连接</button>-->
+                <!--<button id="disconnect" onclick="disconnect()">断开</button>-->
+                <button id="send" onclick="sendName()">发送</button>
                 <hr/>
             </div>
             <div class="ibox-content">
                 <div>
                     <ul class="apsType-linkage">
                         <li>
-                            2018-04-10   21:42
+
                         </li>
                         <li class="col-1ab394">
                             <i class="fa fa-check-circle"></i>
-                            执行完成:
+                            执行完成:<span></span>
                         </li>
-                        <li class="wait">
-                            待执行:
+                        <li class="wait btn-mainProVal">
+                            <i class="fa icon-wait"></i>
+                            待执行:<span></span>
                         </li>
-                        <li class="stop">
+                        <li class="stopbn">
                             <i class="fa fa-exclamation-circle"></i>
-                            停止执行:
+                            停止执行:<span></span>
                         </li>
-                        <li>
+                        <li class="btn-cacel">
                             <i class="fa fa-times-circle"></i>
-                            取消执行:
+                            取消执行:<span></span>
                         </li>
                     </ul>
                 </div>
@@ -81,11 +85,12 @@
                             条记录
                         </div>
                     </div>
-                    <div id="pagination" class="pagination-roll pull-right"> <ul class="pagination"> <li class="previous"><a href="#">«</a></li><li class="disabled hidden"><a href="#">...</a></li> <li class="active"><a href="#">1</a></li><li class="disabled hidden"><a href="#">...</a></li><li class="next"><a href="#">»</a></li></ul></div>
+                    <div id="pagination" class="pagination-roll pull-right"></div>
                 </div>
             </div>
         </div>
     </div>
+
 </body>
 <!--核心插件-->
 <script src="../../js/jquery-2.2.4.min.js"></script>
@@ -102,40 +107,75 @@
 <!--自定义文件-->
 <script src="../../js/common.js"></script>
 <script src="../../js/customForm.js"></script>
+<script src="../../js/customForm-aps.js"></script>
+<script src="../../js/stomp.min.js"></script>
+<script src="../../js/sockjs.min.js"></script>
+<script src="../../js/page.js"></script>
 <script>
-    var arr = [];
-    $(window).load(function () {
-        //获取数据
-        loadData();
-    })
-    //获取数据
-    function loadData(){
-        //指令查看接口地址
-        var url_ = 'http://localhost:63342/branch/json/proDis/productiondispatch.json';
-        ajaxToServer(url_,{}, function(result){
-            if(result.success){
-                console.log(result)
-                var sczb = result.page.rows;
-                for(var i=0;i<sczb.length;i++){
-                    var msgobj = {
-                        "process":sczb[i].groupName,
-                        "instruct":sczb[i].reciveStatus,
-                        "status":sczb[i].status,
-                        "overStatus":sczb[i].overStatus,
-                        "overUserName":sczb[i].overUserName
-                    }
-                    arr.push(msgobj);
-                }
-                createTable(arr);
-            }else{
-                layer.msg(result.message);
-            }
+    // //页面加载建立连接
+    $(function(){
+        connect();
+        myfunction();
+        var date = new Date(),
+            getYear = date.getFullYear(),
+            getMonth = date.getMonth()+1,
+            getDay = date.getDate(),
+            getHour = date.getHours(),
+            getMiner = date.getMinutes(),
+            getSecond = date.getSeconds();
+        getMonth = (getMonth<10?"0"+getMonth:getMonth);
+        $(".apsType-linkage li").eq(0).text(getYear+"-"+getMonth+"-"+getDay+"         "+getHour+":"+getMiner+":"+getSecond);
+    });
+    function myfunction(){
+        setTimeout(function(){
+            sendName();
+        },900);
+    }
+    // webscoket连接方法
+    function connect() {
+        //var socket = new SockJS('/endpointWisely'); //链接SockJS 的endpoint 名称为"/endpointWisely"
+        var socket = new SockJS('http://114.115.165.184:8083/aps-api/endpointWisely'); //链接SockJS 的endpoint 名称为"/endpointWisely"
+        stompClient = Stomp.over(socket);//使用stomp子协议的WebSocket 客户端
+        stompClient.connect({}, function(frame) {//链接Web Socket的服务端。
+            console.log('Connected: ' + frame);
+            stompClient.subscribe('/topic/getResponse',function(respnose){ //订阅/topic/getResponse 目标发送的消息。这个是在控制器的@SendTo中定义的。
+                showResponse(JSON.parse(respnose.body).responseMessage);
+            });
         });
     }
+    // 发送消息
+    function sendName() {
+        //通过stompClient.send 向/welcome 目标 发送消息,这个是在控制器的@messageMapping 中定义的。
+        stompClient.send("/welcome", {}, JSON.stringify({ 'name': "" }));
+        //stompClient.send("http://localhost:8083/aps-api/websocket/welcome", {}, JSON.stringify({ 'name': name }));
+    }
+        // 接收返回信息
+    function showResponse(message) {
+        var statusarr = [];
+        var statusarr1 = [];
+        var statusarr2 = [];
+        var statusarr3 = [];
+        for(var i=0;i<message.rows.length;i++){
+            if(message.rows[i].status == 0){
+                statusarr.push(message.rows[i].status);
+            }else if(message.rows[i].status == 1){
+                statusarr1.push(message.rows[i].status);
+            }else if(message.rows[i].status == 2){
+                statusarr2.push(message.rows[i].status);
+            }else if(message.rows[i].status == -1){
+                statusarr3.push(message.rows[i].status);
+            }
+        }
+        $(".wait span").text(statusarr.length);
+        $(".col-1ab394 span").text(statusarr1.length);
+        $(".stopbn span").text(statusarr2.length);
+        $(".btn-cacel span").text(statusarr3.length)
+        createTable(message.rows)
+    }
     //创建table
-    function createTable(data) {
-        console.log(data)
+    function createTable(data){
         //  datatables使用ajax
+        console.log(data)
         $('#treeTable').dataTable({
             "bPaginate": false,
             "bAutoWidth": false,
@@ -150,29 +190,29 @@
             "data": data,
             //定义列 宽度 以及在json中的列名
             "aoColumns": [
-                {"data": "process", 'sClass': " alignCenter authName","width":'20%'},
-                {"data": "instruct", 'sClass': "alignCenter autoWidth","width":'20%'},
+                {"data": "proc", 'sClass': " alignCenter authName","width":'20%'},
+                {"data": "content", 'sClass': "alignCenter autoWidth","width":'20%'},
                 {"data": "",'order':false,"defaultContent": "", 'sClass': "alignCenter",
                     "render":function (data,type,row,meta) {
                         var html = "";
-                        if (row.status == "0") {
+                        if (row.status == "1") {
                             var setText = "执行完成";
                             html = "<span class='btn-primary1'><i class='fa fa-check-circle'></i>"+setText+"</span>";
-                        } else if (row.status == "1") {
+                        } else if (row.status == "2") {
                             setText = "停止执行";
                             html = "<span class='btn-stop'><i class='fa fa-exclamation-circle'></i>"+setText+"</span>";
-                        } else if (row.status == "2") {
+                        } else if (row.status == "-1") {
                             setText = "取消执行";
                             html ="<span class='btn-cancel'><i class='fa fa-times-circle'></i>"+setText+"</span>";
-                        } else if (row.status == "-1") {
+                        } else if (row.status == "0") {
                             setText = "待执行";
-                            html = "<span class='btn-await1'><i class='fa fa-times-circle'></i>"+setText+"</span>";
+                            html = "<span class='btn-await1 btn-mainProVal'><i class='fa icon-wait'></i>"+setText+"</span>";
                         }
                         return html;
                     }
                 },
-                {"data": "overStatus", 'sClass': "alignCenter"},
-                {"data": "overUserName", 'sClass': "alignCenter"}
+                {"data": "issuedTime", 'sClass': "alignCenter"},
+                {"data": "updateDate", 'sClass': "alignCenter"}
             ]
         });
         RenderiCheckTblBody();
