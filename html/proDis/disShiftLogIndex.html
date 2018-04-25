@@ -19,13 +19,16 @@
         .wrapper {
             height: 1999px;
         }
+
         .ibox {
             background-color: #f3f3f4;
             position: relative;
         }
+
         .ibox > .ibox-content:nth-of-type(1) {
             margin-bottom: 20px;
         }
+
         .ibox > .ibox-content:nth-of-type(2) {
             /*height:999px;*/
             width: 100%;
@@ -33,21 +36,25 @@
             margin-right: 20px;
 
         }
+
         .ibox > .ibox-content > .ibox-content {
             width: 100%;
             height: 100%;
         }
+
         .content-head {
             border-bottom: 1px solid #fff;
         }
+
         /*时间轴 整体样式设置*/
         .outerbox {
             position: relative;
-            left:-24px;
+            left: -24px;
             margin-bottom: 10px;
             width: 120px;
             text-align: center;
         }
+
         .outerbox:after {
             position: absolute;
             left: 54px;
@@ -59,9 +66,11 @@
             border-width: 5px;
             border-color: #1ab394 transparent transparent transparent;
         }
+
         .ibox-content > .pull-left {
             position: relative;
         }
+
         .linebox {
             width: 100%;
             margin-left: 41px;
@@ -69,6 +78,7 @@
             position: relative;
             border-left: 1px solid #ddd;
         }
+
         .clearBoth {
             clear: both;
         }
@@ -78,11 +88,13 @@
             position: relative;
             height: 10px;
         }
+
         div.safe > span, div.production > span, div.else > span {
             position: absolute;
             top: -12px;
             left: 30px;
         }
+
         i.smallimg {
             display: block;
             width: 11px;
@@ -91,7 +103,7 @@
 
         }
 
-        .safebox{
+        .safebox {
             margin-bottom: 45px;
         }
 
@@ -102,6 +114,7 @@
             height: 75px;
             margin-top: 20px;
         }
+
         .newbox > textarea {
             padding: 5px;
             margin-left: 34px;
@@ -111,25 +124,30 @@
             border-radius: 3px;
             resize: none;
         }
+
         .newbox > textarea:focus {
             outline: none;
         }
+
         .newbox .smallimg {
             position: absolute;
             left: -6px;
             top: 34px;
         }
+
         .newbox > .btn {
             font-size: 25px;
             width: 33px;
             height: 33px;
         }
+
         .newbox > .btnaddr {
             position: absolute;
             top: 21px;
             right: -90px;
 
         }
+
         .newbox > .btnremove {
             position: absolute;
             top: 21px;
@@ -153,6 +171,7 @@
             border-right-color: currentColor;
             color: #cacaca;
         }
+
         .newbox:after {
             content: '';
             position: absolute;
@@ -170,19 +189,24 @@
         }
 
         /*table*/
-        .wrapper>.ibox>.ibox-content>.tablecontent{
+        .wrapper > .ibox > .ibox-content > .tablecontent {
             width: 50%;
             clear: none;
-            margin-top: 80px;
+            margin-top: 50px;
             display: none;
-            float:left;
+            float: left;
         }
-        thead th input[type=button]{
+
+        thead th input[type=button] {
             position: relative;
             font-weight: 200;
-            border:none;
+            border: none;
             background-color: transparent;
             color: blue;
+        }
+
+        .table-striped > tbody > tr:nth-of-type(odd) {
+            background-color: transparent;
         }
     </style>
 
@@ -242,9 +266,9 @@
 
                         </div>
                     </div>
-                    <div class="btn bg-1ab394 outerbox">工具是否完好</div>
+                    <div class="btn bg-1ab394 outerbox">工器具是否完好</div>
                     <div class="clearBoth linebox">
-                        <div class="safebox parentbox giveworktext" id="GJSFWH">
+                        <div class="safebox parentbox giveworktext" id="GQJSFWH">
 
                         </div>
                     </div>
@@ -254,9 +278,9 @@
 
                         </div>
                     </div>
-                    <div class="btn bg-1ab394 outerbox">临时安排工作</div>
+                    <div class="btn bg-1ab394 outerbox">临时工作安排</div>
                     <div class="clearBoth linebox">
-                        <div class="safebox parentbox giveworktext" id="LSAPGZ">
+                        <div class="safebox parentbox giveworktext" id="LSGZAP">
 
                         </div>
                     </div>
@@ -268,17 +292,6 @@
             </div>
             <!--隐藏表格区-->
             <div class="ibox-content pull-right tablecontent">
-                <table id="treeTable1" title="岗位记事" class="table table-striped table-bordered table-hover table-condensed dataTables-example dataTable">
-                    <thead>
-                    <tr>
-                        <th colspan="2" style="text-align: left;font-weight:300; background-color: #F5F5F5 !important;color: #000000">
-                            <input type="button" class="btn hidd" style="float:right; font-size: 14px;line-height: 20px;" value="隐藏表格"></th>
-                    </tr>
-                    </thead>
-                    <tbody id="treeTableBody1" >
-
-                    </tbody>
-                </table>
             </div>
         </div>
     </div>
@@ -303,22 +316,23 @@
 <script>
     $(document).ready(function () {
         renderclass();
-        var cz={
-            "bigKind":"DD"
+        var cz = {
+            "bigKind": "DD"
         };
-        ajaxTo('/api/ctrl/ShiftMain/form/DD',JSON.stringify(cz),function (result) {
-            if(result.success==true){
+        ajaxTo('/api/ctrl/ShiftMain/form/DD', JSON.stringify(cz), function (result) {
+            if (result.success == true) {
                 console.log(result);
                 renderleft(result);
                 btnonclick(result);
                 renderTableData(result);
+                $('.table')
 
-                if(result.shiftMain.overStatus=="0"){/*||result.shiftMain.overStatus==''*/
+                if (result.shiftMain.overStatus == "0") {/*||result.shiftMain.overStatus==''*/
                     $('.apsType-box').append('<input type="button" class="giveWork btn bg-1ab394" value="交班">')
-                }else if(result.lastShiftMain.reciveStatus=="0"){/*||result.lastShiftMain.reciveStatus==''*/
+                } else if (result.lastShiftMain.reciveStatus == "0") {/*||result.lastShiftMain.reciveStatus==''*/
                     $('.apsType-box').append('<input type="button"  class="joinWork btn bg-ffa82d" value="接班" >')
                 }
-            }else{
+            } else {
                 console.log(result);
                 layer.msg(result.message)
             }
@@ -330,26 +344,27 @@
     /*判断有没有数据 没有数据自动创建textarea*/
     function renderleft(data) {
         var ShiftMainMap = data.ShiftMainMap;
-        var keyArr = ["SCYXQK","ZBQK","SBYXQK","AQFM","GJSFWH","WSQK","LSAPGZ"];
-        if(data.ShiftMainMap==null){
-            for (var i=0;i<keyArr.length;i++) {
+        var keyArr = ["SCYXQK", "ZBQK", "SBYXQK", "AQFM", "GQJSFWH", "WSQK", "LSGZAP"];
+        ;
+        if (data.ShiftMainMap == null) {
+            for (var i = 0; i < keyArr.length; i++) {
                 var str = "<div class='newbox'>" +
                     "<i class='smallimg'></i>" +
                     "<textarea name='safe'></textarea>" +
                     "<input type='button' class='btn bg-1ab394 btnaddr' value='+'>" +
                     "<input class='btn btnremove' value='-'>" +
                     "</div>";
-                $('#'+keyArr[i]+'').append(str);
+                $('#' + keyArr[i] + '').append(str);
             }
-        }else{
-            NewNodeRow(keyArr,ShiftMainMap)
+        } else {
+            NewNodeRow(keyArr, ShiftMainMap)
         }
     }
     /*有数据的时候渲染到textarea里*/
-    function NewNodeRow(keyArr,ShiftMainMap) {
-        for (var i=0;i<keyArr.length;i++) {
+    function NewNodeRow(keyArr, ShiftMainMap) {
+        for (var i = 0; i < keyArr.length; i++) {
             var shiftLogList = ShiftMainMap[keyArr[i]];
-            if(shiftLogList==null){
+            if (shiftLogList == null) {
                 var _html = "<div class='newbox'>" +
                     "<i class='smallimg'></i>" +
                     "<textarea name='safe'></textarea>" +
@@ -358,11 +373,11 @@
                     "</div>"
                 $("#" + keyArr[i]).append($(_html));
 
-            }else{
+            } else {
                 for (var j = 0; j < shiftLogList.length; j++) {
                     var _html = "<div class='newbox'>" +
                         "<i class='smallimg'></i>" +
-                        "<textarea name='safe'>"+shiftLogList[j].content+"</textarea>" +
+                        "<textarea name='safe'>" + shiftLogList[j].content + "</textarea>" +
                         "<input type='button' class='btn bg-1ab394 btnaddr' value='+'>" +
                         "<input class='btn btnremove' value='-'>" +
                         "</div>"
@@ -376,21 +391,20 @@
     /*所有按钮操作*/
     function btnonclick(result) {
         /*取消隐藏按钮*/
-        $('.content').on('click','.checkupclass',function () {
-            $('.lefttimeline').css('width','45%');
-            $('.tablecontent').css('display','block');
+        $('.content').on('click', '.checkupclass', function () {
+            $('.lefttimeline').css('width', '45%');
+            $('.tablecontent').css('display', 'block');
         });
         /*隐藏表格按钮*/
 
-        $('.content').on('click','.hidd',function () {
-            $('.lefttimeline').css('width','100%');
-            $('.tablecontent').css('display','none');
+        $('.content').on('click', '.hidd', function () {
+            $('.lefttimeline').css('width', '100%');
+            $('.tablecontent').css('display', 'none');
         });
 
 
-
         /*加减按钮*/
-        $('.parentbox').on('click','.btnaddr',function () {
+        $('.parentbox').on('click', '.btnaddr', function () {
             var str = "<div class='newbox'>" +
                 "<i class='smallimg'></i>" +
                 "<textarea name='safe'></textarea>" +
@@ -399,66 +413,82 @@
                 "</div>";
             $(this).parents('.newbox').after(str);
         });
-        $('.parentbox').on('click','.btnremove',function () {
+        $('.parentbox').on('click', '.btnremove', function () {
             $(this).parents('.newbox').remove();
         });
         /*交班*/
 
-        var keyArr = ["SCYXQK","ZBQK","SBYXQK","AQFM","GJSFWH","WSQK","LSAPGZ"];
 
-        $('.apsType-box').on('click','.giveWork',function () {
-            var data={
-                bigKind:"DD",
-                shiftId:result.shiftMain.shift.id,
-                shiftMainId:result.shiftMain.id,
-                overStatus:"1",
-                groupName:result.shiftMain.groupName,
-                shiftDate:result.shiftMain.shiftDate
+        var keyArr = ["SCYXQK", "ZBQK", "SBYXQK", "AQFM", "GQJSFWH", "WSQK", "LSGZAP"];
+        $('.apsType-box').on('click', '.giveWork', function () {
+            top.layer.confirm('是否确定交班',{
+                btn:['确定', '取消'],
+                icon: 3},function () {
+                var data = {
+                    bigKind: "DD",
+                    shiftId: result.shiftMain.shift.id,
+                    shiftMainId: result.shiftMain.id,
+                    overStatus: "1",
+                    groupName: result.shiftMain.groupName,
+                    shiftDate: result.shiftMain.shiftDate
 
-            };
-            $("#reciveStatus").val("1");
-            for (var i=0;i<keyArr.length;i++) {
-                data[keyArr[i]+"_dataArr"] = JSON.stringify(getItemArrJson($('#'+keyArr[i]+''),keyArr[i],result));
-            }
-            ajaxTo1('/api/ctrl/ShiftMain/over',data,function (result) {
-                console.log(data,result);
-            })
+                };
+                $("#reciveStatus").val("1");
+                for (var i = 0; i < keyArr.length; i++) {
+                    data[keyArr[i] + "_dataArr"] = JSON.stringify(getItemArrJson($('#' + keyArr[i] + ''), keyArr[i], result));
+                }
+                ajaxTo1('/api/ctrl/ShiftMain/over', data, function () {
+                    layer.msg(result.massage)
+                });
+                top.layer.closeAll();
+                window.location.reload()
+
+                }
+            )
+
         })
         /*接班*/
-        $('.apsType-box').on('click','.joinWork',function () {
-            var data={
-                bigKind:"DD",
-                reciveStatus:"1",
-                lastShiftMainId:result.lastShiftMain.id
-            };
-            for (var i=0;i<keyArr.length;i++) {
-                data[keyArr[i]+"_dataArr"] = JSON.stringify(getItemArrJson1($('#'+keyArr[i]+''),keyArr[i],result));
-            }
-            ajaxTo1('/api/ctrl/ShiftMain/recive',data,function (result) {
-                console.log(data,result);
-            })
+        $('.apsType-box').on('click', '.joinWork', function () {
+            top.layer.confirm('是否确定接班',{
+                btn:['确定', '取消'],
+                icon: 3},function () {
+                    var data = {
+                        bigKind: "DD",
+                        reciveStatus: "1",
+                        lastShiftMainId: result.lastShiftMain.id
+                    };
+                    for (var i = 0; i < keyArr.length; i++) {
+                        data[keyArr[i] + "_dataArr"] = JSON.stringify(getItemArrJson1($('#' + keyArr[i] + ''), keyArr[i], result));
+                    }
+                    ajaxTo1('/api/ctrl/ShiftMain/recive', data, function () {
+                        layer.msg(result.massage)
+                    });
+                top.layer.closeAll();
+                window.location.reload()
+                }
+            )
         })
     }
     /*用于交班*/
-    function getItemArrJson(obj,keyArr,result){
+    function getItemArrJson(obj, keyArr, result) {
         var jsonArr = new Array();
-        $(obj).find('textarea').each(function(i, r){
+        $(obj).find('textarea').each(function (i, r) {
             jsonArr.push({
-                middleKing:keyArr,
-                main:{"id":result.shiftMain.id},
-                content:$(r).val()
+                middleKing: keyArr,
+                main: {"id": result.shiftMain.id},
+                content: $(r).val()
             });
         });
         return jsonArr;
     }
     /*接班*/
-    function getItemArrJson1(obj,keyArr,result){
+    function getItemArrJson1(obj, keyArr, result) {
         var jsonArr = new Array();
-        $(obj).find('textarea').each(function(i, r){
+        $(obj).find('textarea').each(function (i, r) {
             jsonArr.push({
-                middleKing:keyArr,
-                main:{"id":result.lastShiftMain.id},
-                content:$(r).val()
+                middleKing: keyArr,
+                main: {"id": result.lastShiftMain.id},
+                content: $(r).val()
             });
         });
         return jsonArr;
@@ -503,11 +533,11 @@
                 // Authorization: getCookie("token_type")+" " +getCookie("authorization")，
 
 
-                /*Authorization: "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJqdGkiOiIwMzIyMjcxNmFiNzU0MTIxOTU5Yjg1ODU1YmFhZWRjZSIsInN1YiI6IjIyIiwiaXNzIjoiYWRtaW4iLCJhdWQiOiJBZG1pbiBKV1QgT25saW5lIn0.c_MLl8tCitpuSa6d-RzAFWJq7k-H3XBAQePTep4q4IM"*/    //乙班
+                 /*Authorization: "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJqdGkiOiIwMzIyMjcxNmFiNzU0MTIxOTU5Yjg1ODU1YmFhZWRjZSIsInN1YiI6IjIyIiwiaXNzIjoiYWRtaW4iLCJhdWQiOiJBZG1pbiBKV1QgT25saW5lIn0.c_MLl8tCitpuSa6d-RzAFWJq7k-H3XBAQePTep4q4IM"*/    //乙班
 
-                Authorization: "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJqdGkiOiIwNGQ2MjI3ZTQwMTI0YWY4YTZiMzhhZTExMTMzMTBkMSIsInN1YiI6IjQ0IiwiaXNzIjoiYWRtaW4iLCJhdWQiOiJBZG1pbiBKV1QgT25saW5lIn0.Q1xsSdrr__A8xBiMJOrXFYEZTBRQCgjGrwrJKp4ZQT4"  /*丁*/
+                /*Authorization: "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJqdGkiOiIwNGQ2MjI3ZTQwMTI0YWY4YTZiMzhhZTExMTMzMTBkMSIsInN1YiI6IjQ0IiwiaXNzIjoiYWRtaW4iLCJhdWQiOiJBZG1pbiBKV1QgT25saW5lIn0.Q1xsSdrr__A8xBiMJOrXFYEZTBRQCgjGrwrJKp4ZQT4"*/  /*丁*/
 
-                /*Authorization: "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJqdGkiOiIwMjgyNzJiNDE2Njg0NDc4YmRiMzZhOTI3ZGQ5MDhiZCIsInN1YiI6IjExIiwiaXNzIjoiYWRtaW4iLCJhdWQiOiJBZG1pbiBKV1QgT25saW5lIn0.2FEUoTT96E350SAXijdtAGVncELyd4rkImjMjhaWTck" */    //甲
+                Authorization: "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJqdGkiOiIwMjgyNzJiNDE2Njg0NDc4YmRiMzZhOTI3ZGQ5MDhiZCIsInN1YiI6IjExIiwiaXNzIjoiYWRtaW4iLCJhdWQiOiJBZG1pbiBKV1QgT25saW5lIn0.2FEUoTT96E350SAXijdtAGVncELyd4rkImjMjhaWTck"     //甲
 
                 /*Authorization: "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJqdGkiOiIwNGEzOTJkZGIwNWE0YTJmYTE2NDE4MGMwMWNkYmJmNCIsInN1YiI6IjMzIiwiaXNzIjoiYWRtaW4iLCJhdWQiOiJBZG1pbiBKV1QgT25saW5lIn0.Byouxvl_hsAYtVQ6PQ0TCHTeyfzkG6ojuGfyyc4-880" */  /*丙班*/
             },
@@ -542,7 +572,7 @@
             url: url,
             data: data,
             dataType: 'json',
-            contentType:'application/x-www-form-urlencoded',
+            contentType: 'application/x-www-form-urlencoded',
             success: function (result) {
                 layer.close(layerIndex);
                 if (callbackFun) {
@@ -558,39 +588,50 @@
 
     /*渲染隐藏表*/
     function renderTableData(data) {
-        var keyArr = ["SCYXQK","ZBQK","SBYXQK","AQFM","GJSFWH","WSQK","LSAPGZ"];
-        var lastShiftMainMap=data.lastShiftMainMap;
-        if(lastShiftMainMap=="{}"){
-            NewNodeRow(keyArr,data)
-        }else{
-            for(var i=0;i<lastShiftMainMap.length;i++){
-                renders(lastShiftMainMap[i],'html'+keyArr[i],'#treeTableBody1')
+        var keyArr = ["SCYXQK", "ZBQK", "SBYXQK", "AQFM", "GQJSFWH", "WSQK", "LSGZAP"];
+        var arr = ['生产运行情况', '指标情况', '设备运营情况', '安全方面', '工器具是否完好', '卫生情况', '临时工作安排'];
+        for (var i = 0; i < keyArr.length; i++) {
+            var lastShiftMainMap = data.lastShiftMainMap[keyArr[i]];
+            if (lastShiftMainMap == null) {
+                var html = '<table title="岗位记事" class="table table-striped table-bordered table-hover table-condensed dataTables-example dataTable ' + keyArr[i] + '">' +
+                    '<thead>' +
+                    '<tr>' +
+                    '<th style="text-align: left;font-weight:300; background-color: #F5F5F5 !important;color: #000000">'
+                    + arr[i] + '</th>' +
+                    '</tr>' +
+                    '</thead>' +
+                    '<tbody>' +
+                        '<tr>' +
+                        '<td>暂无内容</td>'+
+                    '</tr>'+
+                    '</tbody>' +
+                    '</table>';
+                $('.tablecontent').append(html);
+            } else {
+                var tb = '<table title="岗位记事" class="table table-striped table-bordered table-hover table-condensed dataTables-example dataTable" >' +
+                    '<thead>' +
+                    '<tr>' +
+                    '<th style="text-align: left;font-weight:300; background-color: #F5F5F5 !important;color: #000000">'
+                    + arr[i] + '</th>' +
+                    '</tr>' +
+                    '</thead>' +
+                    '<tbody class="' + keyArr[i] + '">' +
+                    '</tbody>' +
+                    '</table>';
+                $('.tablecontent').append(tb);
+                for (var j = 0; j < lastShiftMainMap.length; j++) {
+                    var tablecon = '<tr>' +
+                        '<td style="text-align: left;background-color: transparent">' + lastShiftMainMap[j].content + '</td>' +
+                        '</tr>';
+                    $('.' + keyArr[i]).append(tablecon)
+                }
             }
+
+
         }
+        $('.tablecontent').find('table:first tr th').append('<input type="button" class="btn hidd" style="float:right; font-size: 14px;line-height: 20px;" value="隐藏表格"></th>')
 
     }
-    //渲染表
-    function renders(item,htmlname,innerid) {
-        $(item).each(function (i,e) {
-            console.log(e);
-
-//            for(var j=0;j<item[i].length;j++){
-//                if(item[i].content!==''){
-//                    htmlname = "<tr>" +
-//                        "<td width='100%'>"+item[i]+"</td>"
-//                        +"</tr>"
-//                        +"<tr>" +
-//                        "<td width='100%'>"+item[i].content+"</td>"
-//                        +"</tr>";
-//                    $(innerid).append(htmlname);
-//                }
-//            }
-
-        });
-
-
-    }
-
 
 
 </script>

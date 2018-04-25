@@ -56,7 +56,9 @@
                                 title="修改"><!--onclick="#"--><i class="fa fa-file-text-o"></i> 修改
                         </button>
                         <button class="btn btn-white btn-sm"  id = "delete-btn" data-toggle="tooltip" onclick="deleteAll('要删除该菜单及所有子菜单项吗？','/api/sys/SysMenu/ajaxDel/','#treeTable')"
-                                data-placement="top"><i class="fa fa-trash-o">删除</i>
+
+                                data-placement="top"><i class="fa fa-trash-o"></i>删除
+
                         </button>
                         <button  class="btn btn-white btn-sm" id="updateSort-btn" data-toggle="tooltip" data-placement="left" title="保存排序"><i class="fa fa-save"></i> 保存排序
                         </button>
@@ -81,7 +83,7 @@
                             <th>链接</th>
                             <th>排序</th>
                             <th>可见</th>
-                            <th>权限标识</th>
+                            <th>所属模块</th>
                             <th>操作</th>
                         </tr>
                     </thead>
@@ -195,7 +197,7 @@
                         +"<td>"+data[i].href+"</td>"
                         +"<td class='autoWidth'><input type='number' name='sort' value='"+data[i].sort+"' data-val='"+data[i].sort+"' class='form-control' style='width:100px ;padding:1px 6px;height:26px;line-height: 24px;'></td>"
                         +"<td style='text-align: center;'>"+(data[i].is_show =='1'?'是':'否' )+"</td>"
-                        +"<td>"+data[i].permission+"</td>"
+                        +"<td>"+data[i].module+"</td>"
                         +"<td class='autoWidth' ><a href='#' class='btn btn-info btn-xs btn-check'><i class='fa fa-search-plus'></i>查看</a>"+" <a href='#' class='btn btn-success btn-xs btn-change'><i class='fa icon-change'></i>修改</a>"+"<a href='#' class='btn btn-danger btn-xs btn-delete'><i class='fa fa-trash'></i> 删除</a>"+"  <a href='#' class='btn btn-primary btn-xs btn-add'><i class='fa fa-th-large'></i> 添加下级菜单</a></td>"
                     +"</tr>";
             }

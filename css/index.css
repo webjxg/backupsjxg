@@ -26,6 +26,7 @@
 }
 .sidebar-nav > li a .arrow {
   float: right;
+  margin-top: 5px;
 }
 .sidebar-nav > li a i {
   margin-right: 6px;
@@ -237,10 +238,10 @@ body.nav-mini .wrapper-con {
   background-color: #f3f3f3;
 }
 /*.tabs-nav a.active:hover, .tabs-nav a.active i:hover {*/
-  /*color: black;*/
+/*color: black;*/
 /*}*/
 /*.tabs-nav a i {*/
-  /*color: #1cb392;*/
+/*color: #1cb392;*/
 /*}*/
 
 .tabs-nav a i:hover {
@@ -423,4 +424,63 @@ body.nav-mini .wrapper-con {
 }
 .innerlist .layui-layer-setwin .layui-layer-min,.innerlist .layui-layer-setwin .layui-layer-max{
   display: none;
+}
+/*#side-menu li a:first-child span{*/
+  /*margin-top: -5px;*/
+/*}*/
+#side-menu i{
+  display: inline-block;
+  width: 19px;
+  height: 19px;
+  align-content: center;
+  background-image: url("../images/navicon.png");
+  background-repeat: no-repeat;
+}
+/*平台服务*/
+.icon-terrace{
+  background-position: -20px -58px;
+}
+/*hover*/
+#side-menu li a:hover .icon-terrace{
+  background-position: -20px -20px;
+}
+/*focus*/
+#side-menu li a:focus .icon-terrace{
+  background-position: -20px -20px;
+}
+/*生产计划*/
+.icon-production{
+  background-position: -75px -57px;
+}
+/*hover*/
+#side-menu li a:hover .icon-production{
+  background-position: -75px -18px;
+}
+/*focus*/
+#side-menu li a:focus .icon-production{
+  background-position: -75px -18px;
+}
+/*生产调度*/
+.icon-dispatch{
+  background-position: -133px -59px;
+}
+/*hover*/
+#side-menu li a:hover .icon-dispatch{
+  background-position: -133px -21px;
+}
+/*focus*/
+#side-menu li a:focus .icon-dispatch{
+  background-position: -133px -21px;
+}
+/*操作管理*/
+.icon-operation{
+  background-position: -188px -58px;
+}
+/*hover*/
+#side-menu li a:hover .icon-operation{
+  background-position: -188px -20px;
+}
+/*focus*/
+#side-menu li a:focus .icon-operation{
+  background-position: -188px -20px;
 }

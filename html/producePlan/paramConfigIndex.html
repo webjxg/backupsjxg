@@ -39,10 +39,9 @@
                 <button class="btn btn-white btn-sm" onclick="deleteAll
                 ('确认要删除该用户吗？','/api/aps/Configure/delete/','#treeTable')"
                         data-toggle="tooltip" data-placement="top">
-                    <i class="fa fa-trash"></i>
-                    批量删除
+                    <i class="fa fa-trash"></i> 批量删除
                 </button>
-                <button class="btn btn-white btn-sm " style="visibility: hidden"
+                <button class="btn btn-white btn-sm "
                         id="refresh-btn" data-toggle="tooltip" data-placement="left"
                         onclick="window.location.reload();" title="刷新">
                         <i class="glyphicon glyphicon-repeat"></i> 刷新
@@ -146,7 +145,7 @@
                     "data": "id", "orderable": false, "width": "320px", "defaultContent": "",
                     "render": function (data, type, row, meta) {
                         return data =
-                            "<a class='btn  btn-xs btn-change btn-success'><i class='fa icon-change'></i>修改</a >" +
+                            "<a class='btn  btn-xs btn-change'><i class='fa icon-change'></i>修改</a >" +
                             "<a class='btn  btn-xs btn-delete'><i class='fa fa-trash' ></i>删除</a >"
                     }
                 }],

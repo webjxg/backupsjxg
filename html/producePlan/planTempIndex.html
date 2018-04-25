@@ -54,7 +54,7 @@
                         onclick="edit('修改模板信息','./producePlan/planTempCheckView.html','800px','300px','#treeTable')" title="修改"><i class="fa fa-file-text-o"></i> 修改
                 </button>
                 <button class="btn-white btn" onclick="deleteIt('确认要删除该模板吗？','/api/aps/Template/delete/')"  data-toggle="tooltip" data-placement="top"><i
-                        class="fa fa-trash-o"> 删除</i>
+                        class="fa fa-trash-o"></i>删除
                 </button>
                 <button class="btn-white btn" id="refresh-btn" data-toggle="tooltip" data-placement="left"
                         onclick="window.location.reload()" title="刷新"><i class="glyphicon glyphicon-repeat"></i> 刷新
@@ -178,7 +178,7 @@
                 {"data": "id", "orderable": false, "defaultContent": "",
                     "render": function (data, type, row, meta) {
                         return data =
-                            "<a class='btn-maintain btn btn-preserve'><i class='fa icon-maintain' ></i>项目信息维护</a >"
+                            "<a class='btn-maintain btn btn-preserve'><i class='fa icon-project' ></i>项目信息维护</a >"
                     }
                 }],
 

@@ -13,10 +13,10 @@
 <link rel="stylesheet" href="../../plugins/icheck/skins/square/green.css">
 <link rel="stylesheet" href="../../plugins/datatables/css/mydatatable.css">
 <!--引入样式-->
-<link rel="stylesheet" href="../../css/common.css">
 <link rel="stylesheet" href="../../css/customDataTable.css">
 <link rel="stylesheet" href="../../css/aps.css">
 <link rel="stylesheet" href="../../css/proDis.css">
+<link rel="stylesheet" href="../../css/common.css">
 <body id="menu-content">
 <div class="wrapper wrapper-content">
     <div class="ibox">
@@ -30,31 +30,36 @@
                 <div class="col-sm-12">
                     <!--输入框-->
                     <div class="pull-left">
-                            <div class="execution time">
-                                <span>执行时间:</span>
-                                <input type="text" value="" id="startDateParam" class="time-input datePicker" placeholder="开始时间"><i class="fa fa-calendar"></i>
-                                &nbsp;—
-                                <input type="text" value="" id="endDateParam" class="time-input datePicker" placeholder="结束时间"><i class="fa fa-calendar"></i>
-                            </div>
-                        <ul class="apsType-linkage">
-                            <li >
-                                工序:
-                                <select name="" id="process">
-                                    <option value="">-- 全部 --</option>
-                                </select>
-                            </li>
-                            <li >
-                                分类:
-                                <select name="" id="classify">
-                                    < <option value="">-- 全部 --</option>
-                                </select>
-                            </li>
-                            <li>
-                                <div class="execution time">
-                                    指令:<input type="text" value="" class="name" placeholder="请输入指令">
-                                </div>
-                            </li>
-                        </ul>
+                   <label>
+                       <div class="execution time">
+                           <span>执行时间:</span>
+                           <input type="text" value="" id="startDateParam" class="time-input datePicker" placeholder="开始时间"><i class="fa fa-calendar"></i>
+                           &nbsp;—
+                           <input type="text" value="" id="endDateParam" class="time-input datePicker" placeholder="结束时间"><i class="fa fa-calendar"></i>
+                       </div>
+                   </label>
+                        <label>
+                            <ul class="apsType-linkage">
+                                <li >
+                                    工序:
+                                    <select name="" id="process">
+                                        <option value="">-- 全部 --</option>
+                                    </select>
+                                </li>
+                                <li >
+                                    分类:
+                                    <select name="" id="classify">
+                                        < <option value="">-- 全部 --</option>
+                                    </select>
+                                </li>
+                                <li>
+                                    <div class="execution time">
+                                        指令:<input type="text" value="" class="name" placeholder="请输入指令">
+                                    </div>
+                                </li>
+                            </ul>
+                        </label>
+
                     </div>
                 </div>
             </div>
@@ -81,10 +86,10 @@
                         </div>
                     </div>
                     <div class="pull-right">
-                            <button class="btn btn-search" type="button">
+                            <button class="btn btn-search bg-ffa82d btn-white" type="button">
                                 <i class="fa fa-search"></i>
                                 查询</button>
-                            <button class="btn btn-instruct btn-white" id="reset-btn">
+                            <button class="btn  btn-white" id="reset-btn">
                                 <i class="fa icon-reset"></i>
                                 重置</button>
                             <button class="btn btn-white" id="duty">
@@ -229,11 +234,11 @@
     //重置按钮
     $("#reset-btn").click(function () {
         var data = {
-            "startTime":$("#startDateParam").val(), //开始时间
-            "endTime":$("#endDateParam").val(),     //结束时间
-            "proc":$("#process option:selected").text(),            //工序
-            "kind":$("#classify option:selected").text(),            //分类
-            "contentParam":$(".name").val(),  //指令
+            "startTime":$("#startDateParam").val(""), //开始时间
+            "endTime":$("#endDateParam").val(""),     //结束时间
+            "proc":$("#process option:selected").text(""),            //工序
+            "kind":$("#classify option:selected").text(""),            //分类
+            "contentParam":$(".name").val(""),  //指令
             "status":getcheck()                      //状态
         };
         Page.reset(["startTime","endTime","proc","kind","contentParam","status"]);
@@ -264,14 +269,14 @@
                 {"data": "id", 'sClass':"id"},//id设置为隐藏
                 {"data": "kind", 'sClass':"id"},
                 {"data": "proc", 'sClass':"id"},
-                {"data": "oneContent", 'sClass': " alignCenter authName"},
-                {"data": "twoContent", 'sClass': "alignCenter autoWidth"},
-                {"data": "threeContent", 'sClass': "alignCenter"},
-                {"data": "issuedTime", 'sClass': "alignCenter"},
-                {"data": "issuedUser", 'sClass': "alignCenter"},
+                {"data": "oneContent",'width':"17%", 'sClass': " alignCenter authName"},
+                {"data": "twoContent",'width':"17%", 'sClass': "alignCenter autoWidth"},
+                {"data": "threeContent", 'width':"17%",'sClass': "alignCenter"},
+                {"data": "issuedTime",'width':"13%", 'sClass': "alignCenter"},
+                {"data": "issuedUser",'width':"9%", 'sClass': "alignCenter"},
 
                 {
-                    "data": " ", 'order': false, "defaultContent": "", 'sClass': "alignCenter",
+                    "data": " ", 'order': false, "defaultContent": "",'width':"9%", 'sClass': "alignCenter",
                     "render": function (data, type, row, meta) {
                         var html = "";
                         if (row.status == "1") {
@@ -291,7 +296,7 @@
                     }
                 }, //状态
                 {
-                    "data": " ", 'order': false, "defaultContent": "", 'sClass': "alignCenter",
+                    "data": " ", 'order': false, "defaultContent": "", 'width':"18%",'sClass': "alignCenter",
                     "render": function (data, type, row, meta) {
                         var html = "";
                         if (row.status == "-1") {
@@ -301,8 +306,8 @@
                         } else if (row.status == "2") {
                             html = ""
                         } else if (row.status == "0") {
-                            html = "<a class='btn btn-review stopbtn'><i class='fa fa-play'></i>停止指令</a >" +
-                                "<a class='btn btn-review cancelbtn'><i class='fa fa-power-off'></i>取消指令</a >";
+                            html = "<a class='btn btn-review1 btn-operate stopbtn'><i class='fa fa-play'></i>停止指令</a >" +
+                                "<a class='btn btn-review btn-operate cancelbtn'><i class='fa fa-power-off'></i>取消指令</a >";
                         }
                         return html;
                     }
@@ -357,7 +362,7 @@
     });
     //修改状态
     function changeStatus() {
-        $(".btn-review").click(function (e) {
+        $(".btn-operate").click(function (e) {
             if(this.textContent == "停止指令"){
              var  data = {
                     id:this.parentNode.parentNode.firstElementChild.textContent,

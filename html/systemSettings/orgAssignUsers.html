@@ -45,11 +45,13 @@
     <script>
         var officeTree,selectedTree,pre_selectedNodes;//分别为 所有部门、zTree已选择对象、zTree未选择对象
         var id = getQueryString('id');
+        console.log(id)
         var pre_ids = [], ids = [];
         var allDepUrl = "/api/sys/SysOrg/leftTree", //全部部门
             // unallotUrl = "/api/sys/SysUser/selectUser", //待选
             allotUrl = "/api/sys/SysOrg/assign/"+id;  //已选
         ajaxToServer(allDepUrl, {}, function (result) {
+            console.log(result)
             if (result.success) {
                 officeTree = $.fn.zTree.init($("#officeTree"), setting1, result.rows);
             } else {
@@ -88,7 +90,9 @@
                     companyId:treeNode.pId
                 };
                 data = JSON.stringify(data);
+                console.log(data)
                 ajaxToServer('/api/sys/SysUser/selectUser',data, function (result) {
+                    console.log(result)
                     if (result.success) {
                         $.fn.zTree.init($("#userTree"), setting2, result.rows);
                     } else {

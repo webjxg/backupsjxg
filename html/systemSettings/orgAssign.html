@@ -49,7 +49,7 @@
                 class="fa fa-plus"></i> 添加人员
         </button>
         <button class="btn btn-danger btn-sm" id="delete-btn" data-toggle="tooltip" onclick="removeUserBatch()"
-                data-placement="top"><i class="fa fa-trash-o"> 删除</i>
+                data-placement="top"><i class="fa fa-trash-o"> </i>删除
         </button>
         <button class="btn btn-white btn-sm hidden" id="refresh-btn" data-toggle="tooltip" data-placement="left"
                 title="刷新"><i class="glyphicon glyphicon-repeat"></i> 刷新
@@ -85,6 +85,7 @@
 <script src="../../js/customForm.js"></script>
 <script>
     var id = getQueryString('id') || "";
+    console.log(id)
     $(document).ready(function () {
         $("#roleId").val(id);
         //查看角色信息接口

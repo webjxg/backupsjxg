@@ -1,216 +1,394 @@
 {
   "children":[
     {
-      "iconName":"fa-cog",
-      "name":"系统管理",
+      "iconName":"icon-terrace",
+      "name":"平台服务",
       "menu_sub":"1",
       "href":"",
       "children":[
         {
           "iconName":"",
-          "name":"菜单管理",
-          "menu_sub":"0",
-          "href":"../html/systemSettings/menu.html",
-          "children":[]
-        },
-        {
-        "iconName":"",
-        "name":"用户管理",
-        "menu_sub":"0",
-        "href":"../html/systemSettings/userIndex.html",
-        "children":[]
-        },
-        {
-        "iconName":"",
-        "name":"机构管理",
-        "menu_sub":"0",
-        "href":"../html/systemSettings/orgIndex.html",
-        "children":[]
-        },
-        {
-        "iconName":"",
-        "name":"角色管理",
-        "menu_sub":"0",
-        "href":"../html/systemSettings/role.html",
-        "children":[]
-        },
-        {
-        "iconName":"",
-        "name":"字典管理",
-        "menu_sub":"0",
-        "href":"../html/systemSettings/dictionary.html",
-        "children":[]
-        },
-        {
-          "iconName":"",
-          "name":"鉴权类管理",
-          "menu_sub":"0",
-          "href":"../html/systemSettings/authenticationType.html",
-          "children":[]
+          "name":"系统管理",
+          "menu_sub":"1",
+          "href":"",
+          "children":[
+            {
+              "iconName":"",
+              "name":"更改密码",
+              "menu_sub":"1",
+              "href":"",
+              "children":[]
+            },
+            {
+              "iconName":"",
+              "name":"字典管理",
+              "menu_sub":"1",
+              "href":"../html/systemSettings/dictionary.html",
+              "children":[]
+            },
+            {
+              "iconName":"",
+              "name":"菜单管理",
+              "menu_sub":"1",
+              "href":"../html/systemSettings/menu.html",
+              "children":[]
+            },
+            {
+              "iconName":"",
+              "name":"磁铁管理",
+              "menu_sub":"1",
+              "href":"",
+              "children":[]
+            }
+          ]
         },
         {
           "iconName":"",
-          "name":"属性管理",
-          "menu_sub":"0",
-          "href":"../html/systemSettings/proIndex.html",
+          "name":"权限管理",
+          "menu_sub":"1",
+          "href":"",
+          "children":[
+            {
+              "iconName":"",
+              "name":"用户管理",
+              "menu_sub":"1",
+              "href":"../html/systemSettings/userIndex.html",
+              "children":[]
+            },
+            {
+              "iconName":"",
+              "name":"机构管理",
+              "menu_sub":"1",
+              "href":"../html/systemSettings/orgIndex.html",
+              "children":[]
+            },
+            {
+              "iconName":"",
+              "name":"角色管理",
+              "menu_sub":"1",
+              "href":"../html/systemSettings/role.html",
+              "children":[]
+            },
+            {
+              "iconName":"",
+              "name":"鉴权类管理",
+              "menu_sub":"1",
+              "href":"../html/systemSettings/authenticationType.html",
+              "children":[]
+            },
+            {
+              "iconName":"f",
+              "name":"属性管理",
+              "menu_sub":"1",
+              "href":"../html/systemSettings/proIndex.html",
+              "children":[]
+            },
+            {
+              "iconName":"",
+              "name":"应用管理",
+              "menu_sub":"1",
+              "href":"../html/systemSettings/application.html",
+              "children":[]
+            },
+            {
+              "iconName":"",
+              "name":"操作管理",
+              "menu_sub":"1",
+              "href":"../html/systemSettings/operationIndex.html",
+              "children":[]
+            },
+            {
+              "iconName":"",
+              "name":"许可管理",
+              "menu_sub":"1",
+              "href":"../html/systemSettings/permit.html",
+              "children":[]
+            }
+
+          ]
+        },
+        {
+          "iconName":"",
+          "name":"日志服务",
+          "menu_sub":"1",
+          "href":"",
           "children":[]
         },
         {
           "iconName":"",
-          "name":"许可维护",
-          "menu_sub":"0",
-          "href":"../html/systemSettings/permit.html",
+          "name":"定时任务",
+          "menu_sub":"1",
+          "href":"",
+          "children":[
+            {
+              "iconName":"",
+              "name":"定时任务管理",
+              "menu_sub":"1",
+              "href":"",
+              "children":[]
+            },
+            {
+              "iconName":"",
+              "name":"定时任务监控",
+              "menu_sub":"1",
+              "href":"",
+              "children":[]
+            }
+          ]
+        },
+        {
+          "iconName":"",
+          "name":"日历班次",
+          "menu_sub":"1",
+          "href":"",
           "children":[]
         },
         {
           "iconName":"",
-          "name":"应用管理",
-          "menu_sub":"0",
-          "href":"../html/systemSettings/application.html",
-          "children":[]
-        },
-        {
-          "iconName":"",
-          "name":"操作管理",
-          "menu_sub":"0",
-          "href":"../html/systemSettings/operationIndex.html",
+          "name":"服务治理",
+          "menu_sub":"1",
+          "href":"",
           "children":[]
         }
       ]
     },
     {
-      "iconName":"fa-desktop",
+      "iconName":"icon-production",
       "name":"生产计划",
       "menu_sub":"1",
       "href":"",
       "children":[
         {
           "iconName":"",
-          "name":"参数配置",
+          "name":"年计划管理",
           "menu_sub":"1",
-          "href":"../html/producePlan/paramConfigIndex.html",
-          "children":[]
-        },
-        {
-          "iconName":"",
-          "name":"计划模版",
-          "menu_sub":"1",
-          "href":"../html/producePlan/planTempIndex.html",
-          "children":[]
-        },
-        {
-          "iconName": "",
-          "name": "计算公式",
-          "menu_sub": "1",
-          "href": "../html/producePlan/computeFormula.html",
-          "children": []
-        },
-        {
-          "iconName":"",
-          "name":"字典计划",
-          "menu_sub":"1",
-          "href":"../html/producePlan/planDicIndex.html",
-          "children":[]
-        },
-        {
-          "iconName":"",
-          "name":"年计划列表",
-          "menu_sub":"0",
           "href":"../html/producePlan/yearPlanList.html",
           "children":[]
         },
         {
           "iconName":"",
-          "name":"月计划列表",
-          "menu_sub":"0",
+          "name":"月计划管理",
+          "menu_sub":"1",
           "href":"../html/producePlan/monthPlanList.html",
           "children":[]
         },
         {
           "iconName":"",
-          "name":"日计划列表",
-          "menu_sub":"0",
+          "name":"日计划管理",
+          "menu_sub":"1",
           "href":"../html/producePlan/dayPlanList.html",
           "children":[]
+        },
+        {
+          "iconName":"",
+          "name":"计划模板管理",
+          "menu_sub":"1",
+          "href":"",
+          "children":[
+            {
+              "iconName":"",
+              "name":"字典树",
+              "menu_sub":"1",
+              "href":"",
+              "children":[]
+            },
+            {
+              "iconName":"",
+              "name":"参数配置",
+              "menu_sub":"1",
+              "href":"../html/producePlan/paramConfigIndex.html",
+              "children":[]
+            },
+            {
+              "iconName":"",
+              "name":"计算公式",
+              "menu_sub":"1",
+              "href":"../html/producePlan/computeFormula.html",
+              "children":[]
+            },
+            {
+              "iconName":"",
+              "name":"计划模板",
+              "menu_sub":"1",
+              "href":"../html/producePlan/planTempIndex.html",
+              "children":[]
+            }
+          ]
         }
+
       ]
     },
     {
-      "iconName": "fa-desktop",
-      "name": "生产调度",
-      "menu_sub": "1",
-      "href": "",
-      "children": [
-        {
-          "iconName": "",
-          "name": "创建指令",
-          "menu_sub": "1",
-          "href": "../html/proDis/createInstructionIndex.html",
-          "children": []
-        },
-        {
-          "iconName": "",
-          "name": "调度指令",
-          "menu_sub": "1",
-          "href": "../html/proDis/disCommandsIndex.html",
-          "children": []
-        },
-        {
-          "iconName": "",
-          "name": "指令下达",
-          "menu_sub": "1",
-          "href": "../html/proDis/giveOrdersIndex.html",
-          "children": []
-        },
-        {
-          "iconName": "",
-          "name": "交接班记录",
-          "menu_sub": "1",
-          "href": "../html/proDis/record.html",
-          "children": []
-        },
-        {
-          "iconName": "",
-          "name": "指令查看",
-          "menu_sub": "1",
-          "href": "../html/proDis/ordercheck.html",
-          "children": []
-        },
-        {
-          "iconName": "",
-          "name": "指令监控",
-          "menu_sub": "1",
-          "href": "../html/proDis/ordermonitoring.html",
-          "children": []
-        },
-        {
-          "iconName": "",
-          "name": "指令跟踪",
-          "menu_sub": "1",
-          "href": "../html/proDis/ordertailafter.html",
-          "children": []
-        },
-        {
-          "iconName": "",
-          "name": "操作交接班日志",
-          "menu_sub": "1",
-          "href": "../html/proDis/opeShiftLogIndex.html",
-          "children": []
-        },{
-          "iconName": "",
-          "name": "调度交接班日志",
-          "menu_sub": "1",
-          "href": "../html/proDis/disShiftLogIndex.html",
-          "children": []
-        }
-      ]
-    },
-    {
-      "iconName":"fa-desktop",
-      "name":"OA办公11",
+      "iconName":"icon-dispatch",
+      "name":"生产调度",
       "menu_sub":"1",
-      "href":"../html/systemSettings/orgIndex.html",
-      "children":[]
+      "href":"",
+      "children":[
+        {
+          "iconName":"",
+          "name":"调度指令",
+          "menu_sub":"1",
+          "href":"../html/proDis/disCommandsIndex.html",
+          "children":[
+            {
+              "iconName":"",
+              "name":"指令创建",
+              "menu_sub":"1",
+              "href":"../html/proDis/createInstructionIndex.html",
+              "children":[]
+            },
+            {
+              "iconName":"",
+              "name":"指令下达",
+              "menu_sub":"1",
+              "href":"../html/proDis/giveOrdersIndex.html",
+              "children":[]
+            },
+            {
+              "iconName":"",
+              "name":"指令跟踪",
+              "menu_sub":"1",
+              "href":"../html/proDis/ordertailafter.html",
+              "children":[]
+            },
+            {
+              "iconName":"",
+              "name":"指令查看",
+              "menu_sub":"1",
+              "href":"../html/proDis/ordercheck.html",
+              "children":[]
+            },
+            {
+              "iconName":"",
+              "name":"指令监控",
+              "menu_sub":"1",
+              "href":"../html/proDis/ordermonitoring.html",
+              "children":[]
+            }
+
+          ]
+        },
+        {
+          "iconName":"",
+          "name":"生产管控",
+          "menu_sub":"1",
+          "href":"",
+          "children":[
+            {
+              "iconName":"",
+              "name":"实产管控",
+              "menu_sub":"1",
+              "href":"",
+              "children":[]
+            },
+            {
+              "iconName":"",
+              "name":"事故监控",
+              "menu_sub":"1",
+              "href":"",
+              "children":[]
+            }
+          ]
+        },
+        {
+          "iconName":"",
+          "name":"调度交接班",
+          "menu_sub":"1",
+          "href":"",
+          "children":[
+            {
+              "iconName":"",
+              "name":"交接班日志",
+              "menu_sub":"1",
+              "href":"",
+              "children":[]
+            },
+            {
+              "iconName":"",
+              "name":"日志查看",
+              "menu_sub":"1",
+              "href":"",
+              "children":[]
+            }
+
+          ]
+        }
+
+      ]
+    },
+    {
+      "iconName":"icon-operation",
+      "name":"操作管理",
+      "menu_sub":"1",
+      "href":"",
+      "children":[
+        {
+          "iconName":"",
+          "name":"操作指令",
+          "menu_sub":"1",
+          "href":"",
+          "children":[
+            {
+              "iconName":"",
+              "name":"操作指令",
+              "menu_sub":"1",
+              "href":"",
+              "children":[]
+            },
+            {
+              "iconName":"",
+              "name":"指令创建",
+              "menu_sub":"1",
+              "href":"",
+              "children":[]
+            },
+            {
+              "iconName":"",
+              "name":"指令接收",
+              "menu_sub":"1",
+              "href":"",
+              "children":[]
+            },
+            {
+              "iconName":"",
+              "name":"指令查看",
+              "menu_sub":"1",
+              "href":"",
+              "children":[]
+            },
+            {
+              "iconName":"",
+              "name":"异常反馈",
+              "menu_sub":"1",
+              "href":"",
+              "children":[]
+            }
+          ]
+        },
+        {
+          "iconName":"",
+          "name":"操交接班日志",
+          "menu_sub":"1",
+          "href":"",
+          "children":[
+            {
+              "iconName":"",
+              "name":"交接班日志",
+              "menu_sub":"1",
+              "href":"../html/proDis/opeShiftLogIndex.html",
+              "children":[]
+            },
+            {
+              "iconName":"",
+              "name":"日志查看",
+              "menu_sub":"1",
+              "href":"../html/proDis/record.html",
+              "children":[]
+            }
+
+          ]
+        }
+      ]
     }
   ]
 }
