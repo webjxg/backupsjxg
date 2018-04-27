@@ -26,11 +26,12 @@
                     <ul class="apsType-linkage">
                         <li class="month">
                             计划周期（年）：
-                            <input type="text" value="" id="yMPicker" class="time-input form-control datePicker">
+                            <input type="text" value="" id="yMPicker" class="time-input form-control datePicker" placeholder="--请选择--">
                         </li>
                         <li class="month">
                             计划周期（月）：
                             <select name="" id="getMonth">
+                                <option value="">--请选择--</option>
                                 <option value="">全部</option>
                                 <option value="1">1月</option>
                                 <option value="2">2月</option>
@@ -49,6 +50,7 @@
                         <li >
                             状态：
                             <select name="" id="apsState">
+                                <option value="">--请选择--</option>
                                 <option value="0">草稿</option>
                                 <option value="1">已提交</option>
                                 <option value="2">已审核</option>
@@ -124,16 +126,16 @@
 <script>
     $(function(){
         var $year,$month,$status;
-        var date = new Date();
+       /* var date = new Date();
         getYear = date.getFullYear();
-        $("#yMPicker").val(getYear);
+        $("#yMPicker").val(getYear);*/
         $("#yMPicker").datetimepicker({
             format:"yyyy",
             language:'cn',
             weekStart: 1,
             pickTime: false,
             autoclose:true,
-            startView: 4, //月视图
+            startView: 4, //年视图
             minView: "4",
             forceParse: 0,
         });
@@ -176,14 +178,21 @@
                     var attrArr = getAttr($(this));
                     var data = {
                         id:attrArr[0],
-                        status:$(this).attr('data-status')
+                        status: parseInt(attrArr[3])+1
                     };
-                    ajaxToServer("/api/aps/ApsYearPlan/update",JSON.stringify(data),function(result){
-                        if(result.success){
-                            pageLoad();
-                        }
+                    console.log(data);
+                    top.layer.confirm("确定要发布吗?",{icon: 3, title:'系统提示'},function(index){
+
+                       ajaxToServer("/api/aps/ApsMonthAdjust/update",JSON.stringify(data),function(result){
+                           if(result.success){
+                                window.pageLoad();
+                           }
+                        });
+                        top.layer.close(index);
+
                     });
-                })
+
+                });
 
              });
            function getAttr(obj){
@@ -235,6 +244,7 @@
                 {
                     "data": null, "orderable": false, "defaultContent": "",'sClass':" alignCenter ",
                     "render": function (data, type, row, meta) {
+                        console.log(row.status);
                         var classSet =""  ,setText;
                         if(row.status == "0"){
 //                            setText = "草稿";
@@ -262,7 +272,7 @@
                         }else if(row.status == "1") {
                             html = "<a class='btn btn-review' ><i class='fa fa-check'></i>审核</a >";
                         }else if(row.status == "2") {
-                            html = "<a class='btn btn-issue'><i class='fa fa-upload'></i>发布</a >";
+                            html = "<a class='btn btn-issue'><i class='fa fa-check-circle'></i>发布</a >";
                         }else if(row.status == "3") {
                             html = "";
                         }

@@ -30,19 +30,9 @@
     <table class="table table-bordered  table-condensed dataTables-example dataTable no-footer">
         <tbody>
         <tr>
-            <td class="width-15" ><label class="pull-right">工序:</label></td>
-
-            <td class="width-35">
-                <input type="hidden" name="processId" id="processId">
-                <select name="proc" id="proc" class="form-control">
-                    <option value="">--请选择--</option>
-                </select>
-            </td>
-        </tr>
-        <tr>
             <td class="width-15" ><label class="pull-right">级别:</label></td>
             <td class="width-35">
-                <select name="grade" id="grade" class="form-control" disabled="disabled">
+                <select required="required" name="grade" id="grade" class="form-control" disabled="disabled">
                     <option value="">--请选择--</option>
                     <option value="1">一级菜单</option>
                     <option value="2">二级菜单</option>
@@ -51,11 +41,22 @@
             </td>
         </tr>
         <tr>
+            <td class="width-15" ><label class="pull-right">工序:</label></td>
+
+            <td class="width-35">
+                <input type="hidden" name="processId" id="processId">
+                <select required="required"  name="proc" id="proc" class="form-control">
+                    <option value="">--请选择--</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
             <td class="width-15" ><label class="pull-right">分类:</label></td>
             <td class="width-35">
                 <input type="hidden" name="classifyId" id="classifyId">
-                <select name="kind" id="kind" class="form-control">
+                <select required="required" name="kind" id="kind" class="form-control">
                     <option value="">--请选择--</option>
+
                 </select>
             </td>
         </tr>
@@ -66,7 +67,7 @@
                 </label>
             </td>
             <td class="width-60">
-                <textarea id="content" name="content" maxlength="200" class="form-control" rows="6 "></textarea>
+                <textarea required="required" id="content" name="content" maxlength="200" class="form-control" rows="6 "></textarea>
             </td>
         </tr>
         </tbody>
@@ -84,7 +85,7 @@
 <!--自定义文件-->
 <script src="../../js/jeeplus.js"></script>
 <script src="../../js/customForm-aps.js"></script>
-<script src="../../js/public.js"></script>
+<!--<script src="../../js/public.js"></script>-->
 <script src="../../js/page.js"></script>
 
 
@@ -93,27 +94,14 @@
 
 
 <script>
+    var id = getQueryString('id');
+    var proc=false;
     $(document).ready(function() {
         ajaxproc();
         ajaxkind();
-        var id = getQueryString('id');
-        $('#id').val(id);
-        if (id) {
-            /*此处后端接口  id为弹出窗口自带的id 通过浏览器方法传参得到*/
-            var ids={
-                "id":id
-            };
-            var url = "/api/ctrl/BaseDirective/form/";
-            ajaxToServer(url,JSON.stringify(ids), function (result) {
-                if (result.success) {
-                    renderData(result.baseDirective, $('#inputForm'));
-                } else {
-                    layer.msg(result.message);
-                }
 
-            });
-        }
     });
+
 
     //8080 admin-api端口专用ajax
     function ajaxToServerS(url, data, callbackFun){
@@ -148,6 +136,7 @@
             if(result.success){
                 var rows = result.rows;
                 appendOptionsValue($('#proc'), rows, 'name', 'name');
+                renderAll();
             }else{
                 layer.msg(result.message);
             }
@@ -161,10 +150,32 @@
             if(result.success){
                 var rows = result.rows;
                 appendOptionsValue($('#kind'), rows, 'label', 'label');
+                renderAll();
             }else{
                 layer.msg(result.message);
             }
         });
+    }
+    //获取完下拉框渲染表格
+    function renderAll() {
+        $('#id').val(id);
+        if (id ) {
+            /*此处后端接口  id为弹出窗口自带的id 通过浏览器方法传参得到*/
+            var ids={
+                "id":id
+            };
+            var url = "/api/ctrl/BaseDirective/form/";
+            ajaxToServer(url,JSON.stringify(ids), function (result) {
+                if (result.success) {
+
+                    console.log(result);
+                    renderData(result.baseDirective, $('#inputForm'));
+                } else {
+                    layer.msg(result.message);
+                }
+
+            });
+        }
     }
 
 

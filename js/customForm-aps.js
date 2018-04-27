@@ -545,6 +545,7 @@ function deleteCheck(result){
 function renderData(data,renderID){
     var arr = getJsonData(data);
     // console.log(arr)
+
     for(var i = 0;i<arr.length;i++){
         var obj = arr[i];
         var eleId = obj.name.replaceAll("\\.","\\.");
@@ -560,6 +561,7 @@ function renderData(data,renderID){
                 }else if(eleType == 'checkbox'){
                     setCheckboxValue(obj.name,obj.value);
                 }else{
+                    console.log(eleDom,obj.value);
                     $(eleDom).val(obj.value);
                 }
             }else{

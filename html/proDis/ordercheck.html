@@ -139,7 +139,7 @@
                         条记录
                     </div>
                 </div>
-                <div id="pagination" class="pagination-roll pull-right"> <ul class="pagination"> <li class="previous"><a href="#">«</a></li><li class="disabled hidden"><a href="#">...</a></li> <li class="active"><a href="#">1</a></li><li class="disabled hidden"><a href="#">...</a></li><li class="next"><a href="#">»</a></li></ul></div>
+                <div id="pagination" class="pagination-roll pull-right"></div>
             </div>
         </div>
     </div>
@@ -167,9 +167,8 @@
     $(function () {
         window.pageLoad = function () {
             var data = {};
-            Page.init("/api/ctrl/DirectiveDetail/page",data,true,function (result) {
-                console.log(result)
-                loadData()
+            Page.init("/api/ctrl/DirectiveDetail/page",data,true,function (tableDta) {
+                createTable(tableDta)
             })
         }
         //     //获取工序数据
@@ -278,6 +277,7 @@
     function loadRank(){
         var url_ = 'http://114.115.165.184:8080/admin-api/api/sys/SysDict/type/directiveLeaveyType';
         ajaxToServer(url_, {}, function(result){
+            console.log(result)
             if(result.success){
                 var rows = result.rows;
                 appendOptionsValue($('#rank'),rows,'value','label');
@@ -336,6 +336,7 @@
     //获取数据
     function loadData(){
         var arr = [];
+
         var data = {
             proc:$("#process option:selected").text()=="-- 全部 --"?"":$("#process option:selected").text(), //工序
             grade:$("#rank option:selected").text()=="-- 全部 --"?"":$("#rank option:selected").text(),   //级别
@@ -345,8 +346,8 @@
             main:{
                 groupsId:$("#team option:selected").val(),
                 shiftId:$("#time option:selected").val(),
-                status:getcheck()
-            }
+            },
+            status:getcheck()
         };
         console.log(data)
         //指令查看接口地址

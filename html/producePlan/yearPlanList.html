@@ -26,11 +26,12 @@
                     <ul class="apsType-linkage">
                         <li class="month">
                             计划周期（年）：
-                            <input type="text" value="" id="yMPicker" class="time-input form-control datePicker">
+                            <input type="text" value="" id="yMPicker" class="time-input form-control datePicker" placeholder="请选择年份">
                         </li>
                         <li >
                             状态：
                             <select name="" id="apsState">
+                                <option value="" selected>--全部--</option>
                                 <option value="0">草稿</option>
                                 <option value="1">已提交</option>
                             </select>
@@ -66,6 +67,28 @@
 
                 </table>
             </div>
+
+            <div class="clearfix pagination-box">
+                <div class="pagination-detail pull-left" style="display: block;">
+                    <div class="page-info pull-left">显示第1到第6条记录，总共 6条记录</div>
+                    <div class="page-list pull-left">
+                        <span>每页显示</span>
+                        <select name="" id="pag-sel">
+                            <option value="">请选择</option>
+                            <option value="5">5</option>
+                            <option value="10" selected="">10</option>
+                            <option value="20">20</option>
+                            <option value="25">25</option>
+                            <option value="30">30</option>
+                            <option value="40">40</option>
+                            <option value="50">50</option>
+                            <option value="-1">all</option>
+                        </select>
+                        条记录
+                    </div>
+                </div>
+                <div id="pagination" class="pagination-roll pull-right"> <ul class="pagination"> <li class="previous"><a href="#">«</a></li><li class="disabled hidden"><a href="#">...</a></li> <li class="active"><a href="#">1</a></li><li class="disabled hidden"><a href="#">...</a></li><li class="next"><a href="#">»</a></li></ul></div>
+            </div>
         </div>
     </div>
 </div>
@@ -84,10 +107,11 @@
 <script src="../../js/page.js"></script>
 <script>
     $(function(){
+        //输入框内的年份
         var $year,$status;
         var date = new Date();
         getYear = date.getFullYear();
-        $("#yMPicker").val(getYear);
+        $("#yMPicker").val("");
         $("#yMPicker").datetimepicker({
             format:"yyyy",
             language:'cn',
@@ -108,6 +132,7 @@
                 adYear: $year,
                 status: $status
             };
+            console.log(data)
             function getAttr(obj) {
                 var $iChecks = obj.parents("tr").find('.i-checks'),
                     id= obj.parents("tr").find('.id').text(),
@@ -116,6 +141,7 @@
                 return [id, year, status];
             }
             Page.init("/api/aps/ApsYearPlan/page",data, true, function (tableData) {
+                console.log(tableData)
                 renderTableData(tableData);
                 //查看
                 $(".btn-check").click(function () {
@@ -144,12 +170,12 @@
                 windowclick();
                 //添加
                 $("#btn-add").click(function () {
-                    getDataFn();
-                    if ($year == "") {
-                        layerAlert("请选择一个准确的年份!");
-                    } else {
+                    // getDataFn();
+                    // if ($year == "") {
+                    //     layerAlert("请选择一个准确的年份!");
+                    // } else {
                         location.href = "./yearPlanIndex.html?year=" + $year;
-                    }
+                    // }
                 });
 
         //删除单条数据
@@ -225,7 +251,7 @@
                         }else{
                             html = "<a class='btn btn-review' ><i class='fa fa-file-text'></i>排产</a >";
                         }
-                        return  "<a class='btn btn-check btn-info' ><i class='fa fa-search-plus'></i>查看</a >"+
+                        return  "<a class='btn  btn-info btn-check' ><i class='fa fa-search-plus'></i>查看</a >"+
                                 html;
                     }
                 }

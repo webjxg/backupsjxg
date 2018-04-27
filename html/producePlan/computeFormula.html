@@ -15,6 +15,7 @@
     <link rel="stylesheet" href="../../css/customDataTable.css">
     <link rel="stylesheet" href="../../css/aps.css">
 
+
 </head>
 <body>
 <div class="wrapper wrapper-content bg-gray">
@@ -44,7 +45,27 @@
                 <tbody id="datainner">
                 </tbody>
             </table>
-
+            <div class="clearfix pagination-box">
+                <div class="pagination-detail pull-left">
+                    <div class="page-info pull-left"></div>
+                    <div class="page-list pull-left">
+                        <span>每页显示</span>
+                        <select name="" id="pag-sel">
+                            <option value="">请选择</option>
+                            <option value="5">5</option>
+                            <option value="10" selected>10</option>
+                            <option value="20">20</option>
+                            <option value="25">25</option>
+                            <option value="30">30</option>
+                            <option value="40">40</option>
+                            <option value="50">50</option>
+                            <option value="-1">all</option>
+                        </select>
+                        条记录
+                    </div>
+                </div>
+                <div id="pagination" class="pagination-roll pull-right"></div>
+            </div>
         </div>
 
     </div>
@@ -63,6 +84,7 @@
 <script src="../../js/common.js"></script>
 <script src="../../js/jeeplus.js"></script>
 <script src="../../js/customForm-aps.js"></script>
+<script src="../../js/page.js"></script>
 <script>
     function reload(){
         location.reload();
@@ -74,9 +96,10 @@
             openEditDialog("计算公式："+paramName,'producePlan/comForInner.html?id='+id,'800px','500px');
         });
     });
-    ajaxToServer1("/api/aps/Formula/list",{},function(result){
-        if(result.success){
-            renderTableData(result.rows);
+    Page.init("/api/aps/Formula/page",{},true,function(result){
+        console.log(result);
+        if(result){
+            renderTableData(result);
             $('.btn-change').click(function(){
                 var id = $(this).parents("tr").find("td:first").text();
                 openEditDialog('修改计算公式配置','producePlan/comForInner.html?id='+id,'800px','500px')

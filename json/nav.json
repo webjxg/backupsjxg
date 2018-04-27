@@ -189,7 +189,7 @@
               "iconName":"",
               "name":"字典树",
               "menu_sub":"1",
-              "href":"",
+              "href":"../html/producePlan/planDicIndex.html",
               "children":[]
             },
             {
@@ -332,14 +332,14 @@
               "iconName":"",
               "name":"操作指令",
               "menu_sub":"1",
-              "href":"",
+              "href":"../html/proDis/opeOrderIndex.html",
               "children":[]
             },
             {
               "iconName":"",
               "name":"指令创建",
               "menu_sub":"1",
-              "href":"",
+              "href":"../html/proDis/opeOrderCreateIndex.html",
               "children":[]
             },
             {

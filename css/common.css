@@ -45,7 +45,8 @@ iframe{border:none;}
   width: 100%;
   height: 80px;
   overflow: hidden;
-  background-image: url("../images/bg49.jpg");
+  /*background-image: url("../images/bg49.jpg");*/
+  background-color: #182028;
 }
 .logo .logo-right ul{
   position: absolute;
@@ -123,14 +124,25 @@ iframe{border:none;}
     border-radius: 3px;
     /*margin-left: 20px;*/
 }
+
 .btn {
   margin: 0 5px;
   height: 30px;
   padding: 0 5px;
   background: #f2f2f2;
   color: #000;
-  border: 1px solid #cacaca;
+  /*border: 1px solid #cacaca;*/
   line-height: 28px; }
+.btn .fa {
+  margin: 0 2px 0 0; }
+
+.table .btn {
+  width: auto;
+  height: auto;
+  padding: 2px 6px;
+  line-height: 20px;
+  font-size: 12px; }
+
 .btnaddr{
   background-color: #1ab394;
   color: white;
@@ -212,7 +224,7 @@ table.treeTable{
 .btn-check{
   background-color: white;
   color: #ffa82d;
-  border-color: #ffa82d;
+  border: 1px solid #ffa82d !important;
 }
 .btn-check:hover{
   background-color: #ffa82d;
@@ -223,7 +235,7 @@ table.treeTable{
 .btn-change{
   background-color: white;
   color: #62b5e9;
-  border-color: #62b5e9;
+  border:1px solid #62b5e9 !important;
 }
 .btn-change:hover{
   background-color: #62b5e9;
@@ -240,7 +252,7 @@ table.treeTable{
 .btn-delete{
   background-color: white;
   color: #f75c5c;
-  border-color: #f75c5c;
+  border:1px solid #f75c5c !important;
 }
 .btn-delete:hover{
   background-color: #f75c5c;
@@ -251,7 +263,7 @@ table.treeTable{
 .btn-add{
   background-color: white;
   color: #1ab394;
-  border-color: #1ab394;
+  border:1px solid #1ab394 !important;
 }
 .btn-add:hover{
   background-color: #1ab394;
@@ -326,7 +338,7 @@ table.treeTable{
 .btn-compile{
   background-color: white;
   color: #1ab394;
-  border-color: #1ab394;
+  border:1px solid #1ab394 !important;
 }
 .btn-compile:hover{
   background-color: #1ab394;
@@ -374,7 +386,7 @@ table.treeTable{
 .btn-target{
   background-color: white;
   color: #1ab394;
-  border-color: #1ab394;
+  border:1px solid #1ab394 !important;
 }
 .btn-target:hover{
   background-color: #1ab394;
@@ -480,9 +492,20 @@ table.treeTable{
 .btn-review{
   background-color: white;
   color: #62b5e9;
-  border-color: #62b5e9;
+  border:1px solid #62b5e9 !important;
 }
 .btn-review:hover{
+  background-color: #62b5e9;
+  color: white;
+  border-color: #62b5e9;
+}
+/*发布*/
+.btn-issue{
+  background-color: white;
+  color: #62b5e9;
+  border:1px solid #62b5e9 !important;
+}
+.btn-issue:hover{
   background-color: #62b5e9;
   color: white;
   border-color: #62b5e9;

@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="../../plugins/font-awesome/css/font-awesome.min.css">
     <link rel="stylesheet" href="../../plugins/easyui/themes/default/easyui.css">
     <link rel="stylesheet" href="../../plugins/easyui/themes/default/datagrid.css">
+    <link rel="stylesheet" href="../../plugins/datetimepicker/css/bootstrap-datetimepicker.css">
     <!--引入样式-->
     <link rel="stylesheet" href="../../css/common.css">
     <link rel="stylesheet" href="../../css/aps.css">
@@ -82,17 +83,33 @@
                 <input type="text" name="dpYear" id="dpYear" hidden="hidden">
                 <input type="text" name="dpMonth" id="dpMonth" hidden="hidden">
                 <input type="text" name="dpWeek" id="dpWeek" hidden="hidden">
+                <ul class="apsType-linkage">
+                    <li class="month">
+                        计划周期（年月）：
+                        <input type="text" value="" id="yMPicker" class="time-input form-control datePicker">
+                    </li>
+                    <li class="week">
+                        计划周期（周）：
+                        <select name="" id="apsWeek">
+                            <option value="">全部</option>
+                            <option value="1">第一周</option>
+                            <option value="2">第二周</option>
+                            <option value="3">第三周</option>
+                            <option value="4">第四周</option>
+                        </select>
+                    </li>
+                </ul>
+            </div>
+            <div class="pull-right">
                 <button class="btn btn-white btn-back" id="back-btn"><i
                         class="fa fa-reply"></i> 返回
                 </button>
-            </div>
-            <div class="pull-right">
                 <input type="hidden" name="state" id="state" value>
                 <button class="btn btn-primary bg-ffa82d bnt-submit" id="submit-btn"><i
-                        class="fa fa-check-square-o"></i> 递交
+                        class="fa fa-upload"></i> 提交
                 </button>
                 <button class="btn btn-white btn-sav" id="save-btn"><i
-                        class="fa fa-check-circle"></i> 暂存
+                        class="fa fa-save"></i> 保存
                 </button>
             </div>
         </div>
@@ -148,6 +165,7 @@
 <!--附属插件-->
 <script src="../../plugins/layer/layer.js"></script>
 <script src="../../plugins/easyui/js/jquery.easyui.min.js"></script>
+<script src="../../plugins/datetimepicker/js/bootstrap-datetimepicker.js"></script>
 <script src="../../js/dataGridCustom.js"></script>
 <script src="../../js/customForm-aps.js"></script>
 
@@ -156,38 +174,83 @@
 <script>
     $(function () {
         //接收url父页面参数放到input的val里
-        var dpYear=getQueryString('year'),dpMonth=getQueryString('month'),dpWeek=getQueryString('week');
-        tabledatagrid(dpYear,dpMonth,dpWeek);
-        $('#td0,#td1,#td2,#td3,#td4').datagrid('hideColumn', 'id');
+        var id=getQueryString('id');
+        if(id!==null){
+            var dpYear=getQueryString('year'),dpMonth=getQueryString('month'),dpWeek=getQueryString('week');
+            tabledatagrid(id,dpYear,dpMonth,dpWeek);
+            $('#td0,#td1,#td2,#td3,#td4').datagrid('hideColumn', 'id');
+            btnclick();
+            $('.row .pull-left').hide()
+        }else{
+            btnclick();
+            var date = new Date();
+            getYear = date.getFullYear();
+            getMonth = date.getMonth()+1;
+            getMonth = (getMonth<10?"0"+getMonth:getMonth);
+            $("#yMPicker").val(getYear+"-"+getMonth);
+            $("#yMPicker").datetimepicker({
+                format:"yyyy-mm",
+                language:'cn',
+                weekStart: 1,
+                pickTime: false,
+                autoclose:true,
+                startView: 3, //月视图
+                minView: "3",
+                forceParse: 0
+            });
+            var ids='';
+            getDataFn();
+            tabledatagrid(ids,$year,$status,$week);
+
+
+
+
+
+
+            //得到年月周状态
+
+        }
+
+
+    });
+    function getDataFn(){
+        $year = $('.datePicker').val().split("-")[0];
+        $status =$("#apsState").val();
+        $month=$('.datePicker').val().split("-")[1];
+        $week=$('#apsWeek').val();
+
+    }
+
+    function btnclick() {
         $(".btn-sav").click(function () {
+            getDataFn();
             btnSubSave(0);
         });
         $(".btn-submit").click(function () {
+            getDataFn();
             btnSubSave(1);
 
         });
         $(".btn-back").click(function () {
-           refreshActiveTab()
+            refreshActiveTab();
         });
-
-    });
-
+    }
 
     //多表格请求数据渲染方法
-    function tabledatagrid(dpYear,dpMonth,dpWeek) {
+    function tabledatagrid(id,dpYear,dpMonth,dpWeek) {
         //建立空数组
         var cljhArr = [],
             bjhArr = [],
             zlzbjhArr = [],
             jszbjhArr = [],
             gxdhzbjhArr = []; //请求数据渲染表格 以及实现datagrid部分功能
-
-
         var data0 = {
+            "id":id,
             "dpYear": dpYear,
             "dpMonth": dpMonth,
             "dpWeek": dpWeek
         };
+        console.log(data0);
         var da = JSON.stringify(data0);
         ajaxToServer("/api/aps/DayPlan/form", da, table);
         function table(result) {

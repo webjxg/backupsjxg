@@ -111,15 +111,15 @@
   border-right:none;
 }
 table.dataTable thead{
-  background-color: #1AB394 !important;
-  color: white;
+  background-color: #f5f5f6 !important;
+  color: black;
 }
 table.dataTable thead th {
   padding:8px !important;
   line-height: 22px;
   border-bottom: 0;
   vertical-align: middle;
-  background-color: #1AB394 !important;
+  background-color: #f5f5f6 !important;
   border-bottom: none !important;
 }
 .ibox-content table.dataTable tbody td {

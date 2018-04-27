@@ -9,6 +9,7 @@ var Page = {
     defaultPageSize:null,
     rowCount:0,
     init:function(url,data,vari,renderTableFn){
+        console.log(data);
         Page.url_ = url;
         Page.paramData = data;
         if(renderTableFn){
@@ -54,6 +55,7 @@ var Page = {
     },
     pageCom:function(data,vari){
         ajaxToServer(Page.url_, JSON.stringify(data), function(result){
+            console.log(result);
             if(result.success){
                 var page = result.page;
                 Page.rowCount = page.count;
@@ -80,7 +82,7 @@ var Page = {
         callback: function (curr,limit, totalCount) {
             Page.paramData.page = {
                 pageSize:limit,
-                pageNo:curr,
+                pageNo:curr
             };
             Page.init(Page.url_,Page.paramData,false);
         }

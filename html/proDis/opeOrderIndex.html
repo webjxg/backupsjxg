@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>创建、编辑指令</title>
+    <title>操作指令</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <link rel="stylesheet" href="../../plugins/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="../../plugins/font-awesome/css/font-awesome.min.css">
@@ -10,10 +10,11 @@
     <link rel="stylesheet" href="../../plugins/layer/theme/default/layer.css">
     <link rel="stylesheet" href="../../plugins/ztree/css/metroStyle/metroStyle.css">
     <!--样式-->
+    <link rel="stylesheet" href="../../css/common.css">
     <link rel="stylesheet" href="../../css/customDatagrid.css">
     <link rel="stylesheet" href="../../css/customDataTable.css">
     <link rel="stylesheet" href="../../css/aps.css">
-    <link rel="stylesheet" href="../../css/common.css">
+    <link rel="stylesheet" href="../../css/proDis.css">
     <style>
         .wrapper{
             height: 1074px;
@@ -25,18 +26,6 @@
         .ibox-content:nth-of-type(1){
             margin-bottom: 20px;
         }
-        .ibox-content:nth-of-type(2){
-            height: 668px;
-            width: 300px;
-            float:left;
-            margin-right: 20px;
-
-        }
-        .ibox-content:nth-of-type(3){
-            position: absolute;
-            right:0;
-            width: 75%;
-        }
     </style>
 </head>
 <body>
@@ -45,20 +34,21 @@
         <!--标题 按钮-->
         <div class="ibox-content">
             <div>
-                <h1 class="titName">创建、编辑指令</h1>
+                <h1 class="titName">操作指令</h1>
             </div>
             <!--按钮-->
             <div class="clearfix">
                 <div class="apsType-box pull-left mgb-10">
                     <ul class="apsType-linkage">
-                        <li class="proc">
+                        <li class="job">
                             工序：
                             <select name="proc" id="proc">
                                 <option value="">请选择</option>
+
                             </select>
                         </li>
-                        <li class="grade">
-                            指令级别：
+                        <li class="rank">
+                            级别：
                             <select name="grade" id="grade">
                                 <option value="">请选择</option>
                                 <option value="1">一级</option>
@@ -66,33 +56,44 @@
                                 <option value="3">三级</option>
                             </select>
                         </li>
-                        <li class="kind">
-                            指令分类：
+                        <li class="grade">
+                            分类：
                             <select name="kind" id="kind">
                                 <option value="">请选择</option>
                             </select>
                         </li>
+                        <li class="content">
+                            指令内容：
+                            <input type="text" name="contentParam" id="contentParam" value>
+                        </li>
                     </ul>
                 </div>
                 <div class="pull-right btn-box mgb-20">
-                    <button class="btn  btn-white" id="btn-add" type="button" >
-                        <i class="fa icon-instruct"></i>
-                        指令添加</button>
-                    <button hidden="hidden" class="fa-refresh" onclick="window.location.reload()"></button>
+                    <button class="btn btn-search btn-white" id="btn-search" type="button" onclick="getOption()">
+                        <i class="fa fa-search"></i>
+                        查询</button>
+                    <button class="btn btn-white" id="btn-add" type="button" onclick="window.location.href='./opeOrderCreateIndex.html'">
+                        <i class="fa icon-create"></i>
+                        创建指令</button>
                 </div>
             </div>
         </div>
-        <!--左侧ztree-->
+        <!--内容-->
         <div class="ibox-content">
-            <!--左侧树-->
-            <div class="leftBox" >
-                <div id="tree" class="ztree leftBox-content"></div>
-            </div>
-            <!--内容区-->
-        </div>
-        <!--右侧内容 iframe-->
-        <div class="ibox-content">
-            <iframe id="officeContent" name="officeContent" width="100%" height="650px" frameborder="0"></iframe>
+            <table id="treeTable" class="table table-striped table-bordered table-hover table-condensed dataTables-example dataTable">
+                <thead>
+                <tr>
+                    <th class='autoWidth' style="border: none">工序</th>
+                    <th class='autoWidth' style="border: none">指令内容</th>
+                    <th class='autoWidth' style="border: none">指令级别</th>
+                    <th class='autoWidth' style="border: none">指令分类</th>
+                    <th class='autoWidth' >创建时间</th>
+                </tr>
+                </thead>
+                <tbody id="treeTableBody" >
+
+                </tbody>
+            </table>
         </div>
     </div>
 </div>
@@ -115,43 +116,40 @@
 
 <script>
     $(document).ready(function(){
-        $('#officeContent').attr('src','./createInsInner.html');
-        getOption();
         ajaxproc();
         ajaxkind();
-        reloadZtree('#proc','/api/ctrl/BaseDirective/getZTtree');
-        reloadZtree('#kind','/api/ctrl/BaseDirective/getZTtree');
-        reloadZtree('#grade','/api/ctrl/BaseDirective/getZTtree');
-        $('#btn-add').click(function () {
-            openEditDialog('添加指令', './proDis/createInsCVAdd.html?level=1&id=""', '462px', '425px')
-        });
-
-
-
+        Page.init("/api/ctrl/BaseDirectiveCZ/page",{},true,function(tableData){
+            renderTableData(tableData);
+        })
     });
 
-    //获取tree
-    function getOption() {
-        var procValue=$('#proc').val(), gradeValue=$('#grade').val(),kindValue=$('#kind').val();
-            data={
-            "proc":procValue,
-            "grade":gradeValue,
-            "kind":kindValue
-             };
-        var dat=JSON.stringify(data);
-        ajaxToServer('/api/ctrl/BaseDirective/getZTree',dat,function (da) {
-            zTree(da.rows)
-        });
-        reloadZtree();
+    //渲染表格
+    function renderTableData(data) {
+        //↓接口到后修改↓
+        var datas=data;
+        var tableStr = "";
+        for (var i = 0; i < datas.length; i++) {
+            tableStr += "<tr class='alignCenter' >"
+                + "<td class='i-Checks' id='" + datas[i].id + "'>" + datas[i].proc + "</td>"
+                + "<td>"+data[i].content+"</td>"
+                + "<td>" + data[i].grade+"级指令</td>"
+                + "<td>" + datas[i].kind + "</td>"
+                + "<td>" + datas[i].createDate + "</td>"
+                + "</tr>";
+        }
+        if (tableStr.length == 0) {
+            var len = $("#treeTable thead tr").children("th").length;
+            tableStr = "<tr style='text-align: center'><td colspan='" + len + "'><font color='#cd0a0a'>暂无记录，请重新选择条件后再试</font></td></tr>";
+        }
+        $('#treeTableBody').html(tableStr);
     }
-
 
     //获取工序
     function ajaxproc(){
         ajaxToServerS('/api/sys/SysOrg/selectGx/3',{},function (result) {
             if(result.success){
                 var rows = result.rows;
-                appendOptionsValue($('#proc'), rows, 'code', 'name');
+                appendOptionsValue($('#proc'), rows, 'name', 'name');
             }else{
                 layer.msg(result.message);
             }
@@ -164,7 +162,7 @@
         ajaxToServerS('/api/sys/SysDict/type/directiveCassifyType',{},function (result) {
             if(result.success){
                 var rows = result.rows;
-                appendOptionsValue($('#kind'), rows, 'value', 'label');
+                appendOptionsValue($('#kind'), rows, 'label', 'label');
             }else{
                 layer.msg(result.message);
             }
@@ -199,53 +197,18 @@
         });
     }
 
-    //选择框变更后刷新ztree数据
-    function reloadZtree(item){
-        $(item).change(function () {
-            getOption();
-            $('#officeContent')[0].contentWindow.tablehide();
-        });
-    }
-
-
-    //ztree渲染
-    function zTree(da) {
-        var zTreeObj;
-        // zTree 的参数配置，深入使用请参考 API 文档（setting 配置详解）
-        var setting = {
-            data: {
-                simpleData: {
-                    enable: true,   //设置是否使用简单数据模式(Array)
-                    idKey: "id",    //设置节点唯一标识属性名称
-                    pIdKey: "pId"      //设置父节点唯一标识属性名称
-                },
-                key: {
-                    name: "name",//zTree 节点数据保存节点名称的属性名称
-                    title: "name"//zTree 节点数据保存节点提示信息的属性名称
-                }
-            },
-            callback: {
-                onClick: function (e, treeId, node){
-                    if(node.id){
-                        rendersun(node.id,node.level)
-                    }
-                }
-            }
-
+    //得到下拉菜单的值
+    function getOption() {
+        var procValue=$('#proc').val(), gradeValue=$('#grade').val(),kindValue=$('#kind').val(),contentParme=$('#contentParam').val();
+        data={
+            "proc":procValue,
+            "grade":gradeValue,
+            "kind":kindValue,
+            "contentParam":contentParme
         };
-        // zTree 的数据属性，深入使用请参考 API 文档（zTreeNode 节点数据详解）
-        var zNodes = da;
-        //执行ztree
-        var treeObj =$.fn.zTree.init($("#tree"), setting, zNodes);
-
-    }
-
-    //点ztree传值id
-    function rendersun(data,level) {
-        $('#officeContent')[0].contentWindow.updatason(data,level);
+        Page.init("/api/ctrl/BaseDirectiveCZ/page",data,true,function(tableData){
+            renderTableData(tableData);
+        })
     }
 </script>
-
-
-
 </html>

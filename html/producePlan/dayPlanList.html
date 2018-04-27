@@ -21,42 +21,26 @@
                 <h1 class="titName">日计划列表</h1>
             </div>
             <div class="clearfix">
-                <div class="apsType-box pull-left mgb-10">
+                <div class="apsType-box pull-left ">
                     <i class="fa fa-map-marker" aria-hidden="true"></i>
                     <ul class="apsType-linkage">
-                        <li class="year">
-                            类型：
-                            <select name="" id="apsType">
-                                <option value="DAY">日计划</option>
-                            </select>
-                        </li>
                         <li class="month">
                             计划周期（年月）：
-                            <input type="text" value="" id="yMPicker" class="time-input form-control datePicker">
+                            <input type="text" value="请选择" id="yMPicker" class="time-input form-control datePicker">
                         </li>
                         <li class="week">
                             计划周期（周）：
                             <select name="" id="apsWeek">
-                                <option value="">全部</option>
+                                <option value="">请选择</option>
                                 <option value="1">第一周</option>
                                 <option value="2">第二周</option>
                                 <option value="3">第三周</option>
                                 <option value="4">第四周</option>
                             </select>
                         </li>
-                        <li >
-                            状态：
-                            <select name="" id="apsState">
-                                <option value="0">未发布</option>
-                                <option value="1">已发布</option>
-                                <option value="review">审核中</option>
-                                <option value="unissue">待审核</option>
-                                <option value="unissue">暂存</option>
-                            </select>
-                        </li>
                     </ul>
                 </div>
-                <div class="pull-right btn-box mgb-20">
+                <div class="pull-right btn-box ">
                     <button class="btn btn-search btn-white " id="search-btn" type="button"><i class="fa fa-search"></i>查询</button>
                     <button class="btn  btn-white" id="btn-add" type="button"><i class="fa fa-plus"></i>新增</button>
                     </button>
@@ -179,15 +163,7 @@
         //添加
         $("#btn-add").click(function () {
             getDataFn();
-            if ($year == "") {
-                layerAlert("请选择一个准确的年份!");
-            }else if ($month == "") {
-                layerAlert("请选择一个准确的月份!");
-            }else if ($week == "") {
-                layerAlert("请选择周数!");
-            }else {
-                location.href = "./dayPlanIndex.html?year=" + $year+'&month='+$month+'&week='+$week;
-            }
+                location.href = "./dayPlanIndex.html";
         });
 
         //删除单条数据

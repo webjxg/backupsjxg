@@ -63,6 +63,7 @@ function loadFn(){
         $('.tabs-nav').on('click', '.navItem-tabTag i', closeTab); //关闭选项卡菜单
         $('.tabs-lBtn').on('click', scrollTabLeft);  // 左移按扭
         $('.tabs-rBtn').on('click', scrollTabRight);// 右移按扭
+        $(".sidebar-nav li").on('click',clickHandler) //点击icon页面展开
         // $('.tabs-nav').on('dblclick', '.navItem-tabTag', refreshTab);
         $('.tabTag-closeOther').on('click', closeOtherTabs);  //关闭其余选项卡
         $('.tabTag-fixed').on('click', showActiveTab); //定位当前选项卡
@@ -417,5 +418,9 @@ function scrollToTab(element) {
 
     }
 
-
-  
+  function clickHandler(e) {
+      if(!e){
+          e = window.event;
+      }
+      $("body").removeClass("nav-mini");
+  }

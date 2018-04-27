@@ -15,14 +15,11 @@ $ffa82d:#ffa82d;
 .hide {
   display: none;
 }
-
 .show {
   display: block;
 }
-
 .btn {
   margin: 0 5px;
-  width:74px;
   height:30px;
   padding:0 5px;
   background: #f2f2f2;
@@ -46,41 +43,6 @@ $ffa82d:#ffa82d;
     font-size:12px;
   }
 }
-.bg-ffa82d,.btn-save,.btn-check{
-  background: #ffa82d;
-  border-color:#ffa82d;
-  color:#fff;
-  &:hover{
-    background: #ff9000;
-    border-color:#ff9000;
-  }
-}
-.bg-62b5e9,.btn-edit,.btn-issue{
-  background: #62b5e9;
-  border-color:#62b5e9;
-  color:#fff;
-  &:hover{
-    background: #1897e7;
-    border-color:#1897e7;
-  }
-}
-
-.bg-f75c5c,.btn-delete{
-  background: #f75c5c;
-  border-color:#f75c5c;
-  color:#fff;
-  &:hover{
-    background: #f52f2f;
-    border-color: #f52f2f;
-  }
-}
-.bg-1ab394,.btn-review{
-  background:#1ab394;
-  color:#fff;
-  &:hover{
-    background:#009c7c;
-  }
-}
 .col-1ab394{
   color:#1ab394;
 }
@@ -96,17 +58,13 @@ color:#51cd50;
 .col-62b5e9 {
   color:#62b5e9;
 }
-
-
-
 .fa-map-marker {
   color: #1ab394;
   font-size: 16px;
   margin-right: 8px;
   display: inline-block;
-  vertical-align: middle;
+  vertical-align: 5px;
 }
-
 .apsType-linkage {
   font-size: 0;
   display: inline-block;
@@ -115,7 +73,8 @@ color:#51cd50;
     font-size: 14px;
     display: inline-block;
     vertical-align: middle;
-    margin-right: 10px;
+    margin-right: 15px;
+    margin-bottom:15px;
     select, .datePicker {
       width: 120px;
       border: 1px solid #e5e6e7;
@@ -126,12 +85,10 @@ color:#51cd50;
     }
   }
 }
-
 .apsType-linkage .form-control {
   display: inline-block;
   vertical-align: middle;
 }
-
 .titName {
   padding-left: 10px;
   position: relative;
@@ -149,11 +106,7 @@ color:#51cd50;
     margin-top: -10px;
   }
 }
-
-
-
 //计算公式样式 开始
-
 .paramTag .btn{
   width:32px;
   height:32px;
@@ -230,8 +183,6 @@ color:#51cd50;
   vertical-align: top;
   font-size:14px;
 }
-
-
 #paramCodeInput-error{
   font-size:14px;
   position: absolute;
@@ -239,7 +190,6 @@ color:#51cd50;
   left:226px;
   line-height: 34px;
   width:100px;
-
 }
 label.error{ color:red;font-size:14px;}
 #paramRecordShow{
@@ -247,9 +197,6 @@ label.error{ color:red;font-size:14px;}
   font-size:0;
   border:none;
 }
-
-
-
 .tab-con>li,.tab-con>div{
     display: none;
     &.active{
@@ -290,7 +237,6 @@ label.error{ color:red;font-size:14px;}
 }
 .appTextare{  width:50%;overflow:hidden;border:1px solid #bbb;border-radius: 5px;padding:10px;line-height: 24px; outline: none;resize: none;height:140px; word-break:break-all;word-wrap:break-word;
 }
-
 .app-flow-tit{
   display: inline-block;vertical-align: middle;border:1px solid #1ab394;overflow: hidden;border-radius: 6px;margin-bottom:30px;
   li{
@@ -300,7 +246,6 @@ label.error{ color:red;font-size:14px;}
     }
   }
 }
-
 .flow-list{
   font-size:0;
 }
@@ -309,7 +254,7 @@ label.error{ color:red;font-size:14px;}
 }
 .flow-item-icon{
   display: block;width:60px;height:60px;overflow: hidden;border-radius: 50%;background: #ddd;
-  margin:10px auto;background-image: url("../images/app-icon.png");background-repeat: no-repeat;
+  margin:10px auto;background-image: url("../images/aps-review-icon.png");background-repeat: no-repeat;
   background-size:300px 60px;
   &.flow-icon1{
     background-position: 0 0;
@@ -450,3 +395,39 @@ label.error{ color:red;font-size:14px;}
   }
 }
 
+
+//.bg-ffa82d,.btn-save,.btn-check{
+//  background: #ffa82d;
+//  border-color:#ffa82d;
+//  color:#fff;
+//  &:hover{
+//    background: #ff9000;
+//    border-color:#ff9000;
+//  }
+//}
+//.bg-62b5e9,.btn-edit,.btn-issue{
+//  background: #62b5e9;
+//  border-color:#62b5e9;
+//  color:#fff;
+//  &:hover{
+//    background: #1897e7;
+//    border-color:#1897e7;
+//  }
+//}
+//
+//.bg-f75c5c,.btn-delete{
+//  background: #f75c5c;
+//  border-color:#f75c5c;
+//  color:#fff;
+//  &:hover{
+//    background: #f52f2f;
+//    border-color: #f52f2f;
+//  }
+//}
+//.bg-1ab394,.btn-review{
+//  background:#1ab394;
+//  color:#fff;
+//  &:hover{
+//    background:#009c7c;
+//  }
+//}

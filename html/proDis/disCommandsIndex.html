@@ -26,10 +26,6 @@
         .ibox-content:nth-of-type(1){
             margin-bottom: 20px;
         }
-        .ibox-content:nth-of-type(2){
-            height: 668px;
-
-        }
     </style>
 </head>
 <body>
@@ -143,7 +139,7 @@
         }
         if (tableStr.length == 0) {
             var len = $("#treeTable thead tr").children("th").length;
-            tableStr = "<tr style='text-align: center'><td colspan='" + len + "'><font color='#cd0a0a'>暂无记录，请点击左侧对应指标</font></td></tr>";
+            tableStr = "<tr style='text-align: center'><td colspan='" + len + "'><font color='#cd0a0a'>暂无记录，请重新选择查询条件</font></td></tr>";
         }
         $('#treeTableBody').html(tableStr);
     }
@@ -210,7 +206,7 @@
             "kind":kindValue,
             "contentParam":contentParme
         };
-        Page.init("/api/ctrl/BaseDirective/page",data,true,function(tableData){
+        Page.init("/api/ctrl/BaseDirectiveCZ/page",data,true,function(tableData){
             renderTableData(tableData);
         })
     }

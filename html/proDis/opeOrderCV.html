@@ -21,13 +21,11 @@
         }
     </style>
 
-
 </head>
 
 <body>
 <i id="btnMenu" class="icon-th-list" style="cursor:pointer;float:right;margin:10px;"></i>
-<form id="inputForm" class="form-horizontal" action="/api/ctrl/BaseDirective/save" method="post">
-    <input id="pid" name="parentId" type="hidden" />
+<form id="inputForm" class="form-horizontal" action="/api/ctrl/BaseDirectiveCZ/save" method="post">
     <input id="id" name="id" type="hidden" />
     <table class="table table-bordered  table-condensed dataTables-example dataTable no-footer">
         <tbody>
@@ -44,9 +42,8 @@
         <tr>
             <td class="width-15" ><label class="pull-right">级别:</label></td>
             <td class="width-35">
-                <input type="hidden" id="gradeVal" name="grade" value="">
                 <select required="required" name="grade" id="grade" class="form-control" disabled="disabled">
-                    <option value=""></option>
+                    <option value="">--请选择--</option>
                     <option value="1">一级菜单</option>
                     <option value="2">二级菜单</option>
                     <option value="3">三级菜单</option>
@@ -96,51 +93,10 @@
 
 
 <script>
+    var id = getQueryString('id');
     $(document).ready(function() {
         ajaxproc();
         ajaxkind();
-        var id=getQueryString('id');
-        var pid = getQueryString('pid');
-        var level = getQueryString('level');
-        if(level){
-            $('#grade').val(1)
-            $('#gradeVal').val($('#grade').val())
-        }
-        $('#pid').val(pid);
-        if(pid){
-            var ids={
-                "id":pid
-            };
-
-            var url = "/api/ctrl/BaseDirective/form/";
-            ajaxToServer(url,JSON.stringify(ids), function (result) {
-                if (result.success) {
-                    $('#grade').val(parseInt(result.baseDirective.grade)+1)
-                    $('#gradeVal').val($('#grade').val())
-                } else {
-                    layer.msg(result.message);
-                }
-
-            });
-        }
-        $('#id').val(id);
-        if (id) {
-            /*此处后端接口  id为弹出窗口自带的id 通过浏览器方法传参得到*/
-            var ids={
-                "id":id
-            };
-
-            var url = "/api/ctrl/BaseDirective/form/";
-            ajaxToServer(url,JSON.stringify(ids), function (result) {
-                if (result.success) {
-                    $('#grade').val(result.baseDirective.grade)
-                    $('#gradeVal').val($('#grade').val())
-                } else {
-                    layer.msg(result.message);
-                }
-
-            });
-        }
     });
 
     //8080 admin-api端口专用ajax
@@ -176,6 +132,7 @@
             if(result.success){
                 var rows = result.rows;
                 appendOptionsValue($('#proc'), rows, 'name', 'name');
+                renderAll()
             }else{
                 layer.msg(result.message);
             }
@@ -189,13 +146,32 @@
             if(result.success){
                 var rows = result.rows;
                 appendOptionsValue($('#kind'), rows, 'label', 'label');
+                renderAll()
             }else{
                 layer.msg(result.message);
             }
         });
     }
 
+    function renderAll() {
+        $('#id').val(id);
+        if (id) {
+            /*此处后端接口  id为弹出窗口自带的id 通过浏览器方法传参得到*/
+            var ids={
+                "id":id
+            };
+            var url = "/api/ctrl/BaseDirectiveCZ/form/";
+            ajaxToServer(url,JSON.stringify(ids), function (result) {
+                console.log(result);
+                if (result.success) {
+                    renderData(result.baseDirectiveCZ, $('#inputForm'));
+                } else {
+                    layer.msg(result.message);
+                }
 
+            });
+        }
+    }
     /*清除头像*/
     function getSubmitFormId(){
         return "#inputForm";

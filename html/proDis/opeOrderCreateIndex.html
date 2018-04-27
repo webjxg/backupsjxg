@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>指令下达</title>
+    <title>创建操作指令</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <link rel="stylesheet" href="../../plugins/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="../../plugins/font-awesome/css/font-awesome.min.css">
@@ -26,8 +26,8 @@
             margin-bottom: 20px;
         }
         .ibox-content:nth-of-type(2){
+            height: 668px;
             width: 300px;
-            height: 680px;
             float:left;
             margin-right: 20px;
 
@@ -45,46 +45,40 @@
         <!--标题 按钮-->
         <div class="ibox-content">
             <div>
-                <h1 class="titName ">指令下达</h1>
-            </div>
-            <!--班信息-->
-            <div>
-
-                <span> 日期 : </span><span style="margin-right: 15px" class="date"></span>
-                <span> 班次 : </span><span style="margin-right: 15px" class="shiftName"></span>
-                <span> 班组 : </span><span class="groupName"></span>
+                <h1 class="titName">创建操作指令</h1>
             </div>
             <!--按钮-->
             <div class="clearfix">
                 <div class="apsType-box pull-left mgb-10">
                     <ul class="apsType-linkage">
-                        <li class="job">
+                        <li class="proc">
                             工序：
-                            <select required="required" name="proc" id="proc">
+                            <select name="proc" id="proc">
                                 <option value="">请选择</option>
-
                             </select>
                         </li>
-                        <li class="rank">
-                            级别：
-                            <select required="required" name="grade" id="grade">
+                        <li class="grade">
+                            指令级别：
+                            <select name="grade" id="grade">
                                 <option value="">请选择</option>
                                 <option value="1">一级</option>
                                 <option value="2">二级</option>
                                 <option value="3">三级</option>
                             </select>
                         </li>
-                        <li class="grade">
-                            分类：
-                            <select required="required" name="kind" id="kind">
+                        <li class="kind">
+                            指令分类：
+                            <select name="kind" id="kind">
                                 <option value="">请选择</option>
                             </select>
                         </li>
-                        <li class="content">
-                            指令内容：
-                            <input type="text" required="required" name="contentParam" id="contentParam" value>
-                        </li>
                     </ul>
+                </div>
+                <div class="pull-right btn-box mgb-20">
+                    <button class="btn  btn-white btn-instruct" id="btn-add" type="button" >
+                        <i class="fa icon-instruct"></i>
+                        指令添加</button>
+                    <button hidden="hidden" class="fa-refresh" onclick="window.location.reload()"></button>
                 </div>
             </div>
         </div>
@@ -121,145 +115,43 @@
 
 <script>
     $(document).ready(function(){
-        renderclass();
-        $('#officeContent').attr('src','./giveOrdersInner.html');
+        $('#officeContent').attr('src','./opeOrderCreateInner.html');
         getOption();
         ajaxproc();
         ajaxkind();
-        reloadZtree('#proc','/api/ctrl/BaseDirective/getZTtree');
-        reloadZtree('#kind','/api/ctrl/BaseDirective/getZTtree');
-        reloadZtree('#grade','/api/ctrl/BaseDirective/getZTtree');
-        reloadZtreeinput('#contentParam','/api/ctrl/BaseDirective/getZTtree');
+        reloadZtree('#proc','/api/ctrl/BaseDirectiveCZ/getZTtree');
+        reloadZtree('#kind','/api/ctrl/BaseDirectiveCZ/getZTtree');
+        reloadZtree('#grade','/api/ctrl/BaseDirectiveCZ/getZTtree');
+        $('#btn-add').click(function () {
+            openEditDialog('添加指令', './proDis/opeOrderCVAdd.html?level=1&id=""', '462px', '425px')
+        });
 
 
 
     });
-    //写入班信息
-    function renderclass(){
-        $('.date').text(getNowFormatDate());
-        var data={};
-        ajaxTo('/api/ctrl/DirectiveIssued/list',JSON.stringify(data),function (data) {
-            var startTime=data.rows[0].shift.startTime,endTime=data.rows[0].shift.endTime;
-            $('.groupName').text(data.rows[0].name);
-            $('.shiftName').text(startTime+"-"+endTime);
-        });
-    }
-    //获得当前日期
-    function getNowFormatDate() {
-        var date = new Date();
-        var seperator1 = "-";
-        var year = date.getFullYear();
-        var month = date.getMonth() + 1;
-        var strDate = date.getDate();
-        if (month >= 1 && month <= 9) {
-            month = "0" + month;
-        }
-        if (strDate >= 0 && strDate <= 9) {
-            strDate = "0" + strDate;
-        }
-        var currentdate = year + seperator1 + month + seperator1 + strDate;
-        return currentdate;
-    }
 
-
-
-    function ajaxTo(url, data, callbackFun){
-        var layerIndex = layer.load(2);
-        url = url.toLowerCase().indexOf("http://") == 0? url : (urlPrefix + url);
-        $.ajax({
-            headers:{
-                Accept: "application/json; charset=utf-8",
-                // Authorization: getCookie("token_type")+" " +getCookie("authorization")，
-                Authorization: "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJqdGkiOiIwMzIyMjcxNmFiNzU0MTIxOTU5Yjg1ODU1YmFhZWRjZSIsInN1YiI6IjIyIiwiaXNzIjoiYWRtaW4iLCJhdWQiOiJBZG1pbiBKV1QgT25saW5lIn0.c_MLl8tCitpuSa6d-RzAFWJq7k-H3XBAQePTep4q4IM"
-            },
-            type: "post",
-            url: url,
-            data: data,
-            dataType: 'json',
-            contentType:'application/json',
-            success: function(result){
-                layer.close(layerIndex);
-                if(callbackFun){
-                    callbackFun(result);
-                }
-            },
-            error:function(){
-                layer.close(layerIndex);
-                layer.msg('请求服务器异常.');
-            }
-        });
-    }
-    //得到下拉菜单的值
+    //获取tree
     function getOption() {
-        var procValue=$('#proc').val(), gradeValue=$('#grade').val(),kindValue=$('#kind').val(),contentParme=$('#contentParam').val();
+        var procValue=$('#proc').val(), gradeValue=$('#grade').val(),kindValue=$('#kind').val();
         data={
             "proc":procValue,
             "grade":gradeValue,
-            "kind":kindValue,
-            "contentParam":contentParme
+            "kind":kindValue
         };
         var dat=JSON.stringify(data);
-        ajaxToServer('/api/ctrl/BaseDirective/getZTree',dat,function (da) {
-            console.log(dat,da);
+        ajaxToServer('/api/ctrl/BaseDirectiveCZ/getZTree',dat,function (da) {
             zTree(da.rows)
         });
         reloadZtree();
-        reloadZtreeinput();
-    }
-
-    function reloadZtree(item){
-        $('.apsType-linkage').on('change',item,function () {
-            getOption();
-        });
-
-    }
-    function reloadZtreeinput(item1){
-        $(item1).on('blur','.apsType-linkage',function () {
-            getOption();
-        });
-
     }
 
 
-
-    //ztree渲染
-    function zTree(da) {
-        var zTreeObj;
-        // zTree 的参数配置，深入使用请参考 API 文档（setting 配置详解）
-        var setting = {
-            data: {
-                simpleData: {
-                    enable: true,   //设置是否使用简单数据模式(Array)
-                    idKey: "id",    //设置节点唯一标识属性名称
-                    pIdKey: "pId"      //设置父节点唯一标识属性名称
-                },
-                key: {
-                    name: "name",//zTree 节点数据保存节点名称的属性名称
-                    title: "name"//zTree 节点数据保存节点提示信息的属性名称
-                }
-            },
-            callback: {
-                onClick: function (e, treeId, node){
-                    if(node.id){
-                        rendersun(node.id)
-                    }
-                }
-            }
-
-        };
-        // zTree 的数据属性，深入使用请参考 API 文档（zTreeNode 节点数据详解）
-        var zNodes = da;
-        //执行ztree
-        var treeObj =$.fn.zTree.init($("#tree"), setting, zNodes);
-
-    }
-
-    //获取工序下拉框
+    //获取工序
     function ajaxproc(){
         ajaxToServerS('/api/sys/SysOrg/selectGx/3',{},function (result) {
             if(result.success){
                 var rows = result.rows;
-                appendOptionsValue($('#proc'), rows, 'name', 'name');
+                appendOptionsValue($('#proc'), rows, 'code', 'name');
             }else{
                 layer.msg(result.message);
             }
@@ -267,12 +159,12 @@
 
     }
 
-    //获取指令分类下拉框
+    //获取指令分类
     function ajaxkind() {
         ajaxToServerS('/api/sys/SysDict/type/directiveCassifyType',{},function (result) {
             if(result.success){
                 var rows = result.rows;
-                appendOptionsValue($('#kind'), rows, 'label', 'label');
+                appendOptionsValue($('#kind'), rows, 'value', 'label');
             }else{
                 layer.msg(result.message);
             }
@@ -307,9 +199,50 @@
         });
     }
 
+    //选择框变更后刷新ztree数据
+    function reloadZtree(item){
+        $(item).change(function () {
+            getOption();
+            $('#officeContent')[0].contentWindow.tablehide();
+        });
+    }
+
+
+    //ztree渲染
+    function zTree(da) {
+        var zTreeObj;
+        // zTree 的参数配置，深入使用请参考 API 文档（setting 配置详解）
+        var setting = {
+            data: {
+                simpleData: {
+                    enable: true,   //设置是否使用简单数据模式(Array)
+                    idKey: "id",    //设置节点唯一标识属性名称
+                    pIdKey: "pId"      //设置父节点唯一标识属性名称
+                },
+                key: {
+                    name: "name",//zTree 节点数据保存节点名称的属性名称
+                    title: "name"//zTree 节点数据保存节点提示信息的属性名称
+                }
+            },
+            callback: {
+                onClick: function (e, treeId, node){
+                    if(node.id){
+                        rendersun(node.id,node.level)
+                    }
+                }
+            }
+
+        };
+        // zTree 的数据属性，深入使用请参考 API 文档（zTreeNode 节点数据详解）
+        var zNodes = da;
+        //执行ztree
+        var treeObj =$.fn.zTree.init($("#tree"), setting, zNodes);
+
+    }
+
     //点ztree传值id
-    function rendersun(data) {
-        $('#officeContent')[0].contentWindow.updatason(data);
+    function rendersun(data,level) {
+        $('#officeContent')[0].contentWindow.updatason(data,level);
     }
 </script>
 

@@ -123,8 +123,8 @@
 <script>
     $(function () {
         window.pageLoad = function () {
-            ajaxToServer("/api/aps/Template/list",{},function (data) {
-                dataout(data.rows);
+            Page.init("/api/aps/Template/page",{},true,function (data) {
+                dataout(data);
                 $('.btn-preserve').click(function () {
                     var id = $(this).parents("tr").find('.i-checks').attr('id');
                     openDialog('项目信息维护', './producePlan/planTempPreserve.html?id=' + id, '800px', '500px')

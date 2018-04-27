@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="../../plugins/font-awesome/css/font-awesome.min.css">
     <link rel="stylesheet" href="../../plugins/easyui/themes/default/easyui.css">
     <link rel="stylesheet" href="../../plugins/easyui/themes/default/datagrid.css">
+    <link rel="stylesheet" href="../../plugins/datetimepicker/css/bootstrap-datetimepicker.css">
     <!--引入样式-->
     <link rel="stylesheet" href="../../css/customDatagrid.css">
     <link rel="stylesheet" href="../../css/aps.css">
@@ -24,16 +25,23 @@
                         <h1 class="titName">复晟铝业年生产经营计划</h1>
                     </div>
                     <div class="clearfix btn-box">
-                        <div class="pull-left"></div>
+                        <div class="pull-left">
+                            <ul class="apsType-linkage">
+                                <li class="month">
+                                    计划周期（年）：
+                                    <input type="text" value="" id="yMPicker" class="time-input form-control datePicker" placeholder="请选择年份">
+                                </li>
+                            </ul>
+                        </div>
                         <div class="pull-right">
                             <button class="btn btn-back btn-white" id="back-btn">
-                                <i class="fa icon-return"></i> 返回
+                                <i class="fa fa-reply"></i> 返回
                             </button>
 
                             <button class="btn btn-save  btn-instruct">
-                                <i class="fa icon-save"></i>
+                                <i class="fa fa-file-text"></i>
                                 保存</button>
-                            <button class="btn btn-white btn-sub"><i class="fa icon-submit"></i>提交</button>
+                            <button class="btn btn-white btn-sub"><i class="fa fa-upload"></i>提交</button>
                         </div>
                     </div>
                 </div>
@@ -45,18 +53,19 @@
     </div>
 </div>
 <!--表格区-->
-
-
-
-
 </body>
 <script src="../../js/jquery-2.2.4.min.js"></script>
 <script src="../../plugins/bootstrap/js/bootstrap.min.js"></script>
 <!--附属插件-->
 <script src="../../plugins/layer/layer.js"></script>
+<script src="../../plugins/datetimepicker/js/bootstrap-datetimepicker.js"></script>
+<script src="../../plugins/datatables/js/jquery.dataTables.min.js"></script>
+<script src="../../plugins/datatables/js/dataTables.bootstrap.js"></script>
+<script src="../../plugins/bootStrapPager/js/extendPagination.js"></script>
 <script src="../../plugins/easyui/js/jquery.easyui.min.js"></script>
 <script src="../../js/dataGridCustom.js"></script>
 <script src="../../js/customForm-aps.js"></script>
+
 <script>
     //返回按钮
     var check=getQueryString('check');
@@ -74,19 +83,33 @@
     var status;
     getmsg();
     function getmsg() {
+        var date = new Date();
+        getYear = date.getFullYear();
+        // $("#yMPicker").val(getYear);
+        $("#yMPicker").datetimepicker({
+            format:"yyyy",
+            language:'cn',
+            weekStart: 1,
+            pickTime: false,
+            autoclose:true,
+            startView: 4, //月视图
+            minView: "4",
+            forceParse: 0
+        });
         var data={
-            adYear:getQueryString("year")
+            adYear:$("#yMPicker").val()
         };
-        var datastring = JSON.stringify(data)
+        var datastring = JSON.stringify(data);
+        console.log(datastring)
         ajaxToServer("/api/aps/ApsYearPlan/queryYearPlan",datastring,function (result) {
-            console.log(datastring,result);
-            planarr.push(result.cpcl);
+            console.log(result)
             planarr.push(result.cpxl);
             planarr.push(result.zyxhzbjh);
             createTbody(planarr);
         })
     }
     function createTbody(planarr) {
+        console.log(planarr)
         for(var i=0;i<planarr.length;i++){
             for(var j=0;j<planarr[i].length;j++){
                 msgobj = {
@@ -101,14 +124,13 @@
                     "ncl":planarr[i][j].ncl,
                     "templetId":planarr[i][j].templetId,
                     "mainId":planarr[i][j].mainId
-
                 };
                 arr.push(msgobj)
             }
             $('#td0').datagrid('loadData',arr);
         }
     };
-    var $yearupdata =getQueryString('year');
+    var $yearupdata =$("#yMPicker").val();
     $("#td0").datagrid({
         fitColumns:true,
         collapsible:true,
@@ -126,7 +148,6 @@
             {field:'ndyjcl',title:$yearupdata-1+'年预计产量',editor:'numberbox',width:100,align:'center'},
             {field:'yjdsjdcl',title:'预计第四季度产量',editor:'numberbox',width:100,align:'center'},
             {field:'ncl',title:$yearupdata+'年产量',editor:'numberbox',width:100,align:'center'}
-
         ]],
         onAfterEdit: function (rowIndex, rowData, changes) {
             dataGridObj.pushRowData(rowData);
@@ -151,10 +172,12 @@
         $('#td0').datagrid('hideColumn','mainId');
     });
     // 点击按钮并添加点击状态
+    // 保存
     $(".btn-save").click(function () {
             status = "0";
             addstatus(status)
     });
+    // 提交
     $('.btn-sub').click(function () {
         status="1";
         addstatus(status);
@@ -162,19 +185,59 @@
     //将点击状态添加到数组里边
     function addstatus(status) {
         var editItems = dataGridObj.getSaveItemArr();
-        var data={
-            "yearPlans":JSON.stringify(editItems),
-            "status":status
-        };
-        sendmsg(data)  //将数据发送给后台
-
+            var data={
+                "yearPlans":JSON.stringify(editItems),
+                "status":status
+            };
+            console.log(data)
+            sendmsg(data)  //将数据发送给后台
     }
-
-
     function sendmsg(data) {
         ajaxToServer1("/api/aps/ApsYearPlan/saveYearInfo",data,function(result) {
-            refreshActiveTab()
+            // refreshActiveTab()
+            console.log(result);
         });
     }
+        $("#yMPicker").change(function () {
+            var $yearupdata =$("#yMPicker").val();
+            $("#td0").datagrid({
+                fitColumns:true,
+                collapsible:true,
+                singleSelect: true,
+                onClickRow: function(index){
+                    dataGridObj.startEditing(index,"#td0")
+                },
+                //创建table
+                columns:[[
+                    {field:'id',title:'id',hideColumn:'id'},
+                    {field:'mainId',title:'mainId',hideColumn:'mainId'},
+                    {field:'groupName',title:'生产计划',width:100,align:'center'},
+                    {field:'itemName',title:'项目',width:100,align:'center'},
+                    {field:'itemUnit',title:'单位',width:100,align:'center'},
+                    {field:'ndyjcl',title:$yearupdata-1+'年预计产量',editor:'numberbox',width:100,align:'center'},
+                    {field:'yjdsjdcl',title:'预计第四季度产量',editor:'numberbox',width:100,align:'center'},
+                    {field:'ncl',title:$yearupdata+'年产量',editor:'numberbox',width:100,align:'center'}
+                ]],
+                onAfterEdit: function (rowIndex, rowData, changes) {
+                    dataGridObj.pushRowData(rowData);
+                    dataGridObj.setEditIndex("#td0",undefined);
+                    dataGridObj.mergeCells(loadedData,"#td0","groupName");
+                },
+                //合并单元格
+                onLoadSuccess:function (data) {
+                    loadedData = data;
+                    dataGridObj.mergeCells(data,"#td0","groupName");
+                },
+                toolbar: [{
+                    text: '保存', iconCls: 'icon-save', handler: function () {
+                        //保存时结束当前编辑的行，自动触发onAfterEdit事件如果要与后台交互可将数据通过Ajax提交后台
+                        $('#td0').datagrid('endEdit', dataGridObj.getEditIndex("#td0"));
+                    }
+                }]
+            });
+            // 隐藏id列
+            $('#td0').datagrid('hideColumn','id');
+            $('#td0').datagrid('hideColumn','mainId');
+        })
 </script>
 </html>

@@ -110,7 +110,7 @@
         if(id){
             $("#objId").val(id);
             ajaxToServer1("/api/aps/Formula/form/"+id,{},function(result){
-                console.log(result.Formula);
+                console.log(result);
                 if(result.success){
                     var Formula = result.Formula,
                         str = Formula.computeFormula;

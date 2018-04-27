@@ -46,7 +46,7 @@
         <div class="ibox-content">
             <!--搜索区-->
             <div class="row">
-                <div class="col-sm-12">
+                <div class="col-sm-12 mgb-15">
                     <form id="searchForm" class="form-inline" method="post" action="/api/sys/SysDict/page">
                         <div class="form-group">
                             <span>类型：</span>
@@ -56,7 +56,6 @@
                             <input id="description" name="description" class="form-control" type="text" value="" maxlength="50">
                         </div>
                     </form>
-                    <br>
                 </div>
             </div>
             <!--按钮区-->
@@ -70,7 +69,7 @@
                                  title="修改"><!--onclick="#"--><i class="fa fa-file-text-o"></i> 修改
                         </button>
                         <button class="btn btn-white btn-sm"  id = "delete-btn" data-toggle="tooltip" onclick="deleteAll('确认要删除该字典吗？','/api/sys/SysDict/delete/','#treeTable')"
-                                data-placement="top"><i class="fa fa-trash-o"> 删除</i>
+                                data-placement="top"><i class="fa fa-trash-o"> </i>删除
                         </button>
                         <button class="btn btn-white btn-sm " id="refresh-btn" data-toggle="tooltip" data-placement="left" onclick="Page.reload()"
                                 title="刷新"><i class="glyphicon glyphicon-repeat"></i> 刷新

@@ -9,19 +9,7 @@
     <!--引入样式-->
     <link rel="stylesheet" href="../../css/customDataTable.css">
     <link rel="stylesheet" href="../../css/aps.css">
-    <link rel="stylesheet" href="../../css/common.css">
-    <style>
-        .btn-changeI{
-            background-color: white;
-            color: #62b5e9;
-            border:1px solid #62b5e9 !important;
-        }
-        .btn-changeI:hover{
-            background-color: #62b5e9;
-            color: white;
-            border-color: #62b5e9;
-        }
-    </style>
+
 </head>
 <body>
 
@@ -50,6 +38,7 @@
 <script src="../../plugins/treetable/jquery.treetable.js"></script>
 <!--公共样式-->
 <script src="../../js/customForm-aps.js"></script>
+<script src="../../js/page.js"></script>
 
 <script>
     function updatason(node,level){
@@ -57,7 +46,7 @@
             "id":node
         };
         var da=JSON.stringify(data)
-        ajaxToServer("/api/ctrl/BaseDirective/rightList/",da,function(tableData){
+        ajaxToServer("/api/ctrl/BaseDirectiveCZ/rightList/",da,function(tableData){
             renderTableData(tableData);
             clickButton(level);
         })
@@ -66,47 +55,47 @@
     function clickButton(level) {
         $('.btn-addson').click(function(){
             var id = $(this).parents("tr").find('.i-Checks').attr('id');
-            openEditDialog('添加下级指令','./proDis/createInsCVAdd.html?&pid='+id,'462px','425px')
+            openEditDialog('添加下级指令','./proDis/opeOrderCVAdd.html?&pid='+id,'462px','425px')
         });
         $('.btn-changeI').click(function () {
             var id = $(this).parents("tr").find('.i-Checks').attr('id');
-            openEditDialog('修改指令', './proDis/createInsCV.html?level='+level+'&id=' + id, '462px', '425px')
+            openEditDialog('修改指令', './proDis/opeOrderCV.html?level='+level+'&id=' + id, '462px', '425px')
         });
         $('.btn-add').click(function(){
             var id = $(this).parents("tr").find('.i-Checks').attr('id');
-            openEditDialog('添加指令','./proDis/createInsCVAdd.html?&id='+id,'462px','425px')
+            openEditDialog('添加指令','./proDis/opeOrderCVAdd.html?&id='+id,'462px','425px')
         });
         $('.btn-change').click(function () {
             var id = $(this).parents("tr").find('.i-Checks').attr('id');
-            openEditDialog('修改指令', './proDis/createInsCV.html?level='+level+'&id=' + id, '462px', '425px')
+            openEditDialog('修改指令', './proDis/opeOrderCV.html?level='+level+'&id=' + id, '462px', '425px')
         });
         $('.btn-delete').click(function () {
             var id = $(this).parents("tr").find('.i-Checks').attr('id');
-            deleteIt('确定要删除该指令吗', '/api/ctrl/BaseDirective/delete/'+id);
+            deleteIt('确定要删除该指令吗', '/api/ctrl/BaseDirectiveCZ/delete/'+id);
         });
 
     }
     //渲染表
     function renderTableData(data) {
         var tablehead="<tr>" +
-                            "<td class='i-Checks' style='border:none' id='" + data.pList[0].id+"'>"+data.pList[0].content+"</td>"+
-                            "<td>"+
-                            " <a class='btn btn-target btn-addson'><i class='fa fa-edit'></i>添加子级</a>" +
-                            " <a class='btn bg-f75c5c btn-delete'><i class='fa fa-trash'></i> 删除</a>"  +
-                            " <a class='btn btn-changeI'><i class='fa fa-edit'></i>修改</a>" +
-                            "</td>"+
-                      "</tr>";
+            "<td class='i-Checks' style='border:none' id='" + data.pList[0].id+"'>"+data.pList[0].content+"</td>"+
+            "<td>"+
+            " <a class='btn bg-ffa82d btn-addson'><i class='fa fa-edit'></i>添加子级</a>" +
+            " <a class='btn bg-f75c5c btn-delete'><i class='fa fa-trash'></i> 删除</a>"  +
+            " <a class='btn bg-62b5e9 btn-changeI'><i class='fa fa-edit'></i>修改</a>" +
+            "</td>"+
+            "</tr>";
         var datas=data.childList;
         var tableStr = "";
         for (var i = 0; i < datas.length; i++) {
             tableStr += "<tr class='alignCenter' >"
-                            + "<td class='i-Checks' id='" + datas[i].id + "'>" + datas[i].content + "</td>" +
-                            "<td>"+
-                            " <a class='btn  btn-add'><i class='fa fa-edit'></i>添加</a>" +
-                            " <a class='btn  btn-delete'><i class='fa fa-trash'></i> 删除</a>"  +
-                            " <a class='btn  btn-change'><i class='fa fa-edit'></i>修改</a>" +
-                            "</td>"
-                     + "</tr>";
+                + "<td class='i-Checks' id='" + datas[i].id + "'>" + datas[i].content + "</td>" +
+                "<td>"+
+                " <a class='btn bg-ffa82d btn-add'><i class='fa fa-edit'></i>添加</a>" +
+                " <a class='btn bg-f75c5c btn-delete'><i class='fa fa-trash'></i> 删除</a>"  +
+                " <a class='btn bg-62b5e9 btn-change'><i class='fa fa-edit'></i>修改</a>" +
+                "</td>"
+                + "</tr>";
         }
         $('#treeTableBody').html(tablehead+tableStr);
     }
@@ -116,7 +105,7 @@
             ajaxToServer1(url,{},function(result){
                 if(result.success == true){
                     layer.msg("删除成功");
-                    window.location.reload();
+                    Page.reload();
                     var frameActive = top.getActiveTab().attr("name");
                     var obj = $('.fa-refresh', top.window.frames[frameActive].document);
                     if(obj.length == 0){

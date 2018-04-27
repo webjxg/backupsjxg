@@ -14,10 +14,9 @@
     <link rel="stylesheet" href="../../plugins/datatables/css/mydatatable.css">
 
     <!--引入样式-->
-    <link rel="stylesheet" href="../../css/common.css">
     <link rel="stylesheet" href="../../css/customDataTable.css">
     <link rel="stylesheet" href="../../css/aps.css">
-
+    <link rel="stylesheet" href="../../css/common.css">
 
 </head>
 <body>
@@ -30,16 +29,14 @@
         <div class="col-sm-12">
             <div class="pull-right">
                 <button class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="left"
-                        onclick="
-                        openEditDialog('新增用户','./producePlan/paramConfigCheckView.html','568px','358px');"
+                        onclick="openEditDialog('新增用户','./producePlan/paramConfigCheckView.html','568px','358px');"
                         title="添加">
                     <i class="fa fa-plus"></i>
                     增加
                 </button>
                 <button class="btn btn-white btn-sm" onclick="deleteAll
-                ('确认要删除该用户吗？','/api/aps/Configure/delete/','#treeTable')"
-                        data-toggle="tooltip" data-placement="top">
-                    <i class="fa fa-trash"></i> 批量删除
+                ('确认要删除该用户吗？','/api/aps/Configure/delete/','#treeTable')"data-toggle="tooltip" data-placement="top">
+                    <i class="fa fa-trash"></i>批量删除
                 </button>
                 <button class="btn btn-white btn-sm "
                         id="refresh-btn" data-toggle="tooltip" data-placement="left"
@@ -65,6 +62,27 @@
 
         </tbody>
     </table>
+    <div class="clearfix pagination-box">
+        <div class="pagination-detail pull-left">
+            <div class="page-info pull-left"></div>
+            <div class="page-list pull-left">
+                <span>每页显示</span>
+                <select name="" id="pag-sel">
+                    <option value="">请选择</option>
+                    <option value="5">5</option>
+                    <option value="10" selected>10</option>
+                    <option value="20">20</option>
+                    <option value="25">25</option>
+                    <option value="30">30</option>
+                    <option value="40">40</option>
+                    <option value="50">50</option>
+                    <option value="-1">all</option>
+                </select>
+                条记录
+            </div>
+        </div>
+        <div id="pagination" class="pagination-roll pull-right"></div>
+    </div>
 </div>
 <!--核心插件-->
 <script src="../../js/jquery-2.2.4.min.js"></script>
@@ -90,9 +108,8 @@
 <script>
     $(function () {
         window.pageLoad = function () {
-            ajaxToServer("/api/aps/Configure/list", {}, function (data) {
-                console.log(data);
-                dataout(data.rows);
+            Page.init("/api/aps/Configure/page",{},true, function (data) {
+                dataout(data);
                 $('tbody tr').attr('class', 'alignCenter');
 
                 $('.btn-change').click(function () {

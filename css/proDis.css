@@ -9,6 +9,13 @@
   display: none; }
 .show {
   display: block; }
+.fa-calendar{
+  margin-left: -18px;
+  color: #ffa82d;
+}
+.i-Checks{
+  border-right:1px !important;
+}
 /*.fa-calendar {*/
   /*margin-left: -18px;*/
  /*color: #ffa82d;*/

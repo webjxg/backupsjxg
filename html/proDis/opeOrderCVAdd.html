@@ -21,12 +21,11 @@
         }
     </style>
 
-
 </head>
 
 <body>
 <i id="btnMenu" class="icon-th-list" style="cursor:pointer;float:right;margin:10px;"></i>
-<form id="inputForm" class="form-horizontal" action="/api/ctrl/BaseDirective/save" method="post">
+<form id="inputForm" class="form-horizontal" action="/api/ctrl/BaseDirectiveCZ/save" method="post">
     <input id="pid" name="parentId" type="hidden" />
     <input id="id" name="id" type="hidden" />
     <table class="table table-bordered  table-condensed dataTables-example dataTable no-footer">
@@ -112,10 +111,10 @@
                 "id":pid
             };
 
-            var url = "/api/ctrl/BaseDirective/form/";
+            var url = "/api/ctrl/BaseDirectiveCZ/form/";
             ajaxToServer(url,JSON.stringify(ids), function (result) {
                 if (result.success) {
-                    $('#grade').val(parseInt(result.baseDirective.grade)+1)
+                    $('#grade').val(parseInt(result.baseDirectiveCZ.grade)+1)
                     $('#gradeVal').val($('#grade').val())
                 } else {
                     layer.msg(result.message);
@@ -130,10 +129,10 @@
                 "id":id
             };
 
-            var url = "/api/ctrl/BaseDirective/form/";
+            var url = "/api/ctrl/BaseDirectiveCZ/form/";
             ajaxToServer(url,JSON.stringify(ids), function (result) {
                 if (result.success) {
-                    $('#grade').val(result.baseDirective.grade)
+                    $('#grade').val(result.baseDirectiveCZ.grade)
                     $('#gradeVal').val($('#grade').val())
                 } else {
                     layer.msg(result.message);
