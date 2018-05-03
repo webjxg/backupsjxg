@@ -30,6 +30,16 @@
     <table class="table table-bordered  table-condensed dataTables-example dataTable no-footer">
         <tbody>
         <tr>
+            <td class="width-15" ><label class="pull-right">工序:</label></td>
+
+            <td class="width-35">
+                <input type="hidden" name="processId" id="processId">
+                <select required="required"  name="proc" id="proc" class="form-control">
+                    <option value="">--请选择--</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
             <td class="width-15" ><label class="pull-right">级别:</label></td>
             <td class="width-35">
                 <select required="required" name="grade" id="grade" class="form-control" disabled="disabled">
@@ -37,16 +47,6 @@
                     <option value="1">一级菜单</option>
                     <option value="2">二级菜单</option>
                     <option value="3">三级菜单</option>
-                </select>
-            </td>
-        </tr>
-        <tr>
-            <td class="width-15" ><label class="pull-right">工序:</label></td>
-
-            <td class="width-35">
-                <input type="hidden" name="processId" id="processId">
-                <select required="required"  name="proc" id="proc" class="form-control">
-                    <option value="">--请选择--</option>
                 </select>
             </td>
         </tr>

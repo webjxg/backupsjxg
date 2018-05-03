@@ -86,12 +86,12 @@
                 <ul class="apsType-linkage">
                     <li class="month">
                         计划周期（年月）：
-                        <input type="text" value="" id="yMPicker" class="time-input form-control datePicker">
+                        <input type="text" value="请选择" id="yMPicker" class="time-input form-control datePicker">
                     </li>
                     <li class="week">
                         计划周期（周）：
                         <select name="" id="apsWeek">
-                            <option value="">全部</option>
+                            <option value="">请选择</option>
                             <option value="1">第一周</option>
                             <option value="2">第二周</option>
                             <option value="3">第三周</option>
@@ -183,11 +183,6 @@
             $('.row .pull-left').hide()
         }else{
             btnclick();
-            var date = new Date();
-            getYear = date.getFullYear();
-            getMonth = date.getMonth()+1;
-            getMonth = (getMonth<10?"0"+getMonth:getMonth);
-            $("#yMPicker").val(getYear+"-"+getMonth);
             $("#yMPicker").datetimepicker({
                 format:"yyyy-mm",
                 language:'cn',
@@ -196,18 +191,12 @@
                 autoclose:true,
                 startView: 3, //月视图
                 minView: "3",
-                forceParse: 0
+                forceParse: 0,
+                startDate:"2018-01-01"
             });
             var ids='';
             getDataFn();
             tabledatagrid(ids,$year,$status,$week);
-
-
-
-
-
-
-            //得到年月周状态
 
         }
 
@@ -222,20 +211,32 @@
     }
 
     function btnclick() {
+        var yMPicker=$('#yMPicker').val();
+        var apsWeek=$('#apsWeek').val();
         $(".btn-sav").click(function () {
-            getDataFn();
-            btnSubSave(0);
+            if(yMPicker==''||apsWeek==''){
+              layer.msg('请选择年、月、周')
+            }else{
+                getDataFn();
+                btnSubSave(0);
+            }
+
         });
         $(".btn-submit").click(function () {
-            getDataFn();
-            btnSubSave(1);
-
+            if(yMPicker==''||apsWeek==''){
+                layer.msg('请选择年、月、周')
+            }else {
+                getDataFn();
+                btnSubSave(1);
+            }
         });
         $(".btn-back").click(function () {
             refreshActiveTab();
         });
     }
-
+//    function () {
+//
+//    }
     //多表格请求数据渲染方法
     function tabledatagrid(id,dpYear,dpMonth,dpWeek) {
         //建立空数组
@@ -252,10 +253,10 @@
         };
         console.log(data0);
         var da = JSON.stringify(data0);
-        ajaxToServer("/api/aps/DayPlan/form", da, table);
+        ajaxTo("/api/aps/DayPlan/form", da, table);
         function table(result) {
             console.log(da, result);
-            $("#id").val(result.DayPlan.id);
+//            $("#id").val(result.DayPlan.id);
             var bjh = result.bjh,
                 cljh = result.cljh,
                 zlzbjh = result.zlzbjh,
@@ -508,16 +509,20 @@
     }
     //暂存递交
     function btnSubSave(status) {
+        getDataFn()
         var editItems = dataGridObj.getSaveItemArr();
         if(editItems==''){
             layer.alert('数据无变化，请改动数据后再进行保存')
         }else{
             var data={
+                "dpYear":$year,
+                "dpMonth":$month,
+                "dpweek":$week,
                 "dayPlans":JSON.stringify(editItems),
                 "status":status,
                 "id":$('#id').val()
             };
-            ajaxToServer1('/api/aps/DayPlan/save',data, function(result){
+            ajaxTo('/api/aps/DayPlan/save',data, function(result){
                 if (result.success) {
                     layer.msg('提交成功');
                     refreshActiveTab();
@@ -527,7 +532,38 @@
             });
         }
     }
+    function ajaxTo(url, data, callbackFun) {
+        var layerIndex = layer.load(2);
+        url = url.toLowerCase().indexOf("http://") == 0 ? url : (urlPrefix + url);
+        $.ajax({
+            headers: {
+                Accept: "application/json; charset=utf-8",
+                // Authorization: getCookie("token_type")+" " +getCookie("authorization")，
+                Authorization: "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJqdGkiOiIwNGQ2MjI3ZTQwMTI0YWY4YTZiMzhhZTExMTMzMTBkMSIsInN1YiI6IjQ0IiwiaXNzIjoiYWRtaW4iLCJhdWQiOiJBZG1pbiBKV1QgT25saW5lIn0.Q1xsSdrr__A8xBiMJOrXFYEZTBRQCgjGrwrJKp4ZQT4"  /*丁*/
 
+                /* Authorization: "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJqdGkiOiIwMjgyNzJiNDE2Njg0NDc4YmRiMzZhOTI3ZGQ5MDhiZCIsInN1YiI6IjExIiwiaXNzIjoiYWRtaW4iLCJhdWQiOiJBZG1pbiBKV1QgT25saW5lIn0.2FEUoTT96E350SAXijdtAGVncELyd4rkImjMjhaWTck" */    //甲
+
+                /*Authorization: "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJqdGkiOiIwMzIyMjcxNmFiNzU0MTIxOTU5Yjg1ODU1YmFhZWRjZSIsInN1YiI6IjIyIiwiaXNzIjoiYWRtaW4iLCJhdWQiOiJBZG1pbiBKV1QgT25saW5lIn0.c_MLl8tCitpuSa6d-RzAFWJq7k-H3XBAQePTep4q4IM"*/    //乙班
+
+                /*Authorization: "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJqdGkiOiIwNGEzOTJkZGIwNWE0YTJmYTE2NDE4MGMwMWNkYmJmNCIsInN1YiI6IjMzIiwiaXNzIjoiYWRtaW4iLCJhdWQiOiJBZG1pbiBKV1QgT25saW5lIn0.Byouxvl_hsAYtVQ6PQ0TCHTeyfzkG6ojuGfyyc4-880" */  /*丙班*/
+            },
+            type: "post",
+            url: url,
+            data: data,
+            dataType: 'json',
+            contentType: 'application/json',
+            success: function (result) {
+                layer.close(layerIndex);
+                if (callbackFun) {
+                    callbackFun(result);
+                }
+            },
+            error: function () {
+                layer.close(layerIndex);
+                layer.msg('请求服务器异常.');
+            }
+        });
+    }
 
 
 </script>

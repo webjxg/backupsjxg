@@ -86,12 +86,6 @@
 <script src="../../js/page.js"></script>
 <script>
     $(function(){
-        var $year,$month,$week,$status;
-        var date = new Date();
-        getYear = date.getFullYear();
-        getMonth = date.getMonth()+1;
-        getMonth = (getMonth<10?"0"+getMonth:getMonth);
-        $("#yMPicker").val(getYear+"-"+getMonth);
         $("#yMPicker").datetimepicker({
             format:"yyyy-mm",
             language:'cn',
@@ -100,166 +94,170 @@
             autoclose:true,
             startView: 3, //月视图
             minView: "3",
-            forceParse: 0
+            forceParse: 0,
+            startDate:"2018-01-01"
         });
-        //得到年月周状态
-        function getDataFn(){
-            $year = $('.datePicker').val().split("-")[0];
-            $status =$("#apsState").val();
-            $month=$('.datePicker').val().split("-")[1];
-            $week=$('#apsWeek').val();
-        }
-        window.pageLoad = function() {
-            getDataFn();
-            $('#apsWeek').change(function () {
-                getDataFn();
-            });
-            var data = {
-                id:0,
-                dpYear: $year,
-                status: $status,
-                dpWeek: $week,
-                dpMonth:$month
-            };
-            //找到ichecks显示到
-            function getAttr(obj) {
-                var $iChecks = obj.parents("tr").find('.i-checks'),
-                    id = $iChecks.attr('data-id'),
-                    year = $iChecks.attr('data-year'),
-                    month= $iChecks.attr('data-month'),
-                    week= $iChecks.attr('data-week'),
-                    status = $iChecks.attr('data-status');
-                return [id, year,month,week,status];
-            }
-
-            Page.init("/api/aps/DayPlan/page", data, true, function (tableData) {
-                console.log(tableData);
-                renderTableData(tableData);
-                //查看
-                $(".btn-check").click(function () {
-                    getDataFn();
-                    var attrArr = getAttr($(this));
-                    openDialog('查看日计划', 'producePlan/dayPlanCheckIn.html?id=' + attrArr[0] + '&year=' + attrArr[1]+'&month='+attrArr[2]+'&week='+attrArr[3]+'&status='+attrArr[4]+'&check=0', '800px', '500px')
-
-                });
-                //删除
-                $(".btn-delete").click(function () {
-                    var attrArr = getAttr($(this));
-                    console.log(attrArr[0]);
-                    deleteOne('确定要删除该计划', '/api/aps/DayPlan/delete', attrArr[0])
-                });
-                //编辑
-                $(".btn-edit").click(function () {
-                    getDataFn();
-                    var attrArr = getAttr($(this));
-                    location.href = '../producePlan/dayPlanIndex.html?id=' + attrArr[0] + '&year=' + attrArr[1]+'&month='+attrArr[2]+'&week='+attrArr[3]+'&status='+attrArr[4]
-                });
-
-            })
-
-        };
-        pageLoad();
-        windowclick();
-        //添加
-        $("#btn-add").click(function () {
-            getDataFn();
-                location.href = "./dayPlanIndex.html";
-        });
-
-        //删除单条数据
-        function deleteOne(mess,url,id){
-            //var ids= eleP.find('input.i-checks').attr('id')
-            var data = {id:id} || {};
-            top.layer.confirm(mess, {icon: 3, title:'系统提示'},function(index){
-                ajaxToServer(url,JSON.stringify(data),function(result){
-                    console.log(data,url);
-                    if(result.success == true){
-                        var frameActive = top.getActiveTab().attr("name");
-                        var obj = $('#search-btn', top.window.frames[frameActive].document);
-                        if(obj.length == 0){
-                            obj = $('#refresh-btn', top.window.frames[frameActive].document);
-                            if(obj.length == 0){
-
-                                top.refreshActiveTab();
-                            }
-
-                        }
-                        obj.trigger('click');
-                    }
-                });
-                top.layer.close(index);
-            });
-            return false;
-        }
-
-
-
-
-        //  渲染表内容
-        function renderTableData(tableData){
-            $('#treeTable').dataTable({
-                "bPaginate": false,
-                "bAutoWidth": false,
-                "bDestroy":true,
-                "paging": false,
-                "bProcessing": true,
-                "searching": false, //禁用aa原生搜索
-                "info": false,  //底部文字
-                "order": [],
-                "aoColumnDefs": [
-                    {"bSortable": false, "aTargets": [0, 2,4,6]}
-                ],
-                "oLanguage": lang,
-                "data":tableData,
-                //定义列 宽度 以及在json中的列名
-                "aoColumns": [
-                    {"data": "name",'sClass':"alignCenter "},
-                    {"data": "typeLabel",'sClass':"alignCenter "},
-                    {"data": "period",'sClass':"alignCenter"},
-                    {"data": "createBy",'sClass':"alignCenter "},
-                    {"data": "createDate",'sClass':"alignCenter "},
-                    {
-                        "data": null, "orderable": false, "defaultContent": "",'sClass':" alignCenter ",
-                        "render": function (data, type, row, meta) {
-                            var classSet =""  ,setText;
-                            if(row.status == "0"){
-//                            setText = "草稿";
-                                classSet ="col-999";
-                            }else if(row.status == "1" ){
-//                            setText = "已提交";
-                                classSet ="col-51cd50";
-                            }else if(row.status == "2"){
-                                classSet ="col-ffa82d";
-//                            setText = "已审核";
-                            }else if(row.status == "3"){
-//                            setText = "已发布";
-                                classSet ="col-62b5e9";
-                            }
-                            return "<span class='"+classSet+"'>"+row.statusShow+"</span >";
-                        }
-                    },
-                    {
-                        "data": null, "orderable": false, "defaultContent": "",'sClass':" alignCenter autoWidth",
-                        "render": function (data, type, row, meta) {
-                            var setText="";
-                            if(row.status == "0"){
-                                setText="<a class='btn btn-edit btn-compile'><i class='fa fa-edit'></i>编辑</a >";
-                            }else if(row.status == "1" ){
-                                classSet ="col-51cd50";
-                                setText="";
-                            }
-                            var html = setText +
-                                    "<a class='btn btn-delete'><i class='fa fa-trash'></i>删除</a >";
-                            return "<input type='hidden'  id='" + row.id + "' data-type="+row.tYPE+" data-id='"+row.id+"' data-year='"+row.dpYear+"' data-month='"+row.dpMonth+"' data-week='"+row.dpWeek+"' data-status='"+row.status+"' class='i-checks'>"+
-                                "<a class='btn btn-check btn-info' ><i class='fa fa-search-plus'></i>查看</a >" +html;
-
-                        }
-                    }
-
-                ]
-            });
-
-        }
     })
+    var $year,$month,$week,$status;
+    //得到年月周状态
+    function getDataFn(){
+        $year = $('.datePicker').val().split("-")[0];
+        $status =$("#apsState").val();
+        $month=$('.datePicker').val().split("-")[1];
+        $week=$('#apsWeek').val();
+    }
+
+    window.pageLoad = function() {
+        getDataFn();
+        $('#apsWeek').change(function () {
+            getDataFn();
+        });
+
+        var data = {
+            id:0,
+            dpYear: $year,
+            status: $status,
+            dpWeek: $week,
+            dpMonth:$month
+        };
+        //找到ichecks显示到
+        function getAttr(obj) {
+            var $iChecks = obj.parents("tr").find('.i-checks'),
+                id = $iChecks.attr('data-id'),
+                year = $iChecks.attr('data-year'),
+                month= $iChecks.attr('data-month'),
+                week= $iChecks.attr('data-week'),
+                status = $iChecks.attr('data-status');
+            return [id, year,month,week,status];
+        }
+        Page.init("/api/aps/DayPlan/page", data, true, function (tableData) {
+            console.log(tableData);
+            renderTableData(tableData);
+            //查看
+            $(".btn-check").click(function () {
+                getDataFn();
+                var attrArr = getAttr($(this));
+                openDialog('查看日计划', 'producePlan/dayPlanCheckIn.html?id=' + attrArr[0] + '&year=' + attrArr[1]+'&month='+attrArr[2]+'&week='+attrArr[3]+'&status='+attrArr[4]+'&check=0', '800px', '500px')
+
+            });
+            //删除
+            $(".btn-delete").click(function () {
+                var attrArr = getAttr($(this));
+                console.log(attrArr[0]);
+                deleteOne('确定要删除该计划', '/api/aps/DayPlan/delete', attrArr[0])
+            });
+            //编辑
+            $(".btn-edit").click(function () {
+                getDataFn();
+                var attrArr = getAttr($(this));
+                location.href = '../producePlan/dayPlanIndex.html?id=' + attrArr[0] + '&year=' + attrArr[1]+'&month='+attrArr[2]+'&week='+attrArr[3]+'&status='+attrArr[4]
+            });
+
+        })
+
+
+    };
+    windowclick();
+    //添加
+    $("#btn-add").click(function () {
+        getDataFn();
+            location.href = "./dayPlanIndex.html";
+    });
+
+    //删除单条数据
+    function deleteOne(mess,url,id){
+        //var ids= eleP.find('input.i-checks').attr('id')
+        var data = {id:id} || {};
+        top.layer.confirm(mess, {icon: 3, title:'系统提示'},function(index){
+            ajaxToServer(url,JSON.stringify(data),function(result){
+                console.log(data,url);
+                if(result.success == true){
+                    var frameActive = top.getActiveTab().attr("name");
+                    var obj = $('#search-btn', top.window.frames[frameActive].document);
+                    if(obj.length == 0){
+                        obj = $('#refresh-btn', top.window.frames[frameActive].document);
+                        if(obj.length == 0){
+
+                            top.refreshActiveTab();
+                        }
+
+                    }
+                    obj.trigger('click');
+                }
+            });
+            top.layer.close(index);
+        });
+        return false;
+    }
+
+
+
+
+    //  渲染表内容
+    function renderTableData(tableData){
+        $('#treeTable').dataTable({
+            "bPaginate": false,
+            "bAutoWidth": false,
+            "bDestroy":true,
+            "paging": false,
+            "bProcessing": true,
+            "searching": false, //禁用aa原生搜索
+            "info": false,  //底部文字
+            "order": [],
+            "aoColumnDefs": [
+                {"bSortable": false, "aTargets": [0, 2,4,6]}
+            ],
+            "oLanguage": lang,
+            "data":tableData,
+            //定义列 宽度 以及在json中的列名
+            "aoColumns": [
+                {"data": "name",'sClass':"alignCenter "},
+                {"data": "typeLabel",'sClass':"alignCenter "},
+                {"data": "period",'sClass':"alignCenter"},
+                {"data": "createBy",'sClass':"alignCenter "},
+                {"data": "createDate",'sClass':"alignCenter "},
+                {
+                    "data": null, "orderable": false, "defaultContent": "",'sClass':" alignCenter ",
+                    "render": function (data, type, row, meta) {
+                        var classSet =""  ,setText;
+                        if(row.status == "0"){
+//                            setText = "草稿";
+                            classSet ="col-999";
+                        }else if(row.status == "1" ){
+//                            setText = "已提交";
+                            classSet ="col-51cd50";
+                        }else if(row.status == "2"){
+                            classSet ="col-ffa82d";
+//                            setText = "已审核";
+                        }else if(row.status == "3"){
+//                            setText = "已发布";
+                            classSet ="col-62b5e9";
+                        }
+                        return "<span class='"+classSet+"'>"+row.statusShow+"</span >";
+                    }
+                },
+                {
+                    "data": null, "orderable": false, "defaultContent": "",'sClass':" alignCenter autoWidth",
+                    "render": function (data, type, row, meta) {
+                        var setText="";
+                        if(row.status == "0"){
+                            setText="<a class='btn btn-edit btn-compile'><i class='fa fa-edit'></i>编辑</a >";
+                        }else if(row.status == "1" ){
+                            classSet ="col-51cd50";
+                            setText="";
+                        }
+                        var html = setText +
+                                "<a class='btn btn-delete'><i class='fa fa-trash'></i>删除</a >";
+                        return "<input type='hidden'  id='" + row.id + "' data-type="+row.tYPE+" data-id='"+row.id+"' data-year='"+row.dpYear+"' data-month='"+row.dpMonth+"' data-week='"+row.dpWeek+"' data-status='"+row.status+"' class='i-checks'>"+
+                            "<a class='btn btn-check btn-info' ><i class='fa fa-search-plus'></i>查看</a >" +html;
+
+                    }
+                }
+
+            ]
+        });
+
+    }
+
 </script>
 </html>

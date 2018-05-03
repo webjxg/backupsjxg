@@ -16,6 +16,42 @@
 .i-Checks{
   border-right:1px !important;
 }
+.stopbn{
+  color: red;
+}
+#contentParam{
+  width: 150px;
+  height: 34px;
+ border: 1px solid #e5e6e7;
+  border-radius: 6px;
+}
+.newspapers{
+  color: #1ab394;
+}
+.dispose{
+  color: #ffb449;
+}
+.closes{
+  color: #333333;
+}
+.accident{
+  display: inline-block;
+  font-size: 16px;
+}
+.addbtn{
+  width: 24px;
+  height: 24px;
+  background-color: #1ab394 !important;
+  border: none;
+  color: white;
+  font-size: 14px;
+  border-radius: 3px;
+}
+.accident1{
+  width: 800px;
+  height: 80px;
+  resize: none;
+}
 /*.fa-calendar {*/
   /*margin-left: -18px;*/
  /*color: #ffa82d;*/

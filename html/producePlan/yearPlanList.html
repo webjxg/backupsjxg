@@ -51,6 +51,7 @@
                     <thead>
                     <tr role="row">
                         <th class="id"></th>
+                        <th class="year"></th>
                         <th>计划名称</th>
                         <th>计划类型</th>
                         <th>计划周期</th>
@@ -106,106 +107,59 @@
 <script src="../../js/customForm-aps.js"></script>
 <script src="../../js/page.js"></script>
 <script>
-    $(function(){
-        //输入框内的年份
-        var $year,$status;
-        var date = new Date();
-        getYear = date.getFullYear();
-        $("#yMPicker").val("");
-        $("#yMPicker").datetimepicker({
-            format:"yyyy",
-            language:'cn',
-            weekStart: 1,
-            pickTime: false,
-            autoclose:true,
-            startView: 4, //月视图
-            minView: "4",
-            forceParse: 0
-        });
-        function getDataFn(){
-            $year = $('.datePicker').val();
-            $status =$("#apsState").val();
-        }
-        window.pageLoad = function() {
-            getDataFn();
-            var data = {
-                adYear: $year,
-                status: $status
-            };
-            console.log(data)
-            function getAttr(obj) {
-                var $iChecks = obj.parents("tr").find('.i-checks'),
-                    id= obj.parents("tr").find('.id').text(),
-                    year = data.adYear,
-                    status = data.status;
-                return [id, year, status];
-            }
-            Page.init("/api/aps/ApsYearPlan/page",data, true, function (tableData) {
-                console.log(tableData)
-                renderTableData(tableData);
-                //查看
-                $(".btn-check").click(function () {
-                    var attrArr = getAttr($(this));
-                    openDialog('查看月计划', 'producePlan/yearPlanCheck.html?id=' + attrArr[0] + '&year=' + attrArr[1]+'&check=0', '800px', '500px')
-                });
-                //删除
-                $(".btn-delete").click(function () {
-                    var attrArr = getAttr($(this));
-                    deleteItem('确定要删除该计划', '/api/aps/ApsYearPlan/delete', attrArr[0])
-                });
-                //编辑
-                $(".btn-edit").click(function () {
-                    var attrArr = getAttr($(this));
-                    location.href = '../producePlan/yearPlanIndex.html?id=' + attrArr[0] + '&year=' + attrArr[1]
-                });
-                //排产
-                $(".btn-review").click(function () {
-                    var attrArr = getAttr($(this));
-                    location.href = '../producePlan/monthScheduling.html?id=' + attrArr[0] + '&year=' + attrArr[1]
-                });
+   $(function () {
+       //输入框的值
+       var date = new Date();
+       getYear = date.getFullYear();
+       $("#yMPicker").val("");
+       $("#yMPicker").datetimepicker({
+           format:"yyyy",
+           language:'cn',
+           weekStart: 1,
+           pickTime: false,
+           autoclose:true,
+           startView: 4, //月视图
+           minView: "4",
+           forceParse: 0
+       });
 
-            })
-        }
-                pageLoad();
-                windowclick();
-                //添加
-                $("#btn-add").click(function () {
-                    // getDataFn();
-                    // if ($year == "") {
-                    //     layerAlert("请选择一个准确的年份!");
-                    // } else {
-                        location.href = "./yearPlanIndex.html?year=" + $year;
-                    // }
-                });
+       window.pageLoad = function () {
+           var data = {
+                adYear:$(".datePicker").val(),
+               status:$("#apsState").val()
+           }
+           Page.init("/api/aps/ApsYearPlan/page",data,true,function (tableDate) {
+               createTable(tableDate);
+               // 查看按钮
+               $(".btn-check").click(function () {
+                   var attrArr = getAttr ($(this));
+                   openDialog('查看月计划', 'producePlan/yearPlanCheck.html?id=' + attrArr[0] + '&year=' + attrArr[1]+'&check=0', '800px', '500px')
+               });
+               //删除
+               $(".btn-delete").click(function () {
+                   var attrArr = getAttr($(this));
+                   deleteItem('确定要删除该计划', '/api/aps/ApsYearPlan/delete', attrArr[0])
+               });
+               //编辑
+               $(".btn-edit").click(function () {
+                   var attrArr = getAttr($(this));
+                   location.href = '../producePlan/yearPlanIndex.html?id=' + attrArr[0] + '&year=' + attrArr[1]
+               });
+               //排产
+               $(".btn-review").click(function () {
+                   var attrArr = getAttr($(this));
+                   location.href = '../producePlan/monthScheduling.html?id=' + attrArr[0] + '&year=' + attrArr[1]
+               });
+           })
+       }
+       pageLoad();
+       $("#btn-add").click(function () {
+           location.href = "./yearPlanIndex.html"
+       });
+   })
 
-        //删除单条数据
-         /* function deleteOne(mess,url,id){
-            //var ids= eleP.find('input.i-checks').attr('id')
-            var data = {id:id} || {};
-            top.layer.confirm(mess, {icon: 3, title:'系统提示'},function(index){
-                ajaxToServer(url,JSON.stringify(data),function(result){
-                    if(result.success == true){
-                        var frameActive = top.getActiveTab().attr("name");
-                        var obj = $('#search-btn', top.window.frames[frameActive].document);
-                        if(obj.length == 0){
-                            obj = $('#refresh-btn', top.window.frames[frameActive].document);
-                            if(obj.length == 0){
-
-                                top.refreshActiveTab();
-                            }
-
-                        }
-                        obj.trigger('click');
-                    }
-                });
-                top.layer.close(index);
-            });
-            return false;
-        }*/
-
-    //  渲染表内容
-    function renderTableData(tableData){
-        $year = $('.datePicker').val();
+    //创建table
+    function createTable(tableDate) {
         $('#treeTable').dataTable({
             "bPaginate": false,
             "bAutoWidth": false,
@@ -219,10 +173,11 @@
                 {"bSortable": false, "aTargets": [0, 2,4,6]}
             ],
             "oLanguage": lang,
-            "data":tableData,
+            "data":tableDate,
             //定义列 宽度 以及在json中的列名
             "aoColumns": [
                 {"data":"id","sClass":"id alignCenter"},
+                {"data":"adYear","sClass":"year alignCenter"},
                 {"data": "name",'sClass':"alignCenter "},
                 {"data": "typeLabel",'sClass':"alignCenter "},
                 {"data": "period",'sClass':"alignCenter"},
@@ -252,13 +207,23 @@
                             html = "<a class='btn btn-review' ><i class='fa fa-file-text'></i>排产</a >";
                         }
                         return  "<a class='btn  btn-info btn-check' ><i class='fa fa-search-plus'></i>查看</a >"+
-                                html;
+                            html;
                     }
                 }
-                        ]
-            });
+            ]
+        });
+    }
 
-        }
+// 查询按钮
+    $("#search-btn").click(function () {
+        pageLoad()
     })
+    
+    // 获取id以及年份
+    function getAttr (obj) {
+         adYear=obj.parents("tr").find('.year').text();
+        id=obj.parents("tr").find('.id').text();
+      return [id,adYear];
+    }
 </script>
 </html>

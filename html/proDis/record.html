@@ -151,20 +151,6 @@
                     };
                     Page.init("/api/ctrl/ShiftMain/page",data,true,function (tableDta) {
                        console.log(tableDta)
-                       //  var tablearr = [];
-                       // for(var i=0;i<tableDta.length;i++){
-                       //     console.log(tableDta[i]);
-                       //     var msgobj = {
-                       //         process:tableDta[i].process,
-                       //         shiftName:tableDta[i].shift.name,
-                       //         groupName:tableDta[i].groupName,
-                       //         overUserName:tableDta[i].overUserName,
-                       //         reciveUserName:tableDta[i].reciveUserName,
-                       //         overDate:tableDta[i].overDate,
-                       //         createDate:tableDta[i].createDate
-                       //     };
-                       //     tablearr.push(msgobj)
-                       // }
                         createTable(tableDta)
                     })
                 }

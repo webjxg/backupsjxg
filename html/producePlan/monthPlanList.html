@@ -24,7 +24,7 @@
                 <div class="apsType-box pull-left mgb-10">
                     <i class="fa fa-map-marker" aria-hidden="true"></i>
                     <ul class="apsType-linkage">
-                        <li class="month">
+                        <li class="year">
                             计划周期（年）：
                             <input type="text" value="" id="yMPicker" class="time-input form-control datePicker" placeholder="--请选择--">
                         </li>
@@ -61,7 +61,7 @@
                 </div>
                 <div class="pull-right btn-box mgb-20">
                     <button class="btn btn-search  btn-white" id="search-btn" type="button"><i class="fa fa-search"></i>查询</button>
-                    <button class="btn btn-white" id="btn-add" type="button"><i class="fa fa-plus"></i>新增</button>
+                    <button class="btn btn-white " id="btn-add" type="button"><i class="fa fa-plus"></i>新增</button>
                 </div>
             </div>
             <div class="aps-create-list">
@@ -180,7 +180,6 @@
                         id:attrArr[0],
                         status: parseInt(attrArr[3])+1
                     };
-                    console.log(data);
                     top.layer.confirm("确定要发布吗?",{icon: 3, title:'系统提示'},function(index){
 
                        ajaxToServer("/api/aps/ApsMonthAdjust/update",JSON.stringify(data),function(result){
@@ -207,12 +206,7 @@
         pageLoad();
         windowclick();
         $("#btn-add").click(function(){
-            getDataFn();
-            if($month == ""){
-                layerAlert("请选择一个准确的月份!");
-            }else{
-                location.href = "./proTargetPlan.html?year="+$year+"&month="+$month;
-            }
+            location.href = "./proTargetPlan.html?year="+$year+"&month="+$month;
         });
 
     });
@@ -244,7 +238,6 @@
                 {
                     "data": null, "orderable": false, "defaultContent": "",'sClass':" alignCenter ",
                     "render": function (data, type, row, meta) {
-                        console.log(row.status);
                         var classSet =""  ,setText;
                         if(row.status == "0"){
 //                            setText = "草稿";

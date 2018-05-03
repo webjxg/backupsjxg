@@ -3,7 +3,6 @@
  RenderiCheckTblBody();
  });*/
 var urlPrefix = "http://114.115.165.184:8083/aps-api";
-// var urlPrefix = "http://192.168.45.91:8083/aps-api";
 //点击查询按钮
 $("#search-btn").click(function(){
     pageLoad();
@@ -165,7 +164,6 @@ function getQueryString(name, url) {
 function refreshActiveTab() {
     var target = top.getActiveTab();
     var url = target.attr('src');
-    console.log(url);
     var t = top.layer;
     //显示loading提示
     var loading = t.load();

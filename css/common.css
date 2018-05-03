@@ -16,6 +16,39 @@ i,code,b{font-weight:normal;font-style: normal;}
 code{background:transparent;border:none;}
 a,a:hover,a:focus,a:visited{text-decoration: none;}
 html,body,#wrapper{ height: 100%;}
+
+.mgb-15 {
+  margin-bottom: 15px; }
+
+.mgb-20 {
+  margin-bottom: 20px; }
+
+.mgr-30 {
+  margin-right: 30px; }
+
+.pag-30 {
+  padding: 30px; }
+
+.col-999 {
+  color: #999; }
+
+.col-ffa82d {
+  color: #ffa82d; }
+
+.col-1ab394 {
+  color: #1ab394; }
+
+.bg-fff {
+  background: #fff; }
+
+.pos-rel {
+  position: relative; }
+
+.hide {
+  display: none; }
+
+.show {
+  display: block; }
 #wrapper{
   overflow: hidden;
 }
@@ -48,24 +81,28 @@ iframe{border:none;}
   /*background-image: url("../images/bg49.jpg");*/
   background-color: #182028;
 }
+.logo img{
+  display: inline-block;
+   margin: 22px 0 17px 10px;
+}
 .logo .logo-right ul{
   position: absolute;
   right: 0;
-  top: 20px;
+  top: 30px;
 }
 .logo .logo-right ul li{
-  width: 30px;
-  height: 30px;
+  width: 24px;
+  height: 24px;
   display: inline-block;
   background-color: white;
   text-align: center;
   border-radius: 20px;
-  line-height: 30px;
+  line-height: 24px;
   margin-right: 10px;
   cursor:pointer;
 }
 .logo .logo-right ul li i{
-  font-size: 16px;
+  font-size: 14px;
 }
 .logout{
   width: 70px;
@@ -133,8 +170,8 @@ iframe{border:none;}
   color: #000;
   /*border: 1px solid #cacaca;*/
   line-height: 28px; }
-.btn .fa {
-  margin: 0 2px 0 0; }
+/*.btn .fa {
+  margin: 0 2px 0 0; }*/
 
 .table .btn {
   width: auto;
@@ -198,11 +235,12 @@ table.treeTable{
 /*btn中的icon图标*/
 .btn i{
   display: inline-block;
-  width: 13px;
+  width: 16px;
   height: 15px;
   font-size: 13px;
   background-image: url("../images/icon.png");
   background-repeat: no-repeat;
+  vertical-align: middle;
 }
 .btn-box .btn{
   margin-right: 5px;
@@ -215,6 +253,7 @@ table.treeTable{
   background: white;
   font-size: 13px;
   border: 1px solid #e7e7e7;
+  min-width:55px;
 }
 .ibox-content .btn-white:hover, .ibox-content .btn-white:focus, .ibox-content .btn-white:active, .ibox-content .btn-white.active, .ibox-content .open .dropdown-toggle.btn-white {
   color: #80afa7;
@@ -243,7 +282,7 @@ table.treeTable{
   border-color: #62b5e9;
 }
 .icon-change{
-  background-position: -23px -7px;
+  background-position: -23px -9px;
 }
 .btn-change:hover .icon-change{
   background-position: -23px -30px;
@@ -327,11 +366,37 @@ table.treeTable{
 .btn-empower:hover .icon-accredit{
   background-position: -447px -30px;
 }
+#menuButton{
+  width: 34px !important;
+  height: 34px !important;
+  color: white;
+}
+#companyButton{
+  width: 32px !important;
+  height: 30px !important;
+  color: white;
+}
 /*搜索按钮*/
 .btn-sousuo{
+  width: 32px !important;
   background-color: #1ab394 !important;
   color: white !important;
   border-color: #1ab394 !important;
+}
+
+.btn-search,#search-btn,.btn-bgf29{
+  background: #ffa82d;
+  border:1px solid #ffa82d;
+  color:#fff;
+  padding:0 5px;
+  height:30px;
+  margin:0 5px;
+}
+.btn-search:hover,#search-btn:hover,.btn-bgf29:hover{
+  background: #f29c23;
+  border-color:#f29c23;
+  color:#fff;
+  box-shadow: 0 3px 1px 1px gainsboro !important;
 }
 /*生产计划部分按钮样式*/
 /*编辑按钮*/
@@ -369,7 +434,7 @@ table.treeTable{
   .btn-preserve{
       background-color: white;
       color: #ffa82d;
-      border-color: #ffa82d;
+      border: 1px solid #ffa82d !important;
   }
 .btn-preserve:hover{
   background-color: #ffa82d;
@@ -377,6 +442,7 @@ table.treeTable{
   border-color: #ffa82d;
 }
 .icon-project{
+  margin-top: -4px;
   background-position: -484px -7px;
 }
 .btn-preserve:hover .icon-project{
@@ -413,8 +479,8 @@ table.treeTable{
 /*执行完成*/
 .btn-primary1 {
   padding: 4px;
-  width: 10px !important;
-  height: 20px !important;
+  width: 20px !important;
+  height: 30px !important;
   border: 1px solid #1ab394 !important;
   color: #1ab394;
   background-color: transparent;

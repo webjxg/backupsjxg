@@ -34,19 +34,6 @@
 .show {
   display: block; }
 
-.btn {
-  margin: 0 5px;
-  height: 30px;
-  padding: 0 5px;
-  background: #f2f2f2;
-  color: #000;
-  border: 1px solid #cacaca;
-  line-height: 28px; }
-  .btn:hover {
-    color: #fff; }
-  .btn .fa {
-    margin: 0 2px 0 0; }
-
 .table .btn {
   width: auto;
   height: auto;
@@ -93,7 +80,8 @@
       background: #fff;
       padding: 6px 12px;
       height: 34px;
-      border-radius: 6px; }
+      border-radius: 6px;
+      cursor: pointer; }
 
 .apsType-linkage .form-control {
   display: inline-block;

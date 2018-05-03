@@ -17,12 +17,15 @@
 
     <style>
         body>.wrapper{
-            height: 300px;
             overflow-x: hidden;
         }
         .btn-giveOrder{
             margin-top: 30px;
         }
+        .wrapper {
+            min-height: auto;
+        }
+
     </style>
 </head>
 <body>
@@ -42,9 +45,7 @@
     </table>
 
 </div>
-<div class="btn-giveOrder pull-right">
-    <a class='btn btn-levels' id="giveOrders" style="width:90px"><i class='fa fa-download' ></i>指令下达</a >
-</div>
+
 
 
 
@@ -78,41 +79,42 @@
             renderTableData(tableData);
         })
     }
-    $('#giveOrders').click(function () {
-        var str="";
-        var ids="";
-        $(".wrapper input.i-checks:checkbox").each(function(){
-            if(true == $(this).is(':checked')){
-                str+=","+$(this).attr("id");
-            }
-        });
-        if(str.length>0){
-            ids=str.substr(1);
-            var data={
-                ids:ids,
-                issuedUser:issuedUser,
-                groupsId:groupsId,
-                shiftId:shiftId
-            };
-            ajaxToServer("/api/ctrl/DirectiveIssued/save/",JSON.stringify(data),function(result){
-                if(result.success){
-                    top.layer.alert('请求成功',function () {
-                        top.layer.closeAll();
-                        window.location.reload();
-                        parent.location.reload();
-
-                    });
-
-                }else{
-                    layer.msg(result.message);
+    function giveorder() {
+            var str="";
+            var ids="";
+            $(".wrapper input.i-checks:checkbox").each(function(){
+                if(true == $(this).is(':checked')){
+                    str+=","+$(this).attr("id");
                 }
-
             });
+            if(str.length>0){
+                ids=str.substr(1);
+                var data={
+                    ids:ids,
+                    issuedUser:issuedUser,
+                    groupsId:groupsId,
+                    shiftId:shiftId
+                };
+                ajaxToServer("/api/ctrl/DirectiveIssued/save/",JSON.stringify(data),function(result){
+                    if(result.success){
+                        top.layer.alert('请求成功',function () {
+                            top.layer.closeAll();
+                            window.location.reload();
+                            parent.location.reload();
 
-        }else{
-            top.layer.alert('请至少选择一条数据递交!', {icon: 0, title:'警告'});
-        }
-    })
+                        });
+
+                    }else{
+                        layer.msg(result.message);
+                    }
+
+                });
+
+            }else{
+                top.layer.alert('请至少选择一条数据递交!', {icon: 0, title:'警告'});
+            }
+    }
+
     //渲染表
     function renderTableData(data) {
         //↓接口到后修改↓

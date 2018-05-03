@@ -1,26 +1,25 @@
 
 .sidebar-nav {
-  padding-bottom: 20px;
+  /*padding-bottom: 20px;*/
   color: #f9fdfc;
 }
 .sidebar-nav > li {
   font-size: 14px;
-  /*text-align: center;*/
+
 }
 .sidebar-nav > li a {
   color: #8e98a8;
   display: block;
   font-weight: bold;
-  padding:12px 20px 12px 18px;
+  padding: 7px 10px 7px 25px;
   text-decoration: none;
-  line-height: 16px;
+  line-height: 20px;
   border-radius: 20px;
-  /*text-align: center;*/
 }
 .sidebar-nav>li.active>a{
-  color:#a1abbc;
+  color:white;
 }
-.sidebar-nav > li a:hover, .sidebar-nav > li a:focus {
+#side-menu > li a:hover, #side-menu > li a:focus {
   width: 100%;
   color: white;
   background-color: #263340;
@@ -43,28 +42,19 @@
   -o-transition: all 0.5s;
   transition: all .5s;
 }
-/*平台管理*/
-.sidebar-nav > li.active .icon-terrace{
-  background-position: -20px -20px;
+#side-menu .nav-level2 li a:hover{
+    color: white;
+    background-color: #2f4050 !important;
 }
-/*生产计划*/
-.sidebar-nav > li.active .icon-production{
-  background-position: -75px -18px;
-}
-/*生产调度*/
-.sidebar-nav > li.active .icon-dispatch{
-  background-position: -133px -21px;
-}
-/*操作管理*/
-.sidebar-nav > li.active .icon-operation{
-  background-position: -188px -20px;
-}
-.nav-second-level li a, .nav-level2 li a {
-  /*text-align: center;*/
-  padding-left: 30px;
+.nav-third-level li a, .nav-level2 li a {
+  /*padding-left: 40px;*/
+  font-weight: 600;
+  padding: 4px 10px 4px 50px !important;
 }
 .nav-third-level li a, .nav-level3 li a {
-  padding-left: 60px;
+  /*padding-left: 50px;*/
+  font-weight: 600;
+  padding: 0 10px 2px 65px !important;
 }
 .fa.arrow:before {
   content: "\f104";
@@ -121,30 +111,15 @@ body.nav-mini .wrapper-con {
 .nav{
   background-color: #263340;
 }
-.nav li{
-  margin-bottom: 10px;
-}
-/*.wrap-header {*/
-/*background: #f3f3f4;*/
-/*position: absolute;*/
-/*left: 0;*/
-/*right: 0;*/
-/*top: 0;*/
-/*z-index: 100;*/
-/*}*/
-
-/*.navbar-static-top {*/
-  /*padding: 5px;*/
-  /*!*background: #eee;*!*/
-/*}*/
-
 .navbar-mini-btn {
   padding: 6px 12px;
   font-size: 14px;
   background-color: #263340;
   border-color: #263340;
   color: #FFFFFF;
-  float: left;
+  margin-top:4px;
+  margin-left:15px;
+  display:inline-block;
 }
 .navbar-mini-btn i{
   font-size: 20px;
@@ -433,54 +408,67 @@ body.nav-mini .wrapper-con {
   position: relative;
   left: 0;
   top: 4px;
-  background-image: url("../images/navicon.png");
+  background-image: url("../images/nabicon.png");
   background-repeat: no-repeat;
 }
 /*平台服务*/
 .icon-terrace{
-  background-position: -20px -20px;
+  background-position: -20px -26px;
 }
 /*hover*/
 #side-menu li a:hover .icon-terrace{
-  background-position: -20px -20px;
+  background-position: -20px -4px;
+}
+/*点击icon*/
+.sidebar-nav > li.active .icon-terrace{
+  background-position: -20px -4px;
 }
 /*focus*/
 #side-menu li a:focus .icon-terrace{
-  background-position: -20px -20px;
+  background-position: -20px -4px;
 }
 /*生产计划*/
 .icon-production{
-  background-position: -75px -18px;
+  background-position: -66px -24px;
 }
 /*hover*/
 #side-menu li a:hover .icon-production{
-  background-position: -75px -18px;
+  background-position: -66px -2px;
 }
 /*focus*/
 #side-menu li a:focus .icon-production{
-  background-position: -75px -18px;
+  background-position: -66px -2px;
+}
+.sidebar-nav > li.active .icon-production{
+  background-position: -66px  -2px;
 }
 /*生产调度*/
 .icon-dispatch{
-  background-position: -133px -21px;
+  background-position: -112px -26px;
 }
 /*hover*/
 #side-menu li a:hover .icon-dispatch{
-  background-position: -133px -21px;
+  background-position: -112px -4px;
 }
 /*focus*/
 #side-menu li a:focus .icon-dispatch{
-  background-position: -133px -21px;
+  background-position: -112px -4px;
+}
+.sidebar-nav > li.active  .icon-dispatch{
+  background-position: -112px -4px;
 }
 /*操作管理*/
 .icon-operation{
-  background-position: -188px -20px;
+  background-position: -157px -27px;
 }
 /*hover*/
 #side-menu li a:hover .icon-operation{
-  background-position: -188px -20px;
+  background-position: -157px -5px;
 }
 /*focus*/
 #side-menu li a:focus .icon-operation{
-  background-position: -188px -20px;
+  background-position: -157px -5px;
+}
+.sidebar-nav > li.active .icon-operation{
+  background-position: -157px -5px;
 }

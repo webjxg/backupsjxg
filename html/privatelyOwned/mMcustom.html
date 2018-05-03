@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>自定类</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="stylesheet" href="../../plugins/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../plugins/font-awesome/css/font-awesome.min.css">
+    <!--引入样式-->
+    <link rel="stylesheet" href="../../plugins/layer/theme/default/layer.css">
+    <link rel="stylesheet" href="../../plugins/ztree/css/metroStyle/metroStyle.css">
+    <!--样式-->
+    <link rel="stylesheet" href="../../css/customDatagrid.css">
+    <link rel="stylesheet" href="../../css/customDataTable.css">
+    <link rel="stylesheet" href="../../css/aps.css">
+    <link rel="stylesheet" href="../../css/common.css">
+    <!--个人工作台样式-->
+    <link rel="stylesheet" href="../../css/privatelyOwned.css">
+
+
+</head>
+<body>
+<div class="wrapper-content ">
+    <div>
+        <ul class="notapproval">
+        </ul>
+
+    </div>
+</div>
+</body>
+<script src="../../js/jquery-2.2.4.min.js"></script>
+<script src="../../plugins/bootstrap/js/bootstrap.min.js"></script>
+<!--附属插件-->
+<script src="../../plugins/layer/layer.js"></script>
+<!--自定义文件-->
+<script src="../../js/customForm-aps.js"></script>
+<script src="../../js/page.js"></script>
+
+<script>
+    var typeId=getQueryString('typeid');
+    $('document').ready(function () {
+        ajaxToServerS('/api/workbench/WorkbenchTileTemplate/tileList/'+typeId,{},renderul)
+    });
+
+
+    function renderul(result) {
+        console.log(result);
+        var tileList=result.tileList;
+        if(result.success){
+            if(tileList.length>0){
+                for(var i=0;i<tileList.length;i++){
+                    var list='<li>'+
+                        '<div class="topcontent">'+
+                        '<div class="checkView"></div>'+
+                        '<div class="iconImage"></div>'+
+                        '<div class="typeName">'+ '<span>图表类</span>'+ '</div>'+
+                        '</div>'+
+                        '<ul class="contentfrom">'+
+                        '<li>编码: <span>'+tileList[i].tileTemplateCode+'</span></li>'+
+                        '<li>数据来源: <span>'+tileList[i].dataSource+'</span></li>'+
+                        '<li>应用: <span>'+tileList[i].appName+'</span></li>'+
+                        '</ul>'+
+                        '</li>'
+                $('.notapproval').append(list)
+                }
+            }else{
+                top.layer.msg('无相关数据')
+            }
+        }else{
+            top.layer.msg(result.message)
+        }
+
+
+    }
+
+    function ajaxToServerS(url, data, callbackFun){
+        var layerIndex = layer.load(2);
+        url = url.toLowerCase().indexOf("http://") == 0? url : ("http://114.115.165.184:8080/admin-api" + url);
+        $.ajax({
+            headers:{
+                Accept: "application/json; charset=utf-8",
+                // Authorization: getCookie("token_type")+" " +getCookie("authorization")，
+                Authorization: "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJqdGkiOiIwNGEzOTJkZGIwNWE0YTJmYTE2NDE4MGMwMWNkYmJmNCIsInN1YiI6IjMzIiwiaXNzIjoiYWRtaW4iLCJhdWQiOiJBZG1pbiBKV1QgT25saW5lIn0.Byouxvl_hsAYtVQ6PQ0TCHTeyfzkG6ojuGfyyc4-880"
+            },
+            type: "post",
+            url: url,
+            data: data,
+            dataType: 'json',
+            contentType:'application/json',
+            success: function(result){
+                layer.close(layerIndex);
+                if(callbackFun){
+                    callbackFun(result);
+                }
+            },
+            error:function(){
+                layer.close(layerIndex);
+                layer.msg('请求服务器异常.');
+            }
+        });
+    }
+</script>
+
+
+
+
+
+
+
+
+
+</html>

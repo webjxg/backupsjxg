@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <link rel="stylesheet" href="../../plugins/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="../../plugins/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../../plugins/datetimepicker/css/bootstrap-datetimepicker.css">
     <!--引入样式-->
     <link rel="stylesheet" href="../../css/common.css">
     <link rel="stylesheet" href="../../css/aps.css">
@@ -21,21 +22,50 @@
 <body>
 <div class="wrapper wrapper-content">
     <div class="ibox">
-        <div class="ibox-content">
-            <h1 class="targetPlanTit">
+        <div class="ibox-content ">
+            <h1 class="targetPlanTit clearfix">
                <div class="pull-left">
-                   <span></span>生产计划
+                  <span></span>生产计划
                </div>
                 <div class="pull-right">
                     <button type="button" class="back-btn btn btn-white">
-                        <i class="fa icon-return"></i>
+                        <i class="fa fa-reply"></i>
                         返回上级</button>
                     <button class="btn btn-sub  btn-white" id="btnSub">
-                        <i class="fa icon-submit"></i>
+                        <i class="fa fa-upload"></i>
                         提交</button>
                 </div>
             </h1>
-            <br>
+            <div class="clearfix">
+                <div class="apsType-box pull-left mgb-10">
+                    <i class="fa fa-map-marker" aria-hidden="true"></i>
+                    <ul class="apsType-linkage">
+                        <li class="year">
+                            计划周期（年）：
+                            <input type="text" value="" placeholder="--请选择--"  id="yMPicker"  class="time-input form-control datePicker">
+                        </li>
+                        <li class="month">
+                            计划周期（月）：
+                            <select name="" id="getMonth">
+                                <option value="">--请选择--</option>
+                                <option value="1">1月</option>
+                                <option value="2">2月</option>
+                                <option value="3">3月</option>
+                                <option value="4">4月</option>
+                                <option value="5">5月</option>
+                                <option value="6">6月</option>
+                                <option value="7">7月</option>
+                                <option value="8">8月</option>
+                                <option value="9">9月</option>
+                                <option value="10">10月</option>
+                                <option value="11">11月</option>
+                                <option value="12">12月</option>
+                            </select>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
             <div class="targetPlanTab">
                 <ul class="targetPlanTab-nav clearfix">
                     <li class="active">全厂主要生产技术指标计划</li>
@@ -53,51 +83,75 @@
 <script src="../../js/jquery-2.2.4.min.js"></script>
 <script src="../../plugins/bootstrap/js/bootstrap.min.js"></script>
 <!--附属插件-->
+<script src="../../plugins/datetimepicker/js/bootstrap-datetimepicker.js"></script>
 <script src="../../plugins/layer/layer.js"></script>
 <!--自定义文件-->
 <script src="../../js/customForm-aps.js"></script>
 <script>
     $(function(){
-        var year =getQueryString('year'),
-            month =getQueryString('month');
-        $('.targetPlanTit span').empty().html(year+"年"+month+"月");
+   /*     var year =getQueryString('year'),
+            month =getQueryString('month');*/
+       /* var date = new Date(),
+        year = date.getFullYear(),
+        month = date.getMonth()+1;
+        month = (month<10?"0"+month:month);*/
+        // $("#yMPicker").val(year);
+        var $year,$month;
+        $("#yMPicker").datetimepicker({
+            format:"yyyy",
+            language:'cn',
+            weekStart: 1,
+            pickTime: false,
+            autoclose:true,
+            startView: 4, //年视图
+            minView: "4",
+            forceParse: 0,
+        });
+
+        // $("#getMonth").val(month<10?month.substring(1):month);
+        $("#getMonth,#yMPicker").change(function(){
+            getDataFn();
+        });
+
+        function getDataFn(){
+            $year = $('#yMPicker').val();
+            $month = $("#getMonth").val()
+            console.log(1);
+            if($year== ""){
+                layerAlert("请选择年份！");
+                $('.targetPlanTit span').empty().html("某年"+$month+"月");
+            }else{
+                $('.targetPlanTit span').empty().html($year+"年"+$month+"月");
+            }
+            // console.log($('iframe').attr('src'));
+            $('iframe')[0].contentWindow.getDate($year,$month)
+        }
+
         $(".back-btn").click(function(){
             refreshActiveTab();
         });
-     /*   var editPermission = {
-            proTechTarget:true,
-            proCommercePurPlan:false,
-            proSafeEnviPlan:false
-        };
         var tabconUrl = [
-            {
-                editUrl:"./proTechTarget.html?year="+year+"&month="+month,
-                viewUrl:"./proTechTargetView.html?year="+year+"&month="+month,
-            },
-            {
-                editUrl:"./proCommercePurPlan.html?year="+year+"&month="+month,
-                viewUrl:"./proCommercePurPlaniew.html?year="+year+"&month="+month,
-            },
-            {
-                editUrl:"./proSafeEnviPlan.html?year="+year+"&month="+month,
-                viewUrl:"./proSafeEnviPlanView.html?year="+year+"&month="+month,
-            }
-        ];*/
-        var tabconUrl = [
-            "./proTechTarget.html?year="+year+"&month="+month,
-            "./proCommercePurPlan.html?year="+year+"&month="+month,
-            "./proSafeEnviPlan.html?year="+year+"&month="+month,
+            "./proTechTarget.html",
+            "./proCommercePurPlan.html",
+            "./proSafeEnviPlan.html",
         ];
-       var $targetPlanTab = $(".targetPlanTab"),
-           $targetPlanTabNavLi =$targetPlanTab.find(".targetPlanTab-nav").find('li'),
-           $targetPlanCon = $("#iframeCon");
+        var $targetPlanTab = $(".targetPlanTab"),
+            $targetPlanTabNavLi =$targetPlanTab.find(".targetPlanTab-nav").find('li'),
+            $targetPlanCon = $("#iframeCon");
         $targetPlanTabNavLi.click(function(){
             var ind = $(this).index();
+
+            if(ind !== 0){
+                $("#yMPicker,#getMonth").attr("disabled",true).css({"cursor":"not-allow","color":"#999"});
+            }else{
+                $("#yMPicker,#getMonth").attr("disabled",false);
+            }
             $targetPlanCon.children("iframe").hide();
             $(this).addClass('active').siblings("li").removeClass('active');
             createTagFrame("iframeCon","frameId"+ind,tabconUrl[ind]);
         });
         $targetPlanTabNavLi.eq(0).trigger('click');
+
         setFrameHeight();
 
     })

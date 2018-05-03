@@ -1,0 +1,91 @@
+.wrapper{
+    height: 1074px;
+}
+.ibox{
+    background-color: #f3f3f4;
+    position: relative;
+    height:80%;
+}
+.titName{
+    float:left ;
+}
+.clearfix{
+    clear: both;
+    margin-top: 20px;
+
+}
+.clearfix li{
+    margin-right: 20px;
+    font-size: 13px;
+}
+.ibox-content:nth-of-type(1),.ibox-content:nth-of-type(2){
+    margin-bottom: 20px;
+}
+.ibox-content:nth-of-type(2),.ibox-content:nth-of-type(3){
+    float:left;
+    width: 100%;
+}
+.approval .titName:before {
+    background: #ffa82d;
+
+}
+.notapproval{
+    height: 500px;
+}
+.notapproval>li,.alreadyapproval>li{
+    width: 19%;
+    height: 50%;
+    float:left;
+    margin-right: 13px;
+    margin-bottom: 15px;
+    border: 1px solid #e7e7e7;
+    border-radius: 5px;
+    position: relative;
+}
+.notapproval>li:nth-of-type(5n){
+    margin-right: 0;
+}
+.notapproval>li>div{
+    height: 65%;
+    width: 100%;
+}
+.checkView{
+    width: 14px;
+    height: 14px;
+    background-image: url(../images/icon-OwnedMagnet-checkView.png);
+    background-size: cover;
+    position: absolute;
+    top:12px;
+    right:12px;
+}
+.topcontent{
+    border: 1px solid transparent;
+}
+.iconImage{
+    width: 63px;
+    height: 63px;
+    background: url(../images/magnetSprite.png) -10px -10px no-repeat;
+    margin: 25px auto;
+}
+.typeName{
+    text-align: center;
+    font-size: 20px;
+}
+.contentfrom{
+    width: 100%;
+    border-top: 1px solid #e7e7e7;
+    box-sizing: border-box;
+    padding: 10px 10px;
+    font-size: 12px;
+
+}
+.contentfrom>li{
+    width:48%;
+    float:left;
+}
+div#iframeCon{
+    height: 100%;
+}
+#iframeCon iframe{
+    height:100%;
+}

@@ -228,8 +228,15 @@
           "iconName":"",
           "name":"调度指令",
           "menu_sub":"1",
-          "href":"../html/proDis/disCommandsIndex.html",
+          "href":"",
           "children":[
+            {
+              "iconName":"",
+              "name":"调度指令",
+              "menu_sub":"1",
+              "href":"../html/proDis/disCommandsIndex.html",
+              "children":[]
+            },
             {
               "iconName":"",
               "name":"指令创建",
@@ -278,7 +285,7 @@
               "iconName":"",
               "name":"实产管控",
               "menu_sub":"1",
-              "href":"",
+              "href":"../html/proDis/chattelsControl.html",
               "children":[]
             },
             {
@@ -387,6 +394,28 @@
             }
 
           ]
+        }
+      ]
+    },
+    {
+      "iconName":"icon-privatelyOwned",
+      "name":"个人工作台",
+      "menu_sub":"1",
+      "href":"",
+      "children":[
+        {
+          "iconName":"",
+          "name":"磁贴管理",
+          "menu_sub":"1",
+          "href":"../html/privatelyOwned/magnetManagement.html",
+          "children":[]
+        },
+        {
+          "iconName":"",
+          "name":"注册磁贴",
+          "menu_sub":"1",
+          "href":"",
+          "children":[]
         }
       ]
     }
