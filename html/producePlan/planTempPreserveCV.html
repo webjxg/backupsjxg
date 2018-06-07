@@ -54,25 +54,26 @@
 <script src="../../plugins/datatables/js/jquery.dataTables.min.js"></script>
 <!--自定义文件-->
 <script src="../../js/jeeplus.js"></script>
+<script src="../../js/apiDomain.js"></script>
 <script src="../../js/customForm-aps.js"></script>
 <script src="../../js/public.js"></script>
 <script src="../../js/page.js"></script>
-
-
-
-
-
-
 <script>
     $(document).ready(function() {
         icheckinner();
         var id = getQueryString('id');
+        var tempId = getQueryString('tempId');
         $('#id').val(id);
-
         if (id) {
             /*此处后端接口  id为弹出窗口自带的id 通过浏览器方法传参得到*/
-            var url = "/api/aps/Template/selectDict/" + id;
-            ajaxToServer(url, {}, function (result) {
+            var url = "/api/aps/Template/selectDict";
+            var data = {
+                id:id,
+                template:{
+                    id:tempId
+                }
+            };
+            ajaxToServer(url, JSON.stringify(data), function (result) {
                 console.log(url,result); //查看请求回来的参数
                 if (result.success) {
                     dataout(result.rows);
@@ -117,8 +118,6 @@
                                 "<a class='btn btn-success btn-xs btn-preserve btn-down' ><i class='fa fa-edit' ></i>下移</a >"
                         }
                     }]
-
-
             });
             //上移下移
             $("a.btn-up").each(function () {

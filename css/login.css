@@ -1,145 +1,156 @@
-* {
+*{
+  margin: 0;
   padding: 0;
-  margin: 0; }
-
-body {
-  background-image: url("../images/bgimg.png");
+}
+html{
+  height:100%;
+  position: relative;
+}
+.login-bg{
+  position: fixed;
+  top:0;
+  right:0;
+  bottom:0;
+  left:0;
+  background-size: 100% 100%;
+  background-image: url("../images/login-bg.jpg") ;
   background-repeat: no-repeat;
-  background-size: 100% 80%; }
+  background-position: center center;
+  -webkit-transform: scale(1.4);
+  -webkit-animation: loginBg 5s ease;
 
-.block i {
-  color: #1ab394;
-  font-size: 18px;
-  line-height: 100%;
-  float: right;
+}
+@-webkit-keyframes loginBg{
+  0%{
+    -webkit-transform: scale(1);
+  }
+  100%{
+    -webkit-transform: scale(1.4);
+  }
+}
+.login-logo{
+  padding:40px 50px;
   position: absolute;
-  padding-top: 28px;
-  right: 346px; }
+  top:0;
+  left:0;
+  right:0;
+}
+#loginSubmit{
+  width:350px;
+  height:338px;
+  background-color: black;
+  /*opacity: 0.5;*/
+  background-color: rgba(0,0,0,0.5);
+  position: absolute;
+  left:50%;
+  top:35%;
+  margin-left:-175px;
+  margin-top:-140px;
+  text-align: center;
+  padding-bottom: 120px;
+  border-radius: 20px;
+}
+#loginSubmit h1{
+  font-size:20px;
+  color:#fff;
+  line-height: 30px;
+  margin-bottom:10px;
+  text-align: center;
+}
+.login-item{
+  margin-bottom:15px;
+  margin-left: 56px;
+  width:227px;
+  height:30px;
+  outline: none;
+  border:1px solid #767f8c;
+  padding-left:55px;
+  box-sizing: border-box;
+  background: transparent;
+  font-size:14px;
+  overflow: hidden;
+  border-radius: 5px;
+  position: relative;
+  margin-top:24px;
+  background-color: #fff;
+}
+.login-box{
+  margin-top: 40px;
+}
+.login-item span{
+  width:24px;
+  height:24px;
+  position: absolute;
+  left:20px;
+  top:50%;
+  margin-top:-12px;
+  opacity: 0.5;
+  transition: opacity 0.5s;
+  -webkit-transition: opacity 0.5s;
+  -moz-transition: opacity 0.5s;
+  -ms-transition: opacity 0.5s;
 
-.ul {
-  list-style: none; }
-
-#box {
-  width: 100%;
-  height: 100%; }
-
-#box .title {
-  width: 100%;
-  height: 70px;
-  background-color: #303d51; }
-  #box .title .left {
-    padding-left: 50px; }
-
-#box .title ul li {
+}
+.login-item input{
+  display: block;
+  /*padding:5px 10px;*/
+  height:30px;
+  line-height: 30px;
+  outline: none;
+  border:none;
+  width:100%;
+  background: #fff !important;
+  font-size:16px;
+  color: #000;
+}
+.login-wrapper img{
+  width: 100px;
+  height: 33px;
+}
+.login-item i{
   display: inline-block;
-  color: white;
-  line-height: 70px;
-  font-size: 14px; }
-
-.spread {
-  float: right;
-  padding-right: 50px; }
-  .spread span {
-    letter-spacing: 4px; }
-
-.middle {
-  width: 100%; }
-  .middle .login {
-    position: absolute;
-    top: 70px;
-    right: 0;
-    width: 500px;
-    background-color: rgba(81, 86, 113, 0.9); }
-    .middle .login .logo {
-      width: 320px;
-      height: 76px;
-      list-style: none;
-      display: block;
-      padding-top: 130px;
-      padding-left: 146px; }
-      .middle .login .logo img {
-        width: 100%;
-        height: 100%; }
-  .middle .login-box {
-    width: 300px;
-    height: 300px;
-    background-color: white;
-    border-radius: 10px;
-    margin-left: 96px;
-    margin-top: 70px;
-    box-shadow: 5px 5px 2px #17536d; }
-    .middle .login-box span {
-      display: inline-block;
-      margin-left: 76px;
-      color: #4cbea4; }
-    .middle .login-box .user {
-      color: #0C0C0C;
-      font-size: 20px;
-      padding-left: 30px;
-      padding-top: 30px; }
-    .middle .login-box #loginName {
-      width: 230px;
-      height: 40px;
-      border-radius: 3px;
-      border: 1px solid #e0e0e0;
-      margin-left: 26px;
-      margin-top: 16px;
-      padding-left: 50px; }
-    .middle .login-box #password {
-      width: 230px;
-      height: 40px;
-      border-radius: 3px;
-      border: 1px solid #e0e0e0;
-      margin-left: 26px;
-      margin-top: 16px;
-      padding-left: 50px; }
-    .middle .login-box #btn {
-      width: 230px;
-      height: 40px;
-      background-color: #1ab394;
-      border: 0;
-      border-radius: 5px;
-      color: white;
-      margin-left: 26px; }
-    .middle .login-box .check {
-      margin-left: 29px; }
-  .middle .times {
-    padding-top: 220px;
-    padding-left: 60px; }
-    .middle .times .month {
-      color: white;
-      font-size: 16px; }
-    .middle .times .year {
-      color: white;
-      font-size: 22px;
-      font-weight: bold; }
-    .middle .times .week {
-      color: white;
-      font-size: 18px; }
-
-.yinying {
-  background-color: rgba(122, 127, 151, 0.6); }
-  .yinying .new {
-    float: left;
-    color: white;
-    font-size: 20px;
-    padding-top: 80px;
-    padding-left: 100px; }
-
-.footer {
-  width: 100%;
-  height: 150px;
-  background-color: #00b0c4; }
-  .footer ul {
-    margin-left: 100px; }
-  .footer li {
-    display: inline-block;
-    line-height: 50px;
-    text-align: center;
-    color: white;
-    padding: 30px 70px 0 30px; }
-    .footer li img {
-      width: 40px;
-      height: 50px; }
-
-/*# sourceMappingURL=login.css.map */
+  width: 18px;
+  height: 16px;
+  background-image: url("../images/logins.png");
+  margin-left: -10px;
+  margin-top: 5px;
+}
+.icon-user{
+  background-position: -20px -21px;
+}
+.icon-user:hover{
+  background-position: -20px -57px;
+}
+.icon-pass{
+  background-position: -63px -20px;
+}
+.icon-pass:hover{
+  background-position: -63px -56px;
+}
+.login-item input:focus + span{opacity: 1;}
+.login-submit{margin-left:56px;width:227px;height:30px;line-height: 35px;text-align: center;color:#fff;background: #1ab394 ;border-radius: 5px;cursor: pointer;margin-top: 8px;}
+.login-submit:hover{background: #16997e;}
+.login-error{display: none;color:red;}
+/*新样式添加*/
+.login-box h1 p{
+  color:#1ab394 ;
+  display:inline-block;
+  font-weight: bold;
+  font-size: 22px;
+}
+#loginName{
+  background-color: #fff;
+}
+.forgetPassword{
+  clear:both;
+  overflow: hidden;
+  width:100%;
+  padding:0 68px 0 55px;
+}
+.forgetPassword>label{
+  float:right;
+}
+.forgetPassword span{
+  color: #1ab394;
+  font-weight: normal;
+}

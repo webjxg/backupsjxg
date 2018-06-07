@@ -46,24 +46,7 @@
                 </tbody>
             </table>
             <div class="clearfix pagination-box">
-                <div class="pagination-detail pull-left">
-                    <div class="page-info pull-left"></div>
-                    <div class="page-list pull-left">
-                        <span>每页显示</span>
-                        <select name="" id="pag-sel">
-                            <option value="">请选择</option>
-                            <option value="5">5</option>
-                            <option value="10" selected>10</option>
-                            <option value="20">20</option>
-                            <option value="25">25</option>
-                            <option value="30">30</option>
-                            <option value="40">40</option>
-                            <option value="50">50</option>
-                            <option value="-1">all</option>
-                        </select>
-                        条记录
-                    </div>
-                </div>
+                <div class="page-info pull-left"></div>
                 <div id="pagination" class="pagination-roll pull-right"></div>
             </div>
         </div>
@@ -83,6 +66,7 @@
 <!--自定义文件-->
 <script src="../../js/common.js"></script>
 <script src="../../js/jeeplus.js"></script>
+<script src="../../js/apiDomain.js"></script>
 <script src="../../js/customForm-aps.js"></script>
 <script src="../../js/page.js"></script>
 <script>
@@ -130,7 +114,7 @@
             "aoColumns": [
                 {"data": "id",'sClass':"hide"},
                 {"data": "itemName",'sClass':"alignCenter autoWidth"},
-                {"data": "computeFormula",'sClass':"alignCenter autoWidth"},
+                {"data": "computeFormula",'sClass':"alignLeft  autoWidth"},//修改内容居左
                 {
                     "data": null, "orderable": false, "defaultContent": "",'sClass':" alignCenter autoWidth",
                     "render": function (data, type, row, meta) {

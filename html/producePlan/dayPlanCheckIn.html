@@ -138,6 +138,7 @@
 <script src="../../plugins/layer/layer.js"></script>
 <script src="../../plugins/easyui/js/jquery.easyui.min.js"></script>
 <script src="../../js/dataGridCustom.js"></script>
+<script src="../../js/apiDomain.js"></script>
 <script src="../../js/customForm-aps.js"></script>
 
 
@@ -145,8 +146,7 @@
 <script>
     $(function () {
         //接收url父页面参数放到input的val里
-        var dpYear=getQueryString('year'),dpMonth=getQueryString('month'),dpWeek=getQueryString('week');
-        tabledatagrid(dpYear,dpMonth,dpWeek);
+        tabledatagrid('','','');
         $('#td0,#td1,#td2,#td3,#td4').datagrid('hideColumn', 'id');
         $(".btn-sav").click(function () {
             btnSubSave(0);
@@ -165,6 +165,7 @@
     //多表格请求数据渲染方法
     function tabledatagrid(dpYear,dpMonth,dpWeek) {
         //建立空数组
+        var id=getQueryString('id');
         var cljhArr = [],
             bjhArr = [],
             zlzbjhArr = [],
@@ -173,13 +174,14 @@
         var data0 = {
             "dpYear": dpYear,
             "dpMonth": dpMonth,
-            "dpWeek": dpWeek
+            "dpWeek": dpWeek,
+            "id":id
+
         };
         var da = JSON.stringify(data0);
-        ajaxTo("/api/aps/DayPlan/form", da, table);
+        ajaxToServer("/api/aps/DayPlan/form", da, table);
 
         function table(result) {
-            console.log(da,result);
             $("#id").val(result.DayPlan.id);
             var bjh = result.bjh,
                 cljh = result.cljh,
@@ -431,7 +433,7 @@
             "status":status,
             "id":$('#id').val()
         };
-        ajaxTo('/api/aps/DayPlan/save',data,function(result){
+        ajaxToServer('/api/aps/DayPlan/save',data,function(result){
             if (result.success) {
                 layer.msg('提交成功');
                 refreshActiveTab();
@@ -440,38 +442,7 @@
             }
         });
     }
-    function ajaxTo(url, data, callbackFun) {
-        var layerIndex = layer.load(2);
-        url = url.toLowerCase().indexOf("http://") == 0 ? url : (urlPrefix + url);
-        $.ajax({
-            headers: {
-                Accept: "application/json; charset=utf-8",
-                // Authorization: getCookie("token_type")+" " +getCookie("authorization")，
-                Authorization: "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJqdGkiOiIwNGQ2MjI3ZTQwMTI0YWY4YTZiMzhhZTExMTMzMTBkMSIsInN1YiI6IjQ0IiwiaXNzIjoiYWRtaW4iLCJhdWQiOiJBZG1pbiBKV1QgT25saW5lIn0.Q1xsSdrr__A8xBiMJOrXFYEZTBRQCgjGrwrJKp4ZQT4"  /*丁*/
 
-                /* Authorization: "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJqdGkiOiIwMjgyNzJiNDE2Njg0NDc4YmRiMzZhOTI3ZGQ5MDhiZCIsInN1YiI6IjExIiwiaXNzIjoiYWRtaW4iLCJhdWQiOiJBZG1pbiBKV1QgT25saW5lIn0.2FEUoTT96E350SAXijdtAGVncELyd4rkImjMjhaWTck" */    //甲
-
-                /*Authorization: "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJqdGkiOiIwMzIyMjcxNmFiNzU0MTIxOTU5Yjg1ODU1YmFhZWRjZSIsInN1YiI6IjIyIiwiaXNzIjoiYWRtaW4iLCJhdWQiOiJBZG1pbiBKV1QgT25saW5lIn0.c_MLl8tCitpuSa6d-RzAFWJq7k-H3XBAQePTep4q4IM"*/    //乙班
-
-                /*Authorization: "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJqdGkiOiIwNGEzOTJkZGIwNWE0YTJmYTE2NDE4MGMwMWNkYmJmNCIsInN1YiI6IjMzIiwiaXNzIjoiYWRtaW4iLCJhdWQiOiJBZG1pbiBKV1QgT25saW5lIn0.Byouxvl_hsAYtVQ6PQ0TCHTeyfzkG6ojuGfyyc4-880" */  /*丙班*/
-            },
-            type: "post",
-            url: url,
-            data: data,
-            dataType: 'json',
-            contentType: 'application/json',
-            success: function (result) {
-                layer.close(layerIndex);
-                if (callbackFun) {
-                    callbackFun(result);
-                }
-            },
-            error: function () {
-                layer.close(layerIndex);
-                layer.msg('请求服务器异常.');
-            }
-        });
-    }
 
 
 

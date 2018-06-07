@@ -47,15 +47,15 @@
             <!--搜索区-->
             <div class="row">
                 <div class="col-sm-12 mgb-15">
-                    <form id="searchForm" class="form-inline" method="post" action="/api/sys/SysDict/page">
+                    <div id="searchForm" class="form-inline">
                         <div class="form-group">
                             <span>类型：</span>
                             <select id="type" name="type" class="form-control m-b">
                             </select>
                             <span>描述 ：</span>
-                            <input id="description" name="description" class="form-control" type="text" value="" maxlength="50">
+                            <input id="description" name="descriptionParam" class="form-control" type="text" value="" maxlength="50" onkeydown="if(event.keyCode==13){return false;}">
                         </div>
-                    </form>
+                    </div>
                 </div>
             </div>
             <!--按钮区-->
@@ -71,7 +71,7 @@
                         <button class="btn btn-white btn-sm"  id = "delete-btn" data-toggle="tooltip" onclick="deleteAll('确认要删除该字典吗？','/api/sys/SysDict/delete/','#treeTable')"
                                 data-placement="top"><i class="fa fa-trash-o"> </i>删除
                         </button>
-                        <button class="btn btn-white btn-sm " id="refresh-btn" data-toggle="tooltip" data-placement="left" onclick="Page.reload()"
+                        <button class="btn btn-white btn-sm " id="refresh-btn" data-toggle="tooltip" data-placement="left" onclick="refresh()"
                                 title="刷新"><i class="glyphicon glyphicon-repeat"></i> 刷新
                         </button>
                     </div>
@@ -103,27 +103,10 @@
                 <tbody id="datainner">
 
                 </tbody>
-
             </table>
+
             <div class="clearfix pagination-box">
-                <div class="pagination-detail pull-left">
-                    <div class="page-info pull-left"></div>
-                    <div class="page-list pull-left">
-                        <span>每页显示</span>
-                        <select name="" id="pag-sel">
-                            <option value="">请选择</option>
-                            <option value="5">5</option>
-                            <option value="10" selected>10</option>
-                            <option value="20">20</option>
-                            <option value="25">25</option>
-                            <option value="30">30</option>
-                            <option value="40">40</option>
-                            <option value="50">50</option>
-                            <option value="-1">all</option>
-                        </select>
-                        条记录
-                    </div>
-                </div>
+                <div class="page-info pull-left"></div>
                 <div id="pagination" class="pagination-roll pull-right"></div>
             </div>
 
@@ -146,6 +129,7 @@
 <!--自定义文件-->
 <script src="../../js/common.js"></script>
 <script src="../../js/jeeplus.js"></script>
+<script src="../../js/apiDomain.js"></script>
 <script src="../../js/customForm.js"></script>
 <script src="../../js/page.js"></script>
 
@@ -155,9 +139,9 @@
         window.pageLoad = function (){
             var data = {
                 type: $("#type option:selected").val(),
-                description: $('#description').val()
+                descriptionParam: $('#description').val()
             };
-            console.log(data)
+            //修改默认每页显示条数
             Page.init("/api/sys/SysDict/page",data,true,function(tableData){
                 renderTableData(tableData);
                 $('.btn-check').click(function(){
@@ -186,8 +170,15 @@
         };
         pageLoad();
         windowclick();
-        createSelect("/api/sys/SysDict/allType","#type");  //动态添加Select的option
+        createSelect("/api/sys/SysDict/allType","#type",'type','type');  //动态添加Select的option
     });
+
+    function refresh() {
+        $("#type").html("");//刷新重新添加select，避免重复，先清空
+        pageLoad();
+        createSelect("/api/sys/SysDict/allType","#type",'type','type');  //动态添加Select的option
+    }
+
  /*   function getSubmitFormId(){
         return "#inputForm";
     }*/
@@ -214,11 +205,11 @@
                         return data = "<input type='checkbox' id=" + row.id + " class='i-checks'>"
                     }
                 },
-                {"data": "value",'sClass':" alignCenter"},
-                {"data": "label",'sClass':"alignCenter autoWidth"},
-                {"data": "type",'sClass':"alignCenter"},
+                {"data": "value",'sClass':" alignCenter","width":"12%"},
+                {"data": "label",'sClass':"alignCenter ","width":"12%"},
+                {"data": "type",'sClass':"alignCenter","width":"12%"},
                 {"data": "description",'sClass':"alignCenter"},
-                {"data": "sort",'sClass':"alignCenter"},
+                {"data": "sort",'sClass':"alignCenter","width":'8%'},
                 {
                     "data": "id", "orderable": false, "defaultContent": "",'sClass':" alignCenter autoWidth",
                     "render": function (data, type, row, meta) {
@@ -230,8 +221,8 @@
                 }]
         });
         RenderiCheckTblBody();
-
     }
+
 </script>
 </body>
 </html>

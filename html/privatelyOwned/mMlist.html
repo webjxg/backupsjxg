@@ -33,38 +33,93 @@
 <!--附属插件-->
 <script src="../../plugins/layer/layer.js"></script>
 <!--自定义文件-->
-<script src="../../js/customForm-aps.js"></script>
+<script src="../../js/apiDomain.js"></script>
+<script src="../../js/customForm.js"></script>
 <script src="../../js/page.js"></script>
 
 <script>
     var typeId=getQueryString('typeid');
     $('document').ready(function () {
-        ajaxToServerS('/api/workbench/WorkbenchTileTemplate/tileList/'+typeId,{},renderul)
+        ajaxToServer1(admin_domain+'/api/workbench/WorkbenchTileTemplate/tileList',{typeId:typeId},function (result) {
+            btnclick(result);
+            renderul(result)
+        })
     });
+    function btnclick() {
 
+        /*右上角查看框*/
+        $('.notapproval').on('click','.checkView',function () {
+            var typeid=$(this).parents('li').attr('id'),typecode=$(this).parents('li').find('.typecode').val();
+            top.layer.open({
+                type:2,
+                skin:'myclass',
+                title:false,
+                scrollbar:false,
+                area:['643px','456px'],
+                content:'./privatelyOwned/mMCheckView.html?typeId='+typeid+'&type='+typecode
+            })
+        });
+        /*修改*/
+        $('.notapproval').on('click','div.btn-change',function () {
+            var typeid=$(this).parents('.typeid').attr('id'),typecode=$(this).parents('.typeid').find('.typecode').val();
+            openEditDialog('磁贴修改','./privatelyOwned/mMUpdate.html?typeId='+typeid+'&type='+typecode,'564px','405px',doSubmit);
+        });
+        /*删除*/
+        $('.notapproval').on('click','div.btn-delete',function () {
+            var typeid=$(this).parents('.typeid').attr('id'),typecode=$(this).parents('.typeid').find('.typecode').val();
+            deleteIt('是否确定删除？','/api/workbench/WorkbenchTileTemplate/delete',typecode,typeid)
+        })
+    }
 
+    function deleteIt(mess,url,type,id){
+        var data = {
+            type:type,
+            id:id
+        };
+        top.layer.confirm(mess, {icon: 3, title:'系统提示'},function(index){
+            ajaxToServer1(url,data,function(result){
+                if(result.success == true){
+                    top.layer.confirm('删除成功！',{icon:0,btn:'关闭'},function () {
+                        location.reload();
+                        top.layer.closeAll();
+                    })
+                }else{
+                    layerAlert(result.message)
+                }
+            });
+            top.layer.close(index);
+        });
+        return false;
+    }
+    /*渲染磁贴*/
     function renderul(result) {
-        console.log(result);
         var tileList=result.tileList;
         if(result.success){
             if(tileList.length>0){
                 for(var i=0;i<tileList.length;i++){
-                    var list='<li>'+
+                    var imgName=tileList[i].icon.split('.')[0];
+                    var list='<li class="typeid" id="'+tileList[i].id+'">'+
+                        '<input type="hidden" class="typecode" value="'+tileList[i].type+'">'+
                         '<div class="topcontent">'+
                         '<div class="checkView"></div>'+
-                        '<div class="iconImage"></div>'+
-                        '<div class="typeName">'+ '<span>图表类</span>'+ '</div>'+
+                        '<div class="iconImage"><img src="../../images/'+imgName+'.jpg" alt=""></div>'+
+                        '<div class="typeName">'+ '<span>'+tileList[i].title+'</span>'+ '</div>'+
                         '</div>'+
                         '<ul class="contentfrom">'+
                         '<li>编码: <span>'+tileList[i].tileTemplateCode+'</span></li>'+
                         '<li>数据来源: <span>'+tileList[i].dataSource+'</span></li>'+
                         '<li>应用: <span>'+tileList[i].appName+'</span></li>'+
+                        '<li>' +
+                        '<div class="btn btn-delete"><i class="fa fa-trash"></i>删除</div>' +
+                        '<div class="btn btn-change"><i class="fa icon-change"></i>修改</div>'+
+                        '</li>'+
                         '</ul>'+
-                        '</li>'
+                        '</li>';
                     $('.notapproval').append(list)
+                    setFrameHeight();
                 }
             }else{
-                top.layer.msg('无相关数据')
+                top.layer.confirm('无相关数据，请注册磁贴后再进行查看！',{icon:0,btn:'关闭'})
             }
         }else{
             top.layer.msg(result.message)
@@ -72,33 +127,18 @@
 
 
     }
+    function getSubmitFormId(){
+        return "#inputForm";
+    }
 
-    function ajaxToServerS(url, data, callbackFun){
-        var layerIndex = layer.load(2);
-        url = url.toLowerCase().indexOf("http://") == 0? url : ("http://114.115.165.184:8080/admin-api" + url);
-        $.ajax({
-            headers:{
-                Accept: "application/json; charset=utf-8",
-                // Authorization: getCookie("token_type")+" " +getCookie("authorization")，
-                Authorization: "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJqdGkiOiIwNGEzOTJkZGIwNWE0YTJmYTE2NDE4MGMwMWNkYmJmNCIsInN1YiI6IjMzIiwiaXNzIjoiYWRtaW4iLCJhdWQiOiJBZG1pbiBKV1QgT25saW5lIn0.Byouxvl_hsAYtVQ6PQ0TCHTeyfzkG6ojuGfyyc4-880"
-            },
-            type: "post",
-            url: url,
-            data: data,
-            dataType: 'json',
-            contentType:'application/json',
-            success: function(result){
-                layer.close(layerIndex);
-                if(callbackFun){
-                    callbackFun(result);
-                }
-            },
-            error:function(){
-                layer.close(layerIndex);
-                layer.msg('请求服务器异常.');
-            }
+    //回调函数，在修改和添加时，供openDialog调用提交表单。
+    function doSubmit(iframeWin, body, layIdx){
+        //调用表单内部方法，提交表单
+        iframeWin.contentWindow.doSubmitForm(layIdx,function(){
+            location.reload();
         });
     }
+
 </script>
 
 

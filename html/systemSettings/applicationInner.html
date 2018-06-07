@@ -24,44 +24,56 @@
         <tbody>
         <tr>
             <td class="width-15 active">
-                <label class="pull-right">应用名称:</label>
+                <label class="pull-right">
+                    <font color="red">*</font>
+                    应用名称:</label>
             </td>
             <td class="width-35">
-                <input id="name" name="name" class="form-control "   required  type="text" value="" maxlength="50" aria-required="true"></td>
+                <input id="name" name="appName" class="form-control "   required  type="text" value="" maxlength="50" aria-required="true"></td>
             <td class="width-15 active">
-                <label class="pull-right">应用编码:</label>
+                <label class="pull-right">
+                    <font color="red">*</font>
+                    应用编码:</label>
             </td>
             <td class="width-35">
-                <input id="code" name="code" class="form-control "  required  type="text" value="" maxlength="50" aria-required="true">
+                <input id="code" name="appCode" class="form-control "  required  type="text" value="" maxlength="50" aria-required="true">
             </td>
         </tr>
         <tr>
             <td class="width-15 active">
-                <label class="pull-right">描述:</label>
+                <label class="pull-right">
+                    <font color="red">*</font>
+                    应用路径</label>
             </td>
             <td class="width-35">
-                <input id="des" name="des" class="form-control required abc" type="text" value="" maxlength="50" aria-required="true">
+                <input id="appRoot" name="appRoot" class="form-control "   required  type="text" value="" maxlength="50" aria-required="true"></td>
             </td>
             <td class="width-15 active">
-                <label class="pull-right">所属应用:</label>
+                <label class="pull-right">
+                    <font color="red">*</font>
+                    使用范围</label>
             </td>
             <td class="width-35">
-                <select  id="selApp" name="sysApplication.id"  class=" form-control required valid" aria-invalid="false">
-                    <option value="">11</option>
-                    <option value="1">22</option>
-                    <option value="2">33</option>
+                <select  id="selApp" name="applicability"  class=" form-control required valid" aria-invalid="false">
+                    <option value="">请选择</option>
+                    <option value="1">B/S端</option>
+                    <option value="2">C/S端</option>
                 </select>
             </td>
         </tr>
         <tr>
             <td class="width-15 active">
-                <label class="pull-right">排序:</label>
+                <label class="pull-right">
+                    <font color="red">*</font>
+                    排序:</label>
             </td>
             <td class="width-35">
                 <input id="sort" name="sort" class="form-control required digits" type="text" value="" maxlength="11" aria-required="true">
             </td>
             <td class="width-15 active">
-                <label class="pull-right">是否可用:</label>
+                <label class="pull-right">
+                    <font color="red">*</font>
+                    是否可用:</label>
             </td>
             <td class="width-35">
                 <select name="enable" id="enable" class="form-control required " aria-invalid="false">
@@ -104,19 +116,19 @@
 <script src="../../plugins/datatables/js/jquery.dataTables.min.js"></script>
 <!--自定义文件-->
 <script src="../../js/common.js"></script>
+<script src="../../js/apiDomain.js"></script>
 <script src="../../js/customForm.js"></script>
 <script>
     $(document).ready(function() {
         var id =getQueryString('id');
         var api = getQueryString('api') || 'form';
-        var html = "<option value = ''>请选择</option>";
+        var html = '' ;
         var url = "/api/sys/SysApplication/"+api+"/"+id;
         ajaxToServer(url,{},function(result){
-            console.log(result.SysApplication);
             if(result.success){
                 var data = result.SysApplication;
                 if(id){
-                    var  selVal =data.id;
+                    var  selVal =data.applicability;
                     var  selText = data.appNameParam;
                 }
                 if(api == 'view'){
@@ -132,7 +144,7 @@
                         html += "<option value='" + selValFor + "'>" + selTextFor + "</option>";
                     }
                 }
-                $("#selApp").empty().append(html).val(selVal);
+                $("#selApp").val(selVal);
                 renderData(data,$('#inputForm'));
             }else{
                 layer.msg(result.message);

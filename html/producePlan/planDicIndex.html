@@ -9,11 +9,15 @@
     <link rel="stylesheet" href="../../plugins/font-awesome/css/font-awesome.min.css">
     <link rel="stylesheet" href="../../plugins/ztree/css/metroStyle/metroStyle.css">
     <link rel="stylesheet" href="../../plugins/datatables/css/jquery.dataTables.min.css">
+    <link rel="stylesheet" href="../../plugins/treetable/css/jquery.treetable.css">
+    <link rel="stylesheet" href="../../plugins/treetable/css/jquery.treetable.theme.default.css">
     <link rel="stylesheet" href="../../plugins/icheck/skins/square/aero.css">
     <!--引入样式-->
     <link rel="stylesheet" href="../../css/common.css">
     <link rel="stylesheet" href="../../css/customDataTable.css">
     <link rel="stylesheet" href="../../css/aps.css">
+
+
 </head>
 <style>
     #left{
@@ -42,7 +46,7 @@
                 </div>
                 <!--右侧内容-->
                 <div id="right" class="animated fadeInRight" >
-                    <iframe id="officeContent" name="officeContent" width="100%" height="650px" frameborder="0"></iframe>
+                    <iframe id="officeContent" name="officeContent" width="100%" height="650px" frameborder="0" scrolling="no"></iframe>
                 </div>
             </div>
         </div>
@@ -61,7 +65,9 @@
 <script src="../../plugins/slimScroll/jquery.slimscroll.min.js"></script>
 <script src="../../plugins/ztree/js/jquery.ztree.core.js"></script>
 <!--公共样式-->
+<script src="../../js/apiDomain.js"></script>
 <script src="../../js/customForm-aps.js"></script>
+<script src="../../plugins/treetable/jquery.treetable.js"></script>
 
 <script>
     $(document).ready(function(){

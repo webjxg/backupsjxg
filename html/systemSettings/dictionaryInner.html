@@ -25,12 +25,16 @@
         <tbody>
         <tr>
             <td class="width-15 active">
-                <label class="pull-right">键值:</label>
+                <label class="pull-right">
+                    <font color="red">*</font>
+                    键值:</label>
             </td>
             <td class="width-35">
                 <input id="value" name="value" class="form-control "   required  type="text" value="" maxlength="50" aria-required="true"></td>
             <td class="width-15 active">
-                <label class="pull-right">标签:</label>
+                <label class="pull-right">
+                    <font color="red">*</font>
+                    标签:</label>
             </td>
             <td class="width-35">
                 <input id="label" name="label" class="form-control "  required  type="text" value="" maxlength="50" aria-required="true">
@@ -38,13 +42,17 @@
         </tr>
         <tr>
             <td class="width-15 active">
-                <label class="pull-right">类型:</label>
+                <label class="pull-right">
+                    <font color="red">*</font>
+                    类型:</label>
             </td>
             <td class="width-35">
                 <input id="type" name="type" class="form-control required abc" type="text" value="" maxlength="50" aria-required="true">
             </td>
             <td class="width-15 active">
-                <label class="pull-right">描述:</label>
+                <label class="pull-right">
+                    <font color="red">*</font>
+                    描述:</label>
             </td>
             <td class="width-35">
                 <input id="description" name="description" class="form-control required" type="text" value="" maxlength="50" aria-required="true">
@@ -52,7 +60,9 @@
         </tr>
         <tr>
             <td class="width-15 active">
-                <label class="pull-right">排序:</label>
+                <label class="pull-right">
+                    <font color="red">*</font>
+                    排序:</label>
             </td>
             <td class="width-35">
                 <input id="sort" name="sort" class="form-control required digits" type="text" value="" maxlength="11" aria-required="true">
@@ -61,7 +71,8 @@
                 <label class="pull-right">备注:</label>
             </td>
             <td class="width-35">
-                <textarea id="remarks" name="remarks" maxlength="200" class="form-control "rows="3"></textarea>
+                <!--修改-->
+                <textarea id="remarks" name="remark" maxlength="200" class="form-control "rows="3"></textarea>
             </td>
         </tr>
         </tbody>
@@ -80,6 +91,7 @@
 <script src="../../plugins/datatables/js/jquery.dataTables.min.js"></script>
 <!--自定义文件-->
 <script src="../../js/common.js"></script>
+<script src="../../js/apiDomain.js"></script>
 <script src="../../js/customForm.js"></script>
 <script>
     $(document).ready(function() {

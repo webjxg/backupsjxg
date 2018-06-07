@@ -1,10 +1,10 @@
 /**
  * Created by mac on 18/4/12.
  */
-
+//柱状图
 var myChart = echarts.init(document.getElementById('scgk'));
 
-// 指定图表的配置项和数据
+                // 指定图表的配置项和数据
 var option0 = {
     legend: {
         right:0,
@@ -15,7 +15,7 @@ var option0 = {
     dataset: {
         source: [
             ['product', '电厂', '溶出', '燃料'],
-            ['2018-03-01', 14, 9, 12],
+            ['2018-03-01', 65, 9, 12],
             ['2018-03-02', 8, 10, 12],
             ['2018-03-03', 11, 8, 6],
             ['2018-03-04', 12, 11, 10],
@@ -69,17 +69,18 @@ var option0 = {
         }
     },
     color:["#33dad2","#59aeee","#b0a4d6"],
-    // Declare several bar series, each will be mapped
-    // to a column of dataset.source by default.
+                // Declare several bar series, each will be mapped
+                // to a column of dataset.source by default.
     series: [
         {type: 'bar',barWidth:14},
         {type: 'bar',barWidth:14},
         {type: 'bar',barWidth:14}
     ]
 };
-// 使用刚指定的配置项和数据显示图表。
+                // 使用刚指定的配置项和数据显示图表。
 myChart.setOption(option0);
 
+// 线型图表
 var myChart1 = echarts.init(document.getElementById('cpgk'));
 
 var option1 = {
@@ -105,7 +106,7 @@ var option1 = {
     xAxis: {
         type: 'category',
         boundaryGap: false,
-        data: ['2018-03-01','2018-03-02','2018-03-03','2018-03-04','2018-03-05','2018-03-06','2018-03-07']
+        data: ['2018-03-01','2018-03-02','2018-03-03','2018-03-04','2018-03-05','2018-03-06','2018-03-07','2018-03-08','2018-03-09','2018-03-10','2018-03-11','2018-03-12']
     },
     yAxis: {
         type: 'value'
@@ -115,28 +116,28 @@ var option1 = {
             name:'分解',
             type:'line',
             stack: '',
-            data:[10, 10, 8, 7, 6, 8, 9],
+            data:[10, 10, 8, 7, 6, 8, 9,11,14,66,23,16,55],
             smooth: true
         },
         {
             name:'熔烧',
             type:'line',
             stack: '',
-            data:[14, 16, 15, 14, 12, 10, 9],
+            data:[14, 16, 15, 14, 12, 10, 9,15,23,22,14,54],
             smooth: true
         },
         {
             name:'煤气站',
             type:'line',
             stack: '',
-            data:[6, 8, 11, 13, 11, 15, 12],
+            data:[6, 8, 11, 13, 11, 15, 12,23,11,45,67,23],
             smooth: true
         }
     ]
 };
 
 myChart1.setOption(option1);
-
+//空心厚饼tu
 var myChart2 = echarts.init(document.getElementById('cbgk'));
 
 var option2 = {
@@ -282,7 +283,7 @@ var option3 = {
 
 myChart3.setOption(option3);*/
 
-
+//环状图
 function renderRing(id,styleArr){
     var myChartItem =  echarts.init(document.getElementById(id));
     var labelFromatter = {//环内样式
@@ -386,7 +387,7 @@ renderRing("dl-item2",["#b0a4d6","电耗","40","60"]);
 renderRing("dl-item3",["#929292","煤耗","50","50"]);
 
 
-
+//饼状套环状
 var myChart3 =  echarts.init(document.getElementById("fcxh"));
 
 var option3 = {
@@ -484,14 +485,14 @@ var option3 = {
                 {value:1048, name:'脱水胶'},
                 {value:235, name:'阻垢剂'},
                 {value:679, name:'絮凝剂'},
-                {value:335, name:'加球加棒'},
+                {value:335, name:'加球加棒'}
             ]
         }
     ]
 };
 myChart3.setOption(option3);
 
-
+//表格类
 function renderTableData(tableData){
     $('#treeTable').dataTable({
         "bPaginate": false,

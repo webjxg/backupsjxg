@@ -18,13 +18,16 @@
 </div>
 <script>
     $(document).ready(function(){
-        ajaxToServer('/api/sys/SysOrg/selectOrg','json',ztreeorgZtree2);
+        var id = getQueryString('id');
+        var data = {
+            companyId:id
+        }
+        ajaxToServer1(admin_domain+'/api/sys/SysOrg/selectOrg',data,ztreeorgZtree2);
     });
-
     //user-ztree2页面使用 ajax并返回处理节点方法
     var zTreeObj;
     function ztreeorgZtree2(data) {
-        var da=data.rows
+        var da=data.rows;
         var setting = {
             data: {
                 simpleData: {
@@ -40,6 +43,10 @@
         };
         var zNodes = da;
         zTreeObj= $.fn.zTree.init($('#tree'), setting, zNodes);
+        var nodes = zTreeObj.getNodes();
+        for (var i = 0; i < nodes.length; i++) { //设置节点展开
+            zTreeObj.expandNode(nodes[i], true, false, true);
+        }
         if(zTreeObj)
         {return getSelectVal}
     }
@@ -47,6 +54,7 @@
 
 <!--引入公共方法-->
 <script src="../../js/public.js"></script>
+<script src="../../js/apiDomain.js"></script>
 <script src="../../js/customForm.js"></script>
 </body>
 </html>

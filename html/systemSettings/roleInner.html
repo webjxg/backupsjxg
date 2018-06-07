@@ -11,10 +11,23 @@
     <link rel="stylesheet" href="../../plugins/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="../../plugins/layer/theme/default/layer.css">
     <link rel="stylesheet" href="../../plugins/icheck/skins/square/green.css">
+    <link rel="stylesheet" href="../../plugins/select2/dist/css/select2.min.css">
 
     <!--自定义样式-->
-    <link rel="stylesheet" href="../../css/common.css">
     <link rel="stylesheet" href="../../css/comInnerTable.css">
+    <link rel="stylesheet" href="../../css/common.css">
+
+    <style>
+        /*Select下拉框样式*/
+        .select2-container .select2-selection--single,.select2-container--default .select2-selection--single .select2-selection__rendered,.select2-container--default .select2-selection--single .select2-selection__arrow{
+            height:34px;
+            line-height: 34px;
+            font-size: 14px;
+            border-radius: 2px;
+            padding-left: 6px;
+        }
+    </style>
+
 </head>
 <body id="" class="hideScroll  pace-done" style="">
 <i id="btnMenu" class="icon-th-list" style="cursor:pointer;float:right;margin:10px;"></i>
@@ -38,8 +51,8 @@
             <td class="width-35">
                 <select id="roleType" name="roleType" class="form-control ">
                 </select>
-                <span class="help-inline" title="activiti有3种预定义的组类型：security-role、assignment、user 如果使用Activiti Explorer，需要security-role才能看到manage页签，需要assignment才能claim任务">
-						工作流组用户组类型（任务分配：assignment、管理角色：security-role、普通角色：user）
+                <span class="help-inline">
+                 角色类型是对角色进行分类，可以是实际部门,可以是拥有同一类职能的人构成的虚拟组织。
                 </span>
             </td>
             <td class="width-15 active"><label class="pull-right">是否系统数据:</label>
@@ -85,8 +98,11 @@
 <script src="../../plugins/icheck/icheck.min.js"></script>
 <script src="../../plugins/slimScroll/jquery.slimscroll.min.js"></script>
 <script src="../../plugins/datatables/js/jquery.dataTables.min.js"></script>
+<script src="../../plugins/select2/dist/js/select2.min.js"></script>
+<script src="../../plugins/select2/dist/js/i18n/zh-CN.js"></script>
 <!--自定义文件-->
 <script src="../../js/common.js"></script>
+<script src="../../js/apiDomain.js"></script>
 <script src="../../js/customForm.js"></script>
 <script>
     $("#roleTypeLabel").html("");
@@ -95,16 +111,24 @@
             api = getQueryString('api') || 'form';
             var url = "/api/sys/SysRole/" + api + "/" + id;
             ajaxToServer(url, {}, function (result) {
+                renderData(result.SysRole, $('#inputForm'));
                 console.log(result)
                 if (result.success) {
-                    var data = result.roleTypeList,
-                        html="<option value =''>请选择</option>";
-                    for(var i = 0;i<data.length;i++){
-                        var label = data[i].label;
-                         html += "<option value = "+label+">"+label+"</option>";
-                    }
-                    $("#roleType").empty().append(html);
-                    renderData(result.SysRole, $('#inputForm'));
+                    var roleList = result.roleTypeList;
+                    roleList.map(function(item) {
+                        item.text = item.label;
+                        item.id=item.label;
+                    });
+                    $('#roleType').select2({
+                        width: '100%',
+                        allowClear : true,
+                        language: "zh-CN",
+                        data : roleList,
+                        height:'34px'
+                    });
+
+                    //角色赋值
+                    $('#roleType').select2().val(result.SysRole.roleType).trigger('change');
                 } else {
                     layer.msg(result.message);
                 }

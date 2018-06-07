@@ -45,20 +45,26 @@
             <!--搜索区-->
             <div class="row">
                 <div class="col-sm-12">
-                    <form id="searchForm" class="form-inline" method="post" action="/api/sys/SysAuthClass/authClassPage">
-                        <div class="form-group">
-                            <span>鉴权类名称：</span>
-                            <input id="authNameParam" name="nameParam" class="form-control" type="text" value="" maxlength="50">
-                            <span>鉴权类编码 ：</span>
-                            <input id="authCodeParam" name="codeParam" class="form-control" type="text" value="" maxlength="50">
-                            <span>是否启用 ：</span>
-                            <select  name="enable" class="form-control m-b" id="authEnable">
-                                <option value="">请选择</option>
-                                <option value="1">启用</option>
-                                <option value="0">禁用</option>
-                            </select>
+                    <div id="searchForm" class="form-inline">
+                        <div class="form-group search-parameter">
+                            <div>
+                                <span>鉴权类名称：</span>
+                                <input id="authNameParam" name="nameParam" class="form-control" type="text" value="" maxlength="50">
+                            </div>
+                            <div>
+                                <span>鉴权类编码 ：</span>
+                                <input id="authCodeParam" name="codeParam" class="form-control" type="text" value="" maxlength="50">
+                            </div>
+                           <div>
+                               <span>是否启用 ：</span>
+                               <select  name="enable" class="form-control m-b" id="authEnable">
+                                   <option value="">请选择</option>
+                                   <option value="1">启用</option>
+                                   <option value="0">禁用</option>
+                               </select>
+                           </div>
                         </div>
-                    </form>
+                    </div>
                     <br>
                 </div>
             </div>
@@ -75,7 +81,7 @@
                         <button class="btn btn-white btn-sm"  id = "delete-btn" data-toggle="tooltip" onclick="deleteAll('确认要删除该鉴权类吗？','/api/sys/SysAuthClass/delete','#treeTable')"
                                 data-placement="top"><i class="fa fa-trash-o"> </i>删除
                         </button>
-                        <button class="btn btn-white btn-sm " id="refresh-btn" data-toggle="tooltip" data-placement="left" onclick="Page.reload()"
+                        <button class="btn btn-white btn-sm " id="refresh-btn" data-toggle="tooltip" data-placement="left" onclick="window.location.reload()"
                                 title="刷新"><i class="glyphicon glyphicon-repeat"></i> 刷新
                         </button>
                     </div>
@@ -112,24 +118,7 @@
 
             </table>
             <div class="clearfix pagination-box">
-                <div class="pagination-detail pull-left">
-                    <div class="page-info pull-left"></div>
-                    <div class="page-list pull-left">
-                        <span>每页显示</span>
-                        <select name="" id="pag-sel">
-                            <option value="">请选择</option>
-                            <option value="5">5</option>
-                            <option value="10" selected>10</option>
-                            <option value="20">20</option>
-                            <option value="25">25</option>
-                            <option value="30">30</option>
-                            <option value="40">40</option>
-                            <option value="50">50</option>
-                            <option value="-1">all</option>
-                        </select>
-                        条记录
-                    </div>
-                </div>
+                <div class="page-info pull-left"></div>
                 <div id="pagination" class="pagination-roll pull-right"></div>
             </div>
 
@@ -159,6 +148,7 @@
 <!--自定义文件-->
 <script src="../../js/common.js"></script>
 <script src="../../js/jeeplus.js"></script>
+<script src="../../js/apiDomain.js"></script>
 <script src="../../js/customForm.js"></script>
 <script src="../../js/page.js"></script>
 
@@ -167,8 +157,8 @@
     $(function(){
         window.pageLoad = function (){
             var data = {
-                name: $("#authNameParam").val(),
-                code: $("#authCodeParam").val(),
+                nameParam: $("#authNameParam").val(),
+                codeParam: $("#authCodeParam").val(),
                 enable:$("#authEnable").val()
             };
             Page.init("/api/sys/SysAuthClass/authClassPage",data,true,function(tableData){
@@ -197,12 +187,19 @@
                     $("#authEnable option:first").prop("selected", 'selected');
                     $("#authNameParam").val(""),
                     $("#authCodeParam").val(""),
-                    Page.reset(["name","code","enable"]);
+                    Page.reset(["nameParam","codeParam","enable"]);
                 });
             });
         };
         pageLoad();
         windowclick();
+    });
+
+    $('#reset-btn').click(function(){
+        $("#authEnable option:first").prop("selected", 'selected');
+        $("#authNameParam").val(""),
+        $("#authCodeParam").val(""),
+        Page.reset(["nameParam","codeParam","enable"]);
     });
     function getSubmitFormId(){
         return "#inputForm";
@@ -231,10 +228,10 @@
                     }
                 },
                 {"data": "name",'sClass':" alignCenter authName"},
-                {"data": "code",'sClass':"alignCenter autoWidth"},
-                {"data": "sysApplication.appName",'sClass':"alignCenter"},
-                {"data": "sort",'sClass':"alignCenter"},
-                {"data": "enable",'sClass':"alignCenter autoWidth", "defaultContent": "","render":function (data, type, row, meta){
+                {"data": "code",'sClass':"alignCenter","width":"12%"},
+                {"data": "sysApplication.appName",'sClass':"alignCenter","width":"18%"},
+                {"data": "sort",'sClass':"alignCenter","width":"10%"},
+                {"data": "enable",'sClass':"alignCenter ", "width":"10%","defaultContent": "","render":function (data, type, row, meta){
                         var chahgeType;
                         return chahgeType = row.enable==0?"否":"是";
                     }

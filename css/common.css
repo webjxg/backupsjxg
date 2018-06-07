@@ -18,10 +18,12 @@ a,a:hover,a:focus,a:visited{text-decoration: none;}
 html,body,#wrapper{ height: 100%;}
 
 .mgb-15 {
-  margin-bottom: 15px; }
+  margin-bottom: 15px;
+  margin-top: 8px;
+}
 
 .mgb-20 {
-  margin-bottom: 20px; }
+  margin-bottom: 0; }
 
 .mgr-30 {
   margin-right: 30px; }
@@ -32,12 +34,9 @@ html,body,#wrapper{ height: 100%;}
 .col-999 {
   color: #999; }
 
-.col-ffa82d {
-  color: #ffa82d; }
-
-.col-1ab394 {
-  color: #1ab394; }
-
+.stopbn {
+  color: red;
+}
 .bg-fff {
   background: #fff; }
 
@@ -53,6 +52,9 @@ html,body,#wrapper{ height: 100%;}
   overflow: hidden;
 }
 .id{
+  display: none;
+}
+.years{
   display: none;
 }
 .bg-f3{
@@ -71,53 +73,96 @@ html,body,#wrapper{ height: 100%;}
 iframe{border:none;}
 .wrapper{min-height:100%;}
 .wrapper-content{
-  padding:20px 14px 14px 20px;
+  padding:4px 4px 4px 4px;
 }
 /*logo  star*/
 .logo{
   width: 100%;
-  height: 80px;
+  height: 70px;
   overflow: hidden;
-  /*background-image: url("../images/bg49.jpg");*/
-  background-color: #182028;
+  background-image: url("../images/5.5.jpg");
+  /*background-color: #182028;*/
 }
 .logo img{
-  display: inline-block;
-   margin: 22px 0 17px 10px;
+    display: inline-block;
+   margin: 18px 0 17px 10px;
+}
+.logo-right{
+  float:right;
+  margin-top:23px;
+}
+
+#userName{
+    display: inline-block;
+    vertical-align: middle;
+    margin-right:10px;
+}
+#userName span{
+    display: inline-block;
+    vertical-align: middle;
+    color:#fff;
 }
 .logo .logo-right ul{
-  position: absolute;
-  right: 0;
-  top: 30px;
+    display: inline-block;
+    vertical-align: middle;
 }
 .logo .logo-right ul li{
   width: 24px;
   height: 24px;
   display: inline-block;
-  background-color: white;
+  background-color: #ececec;
   text-align: center;
   border-radius: 20px;
   line-height: 24px;
   margin-right: 10px;
   cursor:pointer;
+    position: relative;
+}
+.logo .logo-right ul li .num {
+    display: inline-block;
+    color: white;
+    width: 18px;
+    height: 18px;
+    border-radius: 30px;
+    background-color: #f75c5c;
+    position: absolute;
+    right: -7px;
+    top: -10px;
+    line-height: 18px;
+}
+.logo .logo-right ul li:hover{
+    background-color: white;
 }
 .logo .logo-right ul li i{
   font-size: 14px;
 }
 .logout{
-  width: 70px;
-  height: 40px;
+  width: 60px;
+  height: 34px;
   position: fixed;
-  right: 1px;
-  top: 81px;
+  top: 70px;
+  right: 0;
   z-index: 99;
   background-color: #e6e6e6;
+}
+.col-62b519{
+  color: #62b5e9;
+}
+.logout:hover{
+      background-color: #eee;
+  }
+.navBtns .dropdown:hover{
+    background-color: #e6e6e6;
+    color: #7a7979;
+  }
+.navItem-tabTag:hover{
+  background-color: #eee;
 }
 /*logo   end*/
 
 /* sidebar-nav start */
 .navbar-static-side{
-  width:220px;position: fixed;top:80px; z-index: 99;height:100%;
+  width:210px;position: fixed;top:70px; z-index: 99;height:100%;
   background: #2f4050;transition: all 0.5s;
 }
 .wrap-con,.navItem-con{
@@ -173,12 +218,12 @@ iframe{border:none;}
 /*.btn .fa {
   margin: 0 2px 0 0; }*/
 
-.table .btn {
+/*.table .btn {
   width: auto;
   height: auto;
   padding: 2px 6px;
   line-height: 20px;
-  font-size: 12px; }
+  font-size: 12px; }*/
 
 .btnaddr{
   background-color: #1ab394;
@@ -203,10 +248,10 @@ iframe{border:none;}
 /*.alignCenter{text-align: center;*/
 /*color: white}*/
 #treeTable a.btn{
-  margin:5px 3px;
+  margin:0 3px;
 }
 .pagination-box{
-  margin-top:10px;
+  margin-top:0;
   margin-left: 10px;
 }
 table.treeTable{
@@ -218,6 +263,7 @@ table.treeTable{
   font-size: 16px;
   height: 30px;
   line-height: 30px;
+  font-weight: bold;
 }
 .titName:before{
   content: "";
@@ -260,15 +306,18 @@ table.treeTable{
   box-shadow: 0 3px 1px 1px gainsboro !important;
 }
 /*查看按钮样式*/
-.btn-check{
+.btn-check,.btn-save{
   background-color: white;
   color: #ffa82d;
   border: 1px solid #ffa82d !important;
 }
-.btn-check:hover{
+.btn-check:hover,.btn-save:hover{
   background-color: #ffa82d;
   color: white;
   border-color: #ffa82d;
+}
+.btn-save:hover{
+  box-shadow: 0 3px 1px 1px gainsboro !important;
 }
 /*修改按钮的样式*/
 .btn-change{
@@ -285,7 +334,7 @@ table.treeTable{
   background-position: -23px -9px;
 }
 .btn-change:hover .icon-change{
-  background-position: -23px -30px;
+  background-position: -23px -32px;
 }
 /*删除按钮*/
 .btn-delete{
@@ -325,7 +374,7 @@ table.treeTable{
 .btn-allotApp{
   background-color: white;
   color: #ff7836;
-  border-color: #ff7836;
+  border-color: #ff7836 !important;
 }
 .btn-allotApp:hover{
   background-color: #ff7836;
@@ -344,7 +393,7 @@ table.treeTable{
   border-color: #ff7836;
 }
 .icon-maintain{
-  background-position: -412px -7px;
+  background-position: -412px -9px;
 }
 .btn-mainProVal:hover .icon-maintain{
   background-position: -412px -30px;
@@ -361,21 +410,26 @@ table.treeTable{
   border-color: #51cd50;
 }
 .icon-accredit{
-    background-position: -447px -7px;
+    background-position: -447px -10px;
 }
 .btn-empower:hover .icon-accredit{
-  background-position: -447px -30px;
+  background-position: -447px -33px;
 }
 #menuButton{
   width: 34px !important;
   height: 34px !important;
   color: white;
 }
-#companyButton{
+#companyButtons{
   width: 32px !important;
-  height: 30px !important;
+  height: 34px !important;
   color: white;
 }
+/*#primaryPersonButton{*/
+  /*width: 32px !important;*/
+  /*height: 34px !important;*/
+  /*color: white;*/
+/*}*/
 /*搜索按钮*/
 .btn-sousuo{
   width: 32px !important;
@@ -384,7 +438,15 @@ table.treeTable{
   border-color: #1ab394 !important;
 }
 
-.btn-search,#search-btn,.btn-bgf29{
+/*.btn-search,#search-btn,.btn-bgf29{*/
+  /*background: #ffa82d;*/
+  /*border:1px solid #ffa82d;*/
+  /*color:#fff;*/
+  /*padding:0 5px;*/
+  /*height:30px;*/
+  /*margin:0 5px;*/
+/*}*/
+#monitoring-btn{
   background: #ffa82d;
   border:1px solid #ffa82d;
   color:#fff;
@@ -392,12 +454,13 @@ table.treeTable{
   height:30px;
   margin:0 5px;
 }
-.btn-search:hover,#search-btn:hover,.btn-bgf29:hover{
-  background: #f29c23;
-  border-color:#f29c23;
-  color:#fff;
-  box-shadow: 0 3px 1px 1px gainsboro !important;
-}
+
+/*.btn-search:hover,#search-btn:hover,.btn-bgf29:hover{*/
+  /*background: #f29c23;*/
+  /*border-color:#f29c23;*/
+  /*color:#fff;*/
+  /*box-shadow: 0 3px 1px 1px gainsboro !important;*/
+/*}*/
 /*生产计划部分按钮样式*/
 /*编辑按钮*/
 .btn-compile{
@@ -418,11 +481,16 @@ table.treeTable{
 .icon-save{
   background-position: -624px -30px;
 }
-.btn-save{
+/*.btn-save{
   background-color: #ffa82d;
   color: white;
   border-color: #ffa82d;
 }
+.btn-save:hover{
+  background-color: #ffa82d;
+  color: white;
+  border-color: #ffa82d;
+}*/
 .btn-save:hover .icon-save{
   background-position: -624px -52px;
 }
@@ -461,15 +529,15 @@ table.treeTable{
 }
 /*添加指令*/
 .icon-instruct{
-  background-position: -377px -52px;
+  background-position: -377px -56px;
 }
 /*创建指令*/
 .icon-create{
-  background-position: -340px -54px;
+  background-position: -340px -56px;
 }
 /*重置按钮*/
 .icon-reset{
-  background-position: -551px -53px;
+  background-position: -551px -55px;
 }
 /*生产调度*/
 /*停止执行*/
@@ -494,12 +562,12 @@ table.treeTable{
   color: white;
 }
 /*递交*/
-.bnt-submit{
+.btn-submit{
   background-color: #ffa82d;
   color: white;
   border-color: #ffa82d;
 }
-.bnt-submit:hover{
+.btn-submit:hover{
   background-color: #ffa82d;
   color: black;
   border-color: #ffa82d;
@@ -523,7 +591,17 @@ table.treeTable{
   color: #1ab394;
   background-color: transparent;
   border-radius: 3px; }
-
+.btn-finish{
+  padding: 3px 5px;
+  background: white !important;
+  color: #00B83F !important;
+  border: 1px solid #00B83F;
+  border-radius: 3px;
+}
+.btn-finish:hover{
+  background-color: #00B83F !important;
+  color: white !important;
+}
 .btn-stop {
   padding: 3px;
   border-color: #f75c5a;
@@ -576,3 +654,48 @@ table.treeTable{
   color: white;
   border-color: #62b5e9;
 }
+/*实产管控*/
+.modal-header{
+  color: white;
+  background-color: #1ab394 !important;
+}
+/*确定*/
+#save1Btn{
+  background-color: #ffa82d !important;
+  color: white !important;
+}
+/*取消*/
+#close1{
+  border: 1px solid #e7e7e7;
+  background-color: white;
+  color: #454545;
+}
+/*针对折叠表折叠样式*/
+span.indenter{
+  padding-left:0!important;
+}
+
+/* layer全局弹窗样式*/
+body div.myclass,body div.myclass .layui-layer-content,body div.myclass iframe{
+    border-radius: 10px;
+}
+.layui-layer-title{
+    background-color: #1ab394  !important;
+    color: #fff3f3!important;
+}
+.layui-layer-btn .layui-layer-btn0{
+    background-color: #ffa82d !important;
+    color: #FFFFFF !important;
+    border:0 !important;
+}
+.autoWidth{width:1% !important;white-space:nowrap;}
+.center{text-align:center  !important}
+.center{text-align:center !important;}
+.center{text-align:center !important;}
+.select2-container--default .select2-selection--multiple {
+  border-color: #ccc;
+}
+.select2-container--default.select2-container--focus .select2-selection--multiple {
+  border-color: #1ab394 !important;
+}
+#refresh-btn{display: none;}

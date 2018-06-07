@@ -50,6 +50,7 @@
 <script src="../../plugins/layer/layer.js"></script>
 <script src="../../plugins/treetable/jquery.treetable.js"></script>
 <!--公共样式-->
+<script src="../../js/apiDomain.js"></script>
 <script src="../../js/customForm-aps.js"></script>
 <script src="../../js/page.js"></script>
 
@@ -63,24 +64,25 @@
             renderTableData(tableData);
             clickButton(level);
         })
+
     }
     //按钮操作集合
     function clickButton(level) {
         $('.btn-addson').click(function(){
             var id = $(this).parents("tr").find('.i-Checks').attr('id');
-            openEditDialog('添加下级指令','./proDis/opeOrderCVAdd.html?&pid='+id,'462px','425px')
+            openEditDialog('添加下级指令','./proDis/opeOrderCVAdd.html?&pid='+id,'600px', '450px')
         });
         $('.btn-changeI').click(function () {
             var id = $(this).parents("tr").find('.i-Checks').attr('id');
-            openEditDialog('修改指令', './proDis/opeOrderCV.html?level='+level+'&id=' + id, '462px', '425px')
+            openEditDialog('修改指令', './proDis/opeOrderCV.html?level='+level+'&id=' + id, '600px', '450px')
         });
         $('.btn-add').click(function(){
             var id = $(this).parents("tr").find('.i-Checks').attr('id');
-            openEditDialog('添加指令','./proDis/opeOrderCVAdd.html?&id='+id,'462px','425px')
+            openEditDialog('添加指令','./proDis/opeOrderCVAdd.html?&id='+id,'600px', '450px')
         });
         $('.btn-change').click(function () {
             var id = $(this).parents("tr").find('.i-Checks').attr('id');
-            openEditDialog('修改指令', './proDis/opeOrderCV.html?level='+level+'&id=' + id, '462px', '425px')
+            openEditDialog('修改指令', './proDis/opeOrderCV.html?level='+level+'&id=' + id, '600px', '450px')
         });
         $('.btn-delete').click(function () {
             var id = $(this).parents("tr").find('.i-Checks').attr('id');
@@ -90,28 +92,53 @@
     }
     //渲染表
     function renderTableData(data) {
-        var tablehead="<tr>" +
-            "<td class='i-Checks' id='" + data.pList[0].id+"'>"+data.pList[0].content+"</td>"+
-            "<td>"+
-            " <a class='btn btn-target btn-addson'><i class='fa fa-edit'></i>添加子级</a>" +
-            " <a class='btn  btn-delete'><i class='fa fa-trash'></i> 删除</a>"  +
-            " <a class='btn  btn-changeI'><i class='fa fa-edit'></i>修改</a>" +
-            "</td>"+
-            "</tr>";
-        var datas=data.childList;
-        var tableStr = "";
-        for (var i = 0; i < datas.length; i++) {
-            tableStr += "<tr class='alignCenter' >"
-                + "<td class='i-Checks' id='" + datas[i].id + "'>" + datas[i].content + "</td>" +
-                "<td>"+
-                " <a class='btn btn-add'><i class='fa fa-edit'></i>添加</a>" +
-                " <a class='btn btn-delete'><i class='fa fa-trash'></i> 删除</a>"  +
-                " <a class='btn btn-change'><i class='fa fa-edit'></i>修改</a>" +
-                "</td>"
-                + "</tr>";
+        if(data.pList[0].grade<3) {
+            var tablehead = "<tr>" +
+                "<td class='i-Checks'  id='" + data.pList[0].id + "'>" + data.pList[0].content + "</td>" +
+                "<td class='alignCenter center'>" +
+                " <a class='btn btn-target btn-addson'><i class='fa fa-edit'></i>添加子级</a>" +
+                " <a class='btn btn-delete'><i class='fa fa-trash'></i> 删除</a>" +
+                " <a class='btn btn-changeI'><i class='fa fa-edit'></i>修改</a>" +
+                "</td>" +
+                "</tr>";
+            var datas = data.childList;
+            var tableStr = "";
+            for (var i = 0; i < datas.length; i++) {
+                tableStr += "<tr>"
+                    + "<td class='i-Checks' id='" + datas[i].id + "'>" + datas[i].content + "</td>" +
+                    "<td class='alignCenter center'  >" +
+                    " <a class='btn  btn-delete'><i class='fa fa-trash'></i> 删除</a>" +
+                    " <a class='btn  btn-change'><i class='fa fa-edit'></i>修改</a>" +
+                    "</td>"
+                    + "</tr>";
+            }
+            $('#treeTableBody').html(tablehead+tableStr);
         }
-        $('#treeTableBody').html(tablehead+tableStr);
+        else{
+            var tablehead = "<tr>" +
+                "<td class='i-Checks'  id='" + data.pList[0].id + "'>" + data.pList[0].content + "</td>" +
+                "<td class='center'>" +
+                " <a class='btn btn-delete'><i class='fa fa-trash'></i> 删除</a>" +
+                " <a class='btn btn-changeI'><i class='fa fa-edit'></i>修改</a>" +
+                "</td>" +
+                "</tr>";
+            var datas = data.childList;
+            var tableStr = "";
+            for (var i = 0; i < datas.length; i++) {
+                tableStr += "<tr class='alignCenter' >"
+                    + "<td class='i-Checks' id='" + datas[i].id + "'>" + datas[i].content + "</td>" +
+                    "<td class='center'>" +
+                    " <a class='btn  btn-delete'><i class='fa fa-trash'></i> 删除</a>" +
+                    " <a class='btn  btn-change'><i class='fa fa-edit'></i>修改</a>" +
+                    "</td>"
+                    + "</tr>";
+            }
+            $('#treeTableBody').html(tablehead+tableStr);
+        }
+
+        setFrameHeight()
     }
+
     //    删除
     function deleteIt(mess,url){
         top.layer.confirm(mess, {icon: 3, title:'系统提示'},function(index){

@@ -17,8 +17,9 @@
         }
        b{font-weight: 700;}
         .container-fluid span{margin:0 5px;}
-        .role-info{margin:0 -15px ;}
+        .role-info{padding:0;}
         #assignButton{margin:10px 0;}
+        #treeTable a.btn{margin:0;}
     </style>
 </head>
 <body>
@@ -31,8 +32,8 @@
             <input type="hidden" name="roleId" id = "roleId" value="">
             <input id="idsArr" type="hidden" name="userIds" value="">
         </form>
-        <button id="assignButton" type="submit" class="btn btn-outline btn-primary btn-sm" title="添加人员"><i class="fa fa-plus"></i> 添加人员</button>
-        <button class="btn btn-danger btn-sm" id="delete-btn" data-toggle="tooltip" onclick="removeUserBatch()" data-placement="top"><i class="fa fa-trash-o"> 删除</i>
+        <button id="assignButton" type="submit" class="btn btn-outline btn-add btn-sm" title="添加人员"><i class="fa fa-plus"></i> 添加人员</button>
+        <button class="btn btn-delete btn-sm" id="delete-btn" data-toggle="tooltip" onclick="removeUserBatch()" data-placement="top"><i class="fa fa-trash-o"> </i>删除
         </button>
         <button class="btn btn-white btn-sm hidden" id="refresh-btn" data-toggle="tooltip" data-placement="left"  title="刷新"><i class="glyphicon glyphicon-repeat"></i> 刷新
         </button>
@@ -63,6 +64,7 @@
 <script src="../../plugins/datatables/js/jquery.dataTables.min.js"></script>
 <!--自定义文件-->
 <script src="../../js/common.js"></script>
+<script src="../../js/apiDomain.js"></script>
 <script src="../../js/customForm.js"></script>
 <script>
     var id = getQueryString('id')|| "";
@@ -89,7 +91,6 @@
         //查看角色信息接口
         ajaxToServer("/api/sys/SysRole/view/"+id, {}, function (result) {
             if (result.success) {
-                console.log(result)
                 var data = result.list,
                     html = "",
                     SysRole = result.SysRole;
@@ -102,6 +103,7 @@
                     " </div>";
                 $(".container-fluid").append(html);
                 renderTableData(data);
+
             } else {
                 layer.msg(result.message);
             }
@@ -176,22 +178,23 @@
             "aoColumns": [
                 {"data": null,"sWidth":"60px;","defaultContent":"",'sClass':"alignCenter",
                     "render":function(data, type, row, meta) {
-                        return data = "<input type='checkbox' id=" + row.id + " class='i-checks'>"
+                        console.log(row.id);
+                        return data = "<input type='checkbox' id=" + data.id + " class='i-checks'>"
                     }
                 },
                 {"data": "loginName",'sClass':" alignCenter"},
                 {
                     "data": "name", "orderable": false, "defaultContent": "",'sClass':" alignCenter  ",
                     "render": function (data, type, row, meta) {
-                        return "<a class='btn-check  roleName' style='color:#000'>"+row.name+"</a >" ;
+                        return "<a class='roleName' style='color:#000'>"+row.name+"</a >" ;
                     }
                 },
                 {"data": "phone",'sClass':"alignCenter"},
                 {"data": "mobile",'sClass':"alignCenter"},
                 {
-                    "data": "id", "orderable": false, "defaultContent": "",'sClass':" alignCenter ",
+                    "data": null, "orderable": false, "defaultContent": "",'sClass':" alignCenter ",
                     "render": function (data, type, row, meta) {
-                        return "<a class='btn-delete '  style='cursor:pointer' id='"+row.id+"'>删除</a >" ;
+                        return "<a class='btn btn-delete '  style='cursor:pointer' id='"+row.id+"'>删除</a >" ;
                     }
                 }]
         });

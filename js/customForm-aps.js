@@ -2,7 +2,10 @@
 /*$(function(){
  RenderiCheckTblBody();
  });*/
-var urlPrefix = "http://114.115.165.184:8083/aps-api";
+
+
+
+
 //点击查询按钮
 $("#search-btn").click(function(){
     pageLoad();
@@ -19,6 +22,76 @@ var layerAlert = function (info, icon){
     var title = icon==0?'警告':'消息';
     top.layer.alert(info, {skin:'layui-layer-molv', icon:icon, title:title});
 };
+
+//设置cookies
+var setCookie = function(name,value,path) {
+    var Days = 30;//30天
+    var exp = new Date();
+    exp.setTime(exp.getTime() + Days*24*60*60*1000);
+    var pathTmp = path!=undefined?path:'/';
+    document.cookie=name+"="+encodeURI(value)+";expires="+exp.toGMTString()+";path="+pathTmp;
+};
+//读取cookies
+var getCookie = function(name) {
+    var arr,reg=new RegExp("(^| )"+name+"=([^;]*)(;|$)");
+    if(arr=document.cookie.match(reg))
+        return (decodeURI(arr[2]));
+    else
+        return '';
+};
+//删除cookies
+function delCookie(name,path) {
+    var exp = new Date();
+    exp.setTime(exp.getTime() - 1);
+    var cval=getCookie(name);
+    if(cval!=null){
+        var pathTmp = path!=undefined?path:'/';
+        document.cookie=name+"="+cval+";expires="+exp.toGMTString()+";path="+pathTmp;
+    }
+}
+
+//获取文件后缀名
+var getFileExt = function(FileName){
+    return FileName.substring(FileName.lastIndexOf('.')+1, FileName.length).toLowerCase();
+};
+
+//获取上下文路径
+var basePath = function(){
+    var obj=window.location;
+    var contextPath=obj.pathname.split("/")[1];
+    var path=obj.protocol+"//"+obj.host+"/"+contextPath;
+    return path;
+};
+//加载css/js
+var include = function(id, path, file){
+    if (document.getElementById(id)==null){
+        var files = typeof file == "string" ? [file] : file;
+        for (var i = 0; i < files.length; i++){
+            var name = files[i].replace(/^\s|\s$/g, "");
+            var ext = getFileExt(files[i]).toLowerCase();
+            var isCSS = ext == "css";
+            var fileref;
+            if(isCSS==true){
+                fileref = document.createElement('link');
+                fileref.setAttribute("rel", "stylesheet");
+                fileref.setAttribute("type", "text/css");
+                fileref.setAttribute("href", path + name);
+            }else{
+                fileref = document.createElement('script');
+                fileref.setAttribute("type", "text/javascript");
+                fileref.setAttribute("src", path + name);
+            }
+            if(fileref){
+                fileref.setAttribute("id", id);
+                document.getElementsByTagName("head")[0].appendChild(fileref);
+            }
+        }
+    }
+};
+
+//引入用户校验
+include('checkUser',basePath()+'/js/','checkUser.js');
+
 function RenderiCheckTblBody(){
     $('input.i-checks').iCheck({
         checkboxClass: 'icheckbox_square-green',
@@ -41,12 +114,12 @@ function RenderiCheckTblBody(){
  */
 function ajaxToServer(url, data, callbackFun){
     var layerIndex = layer.load(2);
-    url = url.toLowerCase().indexOf("http://") == 0? url : (urlPrefix + url);
+    url = url.toLowerCase().indexOf("http://") == 0? url : (aps_domain + url);
+    // console.log("发起Ajax请求：", url, '参数：',data);
     $.ajax({
         headers:{
             Accept: "application/json; charset=utf-8",
-            // Authorization: getCookie("token_type")+" " +getCookie("authorization")，
-            Authorization: "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlzcyI6ImFkbWluIiwiYXVkIjoiQWRtaW4gSldUIE9ubGluZSJ9.0fEB0SHaUfc10ARex-BCLPmOxbbr5vgcMfvivQKY1Rc"
+            Authorization: getCookie("token_type")+" " +getCookie("authorization")
         },
         type: "post",
         url: url,
@@ -54,7 +127,16 @@ function ajaxToServer(url, data, callbackFun){
         dataType: 'json',
         contentType:'application/json',
         success: function(result){
+            // console.log("返回：",result);
             layer.close(layerIndex);
+            if(result.success == false){
+                if(result.retCode == "30009"){  //用户登录信息失效
+                    alert('用户登录信息失效,请重新登录');
+                    //$("#quit-btn",top.document).children("i").trigger("click");
+					top.location.href='../html/login.html';
+                    return;
+                }
+            }
             if(callbackFun){
                 callbackFun(result);
             }
@@ -74,13 +156,12 @@ function ajaxToServer(url, data, callbackFun){
  */
 function ajaxToServer1(url, data, callbackFun){  //传送的参数是string时
     var layerIndex = layer.load(2);
-    url = url.toLowerCase().indexOf("http://") == 0? url : (urlPrefix + url);
-    console.log(url);
+    url = url.toLowerCase().indexOf("http://") == 0? url : (aps_domain + url);
+    // console.log("发起Ajax-1请求：", url, '参数：',data);
     $.ajax({
         headers:{
             Accept: "application/json; charset=utf-8",
-            // Authorization: getCookie("token_type")+" " +getCookie("authorization")
-            Authorization: "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlzcyI6ImFkbWluIiwiYXVkIjoiQWRtaW4gSldUIE9ubGluZSJ9.0fEB0SHaUfc10ARex-BCLPmOxbbr5vgcMfvivQKY1Rc"
+            Authorization: getCookie("token_type")+" " +getCookie("authorization")
         },
         type: "post",
         url: url,
@@ -88,7 +169,16 @@ function ajaxToServer1(url, data, callbackFun){  //传送的参数是string时
         dataType: 'json',
         contentType:'application/x-www-form-urlencoded',
         success: function(result){
+            // console.log("返回：",result);
             layer.close(layerIndex);
+            if(result.success == false){
+                if(result.retCode == "30009"){  //用户登录信息失效
+                    alert('用户登录信息失效,请重新登录');
+                    //$("#quit-btn",top.document).children("i").trigger("click");
+					top.location.href='../html/login.html';
+                    return;
+                }
+            }
             if(callbackFun){
                 callbackFun(result);
             }
@@ -146,7 +236,7 @@ var lang = { //dataTable国际化配置
     "sInfoFiltered": "(从 _MAX_ 条数据中检索)",
     "sZeroRecords": "没有找到符合条件的数据",
     "sLoadingRecords": "载入中..."
-}
+};
 
 // 获取URL地址参数
 function getQueryString(name, url) {
@@ -205,15 +295,17 @@ function appendOptions(obj, options){
 
 
 //动态添加Select的option
-function createSelect(url,appendEl){
+function createSelect(url,appendEl,valueField, labelFile){
     ajaxToServer(url,{},function(result){
         if(result.success){
             $(appendEl).html();
+            valueField = valueField||'value';
+            labelFile = labelFile||'label';
             var rows = result.rows,
                 len = rows.length,
-                html ='<option value="" selected="selected"></option>';
+                html ='<option value="" selected="selected">--请选择--</option>';
             for(var i = 0;i<len;i++){
-                html += '<option value="'+rows[i].type+'">'+rows[i].type +'</option>'
+                html += '<option value="'+rows[i][valueField]+'">'+rows[i][labelFile] +'</option>'
             }
             $(appendEl).append(html);
         }else{
@@ -268,8 +360,6 @@ function allotCancelItem(tableId,opflag,ifAllot,dataPrama,url){
             [dataPrama[1]]:str.substr(1),
             opflag:opflag
         };
-        console.log(data);
-        console.log(url)
         ajaxToServer1(url,data,function (result) {
             if (result.success == true) {
                 document.location.reload();
@@ -282,7 +372,6 @@ function allotCancelItem(tableId,opflag,ifAllot,dataPrama,url){
 
 //打开对话框(查看、选择上级菜单)
 function openDialog(title,url,width,height,innerCallbackFn){
-    console.log(url);
     if(navigator.userAgent.match(/(iPhone|iPod|Android|ios)/i)){//如果是移动端，就使用自适应大小弹窗
         width='auto';
         height='auto';
@@ -297,7 +386,7 @@ function openDialog(title,url,width,height,innerCallbackFn){
         type: 2,
         area: [width, height],
         title: title,
-        maxmin: true, //开启最大化最小化按钮
+        maxmin: false, //开启最大化最小化按钮
         content: url ,
         btn: btns
     };
@@ -335,7 +424,7 @@ function openEditDialog(title,url,width,height,innerCallbackFn){
         type: 2,
         area: [width, height],
         title: title,
-        maxmin: true, //开启最大化最小化按钮
+        maxmin: false, //开启最大化最小化按钮
         content: url ,
         btn: ['确定', '关闭'],
         yes: function(index, layero){
@@ -346,7 +435,7 @@ function openEditDialog(title,url,width,height,innerCallbackFn){
                     iframeWin.contentWindow.doSubmit(iframeWin.contentWindow,body,index);
                 }else{
                     //iframeWin.contentWindow[innerCallbackFn]();   //有bug  innerCallbackFn必须是字符串 待解决
-                    innerCallbackFn.call(iframeWin.contentWindow,iframeWin.contentWindow,body,index);
+                    innerCallbackFn.call(iframeWin, body, index);
                 }
                 clickFlag = false;
                 setTimeout(function(){
@@ -369,7 +458,6 @@ function doSubmit(){
     var validateFlag = formObj.validate({
         submitHandler: function(form){
             var formdata = JSON.stringify(formObj.serializeJSON());
-            console.log(formdata);
             layer.msg('正在提交，请稍等...',{time: 1000});
             ajaxToServer(url,formdata,function(result){
                 if(result.success == true){
@@ -431,7 +519,7 @@ function openDialogView(title,url,width,height){
         type: 2,
         area: [width, height],
         title: title,
-        maxmin: true, //开启最大化最小化按钮
+        maxmin: false, //开启最大化最小化按钮
         content: url ,
         btn: ['关闭'],
         cancel: function(index){
@@ -542,8 +630,6 @@ function deleteCheck(result){
 
 function renderData(data,renderID){
     var arr = getJsonData(data);
-    // console.log(arr)
-
     for(var i = 0;i<arr.length;i++){
         var obj = arr[i];
         var eleId = obj.name.replaceAll("\\.","\\.");
@@ -559,7 +645,6 @@ function renderData(data,renderID){
                 }else if(eleType == 'checkbox'){
                     setCheckboxValue(obj.name,obj.value);
                 }else{
-                    console.log(eleDom,obj.value);
                     $(eleDom).val(obj.value);
                 }
             }else{
@@ -638,6 +723,7 @@ $("#iconButton").click(function(){
     top.layer.open({
         type: 2,
         title:"选择图标",
+        maxmin: false,
         area: ['700px',  $(top.document).height()-180+"px"],
         content: '../html/iconselect.html?selVal='+selVal,
         btn: ['确定', '关闭'],
@@ -667,7 +753,8 @@ $("#iconclear").click(function(){
  * @param action
  * @returns {Element}
  */
-function createTagFrame(frameDivID,frameId,action){
+function createTagFrame(frameDivID,action,frameId){
+    frameId = frameId || action;
     var frameDivCont = document.getElementById(frameDivID);
     var tabFrame = document.getElementById(frameId);
     if(tabFrame==null || tabFrame==undefined){
@@ -696,15 +783,34 @@ function createTagFrame(frameDivID,frameId,action){
 /**
  * 设置iFrame高度，在iframe内部页面调用
  */
-function setFrameHeight(){
+function setFrameHeight(offsetHeight_){
     var frames = window.parent.document.getElementsByTagName("iframe");
     for(var i = 0; i < frames.length; i++) {
         var f = frames[i];
         if (null != f && f.style.display != "none") {
-            f.style.height = (document.body.scrollHeight+50)+"px";
+            var h = document.body.scrollHeight+50+(offsetHeight_||0);
+            f.style.height = h+"px";
         }
     }
 }
+
+
+
+//数组是否包含指定的元素
+Array.prototype.contains = function(item){
+    return RegExp("(^|,)" + item.toString() + "($|,)").test(this);
+};
+//去掉数组中的重复项,返回重复的元素
+Array.prototype.unique = function() {
+    var res = [], hash = {};
+    for(var i=0, elem; (elem = this[i]) != null; i++) {
+        if (!hash[elem]) {
+            res.push(elem);
+            hash[elem] = true;
+        }
+    }
+    return res;
+};
 
 
 

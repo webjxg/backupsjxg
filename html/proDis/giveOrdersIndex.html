@@ -27,7 +27,7 @@
         }
         .ibox-content:nth-of-type(2){
             width: 300px;
-            height: 680px;
+            height: 880px;
             float:left;
             margin-right: 20px;
 
@@ -54,7 +54,7 @@
             <div>
 
                 <span> 日期 : </span><span style="margin-right: 15px" class="date"></span>
-                <span> 班次 : </span><span style="margin-right: 15px" class="shiftName"></span>
+                <span> 班次 : </span><span style="margin-right: 15px" class="updateDate"></span>
                 <span> 班组 : </span><span class="groupName"></span>
             </div>
             <!--按钮-->
@@ -104,7 +104,7 @@
         </div>
         <!--右侧内容 iframe-->
         <div class="ibox-content">
-            <iframe id="officeContent" name="officeContent" width="100%" height="650px" frameborder="0"></iframe>
+            <iframe id="officeContent" name="officeContent" width="100%" height="865px" frameborder="0"></iframe>
         </div>
     </div>
 </div>
@@ -122,82 +122,48 @@
 <script src="../../plugins/bootStrapPager/js/extendPagination.js"></script>
 <script src="../../plugins/ztree/js/jquery.ztree.core.js"></script>
 <!--自定义文件-->
+<script src="../../js/apiDomain.js"></script>
 <script src="../../js/customForm-aps.js"></script>
 <script src="../../js/page.js"></script>
-
+<script src="../../js/date.js"></script>
 <script>
     $(document).ready(function(){
-        renderclass();
-        $('#officeContent').attr('src','./giveOrdersInner.html');
-        getOption();
+        $(".date").text(getShortDate());
         ajaxproc();
         ajaxkind();
+        $('#officeContent').attr('src','./giveOrdersInner.html');
         reloadZtree('#proc','/api/ctrl/BaseDirective/getZTtree');
         reloadZtree('#kind','/api/ctrl/BaseDirective/getZTtree');
         reloadZtree('#grade','/api/ctrl/BaseDirective/getZTtree');
         reloadZtreeinput('#contentParam','/api/ctrl/BaseDirective/getZTtree');
-
-
-
     });
     //写入班信息
     function renderclass(){
-        $('.date').text(getNowFormatDate());
         var data={};
-        ajaxTo('/api/ctrl/DirectiveIssued/list',JSON.stringify(data),function (data) {
-            var startTime=data.rows[0].shift.startTime,endTime=data.rows[0].shift.endTime;
-            $('.groupName').text(data.rows[0].name);
-            $('.shiftName').text(startTime+"-"+endTime);
-        });
-    }
-    //获得当前日期
-    function getNowFormatDate() {
-        var date = new Date();
-        var seperator1 = "-";
-        var year = date.getFullYear();
-        var month = date.getMonth() + 1;
-        var strDate = date.getDate();
-        if (month >= 1 && month <= 9) {
-            month = "0" + month;
-        }
-        if (strDate >= 0 && strDate <= 9) {
-            strDate = "0" + strDate;
-        }
-        var currentdate = year + seperator1 + month + seperator1 + strDate;
-        return currentdate;
-    }
-
-
-
-    function ajaxTo(url, data, callbackFun){
-        var layerIndex = layer.load(2);
-        url = url.toLowerCase().indexOf("http://") == 0? url : (urlPrefix + url);
-        $.ajax({
-            headers:{
-                Accept: "application/json; charset=utf-8",
-                // Authorization: getCookie("token_type")+" " +getCookie("authorization")，
-                Authorization: "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJqdGkiOiIwMzIyMjcxNmFiNzU0MTIxOTU5Yjg1ODU1YmFhZWRjZSIsInN1YiI6IjIyIiwiaXNzIjoiYWRtaW4iLCJhdWQiOiJBZG1pbiBKV1QgT25saW5lIn0.c_MLl8tCitpuSa6d-RzAFWJq7k-H3XBAQePTep4q4IM"
-            },
-            type: "post",
-            url: url,
-            data: data,
-            dataType: 'json',
-            contentType:'application/json',
-            success: function(result){
-                layer.close(layerIndex);
-                if(callbackFun){
-                    callbackFun(result);
-                }
-            },
-            error:function(){
-                layer.close(layerIndex);
-                layer.msg('请求服务器异常.');
+        //当前用户的班次班组工序
+        ajaxToServer('/api/ctrl/DirectiveIssued/list1',JSON.stringify(data),function (data) { //
+            console.log(data);
+            if(data.rows.length!==0) {
+                $('#proc').val(data.rows[0].process);
+                getOption();
             }
         });
+        //获取当前时间
+        ajaxToServer('/api/ctrl/DirectiveIssued/goupList',{},function (data) {
+            if(data.rows.length!==0) {
+                var groupName = data.rows[0].name;
+                var shiftName = data.rows[0].shift.name;
+                var startTime = data.rows[0].shift.startTime;
+                var endTime = data.rows[0].shift.endTime;
+                $('.groupName').text(groupName+'班');//班组
+                $('.updateDate').text(shiftName+"("+startTime + "-" + endTime+")");//班次
+            }
+        });
+
     }
     //得到下拉菜单的值
     function getOption() {
-        var procValue=$('#proc').val(), gradeValue=$('#grade').val(),kindValue=$('#kind').val(),contentParme=$('#contentParam').val();
+        var procValue=$('#proc option:selected').val(), gradeValue=$('#grade').val(),kindValue=$('#kind').val(),contentParme=$('#contentParam').val();
         data={
             "proc":procValue,
             "grade":gradeValue,
@@ -206,7 +172,6 @@
         };
         var dat=JSON.stringify(data);
         ajaxToServer('/api/ctrl/BaseDirective/getZTree',dat,function (da) {
-            console.log(dat,da);
             zTree(da.rows)
         });
         reloadZtree();
@@ -215,12 +180,14 @@
 
     function reloadZtree(item){
         $('.apsType-linkage').on('change',item,function () {
+            $(".apsType-linkage").unbind();
             getOption();
         });
 
     }
     function reloadZtreeinput(item1){
         $(item1).on('blur','.apsType-linkage',function () {
+            $(".apsType-linkage").unbind();
             getOption();
         });
 
@@ -257,25 +224,26 @@
         var zNodes = da;
         //执行ztree
         var treeObj =$.fn.zTree.init($("#tree"), setting, zNodes);
-
     }
 
-    //获取工序下拉框
+    //获取工序数据
     function ajaxproc(){
-        ajaxToServerS('/api/sys/SysOrg/selectGx/3',{},function (result) {
+        id = getCookie("loginUserid");
+        ajaxToServer(admin_domain+'/api/sys/SysAuthProperty/getAttributeValue/'+id+'/GXJQ/syswp',{},function (result) {
+            console.log(result);
             if(result.success){
                 var rows = result.rows;
-                appendOptionsValue($('#proc'), rows, 'name', 'name');
+                 appendOptionsValue($('#proc'), rows, 'name', 'name');
+               // appendOptionsValue($('#proc'), rows, 'code', 'name');//工序的值存编码 update by qiyh 2018-05-24
+                renderclass();
             }else{
                 layer.msg(result.message);
             }
         });
-
     }
-
     //获取指令分类下拉框
     function ajaxkind() {
-        ajaxToServerS('/api/sys/SysDict/type/directiveCassifyType',{},function (result) {
+        ajaxToServer(admin_domain+'/api/sys/SysDict/type/directiveCassifyType',{},function (result) {
             if(result.success){
                 var rows = result.rows;
                 appendOptionsValue($('#kind'), rows, 'label', 'label');
@@ -285,41 +253,14 @@
         });
     }
 
-    //8080 admin-api端口专用ajax
-    function ajaxToServerS(url, data, callbackFun){
-        var layerIndex = layer.load(2);
-        url = url.toLowerCase().indexOf("http://") == 0? url : ("http://114.115.165.184:8080/admin-api" + url);
-        $.ajax({
-            headers:{
-                Accept: "application/json; charset=utf-8",
-                // Authorization: getCookie("token_type")+" " +getCookie("authorization")，
-                Authorization: "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlzcyI6ImFkbWluIiwiYXVkIjoiQWRtaW4gSldUIE9ubGluZSJ9.0fEB0SHaUfc10ARex-BCLPmOxbbr5vgcMfvivQKY1Rc"
-            },
-            type: "post",
-            url: url,
-            data: data,
-            dataType: 'json',
-            contentType:'application/json',
-            success: function(result){
-                layer.close(layerIndex);
-                if(callbackFun){
-                    callbackFun(result);
-                }
-            },
-            error:function(){
-                layer.close(layerIndex);
-                layer.msg('请求服务器异常.');
-            }
-        });
-    }
-
     //点ztree传值id
     function rendersun(data) {
         $('#officeContent')[0].contentWindow.updatason(data);
     }
+    //指令下达
     $('#giveOrders').click(function () {
-        $('#officeContent')[0].contentWindow.giveorder()
-    })
+        $('#officeContent')[0].contentWindow.giveorder();
+    });
 </script>
 
 

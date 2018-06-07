@@ -14,7 +14,11 @@
     <link rel="stylesheet" href="../../css/aps.css">
     <link rel="stylesheet" href="../../css/common.css">
 </head>
-
+<style>
+    .btn-sub{
+        display: none;
+    }
+</style>
 <body>
 <div  class="wrapper wrapper-content ibox-content">
     <div class="ibox">
@@ -22,7 +26,7 @@
             <div class="row" style="margin-bottom: 15px">
                 <div class="col-lg-12">
                     <div>
-                        <h1 class="titName">复晟铝业<span class="year"></span>年生产经营计划</h1>
+                        <h1 class="titName">复晟铝业<span class="Moyear"></span>年生产经营计划</h1>
                     </div>
                     <div class="clearfix btn-box">
                         <div class="pull-left">
@@ -62,25 +66,33 @@
 <script src="../../plugins/datatables/js/dataTables.bootstrap.js"></script>
 <script src="../../plugins/bootStrapPager/js/extendPagination.js"></script>
 <script src="../../plugins/easyui/js/jquery.easyui.min.js"></script>
-<script src="../../js/dataGridCustom.js"></script>
+<script src="../../js/apiDomain.js"></script>
 <script src="../../js/customForm-aps.js"></script>
-
+<script src="../../js/dataGridCustom.js"></script>
 <script>
     var planarr = [];
     var arr  =[];
-    var mainID;
-    var id = getQueryString('id');
     var year = getQueryString('year');
+    var id = getQueryString('id');
+    console.log(id==undefined)
+    if (id != undefined){
+        $('#yMPicker').val(year).attr('disabled','disabled').css({"cursor":"not-allowed"});
+    }
+    if(id==""){
+        $(".Moyear").text("某");
+    }else{
+        $("#yMPicker").val(year);
+        $(".Moyear").text($("#yMPicker").val());
+    }
     $("#yMPicker").val(year);
     var $yesteryear;
     var $thisyear;
     $(function () {
         var data = {
-
+            id:id
         };
         var date = new Date();
         getYear = date.getFullYear();
-        $(".year").text(getYear)
         $("#yMPicker").datetimepicker({
             format:"yyyy",
             language:'cn',
@@ -92,15 +104,17 @@
             forceParse: 0
         });
         ajaxToServer("/api/aps/ApsYearPlan/queryYearPlan",JSON.stringify(data),function (result) {
-            mainID = result.cpxl[0].mainId
+            planarr.push(result.cpcl);
             planarr.push(result.cpxl);
+            planarr.push(result.zljh);
             planarr.push(result.zyxhzbjh);
+            planarr.push(result.zyzbjh);
             createTbody(planarr);
         })
         //返回按钮
         var check=getQueryString('check');
         if(check==0){
-            $('#back-btn').hide();
+            $('#btn-sub').hide();
             $('.btn-save').hide();
         }
         $(".btn-back").click(function () {
@@ -114,7 +128,7 @@
             if($("#yMPicker").val() == ""){
                 layer.confirm("请选择具体年份之后才可以保存!");
             }else{
-                var e = "btn-save"
+                var e = "btn-save";
                 preserveFn(e)
             }
         });
@@ -129,89 +143,72 @@
     }
     // 是否保存、提交
     function preserveFn(e) {
-        if(e == "btn-save"){
-            var status = "0";
-            layer.confirm("确认保存！")
-        }else{
-            var status = "1";
-            layer.confirm("确认提交！")
+        if (e == "btn-save") {
+            postData("0");
+        } else if (e == "btn-sub") {
+            postData("1");
         }
-        var status = status
-        var editItems = dataGridObj.getSaveItemArr();
-        var data = {
-            "yearPlans":JSON.stringify(editItems),
-            "status":status,
-            "adYear":$("#yMPicker").val(),
-            "mainId":mainID
-        }
-        $(".layui-layer-btn0").click(function () {
-            sendmsg(data)
-        });
     }
-    // 保存信息
-    function sendmsg(data) {
-        ajaxToServer1("/aps/ApsYearPlan/saveYearInfo",data,function (result) {
 
-        })
-
-    }
     // 创建表格
     function createTbody(planarr) {
-        for(var i=0;i<planarr.length;i++){
-            for(var j=0;j<planarr[i].length;j++){
+        for (var i = 0; i < planarr.length; i++) {
+            for (var j = 0; j < planarr[i].length; j++) {
                 msgobj = {
-                    "id":planarr[i][j].id,
-                    "groupName":planarr[i][j].groupName,
-                    "itemName":planarr[i][j].itemName,
-                    "itemUnit":planarr[i][j].itemUnit,
-                    "adYear":planarr[i][j].adYear,
-                    "adMonth":planarr[i][j].adMonth,
-                    "ndyjcl":planarr[i][j].ndyjcl,
-                    "yjdsjdcl":planarr[i][j].yjdsjdcl,
-                    "ncl":planarr[i][j].ncl,
-                    "templetId":planarr[i][j].templetId,
-                    "mainId":planarr[i][j].mainId
+                    "id": planarr[i][j].id,
+                    "mainId": planarr[i][j].mainId,
+                    "itemCode": planarr[i][j].itemCode,
+                    "groupName": planarr[i][j].groupName,
+                    "itemName": planarr[i][j].itemName,
+                    "itemUnit": planarr[i][j].itemUnit,
+                    "adYear": planarr[i][j].adYear,
+                    "adMonth": planarr[i][j].adMonth,
+                    "ndyjcl": planarr[i][j].ndyjcl,
+                    "yjdsjdcl": planarr[i][j].yjdsjdcl,
+                    "ncl": planarr[i][j].ncl,
+                    "templetId": planarr[i][j].templetId,
                 };
-                arr.push(msgobj)
+                arr.push(msgobj);
             }
-            $('#td0').datagrid('loadData',arr);
+            $('#td0').datagrid('loadData', arr);
         }
     };
-    if(year == null){
+
+    if (year == null) {
         $yesteryear = "去";
         $thisyear = "今"
-    }else{
+    } else {
         $yesteryear = year - 1;
         $thisyear = year;
-
     }
     $("#td0").datagrid({
-        fitColumns:true,
-        collapsible:true,
-        singleSelect: true,
-        onClickRow: function(index){
-            dataGridObj.startEditing(index,"#td0")
+        fitColumns: true,
+        collapsible: true,
+        singleSelect: false,
+        onClickRow: function (index) {
+            dataGridObj.startEditing(index, "#td0")
         },
         //创建table
-        columns:[[
-            {field:'id',title:'id',hideColumn:'id'},
-            {field:'mainId',title:'mainId',hideColumn:'mainId'},
-            {field:'groupName',title:'生产计划',width:100,align:'center'},
-            {field:'itemName',title:'项目',width:100,align:'center'},
-            {field:'itemUnit',title:'单位',width:100,align:'center'},
-            {field:'ndyjcl',title:$yesteryear+'年预计产量',editor:'numberbox',width:100,align:'center'},
-            {field:'yjdsjdcl',title:'预计第四季度产量',editor:'numberbox',width:100,align:'center'},
-            {field:'ncl',title:$thisyear+'年产量',editor:'numberbox',width:100,align:'center'}
+        columns: [[
+            {field: 'id', title: 'id', hideColumn: 'id'},
+            {field: 'mainId', title: 'mainId', hideColumn: 'mainId'},
+            {field: 'itemCode', title: '', hideColumn: 'itemCode'},
+            {field: 'groupName', title: '生产计划', width: 100, align: 'center'},
+            {field: 'itemName', title: '项目', width: 100, align: 'center'},
+            {field: 'itemUnit', title: '单位', width: 100, align: 'center'},
+            {field: 'ndyjcl', title: $yesteryear + '年预计产量', editor: 'text', width: 100, align: 'center'},
+            {field: 'yjdsjdcl', title: '预计第四季度产量', editor: 'text', width: 100, align: 'center'},
+            {field: 'ncl', title: $thisyear + '年产量', editor: 'text', width: 100, align: 'center'}
         ]],
         onAfterEdit: function (rowIndex, rowData, changes) {
             dataGridObj.pushRowData(rowData);
-            dataGridObj.setEditIndex("#td0",undefined);
-            dataGridObj.mergeCells(loadedData,"#td0","groupName");
+            dataGridObj.setEditIndex("#td0", undefined);
+            dataGridObj.mergeCells(loadedData, "#td0", "groupName");
         },
         //合并单元格
-        onLoadSuccess:function (data) {
+        onLoadSuccess: function (data) {
             loadedData = data;
-            dataGridObj.mergeCells(data,"#td0","groupName");
+            dataGridObj.mergeCells(data, "#td0", "groupName");
         },
         toolbar: [{
             text: '保存', iconCls: 'icon-save', handler: function () {
@@ -221,53 +218,73 @@
         }]
     })
     //隐藏id列
-    $(function(){
-        $('#td0').datagrid('hideColumn','id');
-        $('#td0').datagrid('hideColumn','mainId');
+    $(function () {
+        $('#td0').datagrid('hideColumn', 'id');
+        $('#td0').datagrid('hideColumn', 'mainId');
+        $('#td0').datagrid('hideColumn', 'itemCode');
     });
     //输入框change事件
     $("#yMPicker").change(function () {
         var data = {
-            adYear:$("#yMPicker").val()
-        }
-        ajaxToServer("/api/aps/ApsYearPlan/form",JSON.stringify(data),function (result) {
-            if(result.success==true){
-               if(result.rows.length>0){
-                   layer.confirm("选择的年份已经存在，请重新选择!");
-                   $("#yMPicker").val("请选择年份")
-               }
+            adYear: $("#yMPicker").val()
+        };
+        ajaxToServer("/api/aps/ApsYearPlan/form", JSON.stringify(data), function (result) {
+            if (result.success == true) {
+                if (result.rows.length > 0) {
+                    layer.confirm("选择的年份已经存在，请重新选择!");
+                    $("#yMPicker").val("");
+                }
+                ;
+                changeth();
             }
-        })
-        var $yearupdata =$("#yMPicker").val();
-        $yesteryear = $yearupdata - 1;
-        $thisyear = $yearupdata;
+        });
+        //隐藏id列
+        $(function () {
+            $('#td0').datagrid('hideColumn', 'id');
+            $('#td0').datagrid('hideColumn', 'mainId');
+            $('#td0').datagrid('hideColumn', 'itemCode');
+        });
+    });
+
+    function changeth() {
+        var $yearupdata = $("#yMPicker").val();
+        if ($yearupdata == "") {
+            $yesteryear = "去";
+            $thisyear = "今";
+        } else {
+            $yesteryear = $yearupdata - 1;
+            $thisyear = $yearupdata;
+            $(".Moyear").text($thisyear);
+        }
         $("#td0").datagrid({
-            fitColumns:true,
-            collapsible:true,
+            fitColumns: true,
+            collapsible: true,
+            bAutoWidth: false,
             singleSelect: true,
-            onClickRow: function(index){
-                dataGridObj.startEditing(index,"#td0")
+            onClickRow: function (index) {
+                dataGridObj.startEditing(index, "#td0")
             },
             //创建table
-            columns:[[
-                {field:'id',title:'id',hideColumn:'id'},
-                {field:'mainId',title:'mainId',hideColumn:'mainId'},
-                {field:'groupName',title:'生产计划',width:100,align:'center'},
-                {field:'itemName',title:'项目',width:100,align:'center'},
-                {field:'itemUnit',title:'单位',width:100,align:'center'},
-                {field:'ndyjcl',title:$yesteryear+'年预计产量',editor:'numberbox',width:100,align:'center'},
-                {field:'yjdsjdcl',title:'预计第四季度产量',editor:'numberbox',width:100,align:'center'},
-                {field:'ncl',title:$thisyear+'年产量',editor:'numberbox',width:100,align:'center'}
+            columns: [[
+                {field: 'id', title: 'id', hideColumn: 'id'},
+                {field: 'mainId', title: 'mainId', hideColumn: 'mainId'},
+                {field: 'itemCode', title: '', hideColumn: 'itemCode'},
+                {field: 'groupName', title: '生产计划', width: 100, align: 'center'},
+                {field: 'itemName', title: '项目', width: 100, align: 'center'},
+                {field: 'itemUnit', title: '单位', width: 100, align: 'center'},
+                {field: 'ndyjcl', title: $yesteryear + '年预计产量', editor: 'text', width: 100, align: 'center'},
+                {field: 'yjdsjdcl', title: '预计第四季度产量', editor: 'text', width: 100, align: 'center'},
+                {field: 'ncl', title: $thisyear + '年产量', editor: 'text', width: 100, align: 'center'}
             ]],
             onAfterEdit: function (rowIndex, rowData, changes) {
                 dataGridObj.pushRowData(rowData);
-                dataGridObj.setEditIndex("#td0",undefined);
-                dataGridObj.mergeCells(loadedData,"#td0","groupName");
+                dataGridObj.setEditIndex("#td0", undefined);
+                dataGridObj.mergeCells(loadedData, "#td0", "groupName");
             },
             //合并单元格
-            onLoadSuccess:function (data) {
+            onLoadSuccess: function (data) {
                 loadedData = data;
-                dataGridObj.mergeCells(data,"#td0","groupName");
+                dataGridObj.mergeCells(data, "#td0", "groupName");
             },
             toolbar: [{
                 text: '保存', iconCls: 'icon-save', handler: function () {
@@ -275,12 +292,73 @@
                     $('#td0').datagrid('endEdit', dataGridObj.getEditIndex("#td0"));
                 }
             }]
-        })
-        //隐藏id列
-        $(function(){
-            $('#td0').datagrid('hideColumn','id');
-            $('#td0').datagrid('hideColumn','mainId');
         });
-    })
+        $('#td0').datagrid('hideColumn', 'id');
+        $('#td0').datagrid('hideColumn', 'mainId');
+        $('#td0').datagrid('hideColumn', 'itemCode');
+    };
+    $(window).resize(function () {  //浏览器窗口改变时dataGrid数据重置
+        $('#td0').datagrid('resize');
+    });
+    hidebutton();
+    // 将点击状态添加到数组里边
+    function postData(status) {
+        if (year == "某") {
+            LayerAlert("创建年计划的时间不能为空，请选择时间");
+            return;
+        }
+        ;
+        var chechDGArr = [
+            {
+                dgName: "年计划",
+                dgId: "#td0",
+                checkRowArr: [0],
+                checkFieldArr: ['ndyjcl', 'yjdsjdcl', "ncl"]
+            }
+        ];
+        if (status == "1") { //状态为提交时判断要检查的dataGrid指定列中的值是否为空，若为空则将不执行return false之后的方法/表达式
+            var checkFlag = dataGridObj.eachCheckDataGrid(chechDGArr);
+            if (checkFlag == false) {
+                return false;
+            }
+        }
+        var editItems = dataGridObj.getSaveItemArr();
+        var data = {
+            "status": status,
+            "adYear": $("#yMPicker").val(),
+            "mainId": id,
+            "yearPlans": JSON.stringify(editItems)
+        };
+        ajaxToServer1("/api/aps/ApsYearPlan/saveYearInfo", data, function (result) {
+            if (result.success) {
+                top.layer.msg('操作成功，即将返回月计划列表页！', {
+                    icon: 1,
+                    time: 800
+                });
+                setTimeout(function () {
+                    refreshActiveTab();
+                }, 1000)
+            }
+        });
+
+    }
+    function hidebutton() {
+        var url = admin_domain + "/api/sys/SysOperation/currentUserOperation/PPMYPP_PAC";
+        ajaxToServer(url, {}, function (result) {
+            if (result.success) {
+                console.log(result)
+                if (result.rows.length > 0) {
+                    $(".fa-save").css("display", "inline-block")
+                    for (var i = 0; i < result.rows.length; i++) {
+                        if (result.rows[i].code == "PPMYPP_PSO") {  //提交
+                            $(".btn-sub").css("display", "inline-block")
+                        }
+                    }
+                }
+            } else {
+                layerAlert(result.message)
+            }
+        })
+    }
 </script>
 </html>

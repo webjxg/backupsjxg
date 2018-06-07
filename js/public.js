@@ -1,47 +1,6 @@
 // 公共样式库
 
 
-
-
-
-
-
-
-//userIndex ztree方法 默认展开第二层
-function ztreeIndex(da) {
-            var data=da.rows;
-            var zTreeObj;
-            // zTree 的参数配置，深入使用请参考 API 文档（setting 配置详解）
-            var setting = {
-                data: {
-                    simpleData: {
-                        enable: true,   //设置是否使用简单数据模式(Array)
-                        idKey: "id",    //设置节点唯一标识属性名称
-                        pIdKey: "pId"      //设置父节点唯一标识属性名称
-                    },
-                    key: {
-                        name: "name",//zTree 节点数据保存节点名称的属性名称
-                        title: "name"//zTree 节点数据保存节点提示信息的属性名称
-                    }
-                },
-                callback: {
-                    onClick: function (e, treeId, node){
-                        $('#officeContent').attr('src','../systemSettings/'+page+'?treeId='+node.id);
-                    }
-                }
-
-            };
-            // zTree 的数据属性，深入使用请参考 API 文档（zTreeNode 节点数据详解）
-            var zNodes = data;
-            //执行ztree
-            var treeObj =$.fn.zTree.init($("#tree"), setting, zNodes);
-            var nodes = treeObj.getNodes();
-            for (var i = 0; i < nodes.length; i++) { //设置节点展开
-                treeObj.expandNode(nodes[i], true, false, true);
-            }
-
-}
-
 //userCompany页面使用 ajax并返回处理节点方法
 var zTreeObj;
 function ztreeCompany(data) {
@@ -49,12 +8,17 @@ function ztreeCompany(data) {
     var da=data.rows;
     var arr = [];
     da.filter(function (a) {
-        if (a.pId == 0) {
+        // if (a.pId == 0) {
             arr.push(a)
-        }
+        // }
     })
     var setting = {
         data: {
+            simpleData: {
+                enable: true,   //设置是否使用简单数据模式(Array)
+                idKey: "id",    //设置节点唯一标识属性名称
+                pIdKey: "pId"      //设置父节点唯一标识属性名称
+            },
             key: {
                 name: "name",//zTree 节点数据保存节点名称的属性名称
                 title: "name" //zTree 节点数据保存节点提示信息的属性名称
@@ -64,6 +28,10 @@ function ztreeCompany(data) {
 
     var zNodes = arr;
     zTreeObj= $.fn.zTree.init($('#tree'), setting, zNodes);
+    var nodes = zTreeObj.getNodes();
+    for (var i = 0; i < nodes.length; i++) { //设置节点展开
+        zTreeObj.expandNode(nodes[i], true, false, true);
+    }
     if(zTreeObj)
     {return getSelectVal}
 }
@@ -94,7 +62,7 @@ function layerInZtree(btn,size,url,type,name,id,alt) {
             type: 2,
             title: '添加',
             shadeClose: true,
-            maxmin: true, //开启最大化最小化按钮
+            maxmin: false, //开启最大化最小化按钮
             area: size,
             content: url,
             yes:function (index,layero) {
@@ -106,19 +74,17 @@ function layerInZtree(btn,size,url,type,name,id,alt) {
                         return false;
 
                     }
-                $(name).val(selobj.name);
-                $(id).val(selobj.id);
+                    $(name).val(selobj.name);
+                    $(id).val(selobj.id);
                 }
                 top.layer.close(index);
             }
-            // success: function(index,layero){
-            //     // var val = $('#companyId').val();
-            //     // var iframeWin = layero.find('iframe')[0];
-            //     // console.log(iframeWin);
-            //     // iframeWin.contentWindow.setDefaultVal(val);
-            // },
         })
     })
+
+
+
+
 
 
 }
@@ -130,7 +96,7 @@ function layerInZtreeAll(btn,size,url,name,id) {
             type: 2,
             title: '添加',
             shadeClose: true,
-            maxmin: true, //开启最大化最小化按钮
+            maxmin: false, //开启最大化最小化按钮
             area: size,
             content: url,
             yes:function (index,layero) {
@@ -180,19 +146,15 @@ function initWebuploader(url,filePicker, ImagePreview,ImgUrl) {
     }else{
         $img.attr('src',ImgUrl)
     }
-                                            // console.log(BASE_URL + url);
     var uploader = WebUploader.create({
-
                                 // 选完文件后，是否自动上传。
         auto: true,
-
                                 // // swf文件路径
-                                // swf: BASE_URL + '/plugins/webUploader/Uploader.swf',
+        swf: admin_domain + '/plugins/webUploader/Uploader.swf',
 
                                 // 文件接收服务端。
-        server: BASE_URL + url,
-
-                                // 选择文件的按钮。可选。
+        server: admin_domain + url,
+        // 选择文件的按钮。可选。
                                 // 内部根据当前运行是创建，可能是input元素，也可能是flash.
         pick: {
             id: filePicker,
@@ -222,6 +184,7 @@ function initWebuploader(url,filePicker, ImagePreview,ImgUrl) {
 
     });
     uploader.on( 'uploadSuccess', function( file,response) {
+        console.log(file,response);
         $('#nameImage').val(response.saveName);
     });
 }

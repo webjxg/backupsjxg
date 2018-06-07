@@ -30,7 +30,7 @@
         }
 
         .ibox > .ibox-content:nth-of-type(2) {
-            /*height:999px;*/
+            height:100%;
             width: 100%;
             float: left;
             margin-right: 20px;
@@ -286,8 +286,8 @@
                     </div>
                 </form>
                 <div>
-                    <span> 日期 : </span><span style="margin-right: 15px" class="giveworker"></span>
-                    <span> 班次 : </span><span style="margin-right: 15px" class="shiftworker"></span>
+                    <span> 交班人 : </span><span style="margin-right: 15px" class="giveworker"></span>
+                    <span> 接班人 : </span><span style="margin-right: 15px" class="shiftworker"></span>
                 </div>
             </div>
             <!--隐藏表格区-->
@@ -310,6 +310,7 @@
 <script src="../../plugins/bootStrapPager/js/extendPagination.js"></script>
 <script src="../../plugins/ztree/js/jquery.ztree.core.js"></script>
 <!--自定义文件-->
+<script src="../../js/apiDomain.js"></script>
 <script src="../../js/customForm-aps.js"></script>
 <script src="../../js/page.js"></script>
 
@@ -319,22 +320,28 @@
         var cz = {
             "bigKind": "DD"
         };
-        ajaxTo('/api/ctrl/ShiftMain/form/DD', JSON.stringify(cz), function (result) {
+        ajaxToServer('/api/ctrl/ShiftMain/form/DD', JSON.stringify(cz), function (result) {
             if (result.success == true) {
-                console.log(result);
                 renderleft(result);
                 btnonclick(result);
                 renderTableData(result);
-                $('.table')
-
-                if (result.shiftMain.overStatus == "0") {/*||result.shiftMain.overStatus==''*/
+                $('.giveworker').text(result.shiftMain.overUserName);
+                $('.shiftworker').text(result.shiftMain.reciveUserName);
+                console.log(result.shiftMain.overStatus == "0")
+                if (result.shiftMain.overStatus == "0") {
                     $('.apsType-box').append('<input type="button" class="giveWork btn bg-1ab394" value="交班">')
-                } else if (result.lastShiftMain.reciveStatus == "0") {/*||result.lastShiftMain.reciveStatus==''*/
+                } else if (result.lastShiftMain.reciveStatus == "0") {
+                    console.log(2);
+                    $('textarea').attr('readonly','readonly');
                     $('.apsType-box').append('<input type="button"  class="joinWork btn bg-ffa82d" value="接班" >')
+                }else{
+                    $('textarea').attr('readonly','readonly');
                 }
             } else {
-                console.log(result);
+                renderleft(result);
+                renderTableData(result); 
                 layer.msg(result.message)
+                $('textarea').attr('readonly','readonly');
             }
 
         });
@@ -356,8 +363,9 @@
                     "</div>";
                 $('#' + keyArr[i] + '').append(str);
             }
+            btnonclick();
         } else {
-            NewNodeRow(keyArr, ShiftMainMap)
+            NewNodeRow(keyArr, ShiftMainMap);
         }
     }
     /*有数据的时候渲染到textarea里*/
@@ -396,13 +404,10 @@
             $('.tablecontent').css('display', 'block');
         });
         /*隐藏表格按钮*/
-
         $('.content').on('click', '.hidd', function () {
             $('.lefttimeline').css('width', '100%');
             $('.tablecontent').css('display', 'none');
         });
-
-
         /*加减按钮*/
         $('.parentbox').on('click', '.btnaddr', function () {
             var str = "<div class='newbox'>" +
@@ -414,60 +419,100 @@
             $(this).parents('.newbox').after(str);
         });
         $('.parentbox').on('click', '.btnremove', function () {
-            $(this).parents('.newbox').remove();
+            var len = $(this).parents('.parentbox').find('textarea').length;
+           if(len<=1){
+               top.layer.alert("至少填写一条");
+           }else{
+               $(this).parents('.newbox').remove();
+           }
         });
-        /*交班*/
 
-
+        /*_______________交班*/
         var keyArr = ["SCYXQK", "ZBQK", "SBYXQK", "AQFM", "GQJSFWH", "WSQK", "LSGZAP"];
+
+        console.log(result);
         $('.apsType-box').on('click', '.giveWork', function () {
-            top.layer.confirm('是否确定交班',{
-                btn:['确定', '取消'],
-                icon: 3},function () {
-                var data = {
-                    bigKind: "DD",
-                    shiftId: result.shiftMain.shift.id,
-                    shiftMainId: result.shiftMain.id,
-                    overStatus: "1",
-                    groupName: result.shiftMain.groupName,
-                    shiftDate: result.shiftMain.shiftDate
+            if(banName==result.shiftMain.groupName&&banId==result.shiftMain.shift.id){
+                top.layer.confirm('是否确定交班',{
+                        btn:['确定', '取消'],
+                        icon: 3},function () {
+                        var data = {
+                            bigKind: "DD",
+                            shiftId: result.shiftMain.shift.id,
+                            shiftMainId: result.shiftMain.id,
+                            overStatus: "1",
+                            groupName: result.shiftMain.groupName,
+                            shiftDate: result.shiftMain.shiftDate
 
-                };
-                $("#reciveStatus").val("1");
-                for (var i = 0; i < keyArr.length; i++) {
-                    data[keyArr[i] + "_dataArr"] = JSON.stringify(getItemArrJson($('#' + keyArr[i] + ''), keyArr[i], result));
-                }
-                ajaxTo1('/api/ctrl/ShiftMain/over', data, function () {
-                    layer.msg(result.massage)
-                });
-                top.layer.closeAll();
-                window.location.reload()
-
-                }
-            )
-
-        })
-        /*接班*/
-        $('.apsType-box').on('click', '.joinWork', function () {
-            top.layer.confirm('是否确定接班',{
-                btn:['确定', '取消'],
-                icon: 3},function () {
-                    var data = {
-                        bigKind: "DD",
-                        reciveStatus: "1",
-                        lastShiftMainId: result.lastShiftMain.id
-                    };
-                    for (var i = 0; i < keyArr.length; i++) {
-                        data[keyArr[i] + "_dataArr"] = JSON.stringify(getItemArrJson1($('#' + keyArr[i] + ''), keyArr[i], result));
+                        };
+                        $("#reciveStatus").val("1");
+                        for (var i = 0; i < keyArr.length; i++) {
+                            data[keyArr[i] + "_dataArr"] = JSON.stringify(getItemArrJson($('#' + keyArr[i] + ''), keyArr[i], result));
+                        }
+                        ajaxToServer1('/api/ctrl/ShiftMain/over', data, function (result) {
+                            if(result.success){
+                                top.layer.closeAll();
+                                window.location.reload()
+                            }else{
+                                layer.msg(result.massage)
+                            }
+                        });
                     }
-                    ajaxTo1('/api/ctrl/ShiftMain/recive', data, function () {
-                        layer.msg(result.massage)
-                    });
-                top.layer.closeAll();
-                window.location.reload()
-                }
-            )
-        })
+                )
+            }else{
+                layerAlert('用户信息不匹配')
+            }
+
+
+        });
+        /*_____________________接班*/
+        $('.apsType-box').on('click', '.joinWork', function () {
+            if(banName==result.shiftMain.groupName&&banId==result.shiftMain.shift.id){
+                top.layer.confirm('是否确定接班',{
+                        btn:['确定', '取消'],
+                        icon: 3},function () {
+                        var data = {
+                            bigKind: "DD",
+                            reciveStatus: "1",
+                            lastShiftMainId: result.lastShiftMain.id
+                        };
+                        for (var i = 0; i < keyArr.length; i++) {
+                            data[keyArr[i] + "_dataArr"] = JSON.stringify(getItemArrJson1($('#' + keyArr[i] + ''), keyArr[i], result));
+                        }
+                        ajaxToServer1('/api/ctrl/ShiftMain/recive', data, function (result) {
+                            if(result.success){
+                                top.layer.closeAll();
+                                window.location.reload()
+                            }else{
+                                layer.msg(result.massage)
+                            }
+                        });
+                    }
+                )
+            }else{
+                layerAlert('用户信息不匹配')
+            }
+        });
+    }
+    //___________________写入班信息
+    function renderclass() {
+        $('.date').text(getNowFormatDate());
+        var data = {};
+        ajaxToServer1('/api/ctrl/DirectiveIssued/goupList', data, function (data) {
+            console.log(data);
+            if(data.rows.length!==0) {
+                var groupName = data.rows[0].name;
+                var shiftName = data.rows[0].shift.name;
+                var startTime = data.rows[0].shift.startTime;
+                var endTime = data.rows[0].shift.endTime;
+                $('.groupName').text(groupName+'班');//班组
+                $('.shiftName').text(shiftName+"("+startTime + "-" + endTime+")");//班次
+            }
+            banName=data.rows[0].name;
+            banId=data.rows[0].shift.id;
+        });
+
+
     }
     /*用于交班*/
     function getItemArrJson(obj, keyArr, result) {
@@ -494,18 +539,6 @@
         return jsonArr;
     }
 
-    //写入班信息
-    function renderclass() {
-        $('.date').text(getNowFormatDate());
-        var data = {};
-        ajaxTo('/api/ctrl/DirectiveIssued/list', JSON.stringify(data), function (data) {
-            var startTime = data.rows[0].shift.startTime, endTime = data.rows[0].shift.endTime;
-            $('.groupName').text(data.rows[0].name);
-            $('.shiftName').text(startTime + "-" + endTime);
-            $('.giveworker').text(data.rows[0].issuedUser);
-            $('.shiftworker').text(data.rows[0].issuedUser);
-        });
-    }
 
     //获得当前日期
     function getNowFormatDate() {
@@ -524,107 +557,40 @@
         return currentdate;
     }
 
-    function ajaxTo(url, data, callbackFun) {
-        var layerIndex = layer.load(2);
-        url = url.toLowerCase().indexOf("http://") == 0 ? url : (urlPrefix + url);
-        $.ajax({
-            headers: {
-                Accept: "application/json; charset=utf-8",
-                // Authorization: getCookie("token_type")+" " +getCookie("authorization")，
-
-
-                 /*Authorization: "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJqdGkiOiIwMzIyMjcxNmFiNzU0MTIxOTU5Yjg1ODU1YmFhZWRjZSIsInN1YiI6IjIyIiwiaXNzIjoiYWRtaW4iLCJhdWQiOiJBZG1pbiBKV1QgT25saW5lIn0.c_MLl8tCitpuSa6d-RzAFWJq7k-H3XBAQePTep4q4IM"*/    //乙班
-
-                /*Authorization: "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJqdGkiOiIwNGQ2MjI3ZTQwMTI0YWY4YTZiMzhhZTExMTMzMTBkMSIsInN1YiI6IjQ0IiwiaXNzIjoiYWRtaW4iLCJhdWQiOiJBZG1pbiBKV1QgT25saW5lIn0.Q1xsSdrr__A8xBiMJOrXFYEZTBRQCgjGrwrJKp4ZQT4"*/  /*丁*/
-
-                Authorization: "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJqdGkiOiIwMjgyNzJiNDE2Njg0NDc4YmRiMzZhOTI3ZGQ5MDhiZCIsInN1YiI6IjExIiwiaXNzIjoiYWRtaW4iLCJhdWQiOiJBZG1pbiBKV1QgT25saW5lIn0.2FEUoTT96E350SAXijdtAGVncELyd4rkImjMjhaWTck"     //甲
-
-                /*Authorization: "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJqdGkiOiIwNGEzOTJkZGIwNWE0YTJmYTE2NDE4MGMwMWNkYmJmNCIsInN1YiI6IjMzIiwiaXNzIjoiYWRtaW4iLCJhdWQiOiJBZG1pbiBKV1QgT25saW5lIn0.Byouxvl_hsAYtVQ6PQ0TCHTeyfzkG6ojuGfyyc4-880" */  /*丙班*/
-            },
-            type: "post",
-            url: url,
-            data: data,
-            dataType: 'json',
-            contentType: 'application/json',
-            success: function (result) {
-                layer.close(layerIndex);
-                if (callbackFun) {
-                    callbackFun(result);
-                }
-            },
-            error: function () {
-                layer.close(layerIndex);
-                layer.msg('请求服务器异常.');
-            }
-        });
-    }
-
-    function ajaxTo1(url, data, callbackFun) {
-        var layerIndex = layer.load(2);
-        url = url.toLowerCase().indexOf("http://") == 0 ? url : (urlPrefix + url);
-        $.ajax({
-            headers: {
-                Accept: "application/json; charset=utf-8",
-                // Authorization: getCookie("token_type")+" " +getCookie("authorization")，
-                Authorization: "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJqdGkiOiIwMzIyMjcxNmFiNzU0MTIxOTU5Yjg1ODU1YmFhZWRjZSIsInN1YiI6IjIyIiwiaXNzIjoiYWRtaW4iLCJhdWQiOiJBZG1pbiBKV1QgT25saW5lIn0.c_MLl8tCitpuSa6d-RzAFWJq7k-H3XBAQePTep4q4IM"
-            },
-            type: "post",
-            url: url,
-            data: data,
-            dataType: 'json',
-            contentType: 'application/x-www-form-urlencoded',
-            success: function (result) {
-                layer.close(layerIndex);
-                if (callbackFun) {
-                    callbackFun(result);
-                }
-            },
-            error: function () {
-                layer.close(layerIndex);
-                layer.msg('请求服务器异常.');
-            }
-        });
-    }
-
     /*渲染隐藏表*/
     function renderTableData(data) {
         var keyArr = ["SCYXQK", "ZBQK", "SBYXQK", "AQFM", "GQJSFWH", "WSQK", "LSGZAP"];
         var arr = ['生产运行情况', '指标情况', '设备运营情况', '安全方面', '工器具是否完好', '卫生情况', '临时工作安排'];
         for (var i = 0; i < keyArr.length; i++) {
-            var lastShiftMainMap = data.lastShiftMainMap[keyArr[i]];
-            if (lastShiftMainMap == null) {
-                var html = '<table title="岗位记事" class="table table-striped table-bordered table-hover table-condensed dataTables-example dataTable ' + keyArr[i] + '">' +
-                    '<thead>' +
-                    '<tr>' +
-                    '<th style="text-align: left;font-weight:300; background-color: #F5F5F5 !important;color: #000000">'
-                    + arr[i] + '</th>' +
-                    '</tr>' +
-                    '</thead>' +
-                    '<tbody>' +
-                        '<tr>' +
-                        '<td>暂无内容</td>'+
-                    '</tr>'+
-                    '</tbody>' +
-                    '</table>';
+            var html = '<table title="岗位记事" class="table table-striped table-bordered table-hover table-condensed dataTables-example dataTable ' + keyArr[i] + '">' +
+                '<thead>' +
+                '<tr>' +
+                '<th style="text-align: left;font-weight:300; background-color: #F5F5F5 !important;color: #000000">'
+                + arr[i] + '</th>' +
+                '</tr>' +
+                '</thead>' +
+                '<tbody class="' + keyArr[i] + '">' +
+                '</tbody>' +
+                '</table>';
+            if (data.success==false) {
                 $('.tablecontent').append(html);
-            } else {
-                var tb = '<table title="岗位记事" class="table table-striped table-bordered table-hover table-condensed dataTables-example dataTable" >' +
-                    '<thead>' +
-                    '<tr>' +
-                    '<th style="text-align: left;font-weight:300; background-color: #F5F5F5 !important;color: #000000">'
-                    + arr[i] + '</th>' +
-                    '</tr>' +
-                    '</thead>' +
-                    '<tbody class="' + keyArr[i] + '">' +
-                    '</tbody>' +
-                    '</table>';
-                $('.tablecontent').append(tb);
-                for (var j = 0; j < lastShiftMainMap.length; j++) {
-                    var tablecon = '<tr>' +
-                        '<td style="text-align: left;background-color: transparent">' + lastShiftMainMap[j].content + '</td>' +
-                        '</tr>';
-                    $('.' + keyArr[i]).append(tablecon)
+            }else{
+                if(data.lastShiftMainMap[i] == undefined){
+                    $('.tablecontent').append(html);
+                }else if(JSON.stringify(data.lastShiftMainMap) != "{}"){
+                    $('.tablecontent').append(html);
+                    var lastShiftMainMap = data.lastShiftMainMap[keyArr[i]];
+                    console.log(lastShiftMainMap);
+                    for (var j =0; j < lastShiftMainMap.length;j++) {
+                        var thtml =
+                            '<tr>' +
+                            '<td style="text-align: left;background-color: transparent">' + lastShiftMainMap[j].content + '</td>' +
+                            '</tr>';
+                        $('tbody.' + keyArr[i]).append(thtml);
+                    }
                 }
+
+
             }
 
 

@@ -6,8 +6,8 @@
   border: 1px solid #1ab394 !important;
   color: #1ab394;
   background-color: transparent;
-  border-radius: 3px; }
-
+  border-radius: 3px;
+  }
 .btn-stop {
   padding: 3px;
   border-color: #f75c5a;
@@ -36,9 +36,13 @@
 .datePicker{
   height: 30px;
   width: 120px;
-  border: none;
   border:1px solid #e5e6e7;
   border-radius: 3px;
+  display: inline-block !important;
+}
+.fa-calendar{
+  margin-left: -16px;
+  color: #ffa82d;
 }
 .id {
   display: none; }

@@ -81,6 +81,7 @@
 <script src="../../plugins/datatables/js/jquery.dataTables.min.js"></script>
 <!--自定义文件-->
 <script src="../../js/common.js"></script>
+<script src="../../js/apiDomain.js"></script>
 <script src="../../js/customForm.js"></script>
 <script>
     var id = getQueryString('id') || "";
@@ -111,11 +112,12 @@
         $("#datainner").on("click", '.btn-delete', function () {
             var userIds = $(this).attr('id'),
                 roleName = $(this).parents('tr').find('.roleName').text();
+                //alert(roleName);改BUG时候用的
             var data = {
                 appIds: userIds,
                 orgId: id,
             };
-            deleteACallback('确认要将用户 <b>[' + roleName + ']</b>从 <b>[' + $(".roleType b").text() + ']</b>角色中移除吗？', function (layIdx) {
+            deleteACallback('确认要将应用从<b>[' + $(".roleType b").text() + ']</b>中移除吗？', function (layIdx) {
                 var url = '/api/sys/SysOrg/delApp';
 
                 ajaxToServer1(url, data, function (result) {
@@ -167,7 +169,7 @@
                 appIds: userIds.substr(1),
                 orgId: id,
             };
-            deleteACallback('确认要将已选择的用户从角色<b>[' + $(".roleType b").text() + ']</b>中移除吗？', function (layIdx) {
+            deleteACallback('确认要将已选择的应用从<b>[' + $(".roleType b").text() + ']</b>中移除吗？', function (layIdx) {
                 var url = '/api/sys/SysOrg/delApp';
                 ajaxToServer1(url, data, function (result) {
                     console.log(url,data,result);
@@ -248,6 +250,7 @@
                             layer.msg(result.message);
                         }
                     })
+                    location.reload();
                     top.layer.close(index);
                     refreshLoad()
                 },

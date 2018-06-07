@@ -43,23 +43,23 @@
             <!--顶部搜索-->
             <div class="row">
                 <div class="col-sm-12">
-                    <form id="searchForm" class="form-inline" action="#" method="post">
+                    <div id="searchForm" class="form-inline">
                         <input type="hidden" id="treeId"  >
                         <div class="form-group">
-                            <div class="company col-sm-12">
+                            <div class="company ">
                                 <span>操作名称:</span>
                                 <input id="operationNameId" name="operationNameId" class="form-control" type="hidden" value="">
                                 <input id="operationName" name="nameParam" type="text" value="" data-msg-required=""
                                        class="form-control required" style="" aria-required="true">
-                                <label id="companyName-error" class="error" for="officeId" style="display:none"></label>
+                                <label id="companyName-error" class="error" for="operationName" style="display:none"></label>
 
                                 <span >操作编码:</span>
                                 <input id="proCodeId" name="proCodeId" class="form-control" type="hidden" value="">
                                 <input id="operationCode" name="codeParam" type="text" value="" data-msg-required=""
                                        class="form-control required" style="" aria-required="true">
-                                <label id="officeName-error" class="error" for="officeId" style="display:none"></label>
+                                <label id="officeName-error" class="error" for="operationCode" style="display:none"></label>
                             </div>
-                            <div class="user col-sm-12">
+                            <div class="user ">
                                 <span>描&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;述:</span>
                                 <input id="opeDescriptionId" name="opeDescriptionId" class="form-control" type="hidden" value="">
                                 <input id="opeDescription" name="desParam" type="text" value="" data-msg-required=""
@@ -67,13 +67,13 @@
                                 <span >是否启用:</span>
                                 <input id="enableId" name="enableId.id" class="form-control" type="hidden" value="">
                                 <select id="enable" name="enable" class="form-control required">
-                                    <option class="ope"></option>
+                                    <option value="">全部</option>
                                     <option value="1">启用</option>
-                                    <option value="2">禁用</option>
+                                    <option value="0">禁用</option>
                                 </select>
                             </div>
                         </div>
-                    </form>
+                    </div>
                     <br>
                 </div>
             </div>
@@ -81,16 +81,16 @@
                 <div class="col-sm-12">
                     <div class="pull-left">
                         <button class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="left"
-                                onclick="openEditDialog('新增用户','./systemSettings/opeCheckView.html','800px','400px')" title="添加"><i class="fa fa-plus"></i> 添加
+                                onclick="openEditDialog('新增操作','./systemSettings/opeCheckView.html','800px','400px')" title="添加"><i class="fa fa-plus"></i> 添加
                         </button>
 
                         <button class="btn btn-white btn-sm" data-toggle="tooltip" data-placement="left"
-                                onclick="edit('修改用户信息','./systemSettings/opeCheckView.html','800px','400px','#treeTable')" title="修改"><i class="fa fa-file-text-o"></i> 修改
+                                onclick="edit('修改操作','./systemSettings/opeCheckView.html','800px','400px','#treeTable')" title="修改"><i class="fa fa-file-text-o"></i> 修改
                         </button>
                         <button class="btn btn-white btn-sm" onclick="deleteAll('确认要删除该用户吗？','/api/sys/SysOperation/delete/','#treeTable')"  data-toggle="tooltip" data-placement="top"><i
                                 class="fa fa-trash-o"></i>删除</button>
                         <button class="btn btn-white btn-sm " id="refresh-btn" data-toggle="tooltip" data-placement="left"
-                                onclick="Page.reload()" title="刷新"><i class="glyphicon glyphicon-repeat"></i> 刷新
+                                onclick="window.location.reload()" title="刷新"><i class="glyphicon glyphicon-repeat"></i> 刷新
                         </button>
                     </div>
                     <div class="pull-right">
@@ -123,22 +123,7 @@
                 </tbody>
             </table>
             <div class="clearfix pagination-box">
-                <div class="pagination-detail pull-left">
-                    <div class="page-info pull-left"></div>
-                    <div class="page-list pull-left">
-                        <span>每页显示</span>
-                        <select name="" id="pag-sel">
-                            <option value="5">5</option>
-                            <option value="10" selected>10</option>
-                            <option value="20">20</option>
-                            <option value="25">25</option>
-                            <option value="30">30</option>
-                            <option value="40">40</option>
-                            <option value="50">50</option>
-                        </select>
-                        条记录
-                    </div>
-                </div>
+                <div class="page-info pull-left"></div>
                 <div id="pagination" class="pagination-roll pull-right"></div>
             </div>
         </div>
@@ -160,7 +145,9 @@
 <script src="../../plugins/bootStrapPager/js/extendPagination.js"></script>
 <!--页面依赖js-->
 <script src="../../js/public.js"></script>
+<script src="../../js/common.js"></script>
 <script src="../../js/jeeplus.js"></script>
+<script src="../../js/apiDomain.js"></script>
 <script src="../../js/customForm.js"></script>
 <script src="../../js/page.js"></script>
 <script>
@@ -188,7 +175,6 @@
                     deleteItem('确定要删除该属性吗', '/api/sys/SysOperation/delete',id)
                 });
             });
-            $('.ope').text("--请选择--")
         };
 
         var treeId = getQueryString("treeId");
@@ -212,6 +198,7 @@
         $('#treeTable').dataTable({
             "bSort":false,
             "bPaginate": false,
+            "bAutoWidth": false,
             "bDestroy": true,
             "paging": false,
             "bProcessing": true,
@@ -229,13 +216,13 @@
                         return data = "<input type='checkbox' id=" + row.id + " class='i-checks'>"
                     }
                 },
-                {"data": null, },
-                {"data": "name",},
-                {"data": "code", },
-                {"data": "remark", },
-                {"data": "sort", },
+                {"data": null,"width":"6%" },
+                {"data": "name",'sClass':"alignCenter  "},
+                {"data": "code",'sClass':"alignCenter","width":"15%"},
+                {"data": "remark", 'sClass':"alignCenter","width":"15%"},
+                {"data": "sort","width":"6%" },
                 {
-                    "data": null,
+                    "data": null,"width":"6%",
                     "render":function (data) {
                         if(data.enable==0){
                             return data = '否'

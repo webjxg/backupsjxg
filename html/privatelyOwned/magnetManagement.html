@@ -27,8 +27,8 @@
             <div style="border-bottom: 1px solid #eee; height: 45px;">
                 <h1 class="titName">磁贴管理</h1>
                 <div class="pull-right btn-box">
-                    <button class="btn btn-levels" id="btn-add" type="button" >注册磁贴</button>
-                    <button hidden="hidden" class="fa-refresh" onclick="window.location.reload()"></button>
+                    <button class="btn btn-levels" id="btn-add" type="button" onclick="window.location.href='./registerMmIndex.html'">注册磁贴</button>
+
                 </div>
             </div>
             <!--按钮-->
@@ -37,9 +37,12 @@
                     <ul class="apsType-linkage titleName" id="titleName">
                     </ul>
                 </div>
+                <div id="rfresh-btn" class="btn pull-right"><i class="fa fa-refresh"></i>刷新</div>
             </div>
         </div>
-        <div id="iframeCon"></div>
+        <div id="iframeCon">
+            <iframe id="ifr" src="./mMInit.html"  frameborder="0"></iframe>
+        </div>
     </div>
 </div>
 
@@ -50,88 +53,60 @@
 <!--附属插件-->
 <script src="../../plugins/layer/layer.js"></script>
 <!--自定义文件-->
+<script src="../../js/apiDomain.js"></script>
 <script src="../../js/customForm-aps.js"></script>
 <script src="../../js/page.js"></script>
 
 <script>
    $('document').ready(function () {
-       ajaxToServerS('/api/workbench/WorkbenchTileTemplate/typeList',{},rendertitle);
+       ajaxToServer1(admin_domain + '/api/workbench/WorkbenchTileTemplate/typeList', {}, rendertitle);
+//       setFrameHeight()
+       $('#rfresh-btn').click(function () {
+           var ifr=$('#iframeCon').find('iframe');
+           ifr[0].contentWindow.window.location.reload();
 
-   });
-   function rendertitle(result) {
-       var typelist=result.typeList;
-       for(var i=0;i<typelist.length;i++){
-           var html='<li id="'+typelist[i].id+'">'+
-               '<a>'+typelist[i].name+'<span></span></a>'
-               +'</li>'
-           $('.titleName').append(html);
 
+       });
+       function rendertitle(result) {
+           console.log(result);
+           var typelist = result.typeList;
+           for (var i = 0; i < typelist.length; i++) {
+               var html = '<li id="' + typelist[i].id + '">' +
+                   '<a>' + typelist[i].name + '<span></span></a>'
+                   + '</li>'
+               $('.titleName').append(html);
+
+           }
+           rendercontent()
        }
-       rendercontent()
-   }
-    function rendercontent() {
+
+       function rendercontent() {
 
 
-       var $ifrTab=$('#titleName').find('li');
-       var $ifrBox=$('#iframeCon');
+           var $ifrTab = $('#titleName').find('li');
+           var $ifrBox = $('#iframeCon');
 
 
-       $ifrTab.click(function () {
-           var ind=$(this).index(),typeId=$(this).attr('id');
-           var $ifrurl=[
-               "./mMshortcut.html?&typeid="+typeId,
-               "./mMnumber.html?&typeid="+typeId,
-               "./mMchart.html?&typeid="+typeId,
-               "./mMlist.html?&typeid="+typeId,
-               "./mMcard.html?&typeid="+typeId,
-               "./mMtext.html?&typeid="+typeId,
-               "./mMcustom.html?&typeid="+typeId
-           ];
-           $ifrBox.children("iframe").hide();
-           $(this).addClass('active').siblings("li").removeClass('active');
-           createTagFrame("iframeCon","",$ifrurl[ind]);
+           $ifrTab.click(function () {
+               var ind = $(this).index(), typeId = $(this).attr('id');
+               var $ifrurl = [
+                   "./mMshortcut.html?typeid=" + typeId,
+                   "./mMnumber.html?typeid=" + typeId,
+                   "./mMchart.html?typeid=" + typeId,
+                   "./mMlist.html?typeid=" + typeId,
+                   "./mMcard.html?typeid=" + typeId,
+                   "./mMtext.html?typeid=" + typeId,
+                   "./mMcustom.html?typeid=" + typeId
+               ];
+               $ifrBox.children("iframe").remove();
+               $(this).addClass('active').siblings("li").removeClass('active');
+               createTagFrame("iframeCon", $ifrurl[ind]);
 //           $('#iframeCon>iframe').contentWindow.giveval(typeId)
 
-       });
-//       setFrameHeight();
-    }
+           });
 
-
-
-
-
-
-
-
-
-   function ajaxToServerS(url, data, callbackFun){
-       var layerIndex = layer.load(2);
-       url = url.toLowerCase().indexOf("http://") == 0? url : ("http://114.115.165.184:8080/admin-api" + url);
-       $.ajax({
-           headers:{
-               Accept: "application/json; charset=utf-8",
-               // Authorization: getCookie("token_type")+" " +getCookie("authorization")，
-               Authorization: "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJqdGkiOiIwNGEzOTJkZGIwNWE0YTJmYTE2NDE4MGMwMWNkYmJmNCIsInN1YiI6IjMzIiwiaXNzIjoiYWRtaW4iLCJhdWQiOiJBZG1pbiBKV1QgT25saW5lIn0.Byouxvl_hsAYtVQ6PQ0TCHTeyfzkG6ojuGfyyc4-880"
-           },
-           type: "post",
-           url: url,
-           data: data,
-           dataType: 'json',
-           contentType:'application/json',
-           success: function(result){
-               layer.close(layerIndex);
-               if(callbackFun){
-                   callbackFun(result);
-               }
-           },
-           error:function(){
-               layer.close(layerIndex);
-               layer.msg('请求服务器异常.');
-           }
-       });
-   }
-
-
+       }
+   })
 
 
 </script>

@@ -18,8 +18,12 @@
         .targetPlanTab-nav{margin:20px 0 ;}
         .targetPlanTab-nav li{width:33%;text-align: center;line-height: 30px;font-size:14px;float:left;cursor: pointer;}
         .targetPlanTab-nav li.active,.targetPlanTab-nav li:hover{background: #a7e6eb;border-radius: 16px;}
-        /*.targetPlanTab-nav li:hover{background:#5fbb6f;color:#fff;border-color:#5fbb6f;}*/
-
+        .wrapper,.ibox{height:100%;}
+        .ibox{background: #fff;}
+        .revP-tit{background: #f3f3f4;}
+        .btn-sub{
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -27,88 +31,63 @@
     <div class="ibox">
         <div class="ibox-content pos-rel">
             <input type="hidden" value="" id="monthStatus">
-            <button type="button" class="auditing-btn btn pull-right">审核</button>
-            <button type="button" class="back-btn btn pull-right">返回上级</button>
-           <div class="reviewPlans-tab tab-box">
-               <ul class="revP-tit tab-tit clearfix">
-                   <li class="active">审批流程</li>
-                   <li >表单信息</li>
-               </ul>
-               <ul class="tab-con">
-                   <li id="reviewPlans" class="pag-30 bg-fff active">
-                       <div>
-                           <span class="appUser mgr-30" style="display: inline-block;text-indent: 15px;">申请人&nbsp;：<i>高莹</i></span>
-                           <span class="appTime mgr-30">申请时间：<i>2018-01-22</i></span>
-                           <span class="currentApp mgr-30">当前审批人：<i>徐小平</i></span>
-                           <span class="flowStatus mgr-30">流程状态：<i>审批中</i></span>
-                       </div>
-                       <div class="app-radio">
-                           <span class="w-74">审批&nbsp;：</span>
-                           <label class="mgr-30 customRadio" ><input type="radio" value="1" name="appRadio" checked><i></i>通过</label>
-                           <label class="mgr-30 customRadio"><input type="radio"  value="0" name="appRadio"><i></i>驳回</label>
-                       </div>
-                       <div class="app-view">
-                           <span style="vertical-align: top;" class="w-74">审批意见&nbsp;：</span>
-                           <textarea name="" id="" placeholder="请填写您的意见"  class="appTextare"></textarea>
-                       </div>
-                       <div class="tab-box app-flow-tabBox">
-                           <ul class="app-flow-tit tab-tit clearfix">
-                               <li >审批过程</li>
-                               <li class="active">流程图</li>
-                           </ul>
-                           <ul class="tab-con">
-                               <li>
-                                   审批过程
-                               </li>
-                               <li class="active flow-list">
-                                   <div class="flow-item">
-                                       <cite class="flow-item-icon flow-icon1"></cite>
-                                       <span class="flow-item-user">高莹</span>
-                                       <span class="flow-item-time">2018-01-23 12:45</span>
-                                       <span class="flow-agree">发起人</span>
-                                   </div>
-                                   <div class="flow-item">
-                                       <cite class="flow-item-icon flow-icon4"></cite>
-                                       <span class="flow-item-user">徐小平</span>
-                                       <span class="flow-item-time">2018-01-23 12:45</span>
-                                       <span class="flow-disagree">
-                                           驳回</br>指标不合格，请重新计算
-                                       </span>
-                                   </div>
-                                   <div class="flow-item">
-                                       <cite class="flow-item-icon flow-icon2"></cite>
-                                       <span class="flow-item-user">徐小平</span>
-                                       <span class="flow-item-time">2018-01-23 12:45</span>
-                                       <span class="flow-agree">
-                                           同意
-                                       </span>
-                                   </div>
-                                   <div class="flow-item">
-                                       <cite class="flow-item-icon flow-icon3"></cite>
-                                       <span class="flow-item-user">徐小平</span>
-                                       <span class="flow-item-time">2018-01-23 12:45</span>
-                                       <span class="flow-agree">
-                                           通过
-                                       </span>
-                                   </div>
-                               </li>
-                           </ul>
-                       </div>
-                   </li>
-                   <li class="pag-30 bg-fff">
-                       <h1 class="targetPlanTit"><span></span>生产计划</h1>
-                       <div class="targetPlanTab">
-                           <ul class="targetPlanTab-nav clearfix">
-                               <li class="active">全厂主要生产技术指标计划</li>
-                               <li>商务采购指标计划</li>
-                               <li>安全、环保、设备管理总体指标计划</li>
-                           </ul>
-                           <div class="targetPlanTab-con" id="iframeCon">
-                           </div>
-                       </div>
-                   </li>
-               </ul>
-           </div>
+            <div class="pull-right" style="margin-top:4px;">
+                <button type="button" class="back-btn btn btn-white">
+                    <i class="fa fa-reply"></i>
+                    返回上级</button>
+                <button class="btn btn-sub  btn-white" id="btnSub">
+                    <i class="fa fa-file-text-o"></i>
+                    审核</button>
+            </div>
+            <div class="reviewPlans-tab tab-box">
+                <ul class="revP-tit tab-tit clearfix review-box">
+                    <li class="active">审批流程</li>
+                    <li >表单信息</li>
+                </ul>
+                <ul class="tab-con">
+                    <li id="reviewPlans" class="pag-30 bg-fff active">
+                        <div>
+                            <span class=" mgr-30" style="display: inline-block;text-indent: 15px;">申请人&nbsp;：<i class="appUser"></i></span>
+                            <span class=" mgr-30">申请时间：<i class="appTime"></i></span>
+                            <span class=" mgr-30">当前审批人：<i class="currentApp" data-id=""></i></span>
+                            <span class=" mgr-30">流程状态：<i class="flowStatus">审批中</i></span>
+                        </div>
+                        <div class="app-radio">
+                            <span class="w-74">审批&nbsp;：</span>
+                            <label class="mgr-30 customRadio" ><input type="radio" value="通过" name="appRadio" checked><i></i>通过</label>
+                            <label class="mgr-30 customRadio"><input type="radio"  value="驳回" name="appRadio"><i></i>驳回</label>
+                        </div>
+                        <div class="app-view">
+                            <span style="vertical-align: top;" class="w-74">审批意见&nbsp;：</span>
+                            <textarea name="" id="" placeholder="请填写您的意见"  class="appTextare"></textarea>
+                        </div>
+                        <div class="tab-box app-flow-tabBox">
+                            <ul class="app-flow-tit tab-tit clearfix">
+                                <li class="active">审批过程</li>
+                                <li >流程图</li>
+                            </ul>
+                            <ul class="tab-con">
+                                <li class="flow-list active">
+                                </li>
+                                <li class="flow-process">
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li class="pag-30 bg-fff">
+                        <h1 class="targetPlanTit"><span></span>生产计划</h1>
+                        <div class="targetPlanTab">
+                            <ul class="targetPlanTab-nav clearfix">
+                                <li class="active">全厂主要生产技术指标计划</li>
+                                <li>商务采购指标计划</li>
+                                <li>安全、环保、设备管理总体指标计划</li>
+                            </ul>
+                            <div class="targetPlanTab-con" id="iframeCon">
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
         </div>
     </div>
 </div>
@@ -118,6 +97,7 @@
 <!--附属插件-->
 <script src="../../plugins/layer/layer.js"></script>
 <!--自定义文件-->
+<script src="../../js/apiDomain.js"></script>
 <script src="../../js/customForm-aps.js"></script>
 <script>
     var id = getQueryString("id"),
@@ -125,68 +105,134 @@
         adMonth = getQueryString("adMonth"),
         status = getQueryString("status");
     //进到该页面之后请求数据、渲染数据
-    /*ajaxToServer1("/api/aps/ApsMonthAdjust/update",id,function(result){
-         if(result.success){
+    ajaxToServer1("/api/aps/WorkFlow/view/"+id,{},function(result){
+        if(result.success){
             //渲染数据
-         }
-     });*/
-    $(function(){
-
-        $("#monthStatus").val(status);
-      var tabBox = $(".tab-box"),
-            tabTit = tabBox.find(".tab-tit").children();
-        tabTit.click(function(){
-            var ind = $(this).index();
-            $(this).addClass('active').siblings().removeClass('active');
-            $(this).parent().siblings().children().eq(ind).addClass('active').siblings().removeClass('active');
-            if($(this).text() == "表单信息"){
-                $targetPlanTabNavLi.eq(0).trigger('click');
+            //流程图
+            var workFlowUser = result.workFlowUser, //流程发起人
+                workFlowNode = result.workFlowNode, //当前节点审批人
+                workFlowNodeList = result.workFlowNodeList; //审批流程节点
+            $(".appUser").html(workFlowUser.userName);  //申请人
+            $(".appTime").html(workFlowUser.createDate);  //申请时间
+            $(".currentApp").html(workFlowNode.userName).attr("data-id",workFlowNode.id); //当前审批人
+            function htmlFragFn(reviewName){
+                var htmlFrag= "<div class='flow-item'>" +
+                    " <cite class='flow-item-icon flow-icon1'></cite>"+
+                    "<span class='flow-item-user'>"+reviewName+"</span>"
+                    + "</div>";
+                return htmlFrag;
             }
-        });
-        $(".back-btn").click(function(){
-            refreshActiveTab();
-        });
-        $(".auditing-btn").click(function(){
-            var appRadioVal = $(".app-radio input[type='radio']:checked").val(),
-                appTextval = $.trim($(".app-view textarea").val());
-            if(appTextval == ""){
-                layerAlert("请填写审批意见!");
-            }else{
-                var data ={
-                    id:id,
-                    status:parseInt(status)+1
-                };
-                if(data){
-                    console.log(11);
-                    location.reload();
-                }
-               /* ajaxToServer("/api/aps/ApsMonthAdjust/update",JSON.stringify(data),function(result){
-                    if(result.success){
-                        location.reload();
-                    }
-                });*/
-            }
-        });
+            var htmlFrag =htmlFragFn(workFlowUser.userName);
+            $(workFlowNodeList).each(function(index,item){
+                var reviewName = item.userName;  //审批人名称
+                htmlFrag += htmlFragFn(reviewName);
+            });
+            $(".flow-process").append(htmlFrag);
+        }
 
-        $('.targetPlanTit span').empty().html(adYear+"年"+adMonth+"月");
-        var tabconUrl = [
-            "./proTechTargetView.html?year="+adYear+"&month="+adMonth,
-            "./proCommercePurPlanView.html?year="+adYear+"&month="+adMonth,
-            "./proSafeEnviPlanView.html?year="+adYear+"&month="+adMonth
-        ];
-        var $targetPlanTab = $(".targetPlanTab"),
-            $targetPlanTabNavLi =$targetPlanTab.find(".targetPlanTab-nav").find('li'),
-            $targetPlanCon = $("#iframeCon");
-        $targetPlanTabNavLi.click(function(){
-            var ind = $(this).index();
-            $targetPlanCon.children("iframe").hide();
-            $(this).addClass('active').siblings("li").removeClass('active');
-            createTagFrame("iframeCon","frameId"+ind,tabconUrl[ind]);
+        //审批过程
+        var htmlReview ="",
+            reviewLIst = result.logList;
+        $(reviewLIst).each(function(index,item){
+            var reviewType = item.oper==="提交"?"1":item.oper==="通过"?"3":"4",
+                reviewDes = reviewType=="4"?"flow-disagree":"flow-agree";
+            htmlReview += "<div class='flow-item'>" +
+                " <cite class='flow-item-icon flow-icon"+reviewType+"'></cite>"+
+                "<span class='flow-item-user'>"+item.userName+"</span>"+"" +
+                "<span class='flow-item-time'>"+item.createDate+"</span>" +
+                "<span class='"+reviewDes+"'>"+item.opinion+"</span>"+
+                "</div>";
+
         });
-
-        setFrameHeight();
-
+        $(".flow-list").empty().html(htmlReview);
     });
+
+
+    $(function(){
+            $("#monthStatus").val(status);
+            var tabBox = $(".tab-box"),
+                tabTit = tabBox.find(".tab-tit").children();
+            tabTit.click(function(){
+                var ind = $(this).index();
+                var $thisParent = $(this).parent().hasClass('review-box');
+                if($thisParent == true && ind !== 0 ){
+                    $('#btnSub').hide();
+                }else{
+                    $('#btnSub').show();
+                }
+                $(this).addClass('active').siblings().removeClass('active');
+                $(this).parent().siblings().children().eq(ind).addClass('active').siblings().removeClass('active');
+                if($(this).text() == "表单信息"){
+                    $targetPlanTabNavLi.eq(0).trigger('click');
+                }
+            });
+            $(".back-btn").click(function(){
+                refreshActiveTab();
+            });
+            $("#btnSub").click(function(){ //审核事件
+                var appRadioVal = $(".app-radio input[type='radio']:checked").val(),
+                    appTextval = $.trim($(".app-view textarea").val());
+                if(appTextval == ""){
+                    layerAlert("请填写审批意见!");
+                }else{
+                    var data ={
+                        dataId:id,
+                        nodeId:$(".currentApp").attr('data-id'),
+                        oper:appRadioVal,
+                        opinion:appTextval
+                    };
+                    ajaxToServer("/api/aps/WorkFlow/approval",JSON.stringify(data),function(result){
+                        if(result.success){
+                            layer.msg("审核成功！",{icon: 1, time:500});
+                            setTimeout(function(){
+                                refreshActiveTab();
+                            },600);
+
+                        }
+                    });
+                }
+            });
+
+            $('.targetPlanTit span').empty().html(adYear+"年"+adMonth+"月");
+            var tabconUrl = [
+                "./proTechTarget.html?year="+adYear+"&month="+adMonth+"&id="+id,
+                "./proCommercePurPlan.html?year="+adYear+"&month="+adMonth+"&id="+id,
+                "./proSafeEnviPlan.html?year="+adYear+"&month="+adMonth+"&id="+id
+            ];
+            var $targetPlanTab = $(".targetPlanTab"),
+                $targetPlanTabNavLi =$targetPlanTab.find(".targetPlanTab-nav").find('li'),
+                $targetPlanCon = $("#iframeCon");
+            $targetPlanTabNavLi.click(function(){
+                var ind = $(this).index();
+                $targetPlanCon.children("iframe").hide();
+                $(this).addClass('active').siblings("li").removeClass('active');
+                createTagFrame("iframeCon",tabconUrl[ind],"frameId"+ind);
+            });
+            hidebutton();
+            // setFrameHeight();
+        }
+
+    );
+    //////////////////////////////
+    function hidebutton() {
+        var url = admin_domain + "/api/sys/SysOperation/currentUserOperation/PPMMPP_PAC";
+        ajaxToServer(url, {} ,function (result) {
+            if(result.success){
+                console.log(result)
+                if(result.rows.length>0){
+                    for(var i=0;i<result.rows.length;i++){
+                        if(result.rows[i].code == "PPMMPP_YTEO"){  //审核
+                            $(".btn-sub").css( "display","inline-block")
+                        };
+                    };
+                }
+            }else{
+                layerAlert(result.message)
+            }
+        })
+    }
+
+
 </script>
 
 </body>

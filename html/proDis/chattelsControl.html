@@ -17,6 +17,12 @@
 <link rel="stylesheet" href="../../css/customDataTable.css">
 <link rel="stylesheet" href="../../css/aps.css">
 <link rel="stylesheet" href="../../css/proDis.css">
+<style>
+    .bn{
+        margin-top: 20px;
+    }
+    .execution i { pointer-events: none; }
+</style>
 <body id="menu-content">
 <div class="wrapper wrapper-content">
     <div class="ibox">
@@ -29,28 +35,32 @@
                 <div class="col-sm-12">
                     <div class="pull-left">
                         <ul class="apsType-linkage">
-                            <li class="year">
+
+                            <li class="">
+                                事件类型:
+                                <select name="" id="incident-type">
+                                    <option value="">-- 全部 --</option>
+                                    <option value="指标类">指标类</option>
+                                    <option value="消耗类">消耗类</option>
+                                    <option value="能源类">能源类</option>
+                                    <option value="生产类">生产类</option>
+                                </select>
+                            </li>
+                            <li class="">
                                 事件:
                                 <select name="" id="incident">
                                     <option value="">-- 全部 --</option>
-                                    <option value="实产降低">实产降低</option>
-                                    <option value="下料量减少">下料量减少</option>
-                                    <option value="机组运转不稳定">机组运转不稳定</option>
-                                </select>
-                            </li>
-                            <li>
-                                原因:
-                                <select name="" id="cause">
-                                    <option value="">-- 全部 --</option>
-                                    <option value="原料溶出工序指标问题">原料溶出工序指标问题</option>
-                                    <option value="电厂压力、温度波动">电厂压力、温度波动</option>
-                                    <option value="分解工序精液产出率低">分解工序精液产出率低</option>
-                                    <option value="焙烧炉问题(ID风机、电收尘、引风量等)">焙烧炉问题(ID风机、电收尘、引风量等)</option>
                                 </select>
                             </li>
                             <li >
                                 工序:
                                 <select name="" id="process">
+                                    <option value="">-- 全部 --</option>
+                                </select>
+                            </li>
+                            <li>
+                                原因:
+                                <select name="" id="cause">
                                     <option value="">-- 全部 --</option>
                                 </select>
                             </li>
@@ -64,18 +74,18 @@
                                 <label>
                                     <div class="execution time">
                                         <span>执行时间:</span>
-                                        <input type="text" value="" id="startDateParam" class="time-input datePicker" placeholder="开始时间"><i class="fa fa-calendar"></i>
+                                        <input type="text" value="" id="startDateParam" class="time-input form-control datePicker" placeholder="开始时间"><i class="fa fa-calendar"></i>
                                         &nbsp;&nbsp;—
-                                        <input type="text" value="" id="endDateParam" class="time-input datePicker" placeholder="结束时间"><i class="fa fa-calendar"></i>
+                                        <input type="text" value="" id="endDateParam" class="time-input form-control datePicker" placeholder="结束时间"><i class="fa fa-calendar"></i>
                                     </div>
                                 </label>
                             </li>
                         </ul>
 
                     </div>
-                    <div class="pull-right">
+                    <div class="pull-right bn">
                         <label>
-                            <button class="btn btn-search  bg-ffa82d btn-white" type="button">
+                            <button class="btn btn-search  bg-ffa82d btn-white" id="search-btn" type="button">
                                 <i class="fa fa-search"></i>
                                 查询</button>
                         </label>
@@ -96,12 +106,14 @@
                         <table id="treeTable" class="table table-striped table-bordered table-hover table-condensed dataTables-example dataTable tree_table">
                             <thead>
                             <tr>
+                                <th class="id"></th>
                                 <th>序号</th>
                                 <th>事件</th>
                                 <th>原因</th>
                                 <th>上报人</th>
                                 <th>上报时间</th>
                                 <th>状态</th>
+                                <th>操作</th>
                             </tr>
                             </thead>
                             <tbody id="treeTableBody">
@@ -113,25 +125,8 @@
             </div>
             <!--分页显示-->
             <div class="clearfix pagination-box">
-                <div class="pagination-detail pull-left" style="display: block;">
-                    <div class="page-info pull-left">显示第1到第6条记录，总共 6条记录</div>
-                    <div class="page-list pull-left">
-                        <span>每页显示</span>
-                        <select name="" id="pag-sel">
-                            <option value="">请选择</option>
-                            <option value="5">5</option>
-                            <option value="10" selected="">10</option>
-                            <option value="20">20</option>
-                            <option value="25">25</option>
-                            <option value="30">30</option>
-                            <option value="40">40</option>
-                            <option value="50">50</option>
-                            <option value="-1">all</option>
-                        </select>
-                        条记录
-                    </div>
-                </div>
-                <div id="pagination" class="pagination-roll pull-right"> <ul class="pagination"> <li class="previous"><a href="#">«</a></li><li class="disabled hidden"><a href="#">...</a></li> <li class="active"><a href="#">1</a></li><li class="disabled hidden"><a href="#">...</a></li><li class="next"><a href="#">»</a></li></ul></div>
+                <div class="page-info pull-left"></div>
+                <div id="pagination" class="pagination-roll pull-right"></div>
             </div>
         </div>
     </div>
@@ -150,84 +145,123 @@
 <script src="../../plugins/datetimepicker/js/bootstrap-datetimepicker.js"></script>
 
 <!--自定义文件-->
-<script src="../../js/customForm.js"></script>
+<script src="../../js/apiDomain.js"></script>
 <script src="../../js/customForm-aps.js"></script>
 <script src="../../js/page.js"></script>
+<script src="../../js/sockjs.min.js"></script>
+<script src="../../js/stomp.min.js"></script>
 <script>
     $(function () {
-        // 获取等级数据
+        //获取级别
         loadRank();
-        //获取工序数据
+        //获取工序
         loadProcess();
+        //获取事件数据
+        loadREvent()
+        //获取原因数据
+        loadRCause()
+        //获取年月日日期
+        //获取年月日日期
+        $("#startDateParam").datetimepicker({
+            format: "yyyy-mm-dd",  //保留到日
+            showMeridian: true,     //显示上、下午
+            language:'cn',         //中文显示
+            minView: "month",    //月视图
+            todayBtn: true,   //切换到今天
+            clearBtn: true,   //清除全部
+            autoclose:true  //选择时间后自动隐藏
+        });
+        $("#endDateParam").datetimepicker({
+            format: "yyyy-mm-dd",  //保留到日
+            showMeridian: true,     //显示上、下午
+            language:'cn',         //中文显示
+            minView: "month",    //月视图
+            todayBtn: true,   //切换到今天
+            clearBtn: true,   //清除全部
+            autoclose:true  //选择时间后自动隐藏
+        });
         window.pageLoad = function () {
             var data = {
                 proc:$("#process option:selected").val(),
                 grade:$("#rank option:selected").val(),
                 event:$("#incident option:selected").val(),
+                type:$("#incident-type option:selected").val(),
                 cause:$("#cause option:selected").val(),
                 startTime:$("#startDateParam").val(),
                 endTime:$("#endDateParam").val()
             };
-            Page.init("/api/oper/ManageControl/page",data,true,function (tableDta) {
-                createTable(tableDta)
+            Page.init("/api/oper/ManageControl/page",data,true,function (tableData) {
+                createTable(tableData);
+                //创建
+                $("#btn-add").click(function () {
+                    location.href="./accidentCreated.html"
+                });
+                //查看
+                $(".btn-check").click(function (e) {
+                    var id = $(this).parents('tr').find('.id').text();
+                    location.href = "./accidentCreated.html?id="+id+"&operate="+'';
+                })
+                //修改
+                $(".btn-change").click(function (e) {
+                    var id = $(this).parents('tr').find('.id').text();
+                    location.href = "./accidentCreated.html?id="+id+"&operate="+1;
+                })
+                // 删除
+                $(".btn-delete").click(function () {
+                    var ids = $(this).parents('tr').find('.id').text();
+                    // deleteItem('确定要删除', '/api/oper/ManageControl/deleteBatch', ids);
+                    var data = {
+                        ids:ids
+                    }
+                    layer.confirm("确认删除");
+                    $(".layui-layer-btn0").click(function () {
+                        ajaxToServer1("/api/oper/ManageControl/deleteBatch",data,function (result) {
+                            console.log(result)
+                            if(result.success == true){
+                                top.layer.alert("操作成功");
+                                refreshActiveTab();
+                            }else{
+                                top.layer.alert("操作失败");
+                            }
+                        })
+                    })
+                })
             })
-        }
+        };
         pageLoad();
-        //点击查询按钮
-        $(".btn-search").click(function (e) {
-            pageLoad();
-        });
-        // 创建
-        $("#btn-add").click(function (e) {
-            location.href = "./accidentCreated.html"
-        })
-    })
-
-    //获取年月日日期
-    $("#startDateParam").datetimepicker({
-        format: "yyyy-mm-dd hh:mm:ss",
-        language:'cn',
-        weekStart: 1,
-        pickTime: false,
-        autoclose:true,
-        minView: "4",
-        forceParse: 0,
-        todayBtn: true
-    }).on('change',function(ev){
-        var startDate = $('#startDateParam').val();
-        $("#endDateParam").datetimepicker('setStartDate',startDate);
-        $("#startDateParam").datetimepicker('hide');
-    });
-    $("#endDateParam").datetimepicker({
-        format: "yyyy-mm-dd hh:mm:ss",
-        language:'cn',
-        weekStart: 1,
-        pickTime: false,
-        autoclose:true,
-        minView: "4",
-        forceParse: 0,
-        todayBtn: true
-    }).on('change',function(ev){
-        var returnDate = $("#endDateParam").val();
-        $("#startDateParam").datetimepicker('setReturnDate',returnDate);
-        $("#endDateParam").datetimepicker('hide');
     });
 
+    //    //获取工序数据
+    //    function loadProcess(){
+    //        var url_ = 'http://114.115.165.184:8080/admin-api/api/sys/SysOrg/selectGx/4';
+    //        ajaxToServer(url_, {}, function(result){
+    //            if(result.success){
+    //                var rows = result.rows;
+    //                // appendOptionsValue($('#process'), rows, 'name', 'name');
+    //                appendOptionsValue($('#process'), rows, 'code', 'name'); //工序值调整为编码 update by qiyh 2018-05-24
+    //            }else{
+    //                layer.msg(result.message);
+    //            }
+    //        });
+    //    }
     //获取工序数据
     function loadProcess(){
-        var url_ = 'http://114.115.165.184:8080/admin-api/api/sys/SysOrg/selectGx/3';
-        ajaxToServer(url_, {}, function(result){
+        id = getCookie("loginUserid")
+        ajaxToServer(admin_domain+'/api/sys/SysAuthProperty/getAttributeValue/'+id+'/GXJQ/syswp',{},function (result) {
             if(result.success){
                 var rows = result.rows;
                 appendOptionsValue($('#process'), rows, 'name', 'name');
+                //appendOptionsValue($('#process'), rows, 'code', 'name');//工序的值存编码 update by qiyh 2018-05-24
             }else{
                 layer.msg(result.message);
             }
         });
+
     }
+
     //获取级别数据
     function loadRank(){
-        var url_ = 'http://114.115.165.184:8080/admin-api/api/sys/SysDict/type/directiveLeaveyType';
+        var url_ = admin_domain + '/api/sys/SysDict/type/directiveLeaveyType';
         ajaxToServer(url_, {}, function(result){
             if(result.success){
                 var rows = result.rows;
@@ -243,6 +277,7 @@
         $('#treeTable').dataTable({
             "bSort":false,
             "bPaginate": false,
+            "bAutoWidth": false,
             "bDestroy": true,
             "paging": false,
             "bProcessing": true,
@@ -254,12 +289,13 @@
             "data": data,
             //定义列 宽度 以及在json中的列名
             "columns": [
-                {"data": null, "width": "auto"},
-                {"data": "event", "width": "auto"},
-                {"data": "cause", "width": "auto"},
-                {"data": "reportUser", "width": "auto"},
-                {"data": "updateDate", "width": "auto"},
-                { "data": "status", "width": "auto",
+                {"data": 'id', "width": "8%","sClass":"id alignCenter"},
+                {"data": null, "width": "auto","sClass":"alignCenter"},
+                {"data": "event", "width": "14%","sClass":"alignCenter"},
+                {"data": "cause", "width": "auto","sClass":"alignCenter"},
+                {"data": "reportUser", "width": "10%","sClass":"alignCenter"},
+                {"data": "reportTime", "width": "12%","sClass":"alignCenter"},
+                { "data": "status", "width": "6%","sClass":"alignCenter",
                     "render":function (data,type,row,meta) {
                         if(row.status == "0"){
                             var setText = "上报";
@@ -272,19 +308,56 @@
                             var  html = "<span class='closes'>"+setText+"</span>"
                         };
                         return html
-
                     }
-
                 },
-           ],
+                {
+                    "data": "id", "orderable": false, "defaultContent": "",'sClass':" alignCenter autoWidth",
+                    "render": function (data, type, row, meta) {
+                        var html ;
+                        if(row.status == "0" || row.status == "1"){
+                            html =  "<a class='btn btn-info btn-xs btn-check' ><i class='fa fa-search-plus'></i>查看</a >" +
+                                    "<a class='btn btn-success btn-xs btn-change' ><i class='fa icon-change'></i>修改</a >"+
+                                    "<a class='btn btn-success btn-xs btn-delete' ><i class='fa fa-trash-o'></i>删除</a >"
+                        }else{
+                            html =  "<a class='btn btn-info btn-xs btn-check' ><i class='fa fa-search-plus'></i>查看</a >" +
+                                    "<a class='btn btn-success btn-xs btn-delete' ><i class='fa fa-trash-o'></i>删除</a >"
+                        }
+                        return html;
+                    }
+                }
+            ],
             "fnDrawCallback" : function(){
-                this.api().column(0).nodes().each(function(cell, i) {
+                this.api().column(1).nodes().each(function(cell, i) {
                     cell.innerHTML =  i + 1;
                 });
             },
 
         });
         RenderiCheckTblBody();
+    }
+    //获取事件数据
+    function loadREvent(){
+        var url_ = admin_domain + '/api/sys/SysDict/type/accidentEventType';
+        ajaxToServer(url_, {}, function(result){
+            if(result.success){
+                var rows = result.rows;
+                appendOptionsValue($('#incident'),rows,'label','label');
+            }else{
+                layer.msg(result.message);
+            }
+        });
+    }
+    //获取原因数据
+    function loadRCause(){
+        var url_ = admin_domain + '/api/sys/SysDict/type/accidentCauseType';
+        ajaxToServer(url_, {}, function(result){
+            if(result.success){
+                var rows = result.rows;
+                appendOptionsValue($('#cause'),rows,'label','label');
+            }else{
+                layer.msg(result.message);
+            }
+        });
     }
 </script>
 </html>

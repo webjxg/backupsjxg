@@ -46,44 +46,61 @@
             <tbody>
             <tr>
                 <td class="width-15 active">
-                    <label class="pull-right">属性值名称:</label>
+                    <label class="pull-right">操作:</label>
                 </td>
                 <td class="width-35">
-                    <span id="name" name="name"  ></span>
+                    <select id="operationId" name="sysOperation.id" disabled  class="form-control" required></select>
                 </td>
                 <td class="width-15 active">
-                    <label class="pull-right">属性值:</label>
+                    <label class="pull-right">鉴权类:</label>
                 </td>
                 <td class="width-35">
-                    <span name="value" id="value" ></span>
+                    <select name="sysAuthClass.id" id="authClass" disabled  class="form-control "  required></select>
                 </td>
             </tr>
             <tr>
                 <td class="width-15 active">
-                    <label class="pull-right">所属属性:</label>
+                    <label class="pull-right">许可名称:</label>
                 </td>
                 <td class="width-35">
-                    <span id="permitPro" name="sysAuthProperty.code"  ></span>
-                </td>
+                    <input id="name" name="name" class="form-control " disabled  required  type="text" value="" maxlength="50" aria-required="true"></td>
                 <td class="width-15 active">
-                    <label class="pull-right">是否启用:</label>
+                    <label class="pull-right">许可编码:</label>
                 </td>
                 <td class="width-35">
-                    <span id="enable" name="enable" ></span>
+                    <input id="code" name="code" class="form-control " disabled  required  type="text" value="" maxlength="50" aria-required="true">
                 </td>
             </tr>
             <tr>
+                <td class="width-15 active">
+                    <label class="pull-right">描述:</label>
+                </td>
+                <td class="width-35">
+                    <input id="des" name="des" class="form-control required abc" type="text" disabled value="" maxlength="50" aria-required="true">
+                </td>
+                <td class="width-15 active">
+                    <label class="pull-right">排序:</label>
+                </td>
+                <td class="width-35">
+                    <input id="sort" name="sort" class="form-control required digits" disabled type="text" value="" maxlength="11" aria-required="true">
+                </td>
+            </tr>
+            <tr>
+                <td class="width-15 active">
+                    <label class="pull-right">是否可用:</label>
+                </td>
+                <td class="width-35">
+                    <select name="enable" id="enable" class="form-control required " disabled aria-invalid="false">
+                        <option value="">请选择</option>
+                        <option value="1">启用</option>
+                        <option value="0">禁用</option>
+                    </select>
+                </td>
                 <td class="width-15 active">
                     <label class="pull-right">备注:</label>
                 </td>
                 <td class="width-35">
-                    <span id="remark" name="remark" ></span>
-                </td>
-                <td class="width-15 active">
-                    <label class="pull-right"></label>
-                </td>
-                <td class="width-35">
-
+                    <input id="remark" name="remark" class="form-control" disabled type="text" value="" aria-required="true">
                 </td>
             </tr>
             </tbody>
@@ -107,8 +124,63 @@
 <script src="../../plugins/datatables/js/jquery.dataTables.min.js"></script>
 <!--自定义文件-->
 <script src="../../js/common.js"></script>
+<script src="../../js/apiDomain.js"></script>
 <script src="../../js/customForm.js"></script>
 <script>
+    $(document).ready(function() {
+        var id =getQueryString('id'),
+                api = getQueryString('api') || 'form',
+                html = html1 = "";
+        var url = "/api/sys/SysPermission/"+api+"/"+id;
+        ajaxToServer(url,{},function(result){
+            if(result.success){
+                if(api == 'view'){
+                    var data = result.SysPermission;
+                    console.log(data)
+                    var operId =data.id,
+                            operName = data.name,
+                            authClassId = data.id,
+                            authClassName =data.name;
+                    html += "<option value='"+operId+"'>"+operName+"</option>";
+                    html1 += "<option value='"+authClassId+"'>"+(authClassName == null?"无":authClassName)+"</option>";
+                    $("#operationId").empty().append(html).val(operId);
+                    $("#authClass").empty().append(html1).val(authClassId);
+                }else if(api == 'form'){
+                    if(id){
+                        var  data = result.SysPermission;
+                        var  operIdArr =  result.OperationList,
+                                authClassIdArr = result.AuthClassList,
+                                operId =data.sysOperation.id,
+                                authClassId = data.sysAuthObject.sysAuthClass.id;
+                        authClassName = data.sysAuthObject.sysAuthClass.name;
+                        authClassId = authClassName == null ?"":authClassId;
+                        renderSelect(operId,authClassId);
+                    }else{
+                        var operIdArr = result.OperationList,
+                                authClassIdArr =result.AuthClassList;
+                        renderSelect("请选择","");
+                    }
+                    function renderSelect(operId,authClassId){
+                        for(var i=0;i<operIdArr.length;i++) {
+                            operIdFor = operIdArr[i].id;
+                            operNameFor = operIdArr[i].name;
+                            html += "<option value='" + operIdFor + "'>" + operNameFor + "</option>";
+                        }
+                        for(var i=0;i<authClassIdArr.length;i++) {
+                            authClassIdFor = authClassIdArr[i].id;
+                            authClassNameFor = authClassIdArr[i].name;
+                            html1 += "<option value='" + authClassIdFor + "'>" + authClassNameFor + "</option>";
+                        }
+                        $("#operationId").empty().append(html).val(operId);
+                        $("#authClass").empty().append(html1).val(authClassId);
+                    }
+                }
+                renderData(data,$('#inputForm'));
+            }else{
+                layer.msg(result.message);
+            }
+        });
+    });
     function refreshLoad(){
        var selVal = $("#permitAuthZtree").val() ;
         $("#permitAuthZtree").val(selVal);
@@ -116,7 +188,7 @@
     }
     var id =getQueryString('id');
     $("#permissionId").val(id);
-    var selHtml = html1 = "<option value = '' selected>请选择</option>";
+    var selHtml = html1 = "";
     var zTreeObj,objectId,permissionId,propId;
     var setting = {
         check:{

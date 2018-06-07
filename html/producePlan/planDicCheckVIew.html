@@ -23,19 +23,19 @@
                 <input id="_parentId" readonly="readonly" name="parentName" type="text" value=""
                        data-msg-required="" class="form-control " style="">
             </td>
-            <td class="width-15"><label class="pull-right">指标名称:</label></td>
+            <td class="width-15"><label class="pull-right"><font color="red">*</font>指标名称:</label></td>
             <td class="width-35">
                 <input id="itemName" name="itemName" type="text" value="" data-msg-required=""
                        class="form-control required" style="" aria-required="true">
             </td>
         </tr>
         <tr>
-            <td class="width-15"><label class="pull-right">指标代码:</label></td>
+            <td class="width-15"><label class="pull-right"><font color="red">*</font>指标代码:</label></td>
             <td class="width-35">
                 <input id="itemCode" name="itemCode" type="text" value=""
                        data-msg-required="" class="form-control required" style="">
             </td>
-            <td class="width-15"><label class="pull-right">单位:</label></td>
+            <td class="width-15"><label class="pull-right"><font color="red">*</font>单位:</label></td>
             <td class="width-35">
                 <input id="itemUnit" name="itemUnit" type="text" value="" data-msg-required=""
                        class="form-control required" style="" aria-required="true">
@@ -43,15 +43,23 @@
         </tr>
 
         <tr>
-            <td class="width-15"><label class="pull-right">指标值:</label></td>
+            <td class="width-15"><label class="pull-right">年指标值:</label></td>
             <td class="width-35">
                 <input id="itemValue" name="itemValue" type="text" value="" data-msg-required=""
-                       class="form-control required" style="" aria-required="true">
+                       class="form-control " style="" aria-required="true">
             </td>
+            <td class="width-15"><label class="pull-right">月指标值</label></td>
+            <td class="width-35">
+                <input id="itemMonthValue" name="itemMonthValue" type="text" value="" data-msg-required=""
+                       class="form-control " style="" aria-required="true">
+            </td>
+
+        </tr>
+
+        <tr>
             <td class="width-15"><label class="pull-right">是否启用:</label></td>
             <td class="width-35">
                 <select id="enable" name="enable" required class="form-control">
-                    <option>请选择</option>
                     <option value="1">启用</option>
                     <option value="2">禁用</option>
                 </select>
@@ -69,6 +77,7 @@
 <script src="../../plugins/validate/jquery.validate.min.js"></script>
 <script src="../../plugins/validate/messages_zh.min.js"></script>
 <!--公共样式-->
+<script src="../../js/apiDomain.js"></script>
 <script src="../../js/customForm-aps.js"></script>
 
 <script>

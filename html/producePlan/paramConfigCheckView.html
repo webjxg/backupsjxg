@@ -17,28 +17,27 @@
     <table class="table table-bordered  table-condensed dataTables-example dataTable no-footer">
         <tbody>
         <tr>
-            <td class="width-15" ><label class="pull-right">参数:</label></td>
+            <td class="width-15" ><label class="pull-right"><font color="red">*</font>参数:</label></td>
 
             <td class="width-35">
                 <input id="opeName" maxlength="100" required="required" name="paramCode" type="text" value="" data-msg-required="" class="form-control valid" style="" aria-required="true" aria-invalid="false">
-                <label id="proName-error" class="error" for="proName" style="display:none"></label>
+                <label id="proName-error" class="error" for="opeName" style="display:none"></label>
             </td>
 
 
         </tr>
         <tr>
-            <td class="width-15" ><label class="pull-right">数值:</label></td>
+            <td class="width-15" ><label class="pull-right"><font color="red">*</font>数值:</label></td>
 
             <td class="width-35">
                 <input id="opeCode" maxlength="100" required="required" name="value" type="text" value="" data-msg-required="" class="form-control valid" style="" aria-required="true" aria-invalid="false">
-                <label id="proCode-error" class="error" for="proCode" style="display:none"></label>
+                <label id="proCode-error" class="error" for="opeCode" style="display:none"></label>
             </td>
         </tr>
 
         <tr>
             <td class="width-15" >
-                <label class="pull-right">
-                    参数说明:
+                <label class="pull-right"><font color="red">*</font>参数说明:
                 </label>
             </td>
             <td class="width-60">
@@ -58,6 +57,7 @@
 <script src="../../plugins/icheck/icheck.min.js"></script>
 <script src="../../plugins/webUpLoader/webuploader.js"></script>
 <!--自定义文件-->
+<script src="../../js/apiDomain.js"></script>
 <script src="../../js/jeeplus.js"></script>
 <script src="../../js/customForm-aps.js"></script>
 <script src="../../js/public.js"></script>

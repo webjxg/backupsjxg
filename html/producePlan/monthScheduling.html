@@ -15,6 +15,7 @@
     <link rel="stylesheet" href="../../css/customDatagrid.css">
     <link rel="stylesheet" href="../../css/aps.css">
     <link rel="stylesheet" href="../../css/common.css">
+    <link rel="stylesheet" href="../../plugins/datetimepicker/css/bootstrap-datetimepicker.css">
     <style>
         .panel-body{
             border-top: none;
@@ -26,6 +27,18 @@
         }
         .datagrid-header-row td{
             color:#fff;
+        }
+        .schOp-item input{
+            width: 120px;
+            height: 30px;
+            border: 1px solid gainsboro;
+            border-radius: 3px;
+        }
+        #btn-build{
+            display: none;
+        }
+        #btn-save{
+            display: none;
         }
     </style>
 </head>
@@ -44,19 +57,30 @@
 
                 </div>
                 <div class="schOp-item schOp-sc">
-                    <cite><i></i></cite>
-                    <span>
-                        <input type="number" id="scValue" value="" placeholder="">
-                        实产合计
-                    </span>
+                    <!--<cite><i></i></cite>-->
+                    <!--<span>-->
+                    实产:<input type="number" id="scValue" value="" placeholder="">
+
+                    <!--</span>-->
                 </div>
                 <div class="schOp-item schOp-ps">
-                    <cite><i></i></cite>
-                    <span>
-                        <input type="number" id="psValue" value="" placeholder="">
-                        焙烧合计
-                    </span>
+                    <!--<cite><i></i></cite>-->
+                    <!--<span>-->
+                    焙烧:<input type="number" id="psValue" value="" placeholder="">
+
+                    <!--</span>-->
                 </div>
+                <!--                <div class="pull-right">
+                                    <button type="button" class="back-btn btn btn-white">
+                                        <i class="fa fa-reply"></i>
+                                        返回上级</button>
+                                </div>-->
+                <div class="pull-right">
+                    <button class="btn-back btn-white" id="back-btn">
+                        <i class="fa fa-reply"></i> 返回
+                    </button>
+                </div>
+
             </div>
             <div class="dataGridList">
                 <div class="tableItemBox">
@@ -85,11 +109,19 @@
 <!--附属插件-->
 <script src="../../plugins/layer/layer.js"></script>
 <script src="../../plugins/easyui/js/jquery.easyui.min.js"></script>
+<script src="../../plugins/datetimepicker/js/bootstrap-datetimepicker.js"></script>
+<script src="../../plugins/layer/layer.js"></script>
 <!--自定义文件-->
+<script src="../../js/apiDomain.js"></script>
 <script src="../../js/customForm-aps.js"></script>
 <script src="../../js/dataGridCustom.js"></script>
+
 <script>
     var year =getQueryString('year');
+    var status = getQueryString('status');
+    if(status == "col-62b519"){
+        $(".btn").hide();
+    }
     var zzyzjhArr =[],yljhArr = [],xhjhArr=[];  //分别对应装置运转计划、原料计划、消耗计划
     $(document).ready(function(){
         var data = {
@@ -99,11 +131,12 @@
             var zzyzjh = result.zzyzjh;
             var yljh  =result.yljh;
             var xhjh = result.xhjh;
-          	//装置运转计划
+            //装置运转计划
             for(var i=0;i<zzyzjh.length;i++){
                 var itemmsg = {
                     "id":zzyzjh[i].id,
                     "mainId":zzyzjh[i].mainId,
+                    "itemCode":zzyzjh[i].itemCode,
                     "itemName":zzyzjh[i].itemName,
                     "value1":zzyzjh[i].value1,
                     "value2":zzyzjh[i].value2,
@@ -119,8 +152,17 @@
                     "value12":zzyzjh[i].value12,
                     "valueSum":zzyzjh[i].valueSum
                 };
-             zzyzjhArr.push(itemmsg);
+                zzyzjhArr.push(itemmsg);
             }
+            console.log(zzyzjhArr)
+            for(var i=0;i<zzyzjhArr.length;i++){
+                if(zzyzjhArr[i].itemCode == "scscwd"){
+                    $("#scValue").val(zzyzjhArr[i].valueSum);
+                };
+                if(zzyzjhArr[i].itemCode == "bsbswd"){
+                    $("#psValue").val(zzyzjhArr[i].valueSum);
+                }
+            };
             //原料计划
             for(var i=0;i<yljh.length;i++){
                 var itemmsg = {
@@ -128,19 +170,19 @@
                     "mainId":yljh[i].mainId,
                     "pName":yljh[i].pName,
                     "itemName":yljh[i].itemName,
-                    "value1":zzyzjh[i].value1,
-                    "value2":zzyzjh[i].value2,
-                    "value3":zzyzjh[i].value3,
-                    "value4":zzyzjh[i].value4,
-                    "value5":zzyzjh[i].value5,
-                    "value6":zzyzjh[i].value6,
-                    "value7":zzyzjh[i].value7,
-                    "value8":zzyzjh[i].value8,
-                    "value9":zzyzjh[i].value9,
-                    "value10":zzyzjh[i].value10,
-                    "value11":zzyzjh[i].value11,
-                    "value12":zzyzjh[i].value12,
-                    "valueSum":zzyzjh[i].valueSum
+                    "value1":yljh[i].value1,
+                    "value2":yljh[i].value2,
+                    "value3":yljh[i].value3,
+                    "value4":yljh[i].value4,
+                    "value5":yljh[i].value5,
+                    "value6":yljh[i].value6,
+                    "value7":yljh[i].value7,
+                    "value8":yljh[i].value8,
+                    "value9":yljh[i].value9,
+                    "value10":yljh[i].value10,
+                    "value11":yljh[i].value11,
+                    "value12":yljh[i].value12,
+                    "valueSum":yljh[i].valueSum
                 };
                 yljhArr.push(itemmsg);
             }
@@ -177,10 +219,12 @@
                     rows = rows.concat($("#td"+index).datagrid("getRows"));
                 });
                 var data={
-                    status:$(this).attr('data-status'),
-                    pcPlans:rows
+                    status : "1",
+                    pcPlans:rows,
+                    mainId:$(".datagrid-body").find('td').eq(1).text(),
                 };
-                ajaxToServer("/api/aps/ApsMonthPc/saveMonthInfo",data,function(result){
+                console.log(data)
+                ajaxToServer1("/api/aps/ApsMonthPc/saveMonthInfo",data,function(result){
                     if(result.success){
                         refreshActiveTab();
                     }
@@ -193,7 +237,7 @@
                     var data = {
                         mYear:year,
                         scTotal:$scValue,
-                        psTotal:$psValue
+                        psTotal:$psValue,
                     };
                     ajaxToServer1("/api/aps/ApsMonthPc/pcJs",data,function(result){
                         if(result.success){
@@ -302,7 +346,7 @@
         columns:[[
             {field:'id',title:'id',hideColumn:'id'},
             {field:'mainId',title:'mainId',hideColumn:'mainId'},
-            {field:'pName',title:'',width:130,align:'center'},
+            {field:'pName',title:'',width:150,align:'center'},
             {field:'itemName',title:'',width:150,align:'center'},
             {field:'value1',title:'1月',width:110,align:'center'},
             {field:'value2',title:'2月',width:110,align:'center'},
@@ -331,12 +375,11 @@
     });
 
 
-
     $(function(){
         $('#td0,#td1,#td2').datagrid('hideColumn','id');
         $('#td0,#td1,#td2').datagrid('hideColumn','mainId');
     });
-    //
+    hidebutton();////////////权限
     //点击时获取到信息
     $(".btn-save").click(function (e) {
         var btn = $(e.target).context.textContent;
@@ -362,9 +405,38 @@
         ajaxToServer1("/api/aps/ApsMonthAdjustTech/saveTechInfo",data,function(result){
         })
     }
+    $(window).resize(function(){  //浏览器窗口改变时dataGrid数据重置
+        $('#td0,#td1,#td2').datagrid('resize');
+    });
 
-
-
+    $(".btn-back").click(function(){
+        refreshActiveTab();
+    });
+    ///////////////////权限
+    function hidebutton() {
+      if(status == "col-62b519"){
+          $(".btn").hide();
+      }else{
+          var url = admin_domain + "/api/sys/SysOperation/currentUserOperation/PPMYPP_PAC";
+          ajaxToServer(url, {} ,function (result) {
+              if(result.success){
+                  console.log(result)
+                  if(result.rows.length>0){
+                      for(var i=0;i<result.rows.length;i++){
+                          if(result.rows[i].code == "PPMYPP_SDO"){//排产
+                              $("#btn-build").css( "display","inline-block")
+                          };
+                          if(result.rows[i].code == "PPMYPP_SSO"){ //提交
+                              $("#btn-save").css( "display","inline-block")
+                          };
+                      };
+                  }
+              }else{
+                  layerAlert(result.message)
+              }
+          })
+      }
+    }
 
 </script>
 </body>

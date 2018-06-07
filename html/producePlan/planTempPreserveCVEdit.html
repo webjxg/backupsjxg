@@ -53,6 +53,7 @@
 <script src="../../plugins/datatables/js/jquery.dataTables.min.js"></script>
 <!--自定义文件-->
 <script src="../../js/jeeplus.js"></script>
+<script src="../../js/apiDomain.js"></script>
 <script src="../../js/customForm-aps.js"></script>
 <script src="../../js/public.js"></script>
 <script src="../../js/page.js"></script>
@@ -104,13 +105,13 @@
                             return data =
                                 "<input type='checkbox' id='" + row.id + "' name='id' hidden='hidden' class='hidd'>"+
                                 "<a class='btn btn-success btn-xs btn-preserve btn-up'><i class='fa fa-edit' ></i>上移</a >"+
-                                "<a class='btn btn-success btn-xs btn-preserve btn-down' ><i class='fa fa-edit' ></i>下移</a >"+
-                                "<a class='btn btn-success btn-xs btn-preserve btn-delete' ><i class='fa fa-trash-o' ></i>删除</a >"
+                                "<a class='btn btn-success btn-xs btn-preserve btn-down' ><i class='fa fa-edit' ></i>下移</a >"
                         }
                     }],
 
 
             });
+//            "<a class='btn btn-success btn-xs btn-preserve btn-delete' ><i class='fa fa-trash-o' ></i>删除</a >"
             //上移下移
             $("a.btn-up").each(function () {
                 $(this).click(function () {
@@ -129,16 +130,19 @@
                     }
                 });
             });
-            $("a.btn-delete").click(function(){
-                var id=$("tbody tr td input.hidd").attr('id');
-                console.log(id);
-                ajaxToServer1('/api/aps/Template/delTempDetail/'+id,{},function (result) {
-                    if(result.success){
-                        console.log(result);
-                        layer.msg('删除成功')
-                    }
-                });
-            });
+//            $("a.btn-delete").click(function(){
+//                var id=$("tbody tr td input.hidd").attr('id');
+//                console.log(id);
+//                ajaxToServer1('/api/aps/Template/delTempDetail/'+id,{},function (result) {
+//                    if(result.success){
+//                        console.log(result);
+//                        layer.msg('删除成功')
+//                        window.location.reload()
+//                    }
+//
+//                });
+//
+//            });
 
             RenderiCheckTblBody();
             $('tbody tr').attr('class','alignCenter')
@@ -167,6 +171,7 @@
             console.log(url,data,result);
             if(result.success == true){
                 layer.msg('保存成功')
+                location.reload();//刷新添加
                 top.layer.close(index);
             }else{
                 layer.msg(result.message);

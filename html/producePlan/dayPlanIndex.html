@@ -68,6 +68,7 @@
             border-radius: 2px;
         }
     </style>
+    <script src="../../js/dataGridCustom.js"></script>
 
 </head>
 <body>
@@ -79,10 +80,6 @@
     <div class="row">
         <div class="col-sm-12">
             <div class="pull-left">
-                <input type="text" hidden="hidden" name="id" id="id">
-                <input type="text" name="dpYear" id="dpYear" hidden="hidden">
-                <input type="text" name="dpMonth" id="dpMonth" hidden="hidden">
-                <input type="text" name="dpWeek" id="dpWeek" hidden="hidden">
                 <ul class="apsType-linkage">
                     <li class="month">
                         计划周期（年月）：
@@ -90,7 +87,7 @@
                     </li>
                     <li class="week">
                         计划周期（周）：
-                        <select name="" id="apsWeek">
+                        <select name="" id="apsWeek" >
                             <option value="">请选择</option>
                             <option value="1">第一周</option>
                             <option value="2">第二周</option>
@@ -105,7 +102,7 @@
                         class="fa fa-reply"></i> 返回
                 </button>
                 <input type="hidden" name="state" id="state" value>
-                <button class="btn btn-primary bg-ffa82d bnt-submit" id="submit-btn"><i
+                <button class="btn btn-primary bg-ffa82d btn-submit" id="submit-btn"><i
                         class="fa fa-upload"></i> 提交
                 </button>
                 <button class="btn btn-white btn-sav" id="save-btn"><i
@@ -167,6 +164,7 @@
 <script src="../../plugins/easyui/js/jquery.easyui.min.js"></script>
 <script src="../../plugins/datetimepicker/js/bootstrap-datetimepicker.js"></script>
 <script src="../../js/dataGridCustom.js"></script>
+<script src="../../js/apiDomain.js"></script>
 <script src="../../js/customForm-aps.js"></script>
 
 
@@ -175,68 +173,105 @@
     $(function () {
         //接收url父页面参数放到input的val里
         var id=getQueryString('id');
-        if(id!==null){
-            var dpYear=getQueryString('year'),dpMonth=getQueryString('month'),dpWeek=getQueryString('week');
-            tabledatagrid(id,dpYear,dpMonth,dpWeek);
+        $("#yMPicker").datetimepicker({
+            format:"yyyy-mm",
+            language:'cn',
+            weekStart: 1,
+            pickTime: false,
+            autoclose:true,
+            startView: 3, //月视图
+            minView: "3",
+            forceParse: 0,
+            startDate:"2018-01-01"
+        });
+        if(id){
+            dpYear=getQueryString('year'),dpMonth=getQueryString('month'),dpWeek=getQueryString('week');
+            tabledatagrid(id/*,dpYear,dpMonth,dpWeek*/);
             $('#td0,#td1,#td2,#td3,#td4').datagrid('hideColumn', 'id');
-            btnclick();
-            $('.row .pull-left').hide()
-        }else{
-            btnclick();
-            $("#yMPicker").datetimepicker({
-                format:"yyyy-mm",
-                language:'cn',
-                weekStart: 1,
-                pickTime: false,
-                autoclose:true,
-                startView: 3, //月视图
-                minView: "3",
-                forceParse: 0,
-                startDate:"2018-01-01"
-            });
-            var ids='';
-            getDataFn();
-            tabledatagrid(ids,$year,$status,$week);
+            $('#apsWeek').val(dpWeek).attr('disabled',true).css({"cursor":"not-allowed"});
+            $('#yMPicker').val(dpYear+'-'+dpMonth).attr('disabled','disabled').css({"cursor":"not-allowed"});
 
+            btnclick();
+        }else{
+            tabledatagrid('','','','');
+//            $('#td0,#td1,#td2,#td3,#td4').datagrid('hideColumn', 'id');
+            btnclick();
         }
 
+        $("#apsWeek,#yMPicker").change(function(e){
+            var idName=$(this).attr('id');
+            getDataFn()
+            if(dpYear != "请选择" && dpWeek != ""){
+                console.log(1);
+                var data = JSON.stringify({
+                    "dpYear":dpYear,
+                    "dpMonth":dpMonth,
+                    "dpWeek":dpWeek
+                });
+                ajaxToServer("/api/aps/DayPlan/form",data,function(result){
+                    console.log(result);
+                    if(result.success) {
+                        if (result.signFlag) {
+                            top.layer.confirm(dpYear + "年" + dpMonth + "月第" + dpWeek + "周数据已经存在，请重新选择！", function () {
+                                $("#" + idName).val("");
+                                top.layer.closeAll()
+                            }, function () {
+                                $("#" + idName).val("");
+                                top.layer.closeAll()
+                            });
 
-    });
-    function getDataFn(){
-        $year = $('.datePicker').val().split("-")[0];
-        $status =$("#apsState").val();
-        $month=$('.datePicker').val().split("-")[1];
-        $week=$('#apsWeek').val();
+                        } else {
+                            tabledatagrid('', dpYear, dpMonth, dpWeek);
+                            $('#td0,#td1,#td2,#td3,#td4').datagrid('hideColumn', 'id');
+                        }
+                    }else{
+                        top.layer.confirm(result.message, function () {
+                            $("#" + idName).val("");
+                            top.layer.closeAll()
+                        }, function () {
+                            $("#" + idName).val("");
+                            top.layer.closeAll()
+                        });
+                    }
+                });
+            }else if(dpYear== "") {
+                layerAlert("请选择年、月！");
+                //$('.targetPlanTit span').empty().html("某年"+month+"月");
+                return false;
+            }
 
-    }
+        });
 
-    function btnclick() {
-        var yMPicker=$('#yMPicker').val();
-        var apsWeek=$('#apsWeek').val();
-        $(".btn-sav").click(function () {
-            if(yMPicker==''||apsWeek==''){
-              layer.msg('请选择年、月、周')
-            }else{
-                getDataFn();
+        $(window).resize(function(){  //浏览器窗口改变时dataGrid数据重置
+            $('#td0,#td1,#td2,#td3,#td4').datagrid('resize');
+        });
+        function btnclick() {
+            var yMPicker=$('#yMPicker').val();
+            var apsWeek=$('#apsWeek').val();
+            $(".btn-sav").click(function () {
                 btnSubSave(0);
-            }
-
-        });
-        $(".btn-submit").click(function () {
-            if(yMPicker==''||apsWeek==''){
-                layer.msg('请选择年、月、周')
-            }else {
-                getDataFn();
+            });
+            $(".btn-submit").click(function () {
                 btnSubSave(1);
-            }
-        });
-        $(".btn-back").click(function () {
-            refreshActiveTab();
-        });
+
+            });
+            $(".btn-back").click(function () {
+                refreshActiveTab();
+            });
+        }
+    });
+
+    function getDataFn(){
+        dpYear=$('.datePicker').val().split("-")[0],dpMonth=$('.datePicker').val().split("-")[1],dpWeek=$('#apsWeek').val();
+
     }
-//    function () {
-//
-//    }
+
+
+
+
+
+
+
     //多表格请求数据渲染方法
     function tabledatagrid(id,dpYear,dpMonth,dpWeek) {
         //建立空数组
@@ -251,11 +286,10 @@
             "dpMonth": dpMonth,
             "dpWeek": dpWeek
         };
-        console.log(data0);
         var da = JSON.stringify(data0);
-        ajaxTo("/api/aps/DayPlan/form", da, table);
+        ajaxToServer("/api/aps/DayPlan/form", da, table);
         function table(result) {
-            console.log(da, result);
+            console.log(result);
 //            $("#id").val(result.DayPlan.id);
             var bjh = result.bjh,
                 cljh = result.cljh,
@@ -332,10 +366,10 @@
 
 
 
-        //班计划
+        //班计划f
         $('#td0').datagrid({
             fitColumns: true,
-            rownumbers: true,
+            rownumbers: false,
             collapsible: true,
             singleSelect: true,
             onClickRow: function (index) {
@@ -350,10 +384,10 @@
                     title: '周计划',
                     width: 100,
                     align: 'center',
-                    editor: {type: 'numberbox', options: {precision: 1}}
+                    editor: {type: 'text', options: {precision: 1}}
                 },
-                {field: 'dayPlan', title: '日计划', editor: 'numberbox', width: 100, align: 'center'},
-                {field: 'classPlan', title: '班计划', editor: 'numberbox', width: 150, align: 'center'}
+                {field: 'dayPlan', title: '日计划', editor: 'text', width: 100, align: 'center'},
+                {field: 'classPlan', title: '班计划', editor: 'text', width: 150, align: 'center'}
             ]],
             onAfterEdit: function (rowIndex, rowData, changes) {
                 dataGridObj.pushRowData(rowData);
@@ -369,7 +403,7 @@
         //产量计划
         $('#td1').datagrid({
             fitColumns: true,
-            rownumbers: true,
+            rownumbers: false,
             collapsible: true,
             singleSelect: true,
             onClickRow: function (index) {
@@ -384,10 +418,10 @@
                     title: '月计划',
                     width: 100,
                     align: 'center',
-                    editor: {type: 'numberbox', options: {precision: 1}}
+                    editor: {type: 'text', options: {precision: 1}}
                 },
-                {field: 'weekPlan', title: '周计划', editor: 'numberbox', width: 100, align: 'center'},
-                {field: 'dayPlan', title: '日计划', editor: 'numberbox', width: 150, align: 'center'},
+                {field: 'weekPlan', title: '周计划', editor: 'text', width: 100, align: 'center'},
+                {field: 'dayPlan', title: '日计划', editor: 'text', width: 150, align: 'center'},
             ]],
             onAfterEdit: function (rowIndex, rowData, changes) {
                 dataGridObj.pushRowData(rowData);
@@ -403,7 +437,7 @@
         //质量指标计划
         $('#td2').datagrid({
             fitColumns: true,
-            rownumbers: true,
+            rownumbers: false,
             collapsible: true,
             singleSelect: true,
             onClickRow: function (index) {
@@ -419,10 +453,10 @@
                     title: '周计划',
                     width: 100,
                     align: 'center',
-                    editor: {type: 'numberbox', options: {precision: 1}}
+                    editor: {type: 'text', options: {precision: 1}}
                 },
-                {field: 'dayPlan', title: '日计划', editor: 'numberbox', width: 100, align: 'center'},
-                {field: 'classPlan', title: '班计划', editor: 'numberbox', width: 150, align: 'center'},
+                {field: 'dayPlan', title: '日计划', editor: 'text', width: 100, align: 'center'},
+                {field: 'classPlan', title: '班计划', editor: 'text', width: 150, align: 'center'},
             ]],
             onAfterEdit: function (rowIndex, rowData, changes) {
                 dataGridObj.pushRowData(rowData);
@@ -442,7 +476,7 @@
         //技术指标计划
         $('#td3').datagrid({
             fitColumns: true,
-            rownumbers: true,
+            rownumbers: false,
             collapsible: true,
             singleSelect: true,
             onClickRow: function (index) {
@@ -457,10 +491,10 @@
                     title: '月计划',
                     width: 100,
                     align: 'center',
-                    editor: {type: 'numberbox', options: {precision: 1}}
+                    editor: {type: 'text', options: {precision: 1}}
                 },
-                {field: 'weekPlan', title: '周计划', editor: 'numberbox', width: 100, align: 'center'},
-                {field: 'dayPlan', title: '日计划', editor: 'numberbox', width: 150, align: 'center'},
+                {field: 'weekPlan', title: '周计划', editor: 'text', width: 100, align: 'center'},
+                {field: 'dayPlan', title: '日计划', editor: 'text', width: 150, align: 'center'},
             ]],
             onAfterEdit: function (rowIndex, rowData, changes) {
                 dataGridObj.pushRowData(rowData);
@@ -475,7 +509,7 @@
         //各项单耗指标计划
         $('#td4').datagrid({
             fitColumns: true,
-            rownumbers: true,
+            rownumbers: false,
             collapsible: true,
             singleSelect: true,
             onClickRow: function (index) {
@@ -490,10 +524,10 @@
                     title: '月计划',
                     width: 100,
                     align: 'center',
-                    editor: {type: 'numberbox', options: {precision: 1}}
+                    editor: {type: 'text', options: {precision: 1}}
                 },
-                {field: 'weekPlan', title: '周计划', editor: 'numberbox', width: 100, align: 'center'},
-                {field: 'dayPlan', title: '日计划', editor: 'numberbox', width: 150, align: 'center'},
+                {field: 'weekPlan', title: '周计划', editor: 'text', width: 100, align: 'center'},
+                {field: 'dayPlan', title: '日计划', editor: 'text', width: 150, align: 'center'},
             ]],
             onAfterEdit: function (rowIndex, rowData, changes) {
                 dataGridObj.pushRowData(rowData);
@@ -507,60 +541,71 @@
         });
         $('#td0,#td1,#td2,#td3,#td4').datagrid('hideColumn', 'id');
     }
+
     //暂存递交
     function btnSubSave(status) {
-        getDataFn()
-        var editItems = dataGridObj.getSaveItemArr();
-        if(editItems==''){
-            layer.alert('数据无变化，请改动数据后再进行保存')
-        }else{
-            var data={
-                "dpYear":$year,
-                "dpMonth":$month,
-                "dpweek":$week,
-                "dayPlans":JSON.stringify(editItems),
-                "status":status,
-                "id":$('#id').val()
-            };
-            ajaxTo('/api/aps/DayPlan/save',data, function(result){
-                if (result.success) {
-                    layer.msg('提交成功');
-                    refreshActiveTab();
-                } else {
-                    layer.msg(result.message)
-                }
-            });
+        getDataFn();
+        if(dpYear==''||dpWeek==''){
+            layer.confirm('请完整选择年、月、周',{icon:0});
+            return;
         }
-    }
-    function ajaxTo(url, data, callbackFun) {
-        var layerIndex = layer.load(2);
-        url = url.toLowerCase().indexOf("http://") == 0 ? url : (urlPrefix + url);
-        $.ajax({
-            headers: {
-                Accept: "application/json; charset=utf-8",
-                // Authorization: getCookie("token_type")+" " +getCookie("authorization")，
-                Authorization: "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJqdGkiOiIwNGQ2MjI3ZTQwMTI0YWY4YTZiMzhhZTExMTMzMTBkMSIsInN1YiI6IjQ0IiwiaXNzIjoiYWRtaW4iLCJhdWQiOiJBZG1pbiBKV1QgT25saW5lIn0.Q1xsSdrr__A8xBiMJOrXFYEZTBRQCgjGrwrJKp4ZQT4"  /*丁*/
-
-                /* Authorization: "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJqdGkiOiIwMjgyNzJiNDE2Njg0NDc4YmRiMzZhOTI3ZGQ5MDhiZCIsInN1YiI6IjExIiwiaXNzIjoiYWRtaW4iLCJhdWQiOiJBZG1pbiBKV1QgT25saW5lIn0.2FEUoTT96E350SAXijdtAGVncELyd4rkImjMjhaWTck" */    //甲
-
-                /*Authorization: "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJqdGkiOiIwMzIyMjcxNmFiNzU0MTIxOTU5Yjg1ODU1YmFhZWRjZSIsInN1YiI6IjIyIiwiaXNzIjoiYWRtaW4iLCJhdWQiOiJBZG1pbiBKV1QgT25saW5lIn0.c_MLl8tCitpuSa6d-RzAFWJq7k-H3XBAQePTep4q4IM"*/    //乙班
-
-                /*Authorization: "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJqdGkiOiIwNGEzOTJkZGIwNWE0YTJmYTE2NDE4MGMwMWNkYmJmNCIsInN1YiI6IjMzIiwiaXNzIjoiYWRtaW4iLCJhdWQiOiJBZG1pbiBKV1QgT25saW5lIn0.Byouxvl_hsAYtVQ6PQ0TCHTeyfzkG6ojuGfyyc4-880" */  /*丙班*/
+        var checkDGArr = [
+            {
+                dgName:'班计划',
+                dgId: '#td0',
+                checkRow:"",
+                checkRowArr: [0],
+                checkFieldArr: ['weekPlan','dayPlan','classPlan']
             },
-            type: "post",
-            url: url,
-            data: data,
-            dataType: 'json',
-            contentType: 'application/json',
-            success: function (result) {
-                layer.close(layerIndex);
-                if (callbackFun) {
-                    callbackFun(result);
-                }
+            {
+                dgName:'产量计划',
+                dgId: '#td1',
+                checkRowArr: [0],
+                checkFieldArr: ['weekPlan','dayPlan','mouthPlan']
             },
-            error: function () {
-                layer.close(layerIndex);
-                layer.msg('请求服务器异常.');
+            {
+                dgName:'质量指标计划',
+                dgId: '#td2',
+                checkRowArr: [0],
+                checkFieldArr: ['weekPlan','dayPlan','classPlan']
+            },
+            {
+                dgName:'技术指标计划',
+                dgId: '#td3',
+                checkRowArr: [0],
+                checkFieldArr: ['weekPlan','dayPlan','mouthPlan']
+            },
+            {
+                dgName:'各项单耗指标计划',
+                dgId: '#td4',
+                checkRowArr: [0],
+                checkFieldArr: ['weekPlan','dayPlan','mouthPlan']
+            }
+        ];
+        if(status == "1"){ //状态为提交时判断要检查的dataGrid指定列中的值是否为空，若为空则将不执行return false之后的方法/表达式
+            var checkFlag = dataGridObj.eachCheckDataGrid(checkDGArr);
+            if(checkFlag == false){
+                return false;
+            }
+        }
+
+        var editItems = dataGridObj.getSaveItemArr();
+        var id=getQueryString('id');
+        var data={
+            "dpYear":dpYear,
+            "dpMonth":dpMonth,
+            "dpWeek":dpWeek,
+            "dayPlans":JSON.stringify(editItems),
+            "status":status,
+            "id":id
+        };
+        ajaxToServer1('/api/aps/DayPlan/save',data, function(result){
+            console.log(data,result);
+            if (result.success) {
+                layer.msg('提交成功');
+                refreshActiveTab();
+            } else {
+                layer.msg(result.message)
             }
         });
     }

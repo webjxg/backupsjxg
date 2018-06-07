@@ -61,10 +61,12 @@
   clear: both;
   background-color: #ffffff;
   color: inherit;
-  padding:15px 20px;
+  padding:8px 15px;
 }
-.company {
+.company,.user {
   margin-bottom: 10px;
+  display: inline-block;
+  vertical-align: middle;
 }
 .form-group .company .input-group {
   margin-right: 40px;
@@ -79,12 +81,17 @@
   display: inline-block;
   width: auto;
 }
+.search-parameter>div{
+  display: inline-block;
+  vertical-align: middle;
+  margin-bottom:10px;
+}
 .ibox{
   background-color:white;
 }
-.ibox-content .row{
+/*.ibox-content .row{*/
   /*margin-bottom: 5px;*/
-}
+/*}*/
 .btn-white fa{
   color: #999999 !important;
 }
@@ -105,10 +112,10 @@
 .ibox-content .table.dataTable {
   clear: both;
   border: 1px solid gainsboro;
-  margin-top: 10px !important;
-  margin-bottom: 6px !important;
+  /*margin-bottom: 6px !important;*/
   max-width: none !important;
   border-right:none;
+  margin: 10px 0 10px 0;
 }
 table.dataTable thead{
   background-color: #f5f5f6 !important;
@@ -123,10 +130,11 @@ table.dataTable thead th {
   border-bottom: none !important;
 }
 .ibox-content table.dataTable tbody td {
-  padding: 4px 6px ;
+  padding: 5px 6px ;
   vertical-align: middle; 
-  text-align: center;
+  /*text-align: center;*/
   line-height: 26px;
+  font-size: 12px;
   }
 .ibox-content table.dataTable tbody td a{
   margin: 2px;
@@ -232,9 +240,14 @@ tbody > tr:last-child > td {
 }
 .autoWidth{width:1%;white-space: nowrap;}
 
+.alignLeft{
+  text-align: left;
+}
+
 .dataTables_empty{
   text-align: center;
 }
+.no-treeData {color:#D0D0D0;display: block;text-align: center;}
 
 
 /*# sourceMappingURL=dictionaries.css.map */

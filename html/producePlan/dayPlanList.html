@@ -13,6 +13,17 @@
     <link rel="stylesheet" href="../../css/aps.css">
     <link rel="stylesheet" href="../../css/common.css">
 </head>
+<style>
+    #btn-add{
+               display: none;
+           }
+    .btn-delete{
+          display: none;
+      }
+    .btn-compile{
+          display: none;
+      }
+</style>
 <body>
 <div class="wrapper wrapper-content bg-gray">
     <div class="ibox">
@@ -26,7 +37,7 @@
                     <ul class="apsType-linkage">
                         <li class="month">
                             计划周期（年月）：
-                            <input type="text" value="请选择" id="yMPicker" class="time-input form-control datePicker">
+                            <input type="text" value="" id="yMPicker" class="time-input form-control datePicker" placeholder="请选择">
                         </li>
                         <li class="week">
                             计划周期（周）：
@@ -68,6 +79,10 @@
 
                 </table>
             </div>
+            <div class="clearfix pagination-box">
+                <div class="page-info pull-left"></div>
+                <div id="pagination" class="pagination-roll pull-right"></div>
+            </div>
         </div>
     </div>
 </div>
@@ -82,6 +97,7 @@
 <script src="../../plugins/datatables/js/dataTables.bootstrap.js"></script>
 <script src="../../plugins/bootStrapPager/js/extendPagination.js"></script>
 <!--自定义文件-->
+<script src="../../js/apiDomain.js"></script>
 <script src="../../js/customForm-aps.js"></script>
 <script src="../../js/page.js"></script>
 <script>
@@ -95,7 +111,7 @@
             startView: 3, //月视图
             minView: "3",
             forceParse: 0,
-            startDate:"2018-01-01"
+            startDate:"2010-01-01"
         });
     })
     var $year,$month,$week,$status;
@@ -108,18 +124,55 @@
     }
 
     window.pageLoad = function() {
-        getDataFn();
-        $('#apsWeek').change(function () {
-            getDataFn();
-        });
 
-        var data = {
-            id:0,
-            dpYear: $year,
-            status: $status,
-            dpWeek: $week,
-            dpMonth:$month
-        };
+//            getDataFn();
+//            $('#apsWeek').change(function () {
+//                getDataFn();
+//            });
+
+        if($('.datePicker').val() ==='请选择'){
+            var data = {
+                page: {
+                    pageNo: 1,
+                    pageSize: 5
+                }
+            }
+        }else {
+            getDataFn();
+            $('#apsWeek').change(function () {
+                getDataFn();
+            });
+            var data = {
+                    id:0,
+                    dpYear: $year,
+                    status: $status,
+                    dpWeek: $week,
+                    dpMonth:$month
+                };
+        }
+
+
+
+
+//            if($week==''||$year==''){
+//                var data = {
+////                    dpYear: $year,
+////                    dpMonth:$month,
+//                    page: {
+//                        pageNo: 1,
+//                        pageSize: 5
+//                    }
+//                }
+//            }else{
+//                var data = {
+//                    id:0,
+//                    dpYear: $year,
+//                    status: $status,
+//                    dpWeek: $week,
+//                    dpMonth:$month
+//                };
+//            }
+
         //找到ichecks显示到
         function getAttr(obj) {
             var $iChecks = obj.parents("tr").find('.i-checks'),
@@ -131,7 +184,6 @@
             return [id, year,month,week,status];
         }
         Page.init("/api/aps/DayPlan/page", data, true, function (tableData) {
-            console.log(tableData);
             renderTableData(tableData);
             //查看
             $(".btn-check").click(function () {
@@ -143,7 +195,6 @@
             //删除
             $(".btn-delete").click(function () {
                 var attrArr = getAttr($(this));
-                console.log(attrArr[0]);
                 deleteOne('确定要删除该计划', '/api/aps/DayPlan/delete', attrArr[0])
             });
             //编辑
@@ -157,20 +208,21 @@
 
 
     };
+    pageLoad();
     windowclick();
     //添加
     $("#btn-add").click(function () {
         getDataFn();
-            location.href = "./dayPlanIndex.html";
+        location.href = "./dayPlanIndex.html";
     });
 
     //删除单条数据
     function deleteOne(mess,url,id){
         //var ids= eleP.find('input.i-checks').attr('id')
-        var data = {id:id} || {};
+        var data = {ids:id} || {};
         top.layer.confirm(mess, {icon: 3, title:'系统提示'},function(index){
-            ajaxToServer(url,JSON.stringify(data),function(result){
-                console.log(data,url);
+            ajaxToServer1(url,data,function(result){
+                console.log(result);
                 if(result.success == true){
                     var frameActive = top.getActiveTab().attr("name");
                     var obj = $('#search-btn', top.window.frames[frameActive].document);
@@ -237,17 +289,17 @@
                     }
                 },
                 {
-                    "data": null, "orderable": false, "defaultContent": "",'sClass':" alignCenter autoWidth",
+                    "data": null, "orderable": false, "defaultContent": "",'sClass':"alignCenter autoWidth",
                     "render": function (data, type, row, meta) {
                         var setText="";
                         if(row.status == "0"){
-                            setText="<a class='btn btn-edit btn-compile'><i class='fa fa-edit'></i>编辑</a >";
+                            setText="<a  class='btn btn-edit btn-compile'><i class='fa fa-edit'></i>编辑</a >";
                         }else if(row.status == "1" ){
                             classSet ="col-51cd50";
                             setText="";
                         }
                         var html = setText +
-                                "<a class='btn btn-delete'><i class='fa fa-trash'></i>删除</a >";
+                            "<a  class='btn btn-delete'><i class='fa fa-trash'></i>删除</a >";
                         return "<input type='hidden'  id='" + row.id + "' data-type="+row.tYPE+" data-id='"+row.id+"' data-year='"+row.dpYear+"' data-month='"+row.dpMonth+"' data-week='"+row.dpWeek+"' data-status='"+row.status+"' class='i-checks'>"+
                             "<a class='btn btn-check btn-info' ><i class='fa fa-search-plus'></i>查看</a >" +html;
 
@@ -256,8 +308,38 @@
 
             ]
         });
-
+        //隐藏按钮
+        hidebutton();
     }
 
+    //点击查询按钮
+    $("#search-btn").click(function(){
+        pageLoad();
+    });
+
+
+    function hidebutton() {
+        var url = admin_domain + "/api/sys/SysOperation/currentUserOperation/PPMDPP_PAC";
+        ajaxToServer(url, {} ,function (result) {
+            if(result.success){
+                console.log(result)
+                if(result.rows.length>0){
+                    for(var i=0;i<result.rows.length;i++){
+                        if(result.rows[i].code == "PPMDPP_ADO"){  //新增
+                            $("#btn-add").css( "display","inline-block")
+                        };
+                        if(result.rows[i].code == "PPMDPP_DLO"){  //删除
+                            $(".btn-delete").css( "display","inline-block")
+                        };
+                        if(result.rows[i].code == "PPMDPP_DMODO"){  //编辑
+                            $(".btn-compile").css( "display","inline-block" )
+                        };
+                    };
+                }
+            }else{
+                layerAlert(result.message)
+            }
+        })
+    }
 </script>
 </html>

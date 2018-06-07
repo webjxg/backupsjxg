@@ -22,13 +22,17 @@
     <table class="table table-bordered  table-condensed dataTables-example dataTable no-footer">
         <tbody>
         <tr>
-            <td class="width-15 active" ><label class="pull-right">操作名称:</label></td>
+            <td class="width-15 active" ><label class="pull-right">
+                <font color="red">*</font>
+                操作名称:</label></td>
             <td class="width-35">
                 <input id="opeName" name="name" type="text" value="" data-msg-required="" class="form-control required" style="" aria-required="true" aria-invalid="false">
 
                 <label id="proName-error" class="error" for="proName" style="display:none"></label>
             </td>
-            <td class="width-15 active" ><label class="pull-right">操作编码:</label></td>
+            <td class="width-15 active" ><label class="pull-right">
+                <font color="red">*</font>
+                操作编码:</label></td>
             <td class="width-35">
                 <input id="opeCode" name="code" type="text" value="" data-msg-required="" class="form-control required" style="" aria-required="true" aria-invalid="false">
                 <label id="proCode-error" class="error" for="proCode" style="display:none"></label>
@@ -37,6 +41,7 @@
         <tr>
             <td class="active">
                 <label class="pull-right">
+                    <font color="red">*</font>
                     描述:
                 </label>
             </td>
@@ -46,6 +51,7 @@
             </td>
             <td class="active">
                 <label class="pull-right">
+                    <font color="red">*</font>
                     排序:
                 </label>
             </td>
@@ -89,6 +95,7 @@
 <script src="../../plugins/webUpLoader/webuploader.js"></script>
 <!--自定义文件-->
 <script src="../../js/jeeplus.js"></script>
+<script src="../../js/apiDomain.js"></script>
 <script src="../../js/customForm.js"></script>
 <script src="../../js/public.js"></script>
 <script src="../../js/page.js"></script>

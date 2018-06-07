@@ -37,11 +37,8 @@
         <thead>
         <tr>
             <th class='autoWidth'>机构名称</th>
-            <th class='autoWidth'>机构编码</th>
             <th class='autoWidth'>机构类型</th>
-            <th class='autoWidth'>机构简称</th>
             <th class='autoWidth'>机构等级</th>
-            <th class='autoWidth'>是否逻辑删除</th>
             <th class='autoWidth'>操作</th>
         </tr>
         </thead>
@@ -69,10 +66,12 @@
 <script src="../../plugins/bootStrapPager/js/extendPagination.js"></script>
 <!--公共样式-->
 <script src="../../js/public.js"></script>
+
 <script src="../../js/jeeplus.js"></script>
+<script src="../../js/common.js"></script>
+<script src="../../js/apiDomain.js"></script>
 <script src="../../js/customForm.js"></script>
 <script src="../../js/page.js"></script>
-
 <script>
     function updatason(node){
         console.log(node)
@@ -94,61 +93,81 @@
     pageLoad();
     function clickButton() {
         $('.btn-check').click(function () {
-            var id = $(this).parents("tr").find('.i-Checks').attr('id');
+            var id = $(this).parents("tr").attr('data-tt-id');
             openDialog('查看组织机构信息', './systemSettings/orgCheckView.html?id=' + id, '800px', '600px')
         });
         $('.btn-change').click(function () {
-            var id = $(this).parents("tr").find('.i-Checks').attr('id');
+            var id = $(this).parents("tr").attr('data-tt-id');
             openEditDialog('修改组织机构信息', './systemSettings/orgCheckView.html?id=' + id, '800px', '600px')
         });
         $('.btn-delete').click(function () {
-            var id = $(this).parents("tr").find('.i-Checks').attr('id');
+            var id = $(this).parents("tr").attr('data-tt-id');
             deleteIt('确定要删除该机构吗', '/api/sys/SysOrg/del/',id)
         });
         $('.btn-add').click(function(){
-            var id = $(this).parents("tr").find('.i-Checks').attr('id');
+            var id = $(this).parents("tr").attr('data-tt-id');
             openEditDialog('添加下级菜单','./systemSettings/orgCheckView.html?pid='+id,'800px','600px')
         });
         $('.btn-allot').click(function(){
-            var id = $(this).parents("tr").find('.i-Checks').attr('id');//注意大小写
-            openDialog('分配用户','./systemSettings/orgAssign.html?id='+id,'800px','600px');
+            var id = $(this).parents("tr").attr('data-tt-id');//注意大小写
+            var type = $(this).parents("tr").attr('data-tt-type');
+            openDialog('分配用户','./systemSettings/orgAssign.html?id='+id+'&type='+type,'800px','600px');
         });
         $('.btn-allotApp').click(function(){
-            var id = $(this).parents("tr").find('.i-Checks').attr('id');
+            var id = $(this).parents("tr").attr('data-tt-id');
             openDialog('分配应用','./systemSettings/orgAllotApp.html?id='+id,'800px','600px');
         });
     }
     function renderTableData(data) {
+        console.log(data)
         var tableStr = "";
         for (var i = 0; i < data.length; i++) {
             var count = 'data-tt-id=' + data[i].id;
             if (data[i]._parentId && data[i]._parentId != '') {
                 count += '  data-tt-parent-id=' + data[i]._parentId;
             }
-            tableStr += "<tr class='alignCenter'   " + count + " >"
-                + "<td class='i-Checks' id='" + data[i].id + "'>" + data[i].name + "</td>"
-                + "<td>" + data[i].code + "</td>"
-                + "<td>" + data[i].type + "</td>"
-                + "<td>" + data[i].sname + "</td>"
-                + "<td>" + data[i].grade + "</td>"
-                + "<td >" + (data[i].delFlag == 0 ? '否' : '是') + "</td>"
-                + "<td class='autoWidth' >" +
-                "<a class='btn btn-info btn-xs btn-check'><i class='fa fa-search-plus'></i>查看</a>" +
-                " <a class='btn btn-success btn-xs btn-change'><i class='fa icon-change'></i>修改</a>" +
-                " <a class='btn btn-primary btn-xs btn-add'><i class='fa fa-plus'></i> 添加下级机构</a> </br>" +
-                "<a class='btn  btn-warning btn-xs btn-allot'><i class='fa fa-user'></i> 分配用户</a> " +
-                "<a class='btn   btn-xs btn-allotApp'><i class='fa fa-pie-chart'></i> 分配应用</a>" +
-                " <a class='btn btn-danger btn-xs btn-delete'><i class='fa fa-trash'></i> 删除</a>" +
-                "</td>"
+            //要求公司和集团不允许分配用户
+            //修改人：贾旭光 日期：2018.6.6
+            if(data[i].type==1||data[i].type==0){
+                tableStr += "<tr class='alignCenter autoWidth'   " + count + " data-tt-type='"+data[i].type+"'>"
+                    + "<td class='autoWidth' id='" + data[i].id + "'>" + data[i].name + "</td>"
+                    + "<td>" + data[i].typeLabel + "</td>"
+                    + "<td>" + data[i].gradeLabel + "</td>"
+                    + "<td class='autoWidth' >" +
+                    "<a class='btn btn-info btn-xs btn-check'><i class='fa fa-search-plus'></i>查看</a>" +
+                    " <a class='btn btn-success btn-xs btn-change'><i class='fa icon-change'></i>修改</a>" +
+                    " <a class='btn btn-primary btn-xs btn-add'><i class='fa fa-plus'></i> 添加下级机构</a> " +
+                    "<a class='btn   btn-xs btn-allotApp'><i class='fa fa-pie-chart'></i> 分配应用</a>" +
+                    " <a class='btn btn-danger btn-xs btn-delete'><i class='fa fa-trash'></i> 删除</a>" +
+                    "</td>"
 
-                + "</tr>";
+                    + "</tr>";
+            }else{
+                tableStr += "<tr class='alignCenter autoWidth'   " + count + " data-tt-type='"+data[i].type+"'>"
+                    + "<td class='autoWidth' id='" + data[i].id + "'>" + data[i].name + "</td>"
+                    + "<td>" + data[i].typeLabel + "</td>"
+                    + "<td>" + data[i].gradeLabel + "</td>"
+                    + "<td class='autoWidth' >" +
+                    "<a class='btn btn-info btn-xs btn-check'><i class='fa fa-search-plus'></i>查看</a>" +
+                    " <a class='btn btn-success btn-xs btn-change'><i class='fa icon-change'></i>修改</a>" +
+                    " <a class='btn btn-primary btn-xs btn-add'><i class='fa fa-plus'></i> 添加下级机构</a> " +
+                    "<a class='btn  btn-warning btn-xs btn-allot'><i class='fa fa-user'></i> 分配用户</a> " +
+                    "<a class='btn   btn-xs btn-allotApp'><i class='fa fa-pie-chart'></i> 分配应用</a>" +
+                    " <a class='btn btn-danger btn-xs btn-delete'><i class='fa fa-trash'></i> 删除</a>" +
+                    "</td>"
+
+                    + "</tr>";
+            }
+
         }
+
         if (tableStr.length == 0) {
             var len = $("#treeTable thead tr").children("th").length;
             tableStr = "<tr style='text-align: center'><td colspan='" + len + "'><font color='#cd0a0a'>暂无记录</font></td></tr>";
         }
         $('#treeTableBody').html(tableStr);
         $("#treeTable").treetable({expandable: true, column: 0}, true);  //第二个参数表示为true时强制重新初始化树。
+        setFrameHeight();
     }
 
     function deleteIt(mess,url,id){

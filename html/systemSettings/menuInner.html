@@ -61,7 +61,7 @@
                 <input id="icon" name="icon" type="hidden" value=""><a id="iconButton" href="javascript:" class="btn btn-primary color">选择</a>&nbsp;&nbsp;
                 <input id="iconclear" class="btn btn-default" type="button" value="清除" onclick="clear()">
             </td>
-            <td class="width-15 active"><label class="pull-right">排序:</label></td>
+            <td class="width-15 active"><label class="pull-right"><font color="red">*</font>排序:</label></td>
             <td class="width-35">
                 <input id="sort" name="sort" class="required digits form-control valid" type="text" value="" maxlength="50" aria-required="true" aria-invalid="false">
                 <span class="help-inline">排列顺序，升序。</span>
@@ -89,7 +89,7 @@
         </tr>
         <tr>
             <td class="width-15 active"><label class="pull-right">备注:</label></td>
-            <td class="width-85"><textarea id="remarks" name="remarks" maxlength="560" class="form-control " rows="3"  cols="4"></textarea>
+            <td class="width-85"><textarea id="remarks" name="remark" maxlength="560" class="form-control " rows="3"  cols="4"></textarea>
             </td>
             <td class="width-15 active"><label class="pull-right"></label></td>
             <td class="width-85">
@@ -115,6 +115,7 @@
 <script src="../../plugins/datatables/js/jquery.dataTables.min.js"></script>
 <!--自定义文件-->
 <script src="../../js/common.js"></script>
+<script src="../../js/apiDomain.js"></script>
 <script src="../../js/customForm.js"></script>
 <script>
     $(document).ready(function() {
@@ -131,6 +132,7 @@
         if( id != "" || pid != "" ){
             var url = "/api/sys/SysMenu/form";
             ajaxToServer(url,data,function(result){
+                console.log(result);
                 if(result.success){
                     var SysMenu = result.SysMenu;
                     renderData(SysMenu,$('#inputForm'));

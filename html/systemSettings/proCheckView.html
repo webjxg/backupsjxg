@@ -21,17 +21,17 @@
     <table class="table table-bordered  table-condensed dataTables-example dataTable no-footer">
         <tbody>
         <tr>
-            <td class="width-15 active" ><label class="pull-right">鉴权属性名称:</label></td>
+            <td class="width-15 active" ><label class="pull-right"><font color="red">*</font>鉴权属性名称:</label></td>
             <td class="width-35">
                 <input id="proNameId" name="proNameId" class="form-control" type="hidden" value="1" aria-required="true">
-                <input id="proName" name="name" type="text" value="" data-msg-required="" class="form-control valid" style="" aria-required="true" aria-invalid="false">
+                <input id="proName" name="name" type="text" value="" data-msg-required="" class="form-control valid required" style="" aria-required="true" aria-invalid="false">
 
                 <label id="proName-error" class="error" for="proName" style="display:none"></label>
             </td>
-            <td class="width-15  active" ><label class="pull-right">鉴权属性编码:</label></td>
+            <td class="width-15  active" ><label class="pull-right"><font color="red">*</font>鉴权属性编码:</label></td>
             <td class="width-35">
                 <input id="proCodeId" name="proCodeId" class="form-control" type="hidden" value="1" aria-required="true">
-                <input id="proCode" name="code" type="text" value="" data-msg-required="" class="form-control valid" style="" aria-required="true" aria-invalid="false">
+                <input id="proCode" name="code" type="text" value="" data-msg-required="" class="form-control valid required" style="" aria-required="true" aria-invalid="false">
                 <label id="proCode-error" class="error" for="proCode" style="display:none"></label>
             </td>
         </tr>
@@ -131,19 +131,16 @@
 <script src="../../plugins/webUpLoader/webuploader.js"></script>
 <!--自定义文件-->
 <script src="../../js/jeeplus.js"></script>
+<script src="../../js/apiDomain.js"></script>
 <script src="../../js/customForm.js"></script>
 <script src="../../js/public.js"></script>
 <script src="../../js/page.js"></script>
-
-
-
-
-
 
 <script>
     $(document).ready(function() {
         icheckinner();
         var id = getQueryString('id');
+        var api=getQueryString('api')
         $('#id').val(id);
         if (id) {
             /*此处后端接口  id为弹出窗口自带的id 通过浏览器方法传参得到*/
@@ -159,6 +156,12 @@
                 }
 
             });
+            if (api=='view'){
+                $("#proCode").attr('readonly','readonly')
+                $("select").attr('disabled','disabled')
+            }else if(api=='form'){
+                $("#proCode").attr('readonly','readonly')
+            }
         }
     });
 

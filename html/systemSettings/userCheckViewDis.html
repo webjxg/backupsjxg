@@ -11,11 +11,10 @@
     <!--引入样式-->
     <link rel="stylesheet" href="../../css/common.css">
     <link rel="stylesheet" href="../../css/comInnerTable.css">
+    <script src="../../js/apiDomain.js"></script>
 
 </head>
-<script>
-    var BASE_URL = 'http://114.115.165.184:8080/admin-api'
-</script>
+
 <body>
 
 <i id="btnMenu" class="icon-th-list" style="cursor:pointer;float:right;margin:10px;"></i>
@@ -25,11 +24,11 @@
         <tbody>
         <tr>
             <!--上传头像-->
-            <td class="width-15 active" rowspan="2"><label class="pull-right"><font color="red">*</font>头像：</label></td>
-            <td class="width-35 " rowspan="2">
+            <td class="width-15 active" rowspan="2"><label class="pull-right">头像：</label></td>
+            <td class="width-35 " rowspan="2" aria-disabled="true">
                 <input id="nameImage" name="photo" maxlength="255" class="input-xlarge" type="hidden" value="0"/>
                 <ol id="nameImagePreview"></ol>
-                <a href="javascript:" id="filePicker" style="display: none"  class="btn btn-primary">选择</a>&nbsp;
+                <a href="javascript:" id="filePicker" style="display: none"   class="btn btn-primary">选择</a>&nbsp;
             </td>
 
             <!--归属公司-->
@@ -42,7 +41,7 @@
                            data-msg-required="" class="form-control valid" style="" aria-required="true"
                            aria-invalid="false">
                     <span class="input-group-btn">
-                        <button type="button" id="companyButton" class="btn   btn-primary  "><i
+                        <button type="button" id="companyButtons" class="btn   btn-primary  "><i
                                 class="fa fa-search color"></i></button>
                     </span>
 
@@ -50,11 +49,19 @@
             </td>
         </tr>
         <tr>
-            <!--归属岗位-->
+<!--
+            &lt;!&ndash;归属岗位&ndash;&gt;
             <td class="width-15 active" class="active"><label class="pull-right"><font color="red">*</font>所属岗位:</label></td>
             <td class="width-35" >
                 <input type="hidden"  name="jobTypeList" id="jobTypeListId">
                 <select name="jobTypeList" id="jobTypeList" disabled="disabled" class="form-control"></select>
+            </td>
+-->
+            <!--归属岗位-->
+            <td class="width-15 active" class="active"><label class="pull-right"><font color="red">*</font>所属岗位:</label></td>
+            <td class="width-35" >
+                <!--<input type="hidden" name="job" id="jobTypeListId">-->
+                <input name="job" id="jobTypeList" readonly="readonly" disabled class="form-control">
             </td>
         </tr>
         <tr>
@@ -67,7 +74,8 @@
             <td>
                 <input id="officeId" name="office.id" class="form-control" type="hidden" value="4" aria-required="true">
                 <div class="input-group">
-                    <input id="officeName" name="roleName" readonly="readonly" type="text" value="" data-msg-required="" class="form-control valid" aria-required="true" aria-invalid="false" style="border:none;background: #fff;">
+                    <input id="officeName" name="roleName" readonly="readonly" type="text" value="" data-msg-required="" class="form-control valid" aria-required="true" aria-invalid="false">
+                </div>
             </td>
             <!--工号-->
             <td class="active">
@@ -101,25 +109,25 @@
                        maxlength="50"/>
             </td>
         </tr>
-        <tr>
-            <!--密码-->
-            <td class="active">
-                <label class="pull-right">密码:</label>
-            </td>
-            <td>
-                <input id="newPassword" name="newPassword" type="password" value="" readonly="readonly" maxlength="50" minlength="3"
-                       class="form-control "/>
-                <span class="help-inline">若不修改密码，请留空。</span>
-            </td>
-            <!--确认密码-->
-            <td class="active">
-                <label class="pull-right">确认密码:</label>
-            </td>
-            <td>
-                <input id="confirmNewPassword" name="confirmNewPassword" type="password" readonly="readonly" class="form-control " value=""
-                       maxlength="50" minlength="3" equalTo="#newPassword"/>
-            </td>
-        </tr>
+        <!--<tr>-->
+            <!--&lt;!&ndash;密码&ndash;&gt;-->
+            <!--<td class="active">-->
+                <!--<label class="pull-right">密码:</label>-->
+            <!--</td>-->
+            <!--<td>-->
+                <!--<input id="newPassword" name="newPassword" type="password" value="" readonly="readonly" maxlength="50" minlength="3"-->
+                       <!--class="form-control "/>-->
+                <!--<span class="help-inline">若不修改密码，请留空。</span>-->
+            <!--</td>-->
+            <!--&lt;!&ndash;确认密码&ndash;&gt;-->
+            <!--<td class="active">-->
+                <!--<label class="pull-right">确认密码:</label>-->
+            <!--</td>-->
+            <!--<td>-->
+                <!--<input id="confirmNewPassword" name="confirmNewPassword" type="password" readonly="readonly" class="form-control " value=""-->
+                       <!--maxlength="50" minlength="3" equalTo="#newPassword"/>-->
+            <!--</td>-->
+        <!--</tr>-->
         <tr>
             <!--邮箱-->
             <td class="active">
@@ -149,7 +157,7 @@
                 <label class="pull-right">用户状态:</label>
             </td>
             <td>
-                <select id="loginFlag" name="enable" disabled="disabled" class="form-control">
+                <select id="enable" name="enable" disabled="disabled" class="form-control">
                     <option value="1">可用</option>
                     <option value="0">禁用</option>
                 </select>
@@ -210,6 +218,7 @@
 <script src="../../plugins/webUpLoader/webuploader.js"></script>
 <!--自定义文件-->
 <script src="../../js/jeeplus.js"></script>
+<script src="../../js/apiDomain.js"></script>
 <script src="../../js/customForm.js"></script>
 <script src="../../js/public.js"></script>
 <script src="../../js/page.js"></script>
@@ -218,7 +227,7 @@
 <script>
     function filename(filen) {
         $('#nameImage').val(filen)
-        var str = BASE_URL + filen
+        var str = admin_domain + filen
         $('#nameImage img').attr('src', str)
     }
     var time = new Date();
@@ -235,13 +244,21 @@
         /*api = getQueryString('api') || 'form';*/
         if (id) {
             /*此处后端接口  id为弹出窗口自带的id 通过浏览器方法传参得到*/
-            var url = "/api/sys/SysUser/form/" + id;
+            console.log(id)
+            var url = "/api/sys/SysUser/view/" + id;
             ajaxToServer(url, {}, function (result) {
+                console.log(result)
                 if (result.success) {
                     renderData(result.sysUser, $('#inputForm'));
                     /*运行把ajax数据渲染到弹出窗口中*/
                     renderData(result, $('#inputForm'));
-                    renderjobTypeList(result.jobTypeList)
+                    $('#jobTypeList').val(result.jobName);
+                    initWebuploader('/img/sys/SysUpload/upimg?imgPath=img',
+                        '#filePicker',
+                        "#nameImagePreview",
+                        admin_domain + '/img/sys/SysUpload/showImg/' + id
+                    );
+                    /*上传头像*/
                 } else {
                     layer.msg(result.message);
                 }
@@ -249,36 +266,26 @@
             });
         }
 
-        //渲染下拉菜单
-        function renderjobTypeList (data) {
-            var str='';
-            $.each(data,function (index,item) {
-                str+= '<option value="'+data[index].id+'">'+data[index].label+'</optionid>'
-            });
-            $('#jobTypeList').append(str);
-        }
-        //点击把id放到隐藏input中
-        /*$('#jobTypeList').click(function () {
-         var joblist=$('#jobTypeList option:selected').val();
-         $('#jobTypeListId').val(joblist);
-         });*/
 
 
-        /*上传头像*/
-        initWebuploader('/api/img/sys/SysUpload/upimg?imgPath=img',
-            '#filePicker',
-            "#nameImagePreview",
-            BASE_URL + '/api/img/sys/SysUpload/showImg/' + id
-        );
-        layerInZtree('.changeCompany', ['300px', '424px'], './systemSettings/userCompany.html', '1', '#companyName', '#companyId', '请选择部门');
+
+
+        layerInZtree(['300px', '424px'], './systemSettings/userCompany.html', '1', '#companyName', '#companyId', '请选择部门');
 
 
     })
+
+
     /*清除头像*/
     function getSubmitFormId() {
         return "#inputForm";
     }
-
+    $('#companyButtons').click(function(){
+        return false
+    })
+    $('#companyName').click(function(){
+    return false
+    })
 </script>
 </body>
 </html>

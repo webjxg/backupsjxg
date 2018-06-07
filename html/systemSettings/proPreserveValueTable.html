@@ -5,7 +5,7 @@
     <title>text</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <link rel="stylesheet" href="../../plugins/treetable/css/jquery.treetable.css">
-    <!--<link rel="stylesheet" href="../../plugins/treetable/css/jquery.treetable.theme.default.css">-->
+    <link rel="stylesheet" href="../../plugins/treetable/css/jquery.treetable.theme.default.css">
     <link rel="stylesheet" href="../../plugins/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="../../plugins/font-awesome/css/font-awesome.min.css">
     <link rel="stylesheet" href="../../plugins/ztree/css/metroStyle/metroStyle.css">
@@ -67,6 +67,7 @@
 <!--公共样式-->
 <script src="../../js/public.js"></script>
 <script src="../../js/jeeplus.js"></script>
+<script src="../../js/apiDomain.js"></script>
 <script src="../../js/customForm.js"></script>
 <script src="../../js/page.js"></script>
 
@@ -98,6 +99,11 @@
             renderTableData(tableData.rows);
             $('tbody tr').css('text-align','center');
             clickButton();
+
+            $('#btnadd').click(function(){
+                var Sid=getQueryString('id');
+                openEditDialog('添加属性','./systemSettings/proValueForSubmit.html?Sid='+Sid+'&View=no','800px','365px')
+            });
         });
 
 
@@ -107,93 +113,40 @@
     function clickButton() {
         $('.btn-check').click(function () {
             var id = $(this).parents("tr").find('.i-Checks').attr('id');
-            openDialog('查看属性信息', './systemSettings/proValueCheckView.html?id=' + id+'&View=yes', '800px', '500px');
+            openDialog('查看属性信息', './systemSettings/proValueCheckView.html?id=' + id+'&View=yes', '800px', '365px');
+
         });
         $('.btn-change').click(function () {
             var id = $(this).parents("tr").find('.i-Checks').attr('id');
-            openEditDialog('修改属性信息', './systemSettings/proValueCheckView.html?id=' + id+'&View=no', '800px', '500px')
+            openEditDialog('修改属性信息', './systemSettings/proValueCheckView.html?id=' + id+'&View=no', '800px', '365px')
         });
         $('.btn-delete').click(function () {
             var id = $(this).parents("tr").find('.i-Checks').attr('id');
-            deleteItem('确定要删除该属性吗', '/api/sys/SysAuthPropertyValue/ajaxDel/' + id)
+            deleteIt('确定要删除该属性吗', '/api/sys/SysAuthPropertyValue/ajaxDel/' + id)
         });
         $('.btn-add').click(function(){
             var id = $(this).parents("tr").find('.i-Checks').attr('id');
             var Sid=getQueryString('id');
-            openEditDialog('添加下级属性','./systemSettings/proValueForSubmit.html?pid='+id+"&Sid="+Sid+'&View=no','800px','500px')
+            openEditDialog('添加下级属性','./systemSettings/proValueForSubmit.html?pid='+id+"&Sid="+Sid+'&View=no','800px','365px');
+
+
         });
-        $('#btnadd').click(function(){
-            var Sid=getQueryString('id');
-            openEditDialog('添加属性','./systemSettings/proValueForSubmit.html?Sid='+Sid+'&View=no','800px','500px')
-        });
+
+
     }
-
-//    function Dialog(title,url,width,height,innerCallbackFn){
-//        var clickFlag = true;
-//        if(navigator.userAgent.match(/(iPhone|iPod|Android|ios)/i)){//如果是移动端，就使用自适应大小弹窗
-//            width='auto';
-//            height='auto';
-//        }else{//如果是PC端，根据用户设置的width和height显示。
-//        }
-//        var ind =  top.layer.open({
-//            type: 2,
-//            area: [width, height],
-//            title: title,
-//            maxmin: true, //开启最大化最小化按钮
-//            content: url ,
-//            btn: ['确定', '关闭'],
-//            yes: function(index, layero){
-//                var body = top.layer.getChildFrame('body', index);  //获取子iframe
-//                var iframeWin = layero.find('iframe')[0]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
-//                if(clickFlag){
-//                    if(!innerCallbackFn){
-//                        iframeWin.contentWindow.doSubmit(iframeWin.contentWindow,body,index);
-//                    }else{
-//                        //iframeWin.contentWindow[innerCallbackFn]();   //有bug  innerCallbackFn必须是字符串 待解决
-//                        innerCallbackFn.call(iframeWin.contentWindow,iframeWin.contentWindow,body,index);
-//                    }
-//                    clickFlag = false;
-//                    setTimeout(function(){
-//                        clickFlag = true;
-//                    },3000);
-//                }
-//            },
-//            cancel: function(index){
-//            }
-//        });
-//    }
-//    function dsubmit(a,b,c){
-//        console.log(a,b,c);
-//        var id = getQueryString('id');//属性id
-//        var pid=getQueryString('pid')
-//        var obj={'sysAuthProperty':{'id':pid},'parent':{'id':id}};
-//        var data= JSON.stringify(obj);
-//        console.log(data);
-//        ajaxToServer('/api/sys/SysAuthPropertyValue/form',data,function(result){
-//            console.log(data,result);
-//            if(result.success == true){
-//                layer.msg('已成功提交',{time: 1000});
-//                setTimeout(function(){
-////                        var src =top.getActiveTab().attr('src');
-//                    //获取父层
-//                    var index = top.layer.getFrameIndex(window.name);
-//                    //关闭弹出层
-////                    top.layer.close(index);
-//                    //刷新父层
-//                    var frameActive = top.getActiveTab().attr("name");
-//                    var obj = $('#refresh-btn', top.window.frames[frameActive].document);
-//                    if(obj.length == 0){
-//                        obj = $('#search-btn', top.window.frames[frameActive].document);
-//                    }
-//                    obj.trigger('click');
-//                },1000);
-//            }else{
-//                layerAlert(result.message)
-//            }
-//
-//    })
-//    }
-
+    function deleteIt(mess,url,id){
+        //var ids= eleP.find('input.i-checks').attr('id')
+        var data = {ids:id} || {};
+        top.layer.confirm(mess, {icon: 3, title:'系统提示'},function(index){
+            ajaxToServer1(url,data,function(result){
+                if(result.success == true){
+                    $('.fa-refresh',window.parent.document).trigger('click');
+                }
+            });
+            top.layer.close(index);
+        });
+        return false;
+    }
 
 
 
@@ -209,7 +162,7 @@
             tableStr += "<tr  " + count + " >"
                 + "<td class='i-Checks' id='" + data[i].id + "'>" + data[i].name + "</td>"
                 + "<td>" + data[i].value + "</td>"
-                + "<td>" + data[i].sort + "</td>"
+                + "<td>" +data[i].sort+ "</td>"
                 + "<td class='autoWidth' ><a class='btn btn-info btn-xs btn-check'><i class='fa fa-search-plus'></i>查看</a>" + " <a class='btn btn-success btn-xs btn-change'><i class='fa icon-change'></i>修改</a>" + " <a class='btn btn-danger btn-xs btn-delete'><i class='fa fa-trash'></i> 删除</a>" + "  <a class='btn btn-primary btn-xs btn-add'><i class='fa fa-plus'></i> 添加下级节点</a>"
                 + "</tr>";
         }
@@ -220,8 +173,6 @@
         $('#treeTableBody').html(tableStr);
         $("#treeTable").treetable({expandable: true, column: 0}, true);  //第二个参数表示为true时强制重新初始化树。
     }
-
-
 
 
 </script>

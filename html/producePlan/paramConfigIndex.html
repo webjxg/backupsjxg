@@ -63,24 +63,7 @@
         </tbody>
     </table>
     <div class="clearfix pagination-box">
-        <div class="pagination-detail pull-left">
-            <div class="page-info pull-left"></div>
-            <div class="page-list pull-left">
-                <span>每页显示</span>
-                <select name="" id="pag-sel">
-                    <option value="">请选择</option>
-                    <option value="5">5</option>
-                    <option value="10" selected>10</option>
-                    <option value="20">20</option>
-                    <option value="25">25</option>
-                    <option value="30">30</option>
-                    <option value="40">40</option>
-                    <option value="50">50</option>
-                    <option value="-1">all</option>
-                </select>
-                条记录
-            </div>
-        </div>
+        <div class="page-info pull-left"></div>
         <div id="pagination" class="pagination-roll pull-right"></div>
     </div>
 </div>
@@ -100,6 +83,7 @@
 <!--页面依赖js-->
 <script src="../../js/public.js"></script>
 <script src="../../js/jeeplus.js"></script>
+<script src="../../js/apiDomain.js"></script>
 <script src="../../js/customForm-aps.js"></script>
 <script src="../../js/page.js"></script>
 
@@ -137,6 +121,7 @@
         $('#treeTable').dataTable({
             "bSort": false,
             "bPaginate": false,
+            "bAutoWidth": false,
             "bDestroy": true,
             "paging": false,
             "bProcessing": true,
@@ -157,7 +142,7 @@
 
                 {"data": "paramCode", "width": "320px"},
                 {"data": "value", "width": "320px"},
-                {"data": "remark", "width": "320px"},
+                {"data": "remark", "width": "320px",'sClass':"alignLeft  autoWidth"},
                 {
                     "data": "id", "orderable": false, "width": "320px", "defaultContent": "",
                     "render": function (data, type, row, meta) {

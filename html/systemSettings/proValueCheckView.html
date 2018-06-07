@@ -11,11 +11,13 @@
     <!--引入样式-->
     <link rel="stylesheet" href="../../css/common.css">
     <link rel="stylesheet" href="../../css/customDataTable.css">
-
+    <style>
+        .error {
+            font-weight: 400;
+            color: red;
+        }
+    </style>
 </head>
-<script>
-    var BASE_URL='http://114.115.165.184:8080/admin-api'
-</script>
 <body>
 <i id="btnMenu" class="icon-th-list" style="cursor:pointer;float:right;margin:10px;"></i>
 <form id="inputForm" class="form-horizontal" method="post" action="/api/sys/SysAuthPropertyValue/ajaxSave">
@@ -23,18 +25,18 @@
     <table class="table table-bordered  table-condensed dataTables-example dataTable no-footer">
         <tbody>
         <tr>
-            <td class="width-15 active" ><label class="pull-right">名称:</label></td>
+            <td class="width-15 active" ><label class="pull-right"><font color="red">*</font>名称:</label></td>
             <td class="width-35">
                 <input id="valueNameId" name="valueNameId" class="form-control" type="hidden" value="1" aria-required="true">
-                <input id="valueName" name="name" type="text" value="" data-msg-required="" class="form-control valid" style="" aria-required="true" aria-invalid="false">
+                <input id="valueName" name="name" type="text" value="" data-msg-required="" required="required" class="form-control valid required" style="" aria-required="true" aria-invalid="false">
 
-                <label id="proName-error" class="error" for="proName" style="display:none"></label>
+                <label id="valueName-error" class="error" for="valueName" style="display:none"></label>
             </td>
-            <td class="width-15 active" ><label class="pull-right">属性值:</label></td>
+            <td class="width-15 active" ><label class="pull-right"><font color="red">*</font>属性值:</label></td>
             <td class="width-35">
                 <input id="valueId" name="valueId" class="form-control" type="hidden" value="1" aria-required="true">
-                <input id="value" name="value" type="text" value="" data-msg-required="" class="form-control valid" style="" aria-required="true" aria-invalid="false">
-                <label id="proCode-error" class="error" for="proCode" style="display:none"></label>
+                <input id="value" name="value" type="text" value="" data-msg-required="" required="required" class=" form-control valid required" style="" aria-required="true" aria-invalid="false">
+                <label id="value-error" class="error" for="value" style="display:none"></label>
             </td>
         </tr>
         <tr>
@@ -56,7 +58,8 @@
             </td>
             <td>
                 <input id="sysAuthPropertyId" name="sysAuthProperty.id" class="form-control" type="hidden" value="" aria-required="true">
-                <input id="sysAuthPropertyName" name="sysAuthProperty.name" class="form-control" value="">
+                <input id="sysAuthPropertyName" readonly name="sysAuthProperty.name" class="form-control" value="">
+                <label id="sysAuthPropertyName-error" class="error" for="sysAuthPropertyName" style="display:none"></label>
             </td>
         </tr>
         <tr class="hiddenView" >
@@ -66,53 +69,24 @@
                 </label>
             </td>
             <td>
-                <input id="parentId" name="parent.id" class="form-control" type="hidden" value="1" aria-required="true">
-                <input id="parentName" name="parentName" type="text" value="" data-msg-required="" class="form-control valid" style="" aria-required="true" aria-invalid="false">
-                <label id="prodes-error" class="error" for="prodes" style="display:none"></label>
+
+                <input id="parentId" name="parent.id" class="form-control" type="hidden" value="" aria-required="true">
+                <span id="parentName" name="parentName" type="text" value="" data-msg-required="" class="form-control" style="" aria-required="true" aria-invalid="false"></span>
+                <label id="parentName-error" class="error" for="parentName" style="display:none"></label>
             </td>
 
             <td class="active">
-                <label class="pull-right">
+                <label class="pull-right"><font color="red">*</font>
                     源ID:
                 </label>
             </td>
             <td>
                 <input id="source" name="source" class="form-control" type="hidden" value="1" aria-required="true">
-                <input id="sourceId" name="sourceId" class="form-control">
+                <input id="sourceId" required="required" name="sourceId" class="form-control required">
+                <label id="sourceId-error" class="error" for="sourceId" style="display:none"></label>
             </td>
         </tr>
-        <tr class="hiddenUpdata">
-            <td class="active">
-                <label class="pull-right">创建人:</label>
-            </td>
-            <td>
-                <input id="createById" name="createById" class="form-control" type="hidden" value="1" aria-required="true">
-                <input id="createBy" name="createBy" class="form-control" type="text" value="" maxlength="100"/>
-            </td>
-            <td class="active">
-                <label class="pull-right">创建时间:</label>
-            </td>
-            <td>
-                <input id="createDateId" name="createDateId" class="form-control" type="hidden" value="1" aria-required="true">
-                <input id="createDate" name="createDate" class="form-control">
-            </td>
-        </tr>
-        <tr class="hiddenUpdata">
-            <td class="active">
-                <label class="pull-right">修改人:</label>
-            </td>
-            <td>
-                <input id="updateById" name="updateById" class="form-control" type="hidden" value="1" aria-required="true">
-                <input id="updateBy" name="updateBy" class="form-control" type="text" value="" maxlength="100"/>
-            </td>
-            <td class="active">
-                <label class="pull-right">修改时间:</label>
-            </td>
-            <td>
-                <input id="updateDateId" name="updateDateId" class="form-control" type="hidden" value="1" aria-required="true">
-                <input id="updateDate" name="updateDate" class="form-control">
-            </td>
-        </tr>
+
         <tr>
             <td class="active">
                 <label class="pull-right">备注信息:</label>
@@ -124,11 +98,13 @@
                 </textarea>
             </td>
             <td class="active">
-                <label class="pull-right">排序:</label>
+                <label class="pull-right"><font color="red">*</font>排序:</label>
             </td>
             <td>
                 <input id="sortId" name="sortId" class="form-control" type="hidden" value="1" aria-required="true">
-                <input id="sort" name="sort" class="form-control">
+                <input id="sort" required="required" maxlength="10" onkeyup="value=value.replace(/[^\d]/g,'')" name="sort" class="form-control required" placeholder="仅支持数字" digits="true">
+                <label id="sort-error" class="error" for="sort" style="display:none"></label>
+
             </td>
         </tr>
 
@@ -147,25 +123,16 @@
 <script src="../../plugins/webUpLoader/webuploader.js"></script>
 <!--自定义文件-->
 <script src="../../js/jeeplus.js"></script>
+<script src="../../js/apiDomain.js"></script>
 <script src="../../js/customForm.js"></script>
 <script src="../../js/public.js"></script>
 <script src="../../js/page.js"></script>
-
-
-
-
-
 
 <script>
     $(document).ready(function() {
         icheckinner();
         var id = getQueryString('id');
         var view=getQueryString('View');
-        if(view=="yes"){
-            $('.hiddenView').hide();
-        }else if(view=="no"){
-            $('.hiddenUpdata').hide();
-        }
         $('#id').val(id);
 
         if (id) {
@@ -187,6 +154,54 @@
         }
     });
 
+    //回调函数，在修改和添加时，供openDialog调用提交表单。
+    function doSubmit(){
+        var formId = getSubmitFormId();
+        var formObj =$(formId);
+        // var formObj =$(formId,win?win.document:this);
+        var url = formObj.attr('action');
+        var validateFlag = formObj.validate({
+            submitHandler: function(form){
+                var formdata = JSON.stringify(formObj.serializeJSON());
+                layer.msg('正在提交，请稍等...',{time: 1000});
+                console.log(formdata);
+                ajaxToServer(url,formdata,function(result){
+                    if(result.success == true){
+                        layer.msg('已成功提交',{time: 1000});
+                        setTimeout(function(){
+//                        var src =top.getActiveTab().attr('src');
+                            //获取父层
+                            var index = top.layer.getFrameIndex(window.name);
+                            //关闭弹出层
+                            top.layer.close(index);
+                            //刷新父层
+                            var frameActive = top.getActiveTab().attr("name");
+                            var obj = $('#refresh-btn', top.window.frames[frameActive].document);
+                            if(obj.length == 0){
+                                obj = $('#search-btn', top.window.frames[frameActive].document);
+                            }
+                            obj.trigger('click');
+                        },1000);
+                    }else{
+                        layerAlert(result.message)
+                    }
+                });
+            },
+            errorContainer: "#messageBox",
+            errorPlacement: function(error, element) {
+                $("#messageBox").text("输入有误，请先更正。");
+                if (element.is(":checkbox")||element.is(":radio")||element.parent().is(".input-append")){
+                    error.appendTo(element.parent().parent());
+                } else {
+                    error.insertAfter(element);
+                }
+            }
+        }).form;
+        if(validateFlag){
+            formObj.submit();
+            // $(".layui-layer-btn0").css({"background":'red'});
+        }
+    }
     /*清除头像*/
     function getSubmitFormId(){
         return "#inputForm";

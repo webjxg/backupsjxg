@@ -32,14 +32,18 @@
                     <div class="pull-left">
                    <label>
                        <div class="execution time">
-                           <span>下达时间:</span>
-                           <input type="text" value="" id="startDateParam" class="time-input datePicker" placeholder="开始时间"><i class="fa fa-calendar"></i>
-                           &nbsp;—
-                           <input type="text" value="" id="endDateParam" class="time-input datePicker" placeholder="结束时间"><i class="fa fa-calendar"></i>
+                           <span>执行时间:</span>
+                           <input type="text" value="" id="startDateParam" class="time-input datePicker form-control" placeholder="请选择时间"><i class="fa fa-calendar"></i>
                        </div>
                    </label>
                         <label>
                             <ul class="apsType-linkage">
+                                <li  id="class-hidden">
+                                        班次:
+                                        <select name="" id="time">
+                                            <option value="">-- 全部 --</option>
+                                        </select>
+                                </li>
                                 <li >
                                     工序:
                                     <select name="" id="process">
@@ -71,22 +75,22 @@
                             <ul class="apsType-linkage">
                                 <li>状态：</li>
                                 <li>
-                                    <input type='checkbox' class='i-checks' name="status" value="2"><span>停止执行</span>
+                                    <input type='checkbox' name="status" class='i-checks' value="stop"><span>停止执行</span>
                                 </li>
                                 <li>
-                                    <input type='checkbox' class='i-checks' name="status" value="0"><span>待执行</span>
+                                    <input type='checkbox' name="status" class='i-checks' value="wait"><span>待执行</span>
                                 </li>
                                 <li>
-                                    <input type='checkbox' class='i-checks' name="status" value="1"><span>执行完成</span>
+                                    <input type='checkbox' name="status" class='i-checks' value="finish"><span>执行完成</span>
                                 </li>
                                 <li>
-                                    <input type='checkbox' class='i-checks' name="status" value="-1"><span>取消执行</span>
+                                    <input type='checkbox' name="status" class='i-checks' value="cancel"><span>取消执行</span>
                                 </li>
                             </ul>
                         </div>
                     </div>
                     <div class="pull-right">
-                            <button class="btn btn-search bg-ffa82d btn-white" type="button">
+                            <button class="btn btn-search bg-ffa82d btn-white" type="button" id="search-btn">
                                 <i class="fa fa-search"></i>
                                 查询</button>
                             <button class="btn  btn-white" id="reset-btn">
@@ -119,30 +123,15 @@
             </table>
             <!--分页显示-->
             <div class="clearfix pagination-box">
-                <div class="pagination-detail pull-left" style="display: block;">
-                    <div class="page-info pull-left">显示第1到第6条记录，总共 6条记录</div>
-                    <div class="page-list pull-left">
-                        <span>每页显示</span>
-                        <select name="" id="pag-sel">
-                            <option value="">请选择</option>
-                            <option value="5">5</option>
-                            <option value="10" selected="">10</option>
-                            <option value="20">20</option>
-                            <option value="25">25</option>
-                            <option value="30">30</option>
-                            <option value="40">40</option>
-                            <option value="50">50</option>
-                            <option value="-1">all</option>
-                        </select>
-                        条记录
-                    </div>
-                </div>
+                <div class="page-info pull-left"></div>
                 <div id="pagination" class="pagination-roll pull-right"></div>
             </div>
         </div>
     </div>
 </div>
+
 </body>
+
 <!--核心插件-->
 <script src="../../js/jquery-2.2.4.min.js"></script>
 <script src="../../plugins/bootstrap/js/bootstrap.min.js"></script>
@@ -156,16 +145,46 @@
 <script src="../../plugins/datetimepicker/js/bootstrap-datetimepicker.js"></script>
 <!--自定义文件-->
 <script src="../../js/common.js"></script>
-<script src="../../js/customForm.js"></script>
+<script src="../../js/apiDomain.js"></script>
 <script src="../../js/customForm-aps.js"></script>
 <script src="../../js/page.js"></script>
+<script src="../../js/stomp.min.js"></script>
+<script src="../../js/sockjs.min.js"></script>
 <script>
-
     $(function () {
+        connect();   //webscoket连接
         window.pageLoad = function () {
-            var data = {};
-            Page.init("/api/ctrl/DirectiveDetail/queryPage",data,true,function (tableDta) {
-                createTable(tableDta)
+            var exctTime = $("#startDateParam").val();
+            var time = $("#time option:selected").text()=="-- 全部 --"?"":$("#time option:selected").text();
+            console.log("excTime===:"+exctTime);
+            console.log("time===:"+time);
+            var temp,startTime,endTime;
+            if(time!=""){
+                temp = time.split("(")[1].split(")")[0];
+                startTime = temp.split("-")[0];
+                endTime = temp.split("-")[1]=="00:00:00"?"24:00:00":temp.split("-")[1];
+                console.log("startTime:"+startTime+" ,endTime:"+endTime);
+                startTime = exctTime +" "+ startTime;
+                endTime = exctTime + " "+endTime;
+            }else{
+                startTime = exctTime;
+                endTime = "";
+            }
+            var data = {
+                /*startTime:$("#startDateParam").val(), //开始时间
+                endTime:$("#startDateParam").val(), //开始时间*/
+                startTime:startTime, //开始时间
+                endTime:endTime, //结束时间
+                issuedTime:exctTime,//下达时间
+                proc:$("#process option:selected").text()=="-- 全部 --"?"":$("#process option:selected").text(),            //工序
+                kind:$("#classify option:selected").text()=="-- 全部 --"?"":$("#classify option:selected").text(),            //分类
+                contentParam:$(".name").val(),  //指令
+                status:getcheck()                 //状态
+            };
+                console.log(data)
+            Page.init("/api/ctrl/DirectiveDetail/queryPage", data, true, function (tableData) {
+                console.log(tableData)
+                createTable(tableData);
             })
         }
         pageLoad();
@@ -173,54 +192,49 @@
         loadProcess();
         //获取分类数据
         loadClassify();
+        //     //获取班次数据
+        loadShift();
     });
 
             //获取年月日
-            $("#startDateParam").datetimepicker({
-                format: "yyyy-mm-dd hh:mm:ss",
-                language:'cn',
-                weekStart: 1,
-                pickTime: false,
-                autoclose:true,
-                minView: "4",
-                forceParse: 0,
-                todayBtn: true
-            }).on('change',function(ev){
-                var startDate = $('#startDateParam').val();
-                $("#endDateParam").datetimepicker('setStartDate',startDate);
-                $("#startDateParam").datetimepicker('hide');
-            });
-            $("#endDateParam").datetimepicker({
-                format: "yyyy-mm-dd hh:mm:ss",
-                language:'cn',
-                weekStart: 1,
-                pickTime: false,
-                autoclose:true,
-                minView: "4",
-                forceParse: 0,
-                todayBtn: true
-            }).on('change',function(ev){
-                var returnDate = $("#endDateParam").val();
-                $("#startDateParam").datetimepicker('setReturnDate',returnDate);
-                $("#endDateParam").datetimepicker('hide');
-            });
+    //获取年月日日期
+    $("#startDateParam").datetimepicker({
+        format: "yyyy-mm-dd",  //保留到日
+        showMeridian: true,     //显示上、下午
+        language:'cn',         //中文显示
+        minView: "month",    //月视图
+        todayBtn: true,   //切换到今天
+        clearBtn: true,   //清除全部
+        autoclose:true  //选择时间后自动隐藏
+    })
 
-
-        //获取工序数据
+    //获取工序数据
     function loadProcess(){
-            var url_ = 'http://114.115.165.184:8080/admin-api/api/sys/SysOrg/selectGx/3';
-            ajaxToServer(url_, {}, function(result){
-                if(result.success){
-                    var rows = result.rows;
-                    appendOptionsValue($('#process'),rows, 'code', 'name');
-                }else{
-                    layer.msg(result.message);
-                }
-            });
-        }
+        id = getCookie("loginUserid")
+        ajaxToServer(admin_domain+'/api/sys/SysAuthProperty/getAttributeValue/'+id+'/GXJQ/syswp',{},function (result) {
+            if(result.success){
+                var rows = result.rows;
+                appendOptionsValue($('#process'), rows, 'name', 'name');
+                //appendOptionsValue($('#process'), rows, 'code', 'name');//工序的值存编码 update by qiyh 2018-05-24
+            }else{
+                layer.msg(result.message);
+            }
+        });
+
+    }
+
+    //获取工序数据
+    //chengdabin-2018-05-25-取工序根据当前用户获取
+    //获取工序
+    //取工序名称，后续修改，原因
+    //1：涉及的地方比较多
+    //2：如果用code，需要关联，没有人员
+    //3：获取工序，根据当前用户获取，
+    //4：chengdabin-2018-05-25
+
         //获取分类数据
     function loadClassify() {
-            var url_ = 'http://114.115.165.184:8080/admin-api/api/sys/SysDict/type/directiveCassifyType';
+            var url_ = admin_domain +'/api/sys/SysDict/type/directiveCassifyType';
             ajaxToServer(url_, {}, function(result){
                 if(result.success){
                     var rows = result.rows;
@@ -230,8 +244,25 @@
                 }
             });
         }
-
-    //重置按钮
+    //获取班次数据
+    function loadShift(){
+        var url_ = '/api/ctrl/Shift/list';
+        ajaxToServer(url_, {}, function(result) {
+            if (result.success) {
+                var rows = result.rows;
+                // resetSelect($('#time'));
+                var options = new Array();
+                $(rows).each(function (i, o) {
+                    var label = o['name'] + '(' + o['startTime'] + '-' + o['endTime'] + ')';
+                    options.push({'value': o['id'], 'label': label});
+                });
+                appendOptions($('#time'), options);
+            } else {
+                layer.msg(result.message);
+            }
+        })
+        }
+            //重置按钮
     $("#reset-btn").click(function () {
         var data = {
             "startTime":$("#startDateParam").val(""), //开始时间
@@ -269,8 +300,8 @@
                 {"data": "id", 'sClass':"id"},//id设置为隐藏
                 {"data": "kind", 'sClass':"id"},
                 {"data": "proc", 'sClass':"id"},
-                {"data": "oneContent",'width':"17%", 'sClass': " alignCenter authName"},
-                {"data": "twoContent",'width':"17%", 'sClass': "alignCenter autoWidth"},
+                {"data": "oneContent",'width':"17%", 'sClass': " alignLeft authName"},
+                {"data": "twoContent",'width':"17%", 'sClass': "alignLeft autoWidth"},
                 {"data": "threeContent", 'width':"17%",'sClass': "alignCenter"},
                 {"data": "issuedTime",'width':"13%", 'sClass': "alignCenter"},
                 {"data": "issuedUser",'width':"9%", 'sClass': "alignCenter"},
@@ -279,16 +310,16 @@
                     "data": " ", 'order': false, "defaultContent": "",'width':"9%", 'sClass': "alignCenter",
                     "render": function (data, type, row, meta) {
                         var html = "";
-                        if (row.status == "1") {
+                        if (row.status == "finish") {
                             var setText = "执行完成";
                             html = "<span class='btn-primary1'><i class='fa fa-check-circle'></i>"+setText+"</span>";
-                        } else if (row.status == "2") {
+                        } else if (row.status == "stop") {
                             setText = "停止执行";
                             html = "<span class='btn-stop'><i class='fa fa-exclamation-circle'></i>"+setText+"</span>";
-                        } else if (row.status == "-1") {
+                        } else if (row.status == "cancel") {
                             setText = "取消执行";
                             html ="<span class='btn-cancel'><i class='fa fa-times-circle'></i>"+setText+"</span>";
-                        } else if (row.status == "0") {
+                        } else if (row.status == "wait") {
                             setText = "待执行";
                             html = "<span class='btn-await1'><i class='fa fa-times-circle'></i>"+setText+"</span>";
                         }
@@ -299,13 +330,13 @@
                     "data": " ", 'order': false, "defaultContent": "", 'width':"18%",'sClass': "alignCenter",
                     "render": function (data, type, row, meta) {
                         var html = "";
-                        if (row.status == "-1") {
+                        if (row.status == "cancel") {
                             html = ""
-                        } else if (row.status == "1") {
+                        } else if (row.status == "finish") {
                             html = ""
-                        } else if (row.status == "2") {
+                        } else if (row.status == "stop") {
                             html = ""
-                        } else if (row.status == "0") {
+                        } else if (row.status == "wait") {
                             html = "<a class='btn btn-review1 btn-operate stopbtn'><i class='fa fa-play'></i>停止指令</a >" +
                                 "<a class='btn btn-review btn-operate cancelbtn'><i class='fa fa-power-off'></i>取消指令</a >";
                         }
@@ -315,87 +346,55 @@
             ]
         });
         RenderiCheckTblBody();
-        changeStatus()
+        clickHandler();
     }
-
-    //获取数据
-    function loadData(){
-        var arr = [];
-        getcheck();
-        var data = {
-            "startTime":$("#startDateParam").val(), //开始时间
-            "endTime":$("#endDateParam").val(),     //结束时间
-            "proc":$("#process option:selected").text()=="-- 全部 --"?"":$("#process option:selected").text(),            //工序
-            "kind":$("#classify option:selected").text()=="-- 全部 --"?"":$("#classify option:selected").text(),            //分类
-            "contentParam":$(".name").val(),  //指令
-            "status":getcheck()                      //状态
-        };
-        //指令查看接口地址
-        ajaxToServer("/api/ctrl/DirectiveDetail/queryPage",JSON.stringify(data), function(result){
-            if(result.success){
-                var sczb = result.page.rows;
-                for(var i=0;i<sczb.length;i++){
-                    var msgobj = {
-                        "id":sczb[i].id,
-                        "proc":sczb[i].proc,
-                        "kind":sczb[i].kind,
-                        "oneContent":sczb[i].oneContent,
-                        "twoContent":sczb[i].twoContent,
-                        "threeContent":sczb[i].threeContent,
-                        "issuedTime":sczb[i].issuedTime,
-                        "issuedUser":sczb[i].issuedUser,
-                        "status":sczb[i].status,
-
-                    }
-                    arr.push(msgobj)
-                }
-                createTable(arr);
-            }else{
-                layer.msg(result.message);
-            }
-        });
-    }
-
-    //点击查询按钮
-    $(".btn-search").click(function (e) {
-        loadData();
-    });
-    //修改状态
-    function changeStatus() {
-        $(".btn-operate").click(function (e) {
-            if(this.textContent == "停止指令"){
-             var  data = {
-                    id:this.parentNode.parentNode.firstElementChild.textContent,
-                    status:"2"
-                };
-                sendmsg(data);
-            }else{
-                data = {
-                    id:this.parentNode.parentNode.firstElementChild.textContent,
-                    status:"-1"
-                };
-                sendmsg(data);
-            }
-        })
-    }
-    function sendmsg(obj) {
-        ajaxToServer("/api/ctrl/DirectiveDetail/updStatus",JSON.stringify(obj),function (result) {
-           if(result.success){
-               loadData();
-           }else{
-               layer.msg(result.message);
-           }
-        })
-    }
-
-    //值班指令
-    $("#duty").click(function () {
-        ajaxToServer1("/api/ctrl/DirectiveDetail/queryZbzlPage",{},function (result) {
-            var data = result.page.rows;
-            createTable(data)
-        })
-    })
-
+//点击事件
+ function clickHandler() {
+     //停止指令
+     $(".btn-operate").click(function (e) {
+         var data = {
+             ids:this.parentNode.parentNode.firstElementChild.textContent
+         };
+         console.log(data);
+         ajaxToServer1("/api/ctrl/DirectiveIssued/directiveStop",data,function (result) {
+             console.log(result);
+             if(result.success){
+                 pageLoad();
+                 sendName();
+             }else{
+                 layer.msg(result.message);
+             }
+         })
+     });
+     //取消指令
+     $(".cancelbtn").click(function () {
+         var data = {
+             ids:this.parentNode.parentNode.firstElementChild.textContent
+         };
+         ajaxToServer1("/api/ctrl/DirectiveIssued/directiveCancel",data,function (result) {
+             if(result.success){
+                 pageLoad();
+                 sendName();
+             }else{
+                 layer.msg(result.message);
+             }
+         })
+     });
+     //值班指令
+     $("#duty").click(function () {
+         ajaxToServer("/api/ctrl/DirectiveIssued/list",{},function (result) {
+             console.log(result.rows[0].process);
+             if(result.rows.length!==0) {
+                 $('#process').val(result.rows[0].process);
+             }
+         })
+         ajaxToServer("/api/ctrl/DirectiveDetail/queryZbzlPage",{},function (result) {
+             console.log(result);
+             var data = result.page.rows;
+             createTable(data)
+         })
+     });
+ }
     //获取复选框选中状态
         function getcheck() {
         var checkarr = [];
@@ -409,5 +408,34 @@
             textcontent = checkarr.join(",");
                 return textcontent
         }
+
+    // 开启socket连接
+    function connect() {
+        var socket= new SockJS(aps_domain +'/endpointWisely'); //链接SockJS 的endpoint 名称为"/endpointWisely"
+        stompClient = Stomp.over(socket);
+        stompClient.connect({}, function (frame) {
+            console.log('Connected: ' + frame);
+        });
+    }
+    function sendName() {
+        //通过stompClient.send 向/welcome 目标 发送消息,这个是在控制器的@messageMapping 中定义的。
+        stompClient.send("/directiveMonitor", {}, JSON.stringify({'name': ""}));
+    }
+
+    if($('#startDateParam').val() === '' ) {
+        $('#class-hidden').css('display','none')
+    }else{
+        $('#class-hidden').css('display','block')
+    }
+    $('#startDateParam').change(function(){
+        if($('#startDateParam').val() === '' ) {
+            $('#class-hidden').css('display','none')
+        }else{
+            $('#class-hidden').css({
+                display:'block',
+                display:'inline-block'
+            })
+        }
+    })
 </script>
 </html>

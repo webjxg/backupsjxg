@@ -5,27 +5,70 @@
     <title>实产管控</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <style>
-        .newbox {
-            position: relative;
+        .content{
+            display: block;
+        }
+        .big p{
+            display: inline-block;
+        }
+        .big div p{
+            font-size: 16px;
+            font-weight: bold;
+        }
+        .ibox div p{
+            font-size: 16px;
+            font-weight: bold;
+        }
+        .big input{
+            width: 25px;
+            height: 25px;
+            background-color: #1ab394;
+            border: none;
+            font-size: 16px;
+            color: white;
+        }
+        .big textarea{
             width: 80%;
+            margin-top: 10px;
             height: 75px;
+            resize: none;
+            outline:none;
+            border-color: #cacaca;
+        }
+        .big1 p{
+            display: inline-block;
             margin-top: 20px;
         }
-        .newbox > textarea {
-            padding: 5px;
-            margin-left: 34px;
-            width: 100%;
-            height: 100%;
-            border: 1px solid #cacaca;
-            border-radius: 3px;
+        .big input{
+            width: 25px;
+            height: 25px;
+            background-color: #1ab394;
+            border: none;
+            font-size: 16px;
+            color: white;
+        }
+        .big textarea{
+            width:830px;
+            margin-top: 10px;
+            height: 75px;
             resize: none;
+            outline:none;
+            border-color: #cacaca;
+            display: block;
+        }
+        .newbox {
+            position: relative;
+            width: 76%;
+            height: 75px;
+            margin-top: 20px;
+            margin-left: 10px;
         }
         .newbox > textarea:focus {
             outline: none;
         }
         .newbox .smallimg {
             position: absolute;
-            left: -6px;
+            left: -16px;
             top: 34px;
         }
         .newbox > .btn {
@@ -36,33 +79,36 @@
         .newbox > .btnaddr {
             position: absolute;
             top: 21px;
-            right: -90px;
+            left: 840px;
             text-align: center;
-
         }
         .newbox > .btnremove {
             position: absolute;
             top: 21px;
-            right: -140px;
-
+            left: 890px;
         }
-
+        .linebox {
+            width: 100%;
+            margin-bottom: 30px;
+            position: relative;
+            border-left: 1px solid #ddd;
+        }
         /*输入框三角重叠*/
-        .newbox:before {
-            content: '';
-            position: absolute;
-            left: 15px;
-            top: 29px;
-            width: 0;
-            height: 0;
-            border-width: 10px;
-            border-style: solid;
-            border-color: transparent;
-            margin-bottom: -15px;
-            border-right-width: 10px;
-            border-right-color: currentColor;
-            color: #cacaca;
-        }
+        /*.newbox:before {*/
+            /*content: '';*/
+            /*position: absolute;*/
+            /*left: 15px;*/
+            /*top: 29px;*/
+            /*width: 0;*/
+            /*height: 0;*/
+            /*border-width: 10px;*/
+            /*border-style: solid;*/
+            /*border-color: transparent;*/
+            /*margin-bottom: -15px;*/
+            /*border-right-width: 10px;*/
+            /*border-right-color: currentColor;*/
+            /*color: #cacaca;*/
+        /*}*/
         .newbox:after {
             content: '';
             position: absolute;
@@ -78,6 +124,56 @@
             border-right-color: currentColor;
             color: #fff;
         }
+        .describe textarea{
+            width: 80%;
+            margin-top: 10px;
+            height: 75px;
+            resize: none;
+            outline:none;
+            border-color: #cacaca;
+        }
+        .solve textarea{
+            width: 80%;
+            margin-top: 10px;
+            height: 75px;
+            resize: none;
+            outline:none;
+            border-color: #cacaca;
+        }
+        .big{
+            margin-top: 20px;
+        }
+        .tailafter{
+            margin-top: 20px;
+        }
+        #accidentSum{
+            width: 568px !important;
+            height: 300px !important;
+        }
+        .close{
+            color: white;
+        }
+        .preserve p {
+            text-align: center;
+            font-size: 20px;
+        }
+        .preserve div{
+            width: 300px;
+            margin: 0 auto;
+        }
+        .preserve div label{
+            display: inline-block;
+            width: 140px;
+            height: 40px;
+        }
+        .btn button{
+            float: right;
+            margin-right: 10px;
+        }
+        .ibox-content i{
+            color: gainsboro;
+            display: block;
+        }
     </style>
 </head>
 <!--插件样式-->
@@ -92,11 +188,11 @@
 <link rel="stylesheet" href="../../css/customDataTable.css">
 <link rel="stylesheet" href="../../css/aps.css">
 <link rel="stylesheet" href="../../css/proDis.css">
-<body id="menu-content">
+<body>
 <div class="wrapper wrapper-content">
     <div class="ibox">
         <div class="ibox-title">
-            <h1 class="titName">事故创建</h1>
+            <h1 class="titName">事件创建</h1>
             <hr/>
         </div>
         <div class="ibox-content">
@@ -104,42 +200,55 @@
                 <div class="col-sm-12">
                     <div class="pull-left">
                         <ul class="apsType-linkage">
-                            <li class="year">
+                            <li>
                                 事件:
                                 <select name="" id="incident">
-                                    <option value="">-- 全部 --</option>
-                                    <option value="实产降低">实产降低</option>
-                                    <option value="下料量减少">下料量减少</option>
-                                    <option value="机组运转不稳定">机组运转不稳定</option>
+                                    <option value="-- 全部 --">-- 全部 --</option>
+                                </select>
+                            </li>
+                            <li>
+                                事件类型:
+                                <select name="" id="incident-type">
+                                    <option value="-- 全部 --">-- 全部 --</option>
+                                    <option value="指标类">指标类</option>
+                                    <option value="消耗类">消耗类</option>
+                                    <option value="能源类">能源类</option>
+                                    <option value="生产类">生产类</option>
+                                </select>
+                            </li>
+                            <li >
+                                工序:
+                                <select name="" id="process">
+                                    <option value="-- 全部 --">-- 全部 --</option>
                                 </select>
                             </li>
                             <li>
                                 原因:
                                 <select name="" id="cause">
-                                    <option value="">-- 全部 --</option>
-                                    <option value="原料溶出工序指标问题">原料溶出工序指标问题</option>
-                                    <option value="电厂压力、温度波动">电厂压力、温度波动</option>
-                                    <option value="分解工序精液产出率低">分解工序精液产出率低</option>
-                                    <option value="焙烧炉问题(ID风机、电收尘、引风量等)">焙烧炉问题(ID风机、电收尘、引风量等)</option>
+                                    <option value="-- 全部 --">-- 全部 --</option>
                                 </select>
                             </li>
                             <li >
                                 等级:
                                 <select name="" id="rank">
-                                    <option value="">-- 全部 --</option>
+                                    <option value="-- 全部 --">-- 全部 --</option>
                                 </select>
                             </li>
                         </ul>
-
                     </div>
                     <div class="pull-right">
                         <label>
-                            <button class="btn btn-search  bg-ffa82d btn-white" type="button">
+                            <button class="btn btn-back bg-ffa82d btn-white" id="btn-back" type="button">
+                                <i class="fa fa-reply"></i>
+                                返回</button>
+                        </label>
+                        <label>
+                            <button class="btn btn-search  bg-ffa82d btn-white" id="add-btn" type="button">
                                 <i class="fa fa-search"></i>
                                 保存</button>
                         </label>
                         <label>
-                            <button class="btn btn-search  bg-ffa82d btn-white" id="btn-add" type="button">
+                            <button class="btn btn-close bg-ffa82d btn-white" id="btn-add" type="button">
                                 <i class="fa icon-create"></i>
                                 关闭事故单</button>
                         </label>
@@ -151,33 +260,91 @@
         </div>
 
         <div class="ibox-content">
-            <div class="describe">
-                <p class="accident">事故描述：</p><input type="button" value="+" class="addbtn">
-                <div class="">
-                   <textarea class="newbox">
-
-                   </textarea>
+            <div class="SGMS">
+                <div class="big1 big">
+                    <div>  <p>事故描述:</p><input type="button" class="addbtn1 btnaddr" value="+"></div>
+                    <div class="parentbox" id="SGMS"></div>
                 </div>
             </div>
-            <div class="scheme">
-                <p class="accident">解决方案：</p><input type="button" value="+" class="addbtn">
-                <div>
-               <textarea class="newbox">
 
-                   </textarea>
+
+            <div class="JJFA">
+                <div class="big2 big">
+                    <div>  <p>解决方案:</p><input type="button" class="addbtn2 btnaddr" value="+"></div>
+                    <div class="parentbox" id="JJFA"></div>
                 </div>
             </div>
-            <div class="tailafter">
-                <p class="accident">执行跟踪：</p><input type="button" value="+" class="addbtn">
-                <div>
-                   <textarea class="newbox">
 
-                   </textarea>
+            <div class="ZXGZ">
+                <div class="big2 big">
+                    <div>  <p>执行跟踪:</p><input type="button" class="addbtn3 btnaddr" value="+"></div>
+                    <div class="parentbox" id="ZXGZ"></div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+<div class="modal" id="accidentModal">
+    <div class="modal-dialog modal-xs">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"aria-label="Close" id="accidentClose">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title">事故总结：</h4>
+            </div>
+            <div class="modal-body height-lg">
+                <textarea name='accidentSum' id="accidentSum" rows='5'></textarea>
+                <div class="row">
+                    <div class="pull-right">
+                        <button type="button" id="save1Btn" class="btn btn-blue">确定</button>
+                        <button type="button" class="btn btn-gray close1">取消</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal" id="accidentModal1">
+    <div class="modal-dialog modal-xs">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"aria-label="Close" id="accidentCloses">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title">保存：</h4>
+            </div>
+            <div class="modal-body height-lg">
+                <div class="preserve">
+                    <p>事故信息汇报</p>
+                    <div>
+                        <label><input type="checkbox">生产运营部经理</label>
+                        <label><input type="checkbox">一级事故汇报</label>
+                    </div>
+                    <div>
+                        <label> <input type="checkbox">调度室主任</label>
+                        <label> <input type="checkbox">二级事故汇报</label>
+                    </div>
+                    <div>
+                        <label><input type="checkbox">调度值班主任</label>
+                        <label><input type="checkbox">三级事故汇报</label>
+                    </div>
+                    <div>
+                        <label><input type="checkbox">技术部经理</label>
+                        <label><input type="checkbox">四级事故汇报</label>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="pull-right">
+                        <button type="button" id="save2Btn" class="btn btn-blue">发送</button>
+                        <button type="button" class="btn btn-gray close2">不发送</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 </body>
 <!--核心插件-->
 <script src="../../js/jquery-2.2.4.min.js"></script>
@@ -192,21 +359,406 @@
 <script src="../../plugins/datetimepicker/js/bootstrap-datetimepicker.js"></script>
 
 <!--自定义文件-->
-<script src="../../js/customForm.js"></script>
+<script src="../../js/apiDomain.js"></script>
 <script src="../../js/customForm-aps.js"></script>
 <script src="../../js/page.js"></script>
+<script src="../../js/sockjs.min.js"></script>
+<script src="../../js/stomp.min.js"></script>
 <script>
+    //接收参数
+    var id = getQueryString('id');  
+    var operate = getQueryString('operate');
+    var controlId;
     $(function () {
-        loadRank();
+        loadRank();  //获取级别数据
+        loadProcess(); //获取工序数据
+        loadREvent();  //获取事件
+        loadRCause(); //获取原因数据
+        if(id==null){
+            createNew();  //页面加载时创建页面
+            clickNew()
+            // clickHandler()
+        }else if(operate == "1"){
+            loadData(id); //ajax得到数据
+            // clickHandler()
+            clickNew()
+        }else {
+            loadData(id);
+            $("#add-btn").hide();
+            $("#btn-add").hide();
+            $("select").attr("disabled","disabled")
+        }
+        //返回按钮
+        $(".btn-back").click(function () {
+            refreshActiveTab();
+        });
+        //关闭弹窗
+        $(".close1").click(function () {
+            $("#accidentModal").modal('hide');
+            $("#save1Btn").unbind();
+        });
+        $(".close2").click(function () {
+            $("#accidentModal1").modal('hide');
+            $("#save2Btn").unbind();
+        });
+        connect();
+    });
 
-    })
+    //ajax获取数据
+    function loadData(id) {
+        var data = {
+            id:id
+        };
+        ajaxToServer(aps_domain + "/api/oper/ManageControl/form",JSON.stringify(data),function (result) {
+            console.log(result);
+            if(result.success==true){
+                changeselect(result);
+                controlId = result.manageControl.id;
+                msgCreact(result);
+            }else{
+                layerAlert(result.message)
+            }
+        })
+        }
+        //页面创建的时候
+    function createNew() {
+        //用于事故描述以及解决方案
+        var str =  "<div class='newbox'>" +
+            "<textarea class='textarea'></textarea>"+
+            "<input type='button' class='btn bg-1ab394 btnaddr' value='+'>" +
+            "<input type='button' class='btn btnremove' value='-'>" +
+            "</div>";
+        $("#SGMS").append($(str));
+        $("#JJFA").append($(str));
+        $("#ZXGZ").append($(str));
+    }
+    //如果有数据就渲染
+    function msgCreact(data) {
+        var ShiftMainMap  = data.groupMap;
+        var keyarrs = ["SGMS","JJFA","ZXGZ"];
+              for(var i=0;i<keyarrs.length;i++){
+                for(var item in ShiftMainMap){
+                    if(item == keyarrs[i]){
+                        for(var j=0;j<ShiftMainMap[item].length;j++){
+                            var str = "<div>" +
+                                "<i class='fa fa-quote-left'></i>"+
+                                "<span class='content'>"+ShiftMainMap[item][j].content+"</span>" + "<span class='time'>" + ShiftMainMap[item][j].createDate + "</span>" +
+                                "<i class='fa fa-quote-right'></i>";
+                            "</div>"
+                            $("#"+keyarrs[i]).append(str)
+                        }
+                    }
+                }
+              }
+         }
+
+         //保存按钮
+    $("#add-btn").click(function () {
+        var event = $("#incident option:selected").val()=="-- 全部 --"?"":$("#incident option:selected").val();
+        var incidentType = $("#incident-type option:selected").val()=="-- 全部 --"?"":$("#incident-type option:selected").val()
+        var cause = $("#cause option:selected").val()=="-- 全部 --"?"":$("#cause option:selected").val();
+        var proc = $("#process option:selected").val()=="-- 全部 --"?"":$("#process option:selected").val();
+        var rank = $("#rank option:selected").val()=="-- 全部 --"?"":$("#rank option:selected").val();
+        var keys = $(".textarea").val()==""?"":$(".textarea").val();
+        if(event==""||incidentType==""||cause==""||proc==""||rank==""){
+            top.layer.alert("请选择事件信息");
+        }else if(keys==""){
+            top.layer.alert("请填写事件信息");
+        }else {
+            $("#accidentModal1").modal('show');
+            $("#save2Btn").click(function () {
+                var data = getdata();
+                console.log(JSON.stringify(data))
+                ajaxToServer1("/api/oper/ManageControl/save", data, function (result) {
+                    if (result.success == true) {
+                        top.layer.alert("操作成功");
+                        $("#accidentModal1").modal('hide');
+                        sendName();
+                        refreshActiveTab()
+                    } else {
+                        top.layer.alert("操作失败")
+                    }
+                })
+            })
+        }
+    });
+    //关闭事故单
+    $("#btn-add").click(function () {
+        var event = $("#incident option:selected").val()=="-- 全部 --"?"":$("#incident option:selected").val();
+        var incidentType = $("#incident-type option:selected").val()=="-- 全部 --"?"":$("#incident-type option:selected").val()
+        var cause = $("#cause option:selected").val()=="-- 全部 --"?"":$("#cause option:selected").val()
+        var proc = $("#process option:selected").val()=="-- 全部 --"?"":$("#process option:selected").val()
+        var rank = $("#rank option:selected").val()=="-- 全部 --"?"":$("#rank option:selected").val()
+       var sgms = $("#SGMS textarea").val();
+        var jjfa = $("#JJFA textarea").val();
+        var zxgz = $("#ZXGZ textarea").val();
+        if(event==""||incidentType==""||cause==""||proc==""||rank==""){
+            top.layer.alert("请选择事件信息")
+        }else if(sgms==""|| jjfa=="" || zxgz==""){
+            top.layer.alert("请填写事件信息")
+        }else{
+            $("#accidentModal").modal('show');
+            $("#save1Btn").click(function () {
+                var data = getdata();
+                data.status = "2";
+                data.accidentSum = $("#accidentSum").val()
+                ajaxToServer1("/api/oper/ManageControl/save", data , function (result) {
+                    if(result.success = true){
+                        top.layer.alert("操作成功");
+                        sendName();
+                        $("#accidentModal1").modal('hide');
+                        refreshActiveTab();
+                    }else{
+                        top.layer.alert("操作失败")
+                    }
+                })
+            })
+        }
+    });
+
+
+
+
+
+    //查看和修改时select的显示
+    function changeselect(data) {
+        var selecteds = data.manageControl;
+        $("#incident option").each(function () {
+            if(selecteds.event == $(this).attr('value')){
+                $(this).attr("selected",true);
+            }
+        });
+        $("#incident-type option").each(function () {
+            if(selecteds.type == $(this).attr('value')){
+                $(this).attr("selected",true);
+            }
+        });
+        $("#process option").each(function () {
+            if(selecteds.proc == $(this).attr('value')){
+                $(this).attr("selected",true);
+            }
+        });
+        $("#cause option").each(function () {
+            if(selecteds.cause == $(this).attr('value')){
+                $(this).attr("selected",true);
+            }
+        });
+        $("#rank option").each(function () {
+            if(selecteds.grade == $(this).attr('value')){
+                $(this).attr("selected",true);
+            }
+        })
+    }
+    //关闭弹窗
+    $(".close1").click(function () {
+        $("#accidentModal").modal('hide');
+        $("#save1Btn").unbind();
+    });
+    $(".close2").click(function () {
+        $("#accidentModal1").modal('hide');
+        $("#save2Btn").unbind();
+    });
+    function getdata() {
+        var sgms = [];
+        var jjfa = [];
+        var zxgz = [];
+        $("#SGMS").find("textarea").each(function () {
+            var item = {
+                content:$(this).val(),
+                id:"",
+                controlId:controlId==undefined?"":controlId,
+                eventFlag:"SGMS"
+            };
+            sgms.push(item);
+        });
+        $("#SGMS").find(".content").each(function () {
+            var item1 = {
+                content:$(this).text(),
+                id:id,
+                controlId:controlId==undefined?"":controlId,
+                eventFlag:"SGMS"
+            };
+            sgms.push(item1);
+        });
+        $("#JJFA").find("textarea").each(function () {
+            var item = {
+                id:"",
+                content:$(this).val(),
+                controlId:controlId==undefined?"":controlId,
+                eventFlag:"JJFA"
+            };
+            jjfa.push(item);
+        });
+        $("#JJFA").find(".content").each(function () {
+            var item1 = {
+                id:id,
+                content:$(this).text(),
+                controlId:controlId==undefined?"":controlId,
+                eventFlag:"JJFA"
+            };
+            jjfa.push(item1);
+        });
+        $("#ZXGZ").find("textarea").each(function () {
+            var item = {
+                id:"",
+                content:$(this).val(),
+                controlId:controlId==undefined?"":controlId,
+                eventFlag:"ZXGZ"
+            };
+            zxgz.push(item);
+        });
+        $("#ZXGZ").find(".content").each(function () {
+            var item1 = {
+                id:id,
+                content:$(this).text(),
+                controlId:controlId==undefined?"":controlId,
+                eventFlag:"ZXGZ"
+            };
+            zxgz.push(item1);
+        });
+        var data = {
+            id:id,
+            event:$("#incident option:selected").text()=="-- 全部 --"?"":$("#incident option:selected").text(),
+            type:$("#incident-type option:selected").text()=="-- 全部 --"?"":$("#incident-type option:selected").text(),
+            cause:$("#cause option:selected").text()=="-- 全部 --"?"":$("#cause option:selected").text(),
+            grade:$("#rank option:selected").val()=="-- 全部 --"?"":$("#rank option:selected").val(),
+            proc:$("#process option:selected").val()=="-- 全部 --"?"":$("#process option:selected").val(),
+            SGMS_dataArr:JSON.stringify(sgms),
+            JJFA_dataArr:JSON.stringify(jjfa),
+            ZXGZ_dataArr:JSON.stringify(zxgz),
+        };
+        return data
+    }
+
+    //点击创建
+    function clickNew() {
+        var str = "<div class='newbox'>" +
+            "<textarea></textarea>"+
+            "<input type='button' class='btn bg-1ab394 btnaddr' value='+'>" +
+            "<input type='button' class='btn btnremove' value='-'>" +
+            "</div>";
+        $(".addbtn1").click(function () {
+            $("#SGMS").append(str)
+        });
+        $(".addbtn2").click(function () {
+            $("#JJFA").append(str);
+        });
+        $(".addbtn3").click(function () {
+            $("#ZXGZ").append(str)
+        });
+    }
+    $('.big').on('click', '.btnaddr', function () {
+        var str = "<div class='newbox'>" +
+            "<textarea name='safe'></textarea>" +
+            "<input type='button' class='btn bg-1ab394 btnaddr' value='+'>" +
+            "<input type='button' class='btn btnremove' value='-'>" +
+            "</div>";
+        $(this).parents('.newbox').after(str);
+    });
+    //减号按钮
+    $('.big').on('click', '.btnremove', function () {
+        var len = $(this).parents(".big").find("textarea").length;
+        if(len<=1){
+            top.layer.alert("至少填写一条");
+        }else{
+            $(this).parents('.newbox').remove();
+        }
+
+    });
+
+    
+    
+    
+    // webscoker连接
+    var tryConnCount = 3;
+    // 开启socket连接
+    function connect() {
+        var socket= new SockJS(aps_domain +'/endpointMonitor'); //链接SockJS 的endpoint 名称为"/endpointWisely"
+        stompClient = Stomp.over(socket);//使用stomp子协议的WebSocket 客户端
+        stompClient.connect({},
+            function connectCallback(frame) {//链接Web Socket的服务端。
+                console.log('WebSocket连接成功【' + frame + '】');
+                $('#wsConnError').hide();
+                stompClient.subscribe('/topic/getAccidentResponse',function(respnose){ //订阅/topic/getResponse 目标发送的消息。这个是在控制器的@SendTo中定义的。
+                    var result = JSON.parse(respnose.body);
+                    if(result.success==true){
+
+                    }else{
+                        top.layer.alert("");
+                    }
+                });
+            },
+            function errorCallBack (error) {
+                // 连接失败时（服务器响应 ERROR 帧）的回调方法
+                console.log('WebSocket连接失败【' + error + '】');
+                if(tryConnCount > 0){
+                    $('#wsConnError').html('WebSocket连接失败，正在进行第 '+(4-tryConnCount) + ' 次重连....').show();
+                    tryConnCount --;
+                    connect();
+                }else{
+                    $('#wsConnError').html('WebSocket连接失败. ').show();
+                }
+            }
+        );
+    }
+    //点击保存发送或者关闭事故单的时候调用websocket
+    function sendName() {
+        //通过stompClient.send 向/welcome 目标 发送消息,这个是在控制器的@messageMapping 中定义的。
+        stompClient.send("/accidentMonitor", {}, JSON.stringify({ 'name': "" }));
+        //stompClient.send("http://localhost:8083/aps-api/websocket/welcome", {}, JSON.stringify({ 'name': name }));
+    }
+    //获取工序数据
+    //chengdabin-2018-05-25-取工序根据当前用户获取
+    //获取工序
+    //取工序名称，后续修改，原因
+    //1：涉及的地方比较多
+    //2：如果用code，需要关联，没有人员
+    //3：获取工序，根据当前用户获取，
+    //4：chengdabin-2018-05-25
+    function loadProcess(){
+       var ids = getCookie("loginUserid");
+        ajaxToServer(admin_domain+'/api/sys/SysAuthProperty/getAttributeValue/'+ids+'/GXJQ/syswp',{},function (result) {
+            if(result.success){
+                var rows = result.rows;
+                appendOptionsValue($('#process'), rows, 'name', 'name');
+                //appendOptionsValue($('#process'), rows, 'code', 'name');//工序的值存编码 update by qiyh 2018-05-24
+            }else{
+                layer.msg(result.message);
+            }
+        });
+
+    }
     //获取级别数据
     function loadRank(){
-        var url_ = 'http://114.115.165.184:8080/admin-api/api/sys/SysDict/type/directiveLeaveyType';
+        var url_ = admin_domain +'/api/sys/SysDict/type/directiveLeaveyType';
         ajaxToServer(url_, {}, function(result){
             if(result.success){
                 var rows = result.rows;
                 appendOptionsValue($('#rank'),rows,'value','label');
+            }else{
+                layer.msg(result.message);
+            }
+        });
+    }
+    //获取事件数据
+    function loadREvent(){
+        var url_ =  admin_domain +'/api/sys/SysDict/type/accidentEventType';
+        ajaxToServer(url_, {}, function(result){
+            if(result.success){
+                var rows = result.rows;
+                appendOptionsValue($('#incident'),rows,'label','label');
+            }else{
+                layer.msg(result.message);
+            }
+        });
+    }
+    //获取原因数据
+    function loadRCause(){
+        var url_ = admin_domain +'/api/sys/SysDict/type/accidentCauseType';
+        ajaxToServer(url_, {}, function(result){
+            if(result.success){
+                var rows = result.rows;
+                appendOptionsValue($('#cause'),rows,'label','label');
             }else{
                 layer.msg(result.message);
             }

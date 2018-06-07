@@ -11,13 +11,17 @@
     <style>
         /*特殊样式*/
         .width-35>select,.width-35>.form-control{
-            width: 60%;
+            width: 95%;
         }
         .width-60>textarea{
             width:100%;
         }
         .table-bordered>tbody>tr>td,form > .table > tbody > tr > td{
             border:none;
+        }
+        .error {
+            font-weight: 400;
+            color: red;
         }
     </style>
 
@@ -26,24 +30,22 @@
 <body>
 <i id="btnMenu" class="icon-th-list" style="cursor:pointer;float:right;margin:10px;"></i>
 <form id="inputForm" class="form-horizontal" action="/api/ctrl/BaseDirectiveCZ/save" method="post">
-    <input id="id" name="id" type="hidden" />
+    <input id="id" name="id" type="hidden" value="22222" />
     <table class="table table-bordered  table-condensed dataTables-example dataTable no-footer">
         <tbody>
         <tr>
-            <td class="width-15" ><label class="pull-right">工序:</label></td>
-
+            <td class="width-15" ><label class="pull-right"><font color="red">*</font>工序:</label></td>
             <td class="width-35">
                 <input type="hidden" name="processId" id="processId">
                 <select required="required" name="proc" id="proc" class="form-control">
                     <option value="">--请选择--</option>
                 </select>
             </td>
-        </tr>
-        <tr>
             <td class="width-15" ><label class="pull-right">级别:</label></td>
             <td class="width-35">
+                <input type="hidden" id="gradeVal" name="grade" value="">
                 <select required="required" name="grade" id="grade" class="form-control" disabled="disabled">
-                    <option value="">--请选择--</option>
+                    <option value=""></option>
                     <option value="1">一级菜单</option>
                     <option value="2">二级菜单</option>
                     <option value="3">三级菜单</option>
@@ -51,22 +53,31 @@
             </td>
         </tr>
         <tr>
-            <td class="width-15" ><label class="pull-right">分类:</label></td>
+            <td class="width-15" ><label class="pull-right"><font color="red">*</font>分类:</label></td>
             <td class="width-35">
                 <input type="hidden" name="classifyId" id="classifyId">
                 <select required="required" name="kind" id="kind" class="form-control">
                     <option value="">--请选择--</option>
                 </select>
             </td>
+            <td class="width-15" ><label class="pull-right">排序:</label></td>
+            <td class="width-35">
+                <input type="hidden" name="classifyId">
+                <input type="number" min=0 onkeyup="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}" onafterpaste="if(this.value.length==1){this.value=this.value.replace(/[^1-9]/g,'')}else{this.value=this.value.replace(/\D/g,'')}" name="sort" class="form-control" id="sort">
+                <!--<select required="required" name="kind" id="sorts" class="form-control">-->
+                <!--<option value="">&#45;&#45;请选择&#45;&#45;</option>-->
+                <!--</select>-->
+            </td>
         </tr>
         <tr>
             <td class="width-15" >
                 <label class="pull-right">
+                    <font color="red">*</font>
                     指令内容:
                 </label>
             </td>
-            <td class="width-60">
-                <textarea required="required" id="content" name="content" maxlength="200" class="form-control" rows="6 "></textarea>
+            <td class="width-35">
+                <textarea required="required" id="content" name="content" maxlength="300" class="form-control" rows="3"></textarea>
             </td>
         </tr>
         </tbody>
@@ -82,6 +93,7 @@
 <script src="../../plugins/icheck/icheck.min.js"></script>
 <script src="../../plugins/webUpLoader/webuploader.js"></script>
 <!--自定义文件-->
+<script src="../../js/apiDomain.js"></script>
 <script src="../../js/jeeplus.js"></script>
 <script src="../../js/customForm-aps.js"></script>
 <script src="../../js/public.js"></script>
@@ -93,45 +105,76 @@
 
 
 <script>
-    var id = getQueryString('id');
+    var id;
     $(document).ready(function() {
-        ajaxproc();
+        id=getQueryString('id');
+        var pid = getQueryString('pid');
+        var level = getQueryString('level');
         ajaxkind();
+        ajaxproc();
+        if(level){
+            $('#grade').val(1)
+            $('#gradeVal').val($('#grade').val())
+        }
+        $('#pid').val(pid);
+        if(pid){
+            var ids={
+                "id":pid
+            };
+
+            var url = "/api/ctrl/BaseDirectiveCZ/form/";
+            ajaxToServer(url,JSON.stringify(ids), function (result) {
+                console.log(result)
+                if (result.success) {
+                    $('#grade').val(parseInt(result.baseDirectiveCZ.grade)+1)
+                    $('#gradeVal').val($('#grade').val())
+                } else {
+                    layer.msg(result.message);
+                }
+
+            });
+        }
+        if (id) {
+            /*此处后端接口  id为弹出窗口自带的id 通过浏览器方法传参得到*/
+            var ids={
+                "id":id
+            };
+            var url = "/api/ctrl/BaseDirectiveCZ/form/";
+            ajaxToServer(url,JSON.stringify(ids), function (result) {
+                console.log(result)
+                if (result.success) {
+                    $('#grade').val(result.baseDirectiveCZ.grade)
+                    $('#gradeVal').val($('#grade').val())
+                    $('#proc').val(result.baseDirectiveCZ.proc)
+                    $('#kind').val(result.baseDirectiveCZ.kind)
+                    $("#sort").val(result.baseDirectiveCZ.sort)
+                    $("#content").val(result.baseDirectiveCZ.content)
+                    $('#id').val(id);
+                } else {
+                    layer.msg(result.message);
+                }
+
+            });
+        }
+
     });
 
-    //8080 admin-api端口专用ajax
-    function ajaxToServerS(url, data, callbackFun){
-        var layerIndex = layer.load(2);
-        url = url.toLowerCase().indexOf("http://") == 0? url : ("http://114.115.165.184:8080/admin-api" + url);
-        $.ajax({
-            headers:{
-                Accept: "application/json; charset=utf-8",
-                // Authorization: getCookie("token_type")+" " +getCookie("authorization")，
-                Authorization: "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlzcyI6ImFkbWluIiwiYXVkIjoiQWRtaW4gSldUIE9ubGluZSJ9.0fEB0SHaUfc10ARex-BCLPmOxbbr5vgcMfvivQKY1Rc"
-            },
-            type: "post",
-            url: url,
-            data: data,
-            dataType: 'json',
-            contentType:'application/json',
-            success: function(result){
-                layer.close(layerIndex);
-                if(callbackFun){
-                    callbackFun(result);
-                }
-            },
-            error:function(){
-                layer.close(layerIndex);
-                layer.msg('请求服务器异常.');
-            }
-        });
-    }
+    //获取工序数据
+    //chengdabin-2018-05-25-取工序根据当前用户获取
     //获取工序
+    //取工序名称，后续修改，原因
+    //1：涉及的地方比较多
+    //2：如果用code，需要关联，没有人员
+    //3：获取工序，根据当前用户获取，
+    //4：chengdabin-2018-05-25
     function ajaxproc(){
-        ajaxToServerS('/api/sys/SysOrg/selectGx/3',{},function (result) {
+        _id = getCookie("loginUserid")
+        var url=admin_domain+'/api/sys/SysAuthProperty/getAttributeValue/'+_id+'/GXJQ/syswp';
+        ajaxToServer(url,{},function (result) {
             if(result.success){
                 var rows = result.rows;
-                appendOptionsValue($('#proc'), rows, 'name', 'name');
+                // appendOptionsValue($('#proc'), rows, 'name', 'name');
+                appendOptionsValue($('#proc'), rows, 'name', 'name'); //工序值取编码，update by qiyh 2018-05-24
                 renderAll()
             }else{
                 layer.msg(result.message);
@@ -142,7 +185,7 @@
 
     //获取指令分类
     function ajaxkind() {
-        ajaxToServerS('/api/sys/SysDict/type/directiveCassifyType',{},function (result) {
+        ajaxToServer(admin_domain+'/api/sys/SysDict/type/directiveCassifyType',{},function (result) {
             if(result.success){
                 var rows = result.rows;
                 appendOptionsValue($('#kind'), rows, 'label', 'label');
@@ -154,15 +197,15 @@
     }
 
     function renderAll() {
-        $('#id').val(id);
         if (id) {
+            $('#id').val(id);
             /*此处后端接口  id为弹出窗口自带的id 通过浏览器方法传参得到*/
             var ids={
                 "id":id
             };
             var url = "/api/ctrl/BaseDirectiveCZ/form/";
             ajaxToServer(url,JSON.stringify(ids), function (result) {
-                console.log(result);
+                console.log(ids,result);
                 if (result.success) {
                     renderData(result.baseDirectiveCZ, $('#inputForm'));
                 } else {
@@ -170,6 +213,51 @@
                 }
 
             });
+        }
+    }
+
+
+    function doSubmit(){
+        var formId = getSubmitFormId();
+        var formObj =$(formId);
+        console.log(formObj);
+        // var formObj =$(formId,win?win.document:this);
+        var url = formObj.attr('action');
+        var validateFlag = formObj.validate({
+            submitHandler: function(form){
+                var formdata = JSON.stringify(formObj.serializeJSON());
+                layer.msg('正在提交，请稍等...',{time: 1000});
+                console.log(formdata);
+                ajaxToServer(url,formdata,function(result){
+                    if(result.success == true){
+                        layer.msg('已成功提交',{time: 1000});
+                        setTimeout(function(){
+                            //获取父层
+                            var index = top.layer.getFrameIndex(window.name);
+                            //关闭弹出层
+                            top.layer.close(index);
+                            //刷新父层
+                            var frameActive = top.getActiveTab().attr("name");
+                            top.window.frames[frameActive].location.reload();
+                        },1000);
+                    }else{
+                        layerAlert(result.message)
+                    }
+                });
+            },
+            errorContainer: "#messageBox",
+            errorPlacement: function(error, element) {
+                $("#messageBox").text("输入有误，请先更正。");
+                if (element.is(":checkbox")||element.is(":radio")||element.parent().is(".input-append")){
+                    error.appendTo(element.parent().parent());
+                } else {
+                    error.insertAfter(element);
+                }
+            }
+        }).form;
+        if(validateFlag){
+            formObj.submit();
+            // $(".layui-layer-btn0").css({"background":'red'});
         }
     }
     /*清除头像*/

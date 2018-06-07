@@ -14,25 +14,23 @@
 </head>
 <body>
 <form id="inputForm" class="form-horizontal" action="/api/sys/SysOrg/save" method="post" novalidate="novalidate">
-    <input id="id" name="id" type="hidden" value="1">
+    <input id="id" name="id" type="hidden" >
     <table class="table table-bordered  table-condensed dataTables-example dataTable no-footer">
         <tbody>
         <tr>
             <td class="width-15"><label class="pull-right"><font color="red">*</font>机构名称:</label></td>
             <td class="width-35">
-                <input id="orgNameId" name="orgNameId.id" class="form-control" type="hidden" value="" >
                 <input id="orgName" name="name" type="text" value=""
                            data-msg-required="" class="form-control required" style="">
             </td>
             <td class="width-15"><label class="pull-right"><font color="red">*</font>机构简称:</label></td>
             <td class="width-35">
-                <input id="sNameId" name="sNameId.id" class="form-control" type="hidden" value="">
                 <input id="sName" name="sname" type="text" value="" data-msg-required=""
                            class="form-control required" style="" aria-required="true">
 
         </tr>
         <tr>
-            <td class="width-15"><label class="pull-right"><font color="red">*</font>上级机构:</label></td>
+            <td class="width-15"><label class="pull-right"><!--<font color="red">*</font>-->上级机构:</label></td>
             <td class="width-35">
                 <input id="parentId" name="parent.id" class="form-control" type="hidden" value="">
                 <div class="input-group" id="parentalert">
@@ -48,7 +46,6 @@
             </td>
             <td class="width-15"><label class="pull-right"><font color="red">*</font>机构编码:</label></td>
             <td class="width-35">
-                <input id="codeId" name="codeId.id" class="form-control" type="hidden" value="">
                 <input id="code" name="code" type="text" value="" data-msg-required=""
                        class="form-control required" style="" aria-required="true">
             </td>
@@ -56,17 +53,11 @@
         <tr>
             <td class="width-15"><label class="pull-right"><font color="red">*</font>机构类型:</label></td>
             <td class="width-35">
-                <input id="typeId" name="typeId.id" class="form-control" type="hidden" value="">
-                <select id="type" name="type" class="form-control required">
-                    <option value="">--请选择--</option>
-                    <option value="1">公司</option>
-                </select>
+                <select id="type" name="type" class="form-control required"></select>
             </td>
             <td class="width-15"><label class="pull-right"><font color="red">*</font>机构等级:</label></td>
             <td class="width-35">
-                <input id="gradeId" name="gradeId.id" class="form-control" type="hidden" value="">
-                <input id="grade" name="grade" maxlength="1" type="text" value="" data-msg-required=""
-                       class="form-control required" style="" aria-required="true">
+                <select id="grade" name="grade" maxlength="1" type="text" value="" data-msg-required="" class="form-control required" style="" aria-required="true"> </select>
             </td>
         </tr>
         <tr>
@@ -78,7 +69,6 @@
             </td>
             <td class="width-15"><label class="pull-right">联系电话:</label></td>
             <td class="width-35">
-                <input id="phoneId" name="phoneId.id" class="form-control" type="hidden" value="">
                 <input id="phone" name="phone" type="text" value="" data-msg-required=""
                        class="form-control" style="" aria-required="true">
             </td>
@@ -86,13 +76,11 @@
         <tr>
             <td class="width-15"><label class="pull-right">传真:</label></td>
             <td class="width-35">
-                <input id="faxId" name="faxId.id" class="form-control" type="hidden" value="">
                 <input id="fax" name="fax"  type="text" value="" data-msg-required=""
                        class="form-control" style="" aria-required="true">
             </td>
             <td class="width-15"><label class="pull-right">邮箱:</label></td>
             <td class="width-35">
-                <input id="emailId" name="emailId.id" class="form-control" type="hidden" value="">
                 <input id="email" name="email" type="text" value="" data-msg-required=""
                        class="form-control" style="" aria-required="true">
             </td>
@@ -128,7 +116,6 @@
         <tr>
             <td class="width-15 "><label class="pull-right"><font color="red">*</font>是否启用:</label></td>
             <td class="width-35">
-                <input id="enableId" name="enableId.id" class="form-control" type="hidden" value="">
                     <select id="enable" name="enable" class="form-control"  >
                     <option value="1">启用</option>
                     <option value="2">禁用</option>
@@ -136,7 +123,6 @@
             </td>
             <td class="width-15"><label class="pull-right">排序:</label></td>
             <td class="width-35">
-                <input id="sortId" name="sortId.id" class="form-control" type="hidden" value="">
                 <input id="sort" name="sort" type="number" value="10" data-msg-required=""
                        class="form-control" style="" aria-required="true">
             </td>
@@ -144,7 +130,6 @@
         <tr>
             <td class="width-15"><label class="pull-right">备注:</label></td>
             <td class="width-35">
-                <input id="remarkId" name="remarkId.id" class="form-control" type="hidden" value="">
                 <textarea id="remark" name="remark" maxlength="200"
                           class="form-control" rows="3">
                 </textarea>
@@ -175,18 +160,26 @@
 <!--公共样式-->
 <script src="../../js/public.js"></script>
 <script src="../../js/jeeplus.js"></script>
+<script src="../../js/apiDomain.js"></script>
 <script src="../../js/customForm.js"></script>
 <script src="../../js/page.js"></script>
 
 <script>
     $(document).ready(function() {
+
+        // 获取机构类型
+         createSelect("/api/sys/SysDict/type/orgType","#type",'value','label');
+        // 获取机构等级
+        createSelect("/api/sys/SysDict/type/orgGrade","#grade",'value','label');
+
         var id = getQueryString('id');
         var pid=getQueryString('pid');
-        $('#id').val(id);
+        $("#id").val(id)
         /*api = getQueryString('api') || 'form';*/
         if (id!==null) {
             /*此处后端接口  id为弹出窗口自带的id 通过浏览器方法传参得到*/
             var url = "/api/sys/SysOrg/view/" + id;
+            console.log(url)
             ajaxToServer(url, {}, function (result) {
                 console.log(url,result);
                 if (result.success) {
@@ -196,7 +189,7 @@
                     $('#pname').val(SysOrg.primaryPerson?SysOrg.primaryPerson.name:"");
                     $('#dname').val(SysOrg.deputyPerson?SysOrg.deputyPerson.name:"");
                     $('#parentName').val(result.parentName);
-                    setOrgTypeList(result.orgTypeList);
+                    console.log(result.orgTypeList)
                 } else {
                     layer.msg(result.message);
                 }
@@ -208,7 +201,6 @@
                     var SysOrg = result.SysOrg;
                     $('#parentName').val(SysOrg.name);
                     $('#parentId').val(SysOrg.id);
-                    setOrgTypeList(result.orgTypeList);
                 } else {
                     layer.msg(result.message);
                 }
@@ -218,15 +210,7 @@
         layerInPersons('#ppalert', ['800px', '600px'], './systemSettings/orgPersons.html', '#pname', '#pnameId');
         layerInPersons('#dpalert', ['800px', '600px'], './systemSettings/orgPersons.html', '#dname', '#dnameId');
     });
-    //装配组织机构类型
-    function setOrgTypeList(orgTypeList){
-        if(orgTypeList){
-            for(var i = 0;i<orgTypeList.length;i++){
-                var orgType = orgTypeList[i];
-                $('#type').append("<option value = "+orgType.value+">"+orgType.label+"</option>");
-            }
-        }
-    }
+
 
     /*得到传后台的表单*/
     function getSubmitFormId(){
@@ -250,7 +234,6 @@
                         $(name).val(selobj.name);
                         $(id).val(selobj.id);
                     }
-
                     top.layer.close(index);
 
                 }

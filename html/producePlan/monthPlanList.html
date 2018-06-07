@@ -13,6 +13,23 @@
     <link rel="stylesheet" href="../../css/aps.css">
     <link rel="stylesheet" href="../../css/common.css">
 </head>
+<style>
+    #btn-add{
+        display: none;
+    }
+    .btn-delete{
+        display: none;
+    }
+    .btn-edit{
+        display: none;
+    }
+    .btn-review{
+        display: none;
+    }
+    .btn-issue{
+        display: none;
+    }
+</style>
 <body>
 <div class="wrapper wrapper-content bg-gray">
     <div class="ibox">
@@ -51,10 +68,6 @@
                             状态：
                             <select name="" id="apsState">
                                 <option value="">--请选择--</option>
-                                <option value="0">草稿</option>
-                                <option value="1">已提交</option>
-                                <option value="2">已审核</option>
-                                <option value="3">已发布</option>
                             </select>
                         </li>
                     </ul>
@@ -85,25 +98,9 @@
                     </tbody>
 
                 </table>
+
                 <div class="clearfix pagination-box">
-                    <div class="pagination-detail pull-left">
-                        <div class="page-info pull-left"></div>
-                        <div class="page-list pull-left">
-                            <span>每页显示</span>
-                            <select name="" id="pag-sel">
-                                <option value="">请选择</option>
-                                <option value="5">5</option>
-                                <option value="10" selected>10</option>
-                                <option value="20">20</option>
-                                <option value="25">25</option>
-                                <option value="30">30</option>
-                                <option value="40">40</option>
-                                <option value="50">50</option>
-                                <option value="-1">all</option>
-                            </select>
-                            条记录
-                        </div>
-                    </div>
+                    <div class="page-info pull-left"></div>
                     <div id="pagination" class="pagination-roll pull-right"></div>
                 </div>
             </div>
@@ -121,14 +118,17 @@
 <script src="../../plugins/datatables/js/dataTables.bootstrap.js"></script>
 <script src="../../plugins/bootStrapPager/js/extendPagination.js"></script>
 <!--自定义文件-->
+<script src="../../js/apiDomain.js"></script>
 <script src="../../js/customForm-aps.js"></script>
 <script src="../../js/page.js"></script>
 <script>
     $(function(){
         var $year,$month,$status;
-       /* var date = new Date();
-        getYear = date.getFullYear();
-        $("#yMPicker").val(getYear);*/
+        /* var date = new Date();
+         getYear = date.getFullYear();
+         $("#yMPicker").val(getYear);*/
+        loadStatus()
+
         $("#yMPicker").datetimepicker({
             format:"yyyy",
             language:'cn',
@@ -152,7 +152,7 @@
                 status: $status
             };
             Page.init("/api/aps/ApsMonthAdjust/page",data,true,function(tableData){
-                 renderTableData(tableData);
+                renderTableData(tableData);
                 //审核
                 $(".btn-review").click(function(){
                     var attrArr = getAttr($(this));
@@ -161,7 +161,7 @@
                 //查看
                 $(".btn-check").click(function(){
                     var attrArr = getAttr($(this));
-                    openDialog('查看月计划','producePlan/proTargetPlanView.html?id='+attrArr[0]+'&year='+attrArr[1]+'&month='+attrArr[2],'800px','500px')
+                    openDialog('查看月计划','producePlan/proTargetPlan.html?id='+attrArr[0]+'&year='+attrArr[1]+'&month='+attrArr[2],'800px','500px')
                 });
                 //删除
                 $(".btn-delete").click(function(){
@@ -171,7 +171,7 @@
                 //编辑
                 $(".btn-edit").click(function(){
                     var attrArr = getAttr($(this));
-                    location.href = '../producePlan/proTargetPlan.html?id='+attrArr[0]+'&year='+attrArr[1]+'&month='+attrArr[2];
+                    location.href = '../producePlan/proTargetPlanEdit.html?id='+attrArr[0]+'&year='+attrArr[1]+'&month='+attrArr[2];
                 });
                 //发布
                 $(".btn-issue").click(function(){
@@ -182,10 +182,10 @@
                     };
                     top.layer.confirm("确定要发布吗?",{icon: 3, title:'系统提示'},function(index){
 
-                       ajaxToServer("/api/aps/ApsMonthAdjust/update",JSON.stringify(data),function(result){
-                           if(result.success){
+                        ajaxToServer("/api/aps/ApsMonthAdjust/update",JSON.stringify(data),function(result){
+                            if(result.success){
                                 window.pageLoad();
-                           }
+                            }
                         });
                         top.layer.close(index);
 
@@ -193,25 +193,23 @@
 
                 });
 
-             });
-           function getAttr(obj){
-                   var $iChecks = obj.parents("tr").find('.i-checks'),
-                       id = $iChecks.attr('data-id'),
-                       year = $iChecks.attr('data-year'),
-                       month = $iChecks.attr('data-month'),
-                       status = $iChecks.attr('data-status');
-                   return [id,year,month,status];
-           }
+            });
+            function getAttr(obj){
+                var $iChecks = obj.parents("tr").find('.i-checks'),
+                    id = $iChecks.attr('data-id'),
+                    year = $iChecks.attr('data-year'),
+                    month = $iChecks.attr('data-month'),
+                    status = $iChecks.attr('data-status');
+                return [id,year,month,status];
+            }
         };
         pageLoad();
         windowclick();
         $("#btn-add").click(function(){
-            location.href = "./proTargetPlan.html?year="+$year+"&month="+$month;
+            location.href = "./proTargetPlanEdit.html?year="+$year+"&month="+$month;
         });
 
     });
-
-
     //  渲染表内容
     function renderTableData(tableData){
         $('#treeTable').dataTable({
@@ -239,7 +237,7 @@
                     "data": null, "orderable": false, "defaultContent": "",'sClass':" alignCenter ",
                     "render": function (data, type, row, meta) {
                         var classSet =""  ,setText;
-                        if(row.status == "0"){
+                        if(row.status == "0" ){
 //                            setText = "草稿";
                             classSet ="col-999";
                         }else if(row.status == "1" ){
@@ -260,8 +258,7 @@
                     "render": function (data, type, row, meta) {
                         var html="";
                         if(row.status == "0" || row.status == "-1"){
-                            html = "<a class='btn btn-edit btn-compile'><i class='fa fa-edit'></i>编辑</a >" +
-                                "<a class='btn btn-delete'><i class='fa fa-trash'></i>删除</a >";
+                            html = "<a class='btn btn-edit btn-compile'><i class='fa fa-edit'></i>编辑</a >" ;
                         }else if(row.status == "1") {
                             html = "<a class='btn btn-review' ><i class='fa fa-check'></i>审核</a >";
                         }else if(row.status == "2") {
@@ -270,14 +267,61 @@
                             html = "";
                         }
                         return "<input type='hidden'  id=" + row.id + " data-type="+row.tYPE+" data-id='"+row.id+"' data-year='"+row.adYear+"' data-month='"+row.adMonth+"'  data-status='"+row.status+"' class='i-checks'>"+
-                            "<a class='btn btn-check btn-info' ><i class='fa fa-search-plus'></i>查看</a >" +html;
+                            "<a class='btn btn-check btn-info' ><i class='fa fa-search-plus'></i>查看</a >" +
+                            html+
+                            "<a class='btn btn-delete'><i class='fa fa-trash'></i>删除</a >";
 
                     }
                 }
 
             ]
         });
-
+        hidebutton();
     }
+
+    //获取状态数据
+    function loadStatus(){
+        var url_ = admin_domain +'/api/sys/SysDict/type/monthPlanStatus';
+        ajaxToServer(url_, {}, function(result){
+            if(result.success){
+                var rows = result.rows;
+                appendOptionsValue($('#apsState'),rows,'value','label');
+            }else{
+                layer.msg(result.message);
+            }
+        });
+    }
+    ////////////权限
+    function hidebutton() {
+        var url = admin_domain + "/api/sys/SysOperation/currentUserOperation/PPMMPP_PAC";
+        ajaxToServer(url, {} ,function (result) {
+            if(result.success){
+                console.log(result)
+                if(result.rows.length>0){
+                    for(var i=0;i<result.rows.length;i++){
+                        if(result.rows[i].code == "PPMMPP_ADO"){  //新增
+                            $("#btn-add").css( "display","inline-block")
+                        };
+                        if(result.rows[i].code == "PPMMPP_DLO"){  //删除
+                            $(".btn-delete").css( "display","inline-block")
+                        };
+                        if(result.rows[i].code == "PPMMPP_YMODO"){  //编辑
+                            $(".btn-edit").css( "display","inline-block" )
+                        };
+                        if(result.rows[i].code == "PPMMPP_YTEO"){  //审核
+                            $(".btn-review").css( "display","inline-block" )
+                        };
+                        if(result.rows[i].code == "PPMMPP_REO"){  //发布
+                            $(".btn-issue").css( "display","inline-block" )
+                        };
+                    };
+                }
+            }else{
+                layerAlert(result.message)
+            }
+        })
+    }
+
+
 </script>
 </html>

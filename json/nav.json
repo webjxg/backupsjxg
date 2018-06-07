@@ -13,31 +13,24 @@
           "href":"",
           "children":[
             {
-              "iconName":"",
+              "iconName":"icon-disc",
               "name":"更改密码",
               "menu_sub":"1",
-              "href":"",
+              "href":"../html/systemSettings/changePassword.html",
               "children":[]
             },
             {
-              "iconName":"",
+              "iconName":"icon-disc",
               "name":"字典管理",
               "menu_sub":"1",
               "href":"../html/systemSettings/dictionary.html",
               "children":[]
             },
             {
-              "iconName":"",
+              "iconName":"icon-disc",
               "name":"菜单管理",
               "menu_sub":"1",
               "href":"../html/systemSettings/menu.html",
-              "children":[]
-            },
-            {
-              "iconName":"",
-              "name":"磁铁管理",
-              "menu_sub":"1",
-              "href":"",
               "children":[]
             }
           ]
@@ -49,56 +42,56 @@
           "href":"",
           "children":[
             {
-              "iconName":"",
+              "iconName":"icon-disc",
               "name":"用户管理",
               "menu_sub":"1",
               "href":"../html/systemSettings/userIndex.html",
               "children":[]
             },
             {
-              "iconName":"",
+              "iconName":"icon-disc",
               "name":"机构管理",
               "menu_sub":"1",
               "href":"../html/systemSettings/orgIndex.html",
               "children":[]
             },
             {
-              "iconName":"",
+              "iconName":"icon-disc",
               "name":"角色管理",
               "menu_sub":"1",
               "href":"../html/systemSettings/role.html",
               "children":[]
             },
             {
-              "iconName":"",
+              "iconName":"icon-disc",
               "name":"鉴权类管理",
               "menu_sub":"1",
               "href":"../html/systemSettings/authenticationType.html",
               "children":[]
             },
             {
-              "iconName":"f",
+              "iconName":"icon-disc",
               "name":"属性管理",
               "menu_sub":"1",
               "href":"../html/systemSettings/proIndex.html",
               "children":[]
             },
             {
-              "iconName":"",
+              "iconName":"icon-disc",
               "name":"应用管理",
               "menu_sub":"1",
               "href":"../html/systemSettings/application.html",
               "children":[]
             },
             {
-              "iconName":"",
+              "iconName":"icon-disc",
               "name":"操作管理",
               "menu_sub":"1",
               "href":"../html/systemSettings/operationIndex.html",
               "children":[]
             },
             {
-              "iconName":"",
+              "iconName":"icon-disc",
               "name":"许可管理",
               "menu_sub":"1",
               "href":"../html/systemSettings/permit.html",
@@ -111,7 +104,7 @@
           "iconName":"",
           "name":"日志服务",
           "menu_sub":"1",
-          "href":"",
+          "href":"../html/systemSettings/loggingService.html",
           "children":[]
         },
         {
@@ -121,17 +114,17 @@
           "href":"",
           "children":[
             {
-              "iconName":"",
+              "iconName":"icon-disc",
               "name":"定时任务管理",
               "menu_sub":"1",
-              "href":"",
+              "href":"../html/systemSettings/timingMissionManagement.html",
               "children":[]
             },
             {
-              "iconName":"",
+              "iconName":"icon-disc",
               "name":"定时任务监控",
               "menu_sub":"1",
-              "href":"",
+              "href":"../html/systemSettings/timingMissionMonitoring.html",
               "children":[]
             }
           ]
@@ -140,14 +133,14 @@
           "iconName":"",
           "name":"日历班次",
           "menu_sub":"1",
-          "href":"",
+          "href":"../html/systemSettings/menologyClasses.html",
           "children":[]
         },
         {
           "iconName":"",
           "name":"服务治理",
           "menu_sub":"1",
-          "href":"",
+          "href":"../html/systemSettings/serveGovern.html",
           "children":[]
         }
       ]
@@ -186,28 +179,28 @@
           "href":"",
           "children":[
             {
-              "iconName":"",
+              "iconName":"icon-disc",
               "name":"字典树",
               "menu_sub":"1",
               "href":"../html/producePlan/planDicIndex.html",
               "children":[]
             },
             {
-              "iconName":"",
+              "iconName":"icon-disc",
               "name":"参数配置",
               "menu_sub":"1",
               "href":"../html/producePlan/paramConfigIndex.html",
               "children":[]
             },
             {
-              "iconName":"",
+              "iconName":"icon-disc",
               "name":"计算公式",
               "menu_sub":"1",
               "href":"../html/producePlan/computeFormula.html",
               "children":[]
             },
             {
-              "iconName":"",
+              "iconName":"icon-disc",
               "name":"计划模板",
               "menu_sub":"1",
               "href":"../html/producePlan/planTempIndex.html",
@@ -231,42 +224,35 @@
           "href":"",
           "children":[
             {
-              "iconName":"",
+              "iconName":"icon-disc",
               "name":"调度指令",
               "menu_sub":"1",
               "href":"../html/proDis/disCommandsIndex.html",
               "children":[]
             },
             {
-              "iconName":"",
-              "name":"指令创建",
-              "menu_sub":"1",
-              "href":"../html/proDis/createInstructionIndex.html",
-              "children":[]
-            },
-            {
-              "iconName":"",
+              "iconName":"icon-disc",
               "name":"指令下达",
               "menu_sub":"1",
               "href":"../html/proDis/giveOrdersIndex.html",
               "children":[]
             },
             {
-              "iconName":"",
+              "iconName":"icon-disc",
               "name":"指令跟踪",
               "menu_sub":"1",
               "href":"../html/proDis/ordertailafter.html",
               "children":[]
             },
             {
-              "iconName":"",
+              "iconName":"icon-disc",
               "name":"指令查看",
               "menu_sub":"1",
               "href":"../html/proDis/ordercheck.html",
               "children":[]
             },
             {
-              "iconName":"",
+              "iconName":"icon-disc",
               "name":"指令监控",
               "menu_sub":"1",
               "href":"../html/proDis/ordermonitoring.html",
@@ -282,15 +268,22 @@
           "href":"",
           "children":[
             {
-              "iconName":"",
+              "iconName":"icon-disc",
               "name":"实产管控",
               "menu_sub":"1",
               "href":"../html/proDis/chattelsControl.html",
               "children":[]
             },
             {
-              "iconName":"",
-              "name":"事故监控",
+              "iconName":"icon-disc",
+              "name":"事件监控",
+              "menu_sub":"1",
+              "href":"../html/proDis/accidentMonitoring.html",
+              "children":[]
+            },
+            {
+              "iconName":"icon-disc",
+              "name":"成品氧化铝管控",
               "menu_sub":"1",
               "href":"",
               "children":[]
@@ -304,17 +297,17 @@
           "href":"",
           "children":[
             {
-              "iconName":"",
+              "iconName":"icon-disc",
               "name":"交接班日志",
               "menu_sub":"1",
-              "href":"",
+              "href":"../html/proDis/disShiftLogIndex.html",
               "children":[]
             },
             {
-              "iconName":"",
+              "iconName":"icon-disc",
               "name":"日志查看",
               "menu_sub":"1",
-              "href":"",
+              "href":"../html/proDis/record.html",
               "children":[]
             }
 
@@ -336,38 +329,24 @@
           "href":"",
           "children":[
             {
-              "iconName":"",
+              "iconName":"icon-disc",
               "name":"操作指令",
               "menu_sub":"1",
               "href":"../html/proDis/opeOrderIndex.html",
               "children":[]
             },
             {
-              "iconName":"",
-              "name":"指令创建",
-              "menu_sub":"1",
-              "href":"../html/proDis/opeOrderCreateIndex.html",
-              "children":[]
-            },
-            {
-              "iconName":"",
+              "iconName":"icon-disc",
               "name":"指令接收",
               "menu_sub":"1",
               "href":"",
               "children":[]
             },
             {
-              "iconName":"",
+              "iconName":"icon-disc",
               "name":"指令查看",
               "menu_sub":"1",
-              "href":"",
-              "children":[]
-            },
-            {
-              "iconName":"",
-              "name":"异常反馈",
-              "menu_sub":"1",
-              "href":"",
+              "href":"../html/proDis/operationOrdercheck.html",
               "children":[]
             }
           ]
@@ -379,17 +358,17 @@
           "href":"",
           "children":[
             {
-              "iconName":"",
+              "iconName":"icon-disc",
               "name":"交接班日志",
               "menu_sub":"1",
               "href":"../html/proDis/opeShiftLogIndex.html",
               "children":[]
             },
             {
-              "iconName":"",
+              "iconName":"icon-disc",
               "name":"日志查看",
               "menu_sub":"1",
-              "href":"../html/proDis/record.html",
+              "href":"../html/proDis/operationRecord.html",
               "children":[]
             }
 
@@ -414,8 +393,15 @@
           "iconName":"",
           "name":"注册磁贴",
           "menu_sub":"1",
-          "href":"",
+          "href":"../html/privatelyOwned/registerMmIndex.html",
           "children":[]
+        },
+        {
+          "iconName": "",
+          "name": "工作台",
+          "menu_sub": "1",
+          "href": "../html/privatelyOwned/selfJobTable.html",
+          "children": []
         }
       ]
     }

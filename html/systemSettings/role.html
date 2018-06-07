@@ -46,12 +46,12 @@
             <!--搜索区-->
             <div class="row">
                 <div class="col-sm-12">
-                    <form id="searchForm" class="form-inline" method="post" >
+                    <div id="searchForm" class="form-inline">
                         <div class="form-group">
                             <span>角色名称：</span>
-                            <input id="name" name="name" class=" form-control input-sm" type="text" value="" maxlength="64">
+                            <input id="name" name="name" class=" form-control input-sm" onkeydown="if(event.keyCode==13){return false;}" type="text" value="" maxlength="64">
                         </div>
-                    </form>
+                    </div>
                     <br>
                 </div>
             </div>
@@ -69,7 +69,7 @@
                                 data-placement="top"><i class="fa fa-trash-o"> </i>删除
 
                         </button>
-                        <button class="btn btn-white btn-sm " id="refresh-btn" data-toggle="tooltip" data-placement="left" onclick="Page.reload()"
+                        <button class="btn btn-white btn-sm " id="refresh-btn" data-toggle="tooltip" data-placement="left" onclick="window.location.reload()"
                                 title="刷新"><i class="glyphicon glyphicon-repeat"></i> 刷新
                         </button>
                     </div>
@@ -101,24 +101,7 @@
                 </tbody>
             </table>
             <div class="clearfix pagination-box">
-                <div class="pagination-detail pull-left">
-                    <div class="page-info pull-left"></div>
-                    <div class="page-list pull-left">
-                        <span>每页显示</span>
-                        <select name="" id="pag-sel">
-                            <option value="">请选择</option>
-                            <option value="5">5</option>
-                            <option value="10" selected>10</option>
-                            <option value="20">20</option>
-                            <option value="25">25</option>
-                            <option value="30">30</option>
-                            <option value="40">40</option>
-                            <option value="50">50</option>
-                            <option value="-1">all</option>
-                        </select>
-                        条记录
-                    </div>
-                </div>
+                <div class="page-info pull-left"></div>
                 <div id="pagination" class="pagination-roll pull-right"></div>
             </div>
 
@@ -149,6 +132,7 @@
 <!--自定义文件-->
 <script src="../../js/common.js"></script>
 <script src="../../js/jeeplus.js"></script>
+<script src="../../js/apiDomain.js"></script>
 <script src="../../js/customForm.js"></script>
 <script src="../../js/page.js"></script>
 
@@ -195,7 +179,7 @@
         };
         pageLoad();
         windowclick(); //窗口工具操作按钮
-        createSelect("/api/sys/SysDict/allType","#type");  //动态添加Select的option
+        createSelect("/api/sys/SysDict/allType","#type",'type','type');  //动态添加Select的option
     });
     function getSubmitFormId(){
         return "#inputForm";
@@ -222,7 +206,7 @@
                     }
                 },
                 {"data": "name",'sClass':" alignCenter authName"},
-                {"data": "enname",'sClass':"alignCenter autoWidth"},
+                {"data": "enname",'sClass':"alignCenter ","width":"15%"},
                 {"data": "roleType",'sClass':"alignCenter"},
                 {
                     "data": "id", "orderable": false, "defaultContent": "",'sClass':" alignCenter autoWidth",

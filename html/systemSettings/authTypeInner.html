@@ -25,12 +25,12 @@
         <tbody>
         <tr>
             <td class="width-15 active">
-                <label class="pull-right">鉴权类名称:</label>
+                <label class="pull-right"><font color="red">*</font>鉴权类名称:</label>
             </td>
             <td class="width-35">
                 <input id="name" name="name" class="form-control "   required  type="text" value="" maxlength="50" aria-required="true"></td>
             <td class="width-15 active">
-                <label class="pull-right">鉴权类编码:</label>
+                <label class="pull-right"><font color="red">*</font>鉴权类编码:</label>
             </td>
             <td class="width-35">
                 <input id="code" name="code" class="form-control "  required  type="text" value="" maxlength="50" aria-required="true">
@@ -38,13 +38,13 @@
         </tr>
         <tr>
             <td class="width-15 active">
-                <label class="pull-right">描述:</label>
+                <label class="pull-right"><font color="red">*</font>描述:</label>
             </td>
             <td class="width-35">
                 <input id="des" name="des" class="form-control required abc" type="text" value="" maxlength="50" aria-required="true">
             </td>
             <td class="width-15 active">
-                <label class="pull-right">所属应用:</label>
+                <label class="pull-right"><font color="red">*</font>所属应用:</label>
             </td>
             <td class="width-35">
                 <select  id="selApp" name="sysApplication.id"  class=" form-control required valid" aria-invalid="false">
@@ -53,17 +53,16 @@
         </tr>
         <tr>
             <td class="width-15 active">
-                <label class="pull-right">排序:</label>
+                <label class="pull-right"><font color="red">*</font>排序:</label>
             </td>
             <td class="width-35">
                 <input id="sort" name="sort" class="form-control required digits" type="text" value="" maxlength="11" aria-required="true">
             </td>
             <td class="width-15 active">
-                <label class="pull-right">是否可用:</label>
+                <label class="pull-right"><font color="red">*</font>是否可用:</label>
             </td>
             <td class="width-35">
                 <select name="enable" id="enable" class="form-control required " aria-invalid="false">
-                    <option value="">请选择</option>
                     <option value="1">启用</option>
                     <option value="0">禁用</option>
                 </select>
@@ -102,6 +101,7 @@
 <script src="../../plugins/datatables/js/jquery.dataTables.min.js"></script>
 <!--自定义文件-->
 <script src="../../js/common.js"></script>
+<script src="../../js/apiDomain.js"></script>
 <script src="../../js/customForm.js"></script>
 <script>
     $(document).ready(function() {

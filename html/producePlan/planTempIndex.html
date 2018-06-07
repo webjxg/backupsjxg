@@ -53,7 +53,7 @@
                 <button class="btn-white btn" data-toggle="tooltip" data-placement="left"
                         onclick="edit('修改模板信息','./producePlan/planTempCheckView.html','800px','300px','#treeTable')" title="修改"><i class="fa fa-file-text-o"></i> 修改
                 </button>
-                <button class="btn-white btn" onclick="deleteIt('确认要删除该模板吗？','/api/aps/Template/delete/')"  data-toggle="tooltip" data-placement="top"><i
+                <button class="btn-white btn" onclick="deleteIt('内置模板不允许删除，您确定要删除吗？','/api/aps/Template/delete/')"  data-toggle="tooltip" data-placement="top"><i
                         class="fa fa-trash-o"></i>删除
                 </button>
                 <button class="btn-white btn" id="refresh-btn" data-toggle="tooltip" data-placement="left"
@@ -80,22 +80,7 @@
         </tbody>
     </table>
     <div class="clearfix pagination-box">
-        <div class="pagination-detail pull-left">
-            <div class="page-info pull-left"></div>
-            <div class="page-list pull-left">
-                <span>每页显示</span>
-                <select name="" id="pag-sel">
-                    <option value="5">5</option>
-                    <option value="10" selected>10</option>
-                    <option value="20">20</option>
-                    <option value="25">25</option>
-                    <option value="30">30</option>
-                    <option value="40">40</option>
-                    <option value="50">50</option>
-                </select>
-                条记录
-            </div>
-        </div>
+        <div class="page-info pull-left"></div>
         <div id="pagination" class="pagination-roll pull-right"></div>
     </div>
 </div>
@@ -115,6 +100,7 @@
 <!--页面依赖js-->
 <script src="../../js/public.js"></script>
 <script src="../../js/jeeplus.js"></script>
+<script src="../../js/apiDomain.js"></script>
 <script src="../../js/customForm-aps.js"></script>
 <script src="../../js/page.js"></script>
 
@@ -145,6 +131,7 @@
         $('#treeTable').dataTable({
             "bSort":false,
             "bPaginate": false,
+            "bAutoWidth": false,
             "bDestroy": true,
             "paging": false,
             "bProcessing": true,
@@ -162,11 +149,11 @@
                         return data = "<input type='checkbox' id=" + row.id + " class='i-checks'>"
                     }
                 },
-                {"data": "name", "width": "auto"},
-                {"data": "type", "width": "auto"},
-                {"data": "createDate", "width": "auto"},
+                {"data": "name", 'sClass':"alignLeft  autoWidth"},//修改内容居左
+                {"data": "type", 'sClass':"alignLeft  autoWidth"},//修改内容居左
+                {"data": "createDate", 'sClass':"alignCenter  autoWidth"},
                 {
-                    "data": null, "width": "auto",
+                    "data": null, 'sClass':"alignCenter  autoWidth",
                     "render":function (data) {
                         if(data.enable==0){
                             return data = '否'
@@ -206,14 +193,17 @@
             ajaxToServer1(url,data,function(result){
                 console.log(url,data,result);
                 if(result.success == true){
+                    console.log(result)
                     var frameActive = top.getActiveTab().attr("name");
                     var obj = $('#refresh-btn', top.window.frames[frameActive].document);
+                    // refreshActiveTab();
                     if(obj.length == 0){
                         obj = $('#refresh-btn', top.window.frames[frameActive].document);
                     }
                     obj.trigger('click');
                 }
             });
+            location.reload();//刷新添加
             top.layer.close(index);
         });
         return false;

@@ -7,32 +7,21 @@
     <!--插件样式-->
     <link rel="stylesheet" href="../../plugins/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="../../plugins/font-awesome/css/font-awesome.min.css">
-    <link rel="stylesheet" href="../../plugins/datatables/css/mydatatable.css">
     <link rel="stylesheet" href="../../plugins/icheck/skins/square/green.css">
     <!--自定义样式-->
     <link rel="stylesheet" href="../../css/common.css">
     <link rel="stylesheet" href="../../css/customDataTable.css">
     <style>
-        #datainner td {
+        #datainner td{
             vertical-align: middle;
         }
-
-        b {
-            font-weight: 700;
-        }
-
-        .container-fluid span {
-            margin: 0 5px;
-        }
-
-        .role-info {
-            margin: 0 -15px;
-        }
-
-        #assignButton {
-            margin: 10px 0;
-        }
+        b{font-weight: 700;}
+        .container-fluid span{margin:0 5px;}
+        .role-info{padding:0;}
+        #assignButton{margin:10px 0;}
+        #treeTable a.btn{margin:0;}
     </style>
+
 </head>
 <body>
 <div class="wrapper wrapper-content">
@@ -45,10 +34,10 @@
             <input type="hidden" name="companyId" id="companyList" value="">
             <input id="idsArr" type="hidden" name="userIds" value="">
         </form>
-        <button id="assignButton" type="submit" class="btn btn-outline btn-primary btn-sm" title="添加人员"><i
+        <button id="assignButton" type="submit" class="btn btn-add  btn-sm" title="添加人员"><i
                 class="fa fa-plus"></i> 添加人员
         </button>
-        <button class="btn btn-danger btn-sm" id="delete-btn" data-toggle="tooltip" onclick="removeUserBatch()"
+        <button class="btn btn-delete btn-sm" id="delete-btn" data-toggle="tooltip" onclick="removeUserBatch()"
                 data-placement="top"><i class="fa fa-trash-o"> </i>删除
         </button>
         <button class="btn btn-white btn-sm hidden" id="refresh-btn" data-toggle="tooltip" data-placement="left"
@@ -71,6 +60,10 @@
         <tbody id="datainner">
         </tbody>
     </table>
+    <div class="clearfix pagination-box">
+        <div class="page-info pull-left"></div>
+        <div id="pagination" class="pagination-roll pull-right"></div>
+    </div>
 </div>
 <!--核心插件-->
 <script src="../../js/jquery-2.2.4.min.js"></script>
@@ -80,34 +73,58 @@
 <script src="../../plugins/layer/layer.js"></script>
 <script src="../../plugins/icheck/icheck.min.js"></script>
 <script src="../../plugins/datatables/js/jquery.dataTables.min.js"></script>
+<script src="../../js/page.js"></script>
+<script src="../../plugins/bootStrapPager/js/extendPagination.js"></script>
 <!--自定义文件-->
 <script src="../../js/common.js"></script>
+<script src="../../js/apiDomain.js"></script>
 <script src="../../js/customForm.js"></script>
 <script>
-    var id = getQueryString('id') || "";
-    console.log(id)
+var id = getQueryString('id') || "";
+var type = getQueryString('type') || "";
     $(document).ready(function () {
-        $("#roleId").val(id);
+        if(id!=='') {
+            $("#roleId").val(id);
+
+            var url = '/api/sys/SysOrg/assign/';
+
+            ajaxToServer(url, JSON.stringify({id: id}), function (result) {
+                if (result.success) {
+                    $('#companyList').val(result.company.id);
+                    html = "";
+                    SysRole = result.dept;
+                    html += " <div class=\"row-fluid span12\">" +
+                        "<span class=\"span4 roleType\">机构名称: <b>" + SysRole.name + "</b></span>" +
+                        "<span class=\"span4\">英文名称: " + SysRole.sname + "</span>" +
+                        " </div>" +
+                        " <div class=\"row-fluid span8\">" +
+                        "<span class=\"span4\">机构类型: " + SysRole.typeLabel + "</span>" +
+                        " </div>";
+                    $(".container-fluid").append(html);
+                } else {
+                    layer.msg(result.message)
+                }
+
+            })
+        }else{
+            layer.msg('用户信息接收失败！');
+            return false
+        }
         //查看角色信息接口
-        ajaxToServer("/api/sys/SysOrg/assign/" + id, {}, function (result) {
-           console.log(result);
-            if (result.success) {
-                var data = result.userList,
-                    html = "",
-                    SysRole = result.dept,
-                    SysCompany= result.company;
-                html += " <div class=\"row-fluid span12\">" +
-                    "<span class=\"span4 roleType\">角色名称: <b>" + SysRole.name + "</b></span>" +
-                    "<span class=\"span4\">简称: " + SysRole.sname + "</span>" +
-                    " </div>" +
-                    " <div class=\"row-fluid span8\">" +
-                    "<span class=\"span4\">公司: " + SysCompany.name + "</span>" +
-                    " </div>";
-                $(".container-fluid").append(html);
-                var company= result.company.id;
-                $("#companyList").val(company);
-                var data = result.userList;
-                renderTableData(data);
+        if(type!=1){
+            dataval={
+               deptId:id
+            }
+        }else{
+            dataval={
+                companyId:id
+            }
+        }
+        Page.defaultPageSizeIndex=0;
+        Page.init("/api/sys/SysOrg/assignPage1/",dataval,true,function (result) {
+            console.log(result);
+            if (result) {
+                renderTableData(result);
             } else {
                 layer.msg(result.message);
             }
@@ -123,14 +140,14 @@
                 deptId: id,
                 companyId:company
             };
-            deleteACallback('确认要将用户 <b>[' + roleName + ']</b>从 <b>[' + $(".roleType b").text() + ']</b>角色中移除吗？', function (layIdx) {
+            deleteACallback('确认要将用户 <b>[' + roleName + ']</b>从角色中移除吗？', function (layIdx) {
                 var url = '/api/sys/SysOrg/delUser';
 
                 ajaxToServer1(url, data, function (result) {
-                    console.log(url,data,result);
+                    console.log(result);
                     if (result.success == true) {
                         top.layer.close(layIdx);
-                        refreshLoad();
+                        window.location.reload()
                     }
 
                 });
@@ -141,6 +158,7 @@
         $("#refresh-btn").click(function () {
             refreshLoad();
         });
+
     });
 
 
@@ -150,11 +168,22 @@
         var roleId = $("#roleId").val();
         if (roleId != '') {
             //用户功能显示（已分配）用户信息
-            var url = "/api/sys/SysOrg/assign/" + roleId;
-            ajaxToServer(url, {}, function (result) {
+            var url = "/api/sys/SysOrg/assign/";
+            ajaxToServer(url, JSON.stringify({id:roleId}), function (result) {
                 if (result.success) {
-                    var data = result.userList;
-                    renderTableData(data);
+                    html = "",
+                        SysRole = result.dept,
+                        SysCompany= result.company;
+                    html += " <div class=\"row-fluid span12\">" +
+                        "<span class=\"span4 roleType\">公司名称: <b>" + SysRole.name + "</b></span>" +
+                        "<span class=\"span4\">简称: " + SysRole.sname + "</span>" +
+                        " </div>" +
+                        " <div class=\"row-fluid span8\">" +
+                        "<span class=\"span4\">公司: " + SysCompany.name + "</span>" +
+                        " </div>";
+                    $(".container-fluid").append(html);
+                    renderTableData(result);
+
                 } else {
                     layer.msg(result.message);
                 }
@@ -177,13 +206,12 @@
                 deptId: id,
                 companyId:company
             };
-            deleteACallback('确认要将已选择的用户从角色<b>[' + $(".roleType b").text() + ']</b>中移除吗？', function (layIdx) {
+            deleteACallback('确认要将已选择的用户从角色中移除吗？', function (layIdx) {
                 var url = '/api/sys/SysOrg/delUser';
                 ajaxToServer1(url, data, function (result) {
-                    console.log(url,data,result);
                     if (result.success == true) {
                         top.layer.close(layIdx);
-                        refreshLoad();
+                        window.location.reload();
                         //去掉标题中的选中状态
                         $(".icheckbox_square-green").find("[type='checkbox']").iCheck('uncheck');
 
@@ -221,7 +249,7 @@
                 {
                     "data": "name", "orderable": false, "defaultContent": "", 'sClass': " alignCenter  ",
                     "render": function (data, type, row, meta) {
-                        return data= "<a class='btn-check  roleName' >" + row.name + "</a >";
+                        return data= "<a class=' roleName' >" + row.name + "</a >";
                     }
                 },
                 {"data": "phone", 'sClass': "alignCenter"},
@@ -229,7 +257,7 @@
                 {
                     "data": "id", "orderable": false, "defaultContent": "", 'sClass': " alignCenter ",
                     "render": function (data, type, row, meta) {
-                        return data= "<a class='btn-delete ' id='" + row.id + "'>删除</a >";
+                        return data= "<a class='btn btn-delete ' id='" + row.id + "'>删除</a >";
                     }
                 }]
         });
@@ -242,7 +270,7 @@
             area: ['800px', '600px'],
             title: "选择用户",
             maxmin: true, //开启最大化最小化按钮
-            content: "systemSettings/orgAssignUsers.html?id=" + id,
+            content: "systemSettings/orgAssignUsers.html?id=" + id+'&type='+type,
             btn: ['确定', '关闭'],
             yes: function (index, layero) {
                 var pre_ids = layero.find("iframe")[0].contentWindow.pre_ids;
@@ -264,31 +292,23 @@
                     idsArr = (idsArr + ids[i]) + (((i + 1) == ids.length) ? '' : ',');
                 }
                 $('#idsArr').val(idsArr);
-                //$('#assignRoleForm').submit();
-                // console.log( iframeWin.contentWindow);
-
                 var company=$('#companyList').val();
                 var formdata = {
                     companyId:company,
                     deptId: id,
                     userIds: idsArr
                 };
-                console.log(formdata);
+
                 var url = $("#assignRoleForm").attr('action');
                 ajaxToServer1(url, formdata, function (result) {
-                    console.log(url,formdata,result);
                     if (result.success == true) {
-                        layer.msg('已成功提交', {time: 1000});
-                        setTimeout(function () {
-                            top.layer.close(index);
-                            refreshLoad();
-
-                        }, 1000);
+                        top.layer.msg('已成功提交', {time: 1000});
+                        window.location.reload();
                     } else {
                         layerAlert(result.message)
                     }
+                    top.layer.close(index);
                 });
-                //top.layer.close(index);
             },
             cancel: function (index) {
             }

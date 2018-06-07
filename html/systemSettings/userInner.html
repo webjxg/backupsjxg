@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>用户内容</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0 user-scalable=no"/>
     <!--插件样式-->
     <link rel="stylesheet" href="../../plugins/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="../../plugins/font-awesome/css/font-awesome.min.css">
@@ -22,13 +22,13 @@
     <!--顶部搜索-->
     <div class="row">
         <div class="col-sm-12">
-            <form id="searchForm" class="form-inline" action="#" method="post">
+            <div id="searchForm" class="form-inline">
                 <input type="hidden" id="treeId"  >
                 <div class="form-group">
                     <div class="company col-sm-12">
                         <span>归属公司：</span>
                         <input id="companyId" name="company.id" class=" form-control input-sm " type="hidden" value="">
-                        <div class="input-group">
+                        <div class="input-group first-input-group">
                             <input id="companyName" name="company.name" readonly="readonly" type="text" value=""
                                    data-msg-required="" class=" form-control input-sm " style="">
                             <span class="input-group-btn">
@@ -41,7 +41,7 @@
                         <label id="companyName-error" class="error" for="officeId" style="display:none"></label>
                         <span >归属部门：</span>
                         <!--<input id="officeId" name="office.id" class=" form-control input-sm " type="hidden" value="">-->
-                        <div class="input-group">
+                        <div class="input-group second-input-group">
                             <input id="officeName" name="office.name" readonly="readonly" type="text" value=""
                                    data-msg-required="" class=" form-control input-sm " style="">
                             <span class="input-group-btn">
@@ -60,7 +60,7 @@
                                maxlength="50">
                     </div>
                 </div>
-            </form>
+            </div>
             <br>
         </div>
     </div>
@@ -125,22 +125,7 @@
         </tbody>
     </table>
     <div class="clearfix pagination-box">
-        <div class="pagination-detail pull-left">
-            <div class="page-info pull-left"></div>
-            <div class="page-list pull-left">
-                <span>每页显示</span>
-                <select name="" id="pag-sel">
-                    <option value="5">5</option>
-                    <option value="10" selected>10</option>
-                    <option value="20">20</option>
-                    <option value="25">25</option>
-                    <option value="30">30</option>
-                    <option value="40">40</option>
-                    <option value="50">50</option>
-                </select>
-                条记录
-            </div>
-        </div>
+        <div class="page-info pull-left"></div>
         <div id="pagination" class="pagination-roll pull-right"></div>
     </div>
 </div>
@@ -159,19 +144,28 @@
 <script src="../../plugins/bootStrapPager/js/extendPagination.js"></script>
 <!--页面依赖js-->
 <script src="../../js/public.js"></script>
+<script src="../../js/common.js"></script>
 <script src="../../js/jeeplus.js"></script>
+<script src="../../js/apiDomain.js"></script>
 <script src="../../js/customForm.js"></script>
 <script src="../../js/page.js"></script>
-
-
 </body>
 <script>
     function updatason(node){
-        var data={"deptId":node};
-        Page.init("/api/sys/SysUser/page", data, true, function (tableData) {
-            dataout(tableData); //创建table
-            clickButton()       //加载点击事件
-        });
+        console.log(node);
+        if(node.type==1){
+            var data={"companyId":node.id};
+            Page.init("/api/sys/SysUser/page", data, true, function (tableData) {
+                dataout(tableData); //创建table
+                clickButton()       //加载点击事件
+            })
+        }else{
+            var data={"deptId":node.id};
+            Page.init("/api/sys/SysUser/page", data, true, function (tableData) {
+                dataout(tableData); //创建table
+                clickButton()       //加载点击事件
+            })
+        }
     }
     function clickButton() {
         $('.btn-check').click(function () {
@@ -187,31 +181,67 @@
             deleteItem('确定要删除该用户吗', '/api/sys/SysUser/delete/',id)
         });
 
-        //重置按钮
-        $('#reset-btn').click(function(){
-            // $("#authEnable option:first").prop("selected", 'selected');
-            $("#name").val(""),
-                // $("#authCodeParam").val(""),
-                // $("#desParam").val(),
-                Page.reset(["nameParam"]);
-        });
+//        //重置按钮
+//        $('#reset-btn').click(function(){
+//            $("#name").val("")
+//            Page.reset(["nameParam"]);
+//        });
     }
 
-    layerInZtree('.input-group:nth-of-type(1)', ['300px', '424px'], './systemSettings/userCompany.html', '1', '#companyName', '#companyId', '请选择归属公司');
-    layerInZtree('.input-group:nth-of-type(2)', ['300px', '424px'], './systemSettings/userDepartment.html', '2', '#officeName', '#officeId', '请选择部门');
     window.pageLoad = function () {
+
         var data = {
-            companyId: $("#companyId").val(),
+            companyId: $("#companyName").val(),
             loginNameParam: $('#loginName').val(),
-            deptId: $('#officeId').val(),
+            deptId: $('#officeName').val(),
             nameParam: $('#name').val(),
             treeId: $('#treeId').val()
         };
         Page.init("/api/sys/SysUser/page", data, true, function (tableData) {
+            console.log(data);
             dataout(tableData);
+            // setFrameHeight();
             clickButton()
         });
+
+
+
+
+
     };
+    $('.second-input-group').click(function () {
+        var companyId=$('#companyId').val();
+        layerInZtrees(['300px', '424px'], './systemSettings/userDepartment.html?id='+companyId, '2', '#officeName', '#officeId', '请选择部门');
+    });
+    $('.first-input-group').click(function () {
+        layerInZtrees(['300px', '424px'], './systemSettings/userCompany.html', '1', '#companyName', '#companyId', '请选择归属公司');
+    });
+    function layerInZtrees(size,url,type,name,id,alt) {
+            top.layer.open({
+                btn: ['确定', '取消'],
+                shade: [0.4, '#000'], //0.1透明度的白色背景
+                type: 2,
+                title: '添加',
+                shadeClose: true,
+                maxmin: false, //开启最大化最小化按钮
+                area: size,
+                content: url,
+                yes:function (index,layero) {
+                    var iframeWin = layero.find('iframe')[0];
+                    var selobj=iframeWin.contentWindow.getSelectVal();//在layer中运行当前弹出页内的getSelectVal方法
+                    if(selobj){
+                        if(selobj.type != type){
+                            alert(alt);
+                            return false;
+
+                        }
+                        $(name).val(selobj.name);
+                        $(id).val(selobj.id);
+                    }
+                    top.layer.close(index);
+                }
+            })
+    }
 
     var treeId = getQueryString("treeId");
     $('#treeId').val(treeId);
@@ -222,10 +252,11 @@
     //点击重置按钮
     $("#reset-btn").click(function () {
         $("#companyName").val("");
+        $("#companyId").val("");
         $('#loginName').val("");
         $('#officeName').val("");
         $('#name').val("");
-        Page.reload('companyId','');
+        Page.reset(["nameParam","deptId","loginNameParam","companyId"]);
     });
 
 
@@ -234,6 +265,7 @@
         $('#treeTable').dataTable({
             "bPaginate": false,
             "bDestroy": true,
+            "bAutoWidth": false,
             "paging": false,
             "bProcessing": true,
             "searching": false, //禁用aa原生搜索
@@ -253,11 +285,11 @@
                         return data = "<input type='checkbox' id=" + row.id + " class='i-checks'>"
                     }
                 },
-                {"data": "loginName", "width": "auto"},
-                {"data": "name", "width": "auto"},
-                {"data": "phone", "width": "auto"},
-                {"data": "mobile", "width": "auto"},
-                {"data": "id", "width": "auto","orderable": false, "defaultContent": "",
+                {"data": "loginName", "width": "auto",'sClass':"alignCenter"},
+                {"data": "name", "width": "auto",'sClass':"alignCenter"},
+                {"data": "phone", "width": "auto",'sClass':"alignCenter"},
+                {"data": "mobile", "width": "auto",'sClass':"alignCenter"},
+                {"data": "id", "width": "auto","orderable": false, "defaultContent": "", 'sClass':'alignCenter  autoWidth',
                     "render": function (data, type, row, meta) {
                         return data = "<a class='btn btn-info btn-xs  btn-check'><i class='fa fa-search-plus'></i>查看</a >" +
                             "<a class='btn btn-success btn-xs btn-change'><i class='fa icon-change'></i>修改</a >" +
@@ -267,6 +299,7 @@
 
         });
         RenderiCheckTblBody();
+        // setFrameHeight();
     }
 
 

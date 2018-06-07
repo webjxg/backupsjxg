@@ -16,7 +16,7 @@
     <link rel="stylesheet" href="../../css/common.css">
     <style>
         .wrapper{
-            height: 1074px;
+            height: 474px;
         }
         .ibox{
             background-color: #f3f3f4;
@@ -26,11 +26,11 @@
             margin-bottom: 20px;
         }
         .ibox-content:nth-of-type(2){
-            height: 680px;
+            height: 675px;
             width: 300px;
             float:left;
             margin-right: 20px;
-
+            overflow-y: scroll;
         }
         .ibox-content:nth-of-type(3){
             position: absolute;
@@ -61,9 +61,6 @@
                             指令级别：
                             <select name="grade" id="grade">
                                 <option value="">请选择</option>
-                                <option value="1">一级</option>
-                                <option value="2">二级</option>
-                                <option value="3">三级</option>
                             </select>
                         </li>
                         <li class="kind">
@@ -83,7 +80,7 @@
             </div>
         </div>
         <!--左侧ztree-->
-        <div class="ibox-content">
+        <div id="assignRole" class="ibox-content">
             <!--左侧树-->
             <div class="leftBox" >
                 <div id="tree" class="ztree leftBox-content"></div>
@@ -110,6 +107,7 @@
 <script src="../../plugins/bootStrapPager/js/extendPagination.js"></script>
 <script src="../../plugins/ztree/js/jquery.ztree.core.js"></script>
 <!--自定义文件-->
+<script src="../../js/apiDomain.js"></script>
 <script src="../../js/customForm-aps.js"></script>
 <script src="../../js/page.js"></script>
 
@@ -117,19 +115,32 @@
     $(document).ready(function(){
         $('#officeContent').attr('src','./createInsInner.html');
         getOption();
-        ajaxproc();
         ajaxkind();
+        loadProcess();
+        loadGrade();
         reloadZtree('#proc','/api/ctrl/BaseDirective/getZTtree');
         reloadZtree('#kind','/api/ctrl/BaseDirective/getZTtree');
         reloadZtree('#grade','/api/ctrl/BaseDirective/getZTtree');
         $('#btn-add').click(function () {
-            openEditDialog('添加指令', './proDis/createInsCVAdd.html?level=1&id=""', '462px', '425px')
+            openEditDialog1('添加指令', './proDis/createInsCVAdd.html?level=1&id=""', '600px', '450px')
         });
 
 
 
     });
-
+    //获取等级
+    function loadGrade() {
+        var url=admin_domain+'/api/sys/SysDict/type/directiveLeaveyType';
+        ajaxToServer(url,{},function (result) {
+            console.log(result);
+            if(result.success){
+                var rows = result.rows;
+                appendOptionsValue($('#grade'), rows, 'value', 'label');
+            }else{
+                layer.msg(result.message);
+            }
+        });
+    }
     //获取tree
     function getOption() {
         var procValue=$('#proc').val(), gradeValue=$('#grade').val(),kindValue=$('#kind').val();
@@ -146,12 +157,21 @@
     }
 
 
+    //获取工序数据
+    //chengdabin-2018-05-25-取工序根据当前用户获取
     //获取工序
-    function ajaxproc(){
-        ajaxToServerS('/api/sys/SysOrg/selectGx/3',{},function (result) {
+    //取工序名称，后续修改，原因
+    //1：涉及的地方比较多
+    //2：如果用code，需要关联，没有人员
+    //3：获取工序，根据当前用户获取，
+    //4：chengdabin-2018-05-25
+    function loadProcess(){
+        var url=admin_domain+'/api/sys/SysAuthProperty/getAttributeValue/GXJQ/syswp';
+        ajaxToServer(url,{},function (result) {
             if(result.success){
                 var rows = result.rows;
-                appendOptionsValue($('#proc'), rows, 'code', 'name');
+                // appendOptionsValue($('#proc'), rows, 'name', 'name');
+                appendOptionsValue($('#proc'), rows, 'name', 'name'); //工序值取编码，update by qiyh 2018-05-24
             }else{
                 layer.msg(result.message);
             }
@@ -161,40 +181,12 @@
 
     //获取指令分类
     function ajaxkind() {
-        ajaxToServerS('/api/sys/SysDict/type/directiveCassifyType',{},function (result) {
+        ajaxToServer(admin_domain+'/api/sys/SysDict/type/directiveCassifyType',{},function (result) {
             if(result.success){
                 var rows = result.rows;
-                appendOptionsValue($('#kind'), rows, 'value', 'label');
+                appendOptionsValue($('#kind'), rows, 'label', 'label');
             }else{
                 layer.msg(result.message);
-            }
-        });
-    }
-
-    //8080 admin-api端口专用ajax
-    function ajaxToServerS(url, data, callbackFun){
-        var layerIndex = layer.load(2);
-        url = url.toLowerCase().indexOf("http://") == 0? url : ("http://114.115.165.184:8080/admin-api" + url);
-        $.ajax({
-            headers:{
-                Accept: "application/json; charset=utf-8",
-                // Authorization: getCookie("token_type")+" " +getCookie("authorization")，
-                Authorization: "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlzcyI6ImFkbWluIiwiYXVkIjoiQWRtaW4gSldUIE9ubGluZSJ9.0fEB0SHaUfc10ARex-BCLPmOxbbr5vgcMfvivQKY1Rc"
-            },
-            type: "post",
-            url: url,
-            data: data,
-            dataType: 'json',
-            contentType:'application/json',
-            success: function(result){
-                layer.close(layerIndex);
-                if(callbackFun){
-                    callbackFun(result);
-                }
-            },
-            error:function(){
-                layer.close(layerIndex);
-                layer.msg('请求服务器异常.');
             }
         });
     }
@@ -206,7 +198,6 @@
             $('#officeContent')[0].contentWindow.tablehide();
         });
     }
-
 
     //ztree渲染
     function zTree(da) {
@@ -243,6 +234,42 @@
     //点ztree传值id
     function rendersun(data,level) {
         $('#officeContent')[0].contentWindow.updatason(data,level);
+    }
+
+    function openEditDialog1(title,url,width,height,innerCallbackFn){
+        var clickFlag = true;
+        if(navigator.userAgent.match(/(iPhone|iPod|Android|ios)/i)){//如果是移动端，就使用自适应大小弹窗
+            width='auto';
+            height='auto';
+        }else{//如果是PC端，根据用户设置的width和height显示。
+        }
+        var ind =  top.layer.open({
+            type: 2,
+            area: [width, height],
+            title: title,
+            maxmin: true, //开启最大化最小化按钮
+            content: url ,
+            btn: ['保存', '继续'],
+            yes: function(index, layero){
+                var body = top.layer.getChildFrame('body', index);  //获取子iframe
+                var iframeWin = layero.find('iframe')[0]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
+                if(clickFlag){
+                    if(!innerCallbackFn){
+                        iframeWin.contentWindow.doSubmit(iframeWin.contentWindow,body,index);
+                    }else{
+                        //iframeWin.contentWindow[innerCallbackFn]();   //有bug  innerCallbackFn必须是字符串 待解决
+                        innerCallbackFn.call(iframeWin.contentWindow,iframeWin.contentWindow,body,index);
+                    }
+                    clickFlag = false;
+                    setTimeout(function(){
+                        clickFlag = true;
+                    },3000);
+                }
+            },
+            cancel: function(index){
+            }
+        });
+
     }
 </script>
 

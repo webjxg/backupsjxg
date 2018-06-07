@@ -45,7 +45,7 @@
             <!--搜索区-->
             <div class="row">
                 <div class="col-sm-12">
-                    <form id="searchForm" class="form-inline" method="post" action="/api/sys/SysApplication/page">
+                    <div id="searchForm" class="form-inline">
                         <div class="form-group">
                             <span>应用名称：</span>
                             <input id="authNameParam" name="nameParam" class="form-control" type="text" value="" maxlength="50">
@@ -60,7 +60,7 @@
                                 <option value="0">禁用</option>
                             </select>
                         </div>
-                    </form>
+                    </div>
                     <br>
                 </div>
             </div>
@@ -77,7 +77,7 @@
                         <button class="btn btn-white btn-sm"  id = "delete-btn" data-toggle="tooltip" onclick="deleteAll('确认要删除该应用吗？','/api/sys/SysApplication/delete','#treeTable')"
                                 data-placement="top"><i class="fa fa-trash-o"> </i>删除
                         </button>
-                        <button class="btn btn-white btn-sm " id="refresh-btn" data-toggle="tooltip" data-placement="left" onclick="Page.reload()"
+                        <button class="btn btn-white btn-sm " id="refresh-btn" data-toggle="tooltip" data-placement="left" onclick="window.location.reload()"
                                 title="刷新"><i class="glyphicon glyphicon-repeat"></i> 刷新
                         </button>
                     </div>
@@ -115,24 +115,7 @@
 
             </table>
             <div class="clearfix pagination-box">
-                <div class="pagination-detail pull-left">
-                    <div class="page-info pull-left"></div>
-                    <div class="page-list pull-left">
-                        <span>每页显示</span>
-                        <select name="" id="pag-sel">
-                            <option value="">请选择</option>
-                            <option value="5">5</option>
-                            <option value="10" selected>10</option>
-                            <option value="20">20</option>
-                            <option value="25">25</option>
-                            <option value="30">30</option>
-                            <option value="40">40</option>
-                            <option value="50">50</option>
-                            <option value="-1">all</option>
-                        </select>
-                        条记录
-                    </div>
-                </div>
+                <div class="page-info pull-left"></div>
                 <div id="pagination" class="pagination-roll pull-right"></div>
             </div>
 
@@ -162,6 +145,7 @@
 <!--自定义文件-->
 <script src="../../js/common.js"></script>
 <script src="../../js/jeeplus.js"></script>
+<script src="../../js/apiDomain.js"></script>
 <script src="../../js/customForm.js"></script>
 <script src="../../js/page.js"></script>
 
@@ -178,7 +162,7 @@
             console.log(data);
             Page.init("/api/sys/SysApplication/page",data,true,function(tableData){
                 renderTableData(tableData);
-                console.log()
+                console.log
                 $('.btn-check').click(function(){
                     var id = $(this).parents("tr").find('.i-checks').attr('id');
                     openDialog('查看应用','systemSettings/applicationInner.html?id='+id+'&api=view','800px','500px')
@@ -230,7 +214,7 @@
                         return data = "<input type='checkbox' id=" + row.id + " class='i-checks'>"
                     }
                 },
-                {"data": "appName",'sClass':"alignCenter autoWidth"},
+                {"data": "appName",'sClass':"alignCenter ","width":"15%"},
                 {"data": "appCode",'sClass':"alignCenter"},
                 {"data": "appRoot",'sClass':"alignCenter"},
                 {"data": "applicability","defaultContent":"",'sClass':"alignCenter",
@@ -239,7 +223,7 @@
                     }
                 },
                 {"data": "sort",'sClass':"alignCenter"},
-                {"data": "enable",'sClass':"alignCenter autoWidth", "defaultContent": "","render":function (data, type, row, meta){
+                {"data": "enable",'sClass':"alignCenter ","width":"10%", "defaultContent": "","render":function (data, type, row, meta){
                         var chahgeType;
                         return chahgeType = row.enable=='0'?"否":"是";
                     }

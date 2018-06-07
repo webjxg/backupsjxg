@@ -22,16 +22,16 @@
     <table class="table table-bordered  table-condensed dataTables-example dataTable no-footer">
         <tbody>
         <tr>
-            <td class="width-15" ><label class="pull-right">模版名称:</label></td>
+            <td class="width-15" ><label class="pull-right"><font color="red">*</font>模版名称:</label></td>
             <td class="width-35">
                 <input id="opeName" name="name" required="required" type="text" value="" data-msg-required="" class="form-control valid" style="" aria-required="true" aria-invalid="false">
 
-                <label id="proName-error" class="error" for="proName" style="display:none"></label>
+                <label id="proName-error" class="error" for="opeName" style="display:none"></label>
             </td>
-            <td class="width-15" ><label class="pull-right">模版类型:</label></td>
+            <td class="width-15" ><label class="pull-right"><font color="red">*</font>模版类型:</label></td>
             <td class="width-35">
                 <input id="opeCode" name="type" type="text" required="required" value="" data-msg-required="" class="form-control valid" style="" aria-required="true" aria-invalid="false">
-                <label id="proCode-error" class="error" for="proCode" style="display:none"></label>
+                <label id="proCode-error" class="error" for="opeCode" style="display:none"></label>
             </td>
         </tr>
         <tr>
@@ -47,20 +47,7 @@
                 </select>
             </td>
         </tr>
-        <!--<tr>-->
-            <!--<td class="active">-->
-                <!--<label class="pull-right">修改人:</label>-->
-            <!--</td>-->
-            <!--<td>-->
-                <!--<input id="updateBy" name="updateBy" class="form-control" type="text" value="" maxlength="100"/>-->
-            <!--</td>-->
-            <!--<td class="active">-->
-                <!--<label class="pull-right">修改时间:</label>-->
-            <!--</td>-->
-            <!--<td>-->
-                <!--<input id="updateDate" name="updateDate" class="form-control" type="text" value="" maxlength="100"/>-->
-            <!--</td>-->
-        <!--</tr>-->
+
         </tbody>
     </table>
 </form>
@@ -74,6 +61,7 @@
 <script src="../../plugins/icheck/icheck.min.js"></script>
 <script src="../../plugins/webUpLoader/webuploader.js"></script>
 <!--自定义文件-->
+<script src="../../js/apiDomain.js"></script>
 <script src="../../js/jeeplus.js"></script>
 <script src="../../js/customForm-aps.js"></script>
 <script src="../../js/public.js"></script>

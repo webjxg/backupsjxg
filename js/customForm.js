@@ -6,7 +6,6 @@
     RenderiCheckTblBody();
 });*/
 
-var urlPrefix = "http://114.115.165.184:8080/admin-api";
 
 //点击查询按钮
 $("#search-btn").click(function(){
@@ -18,12 +17,82 @@ $("#quit-btn").click(function(){
     delCookie("token_type");
     location.href="../html/login.html";
 });
-
 var layerAlert = function (info, icon){
     icon = icon||0;
     var title = icon==0?'警告':'消息';
     top.layer.alert(info, {skin:'layui-layer-molv', icon:icon, title:title});
 };
+//设置cookies
+var setCookie = function(name,value,path) {
+    var Days = 30;//30天
+    var exp = new Date();
+    exp.setTime(exp.getTime() + Days*24*60*60*1000);
+    var pathTmp = path!=undefined?path:'/';
+    document.cookie=name+"="+encodeURI(value)+";expires="+exp.toGMTString()+";path="+pathTmp;
+};
+//读取cookies
+var getCookie = function(name) {
+    var arr,reg=new RegExp("(^| )"+name+"=([^;]*)(;|$)");
+    if(arr=document.cookie.match(reg))
+        return (decodeURI(arr[2]));
+    else
+        return '';
+};
+//删除cookies
+function delCookie(name,path) {
+    var exp = new Date();
+    exp.setTime(exp.getTime() - 1);
+    var cval=getCookie(name);
+    if(cval!=null){
+        var pathTmp = path!=undefined?path:'/';
+        document.cookie=name+"="+cval+";expires="+exp.toGMTString()+";path="+pathTmp;
+    }
+}
+
+//获取文件后缀名
+var getFileExt = function(FileName){
+    return FileName.substring(FileName.lastIndexOf('.')+1, FileName.length).toLowerCase();
+};
+
+//获取上下文路径
+var basePath = function(){
+    var obj=window.location;
+    var contextPath=obj.pathname.split("/")[1];
+    var path=obj.protocol+"//"+obj.host+"/"+contextPath;
+    return path;
+};
+
+//加载css/js
+var include = function(id, path, file){
+    if (document.getElementById(id)==null){
+        var files = typeof file == "string" ? [file] : file;
+        for (var i = 0; i < files.length; i++){
+            var name = files[i].replace(/^\s|\s$/g, "");
+            var ext = getFileExt(files[i]).toLowerCase();
+            var isCSS = ext == "css";
+            var fileref;
+            if(isCSS==true){
+                fileref = document.createElement('link');
+                fileref.setAttribute("rel", "stylesheet");
+                fileref.setAttribute("type", "text/css");
+                fileref.setAttribute("href", path + name);
+            }else{
+                fileref = document.createElement('script');
+                fileref.setAttribute("type", "text/javascript");
+                fileref.setAttribute("src", path + name);
+            }
+            if(fileref){
+                fileref.setAttribute("id", id);
+                document.getElementsByTagName("head")[0].appendChild(fileref);
+            }
+        }
+    }
+};
+
+//引入用户校验
+include('checkUser',basePath()+'/js/','checkUser.js');
+
+
 function RenderiCheckTblBody(){
     $('input.i-checks').iCheck({
         checkboxClass: 'icheckbox_square-green',
@@ -39,12 +108,12 @@ function RenderiCheckTblBody(){
 }
 function ajaxToServer(url, data, callbackFun){//传送的参数是josnString时
     var layerIndex = layer.load(2);
-    url = url.toLowerCase().indexOf("http://") == 0? url : (urlPrefix + url);
+    url = url.toLowerCase().indexOf("http://") == 0? url : (admin_domain + url);
+    // console.log("发起Ajax请求：", url, '参数：',data);
     $.ajax({
         headers:{
             Accept: "application/json; charset=utf-8",
-            // Authorization: getCookie("token_type")+" " +getCookie("authorization")，
-            Authorization: "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlzcyI6ImFkbWluIiwiYXVkIjoiQWRtaW4gSldUIE9ubGluZSJ9.0fEB0SHaUfc10ARex-BCLPmOxbbr5vgcMfvivQKY1Rc"
+            Authorization: getCookie("token_type")+" " +getCookie("authorization")
         },
         type: "post",
         url: url,
@@ -52,8 +121,16 @@ function ajaxToServer(url, data, callbackFun){//传送的参数是josnString时
         dataType: 'json',
         contentType:'application/json',
         success: function(result){
-            console.log(result);
+            // console.log("返回：",result);
             layer.close(layerIndex);
+            if(result.success == false){
+                if(result.retCode == "30009"){  //用户登录信息失效
+					alert('用户登录信息失效,请重新登录');
+                    //$("#quit-btn",top.document).children("i").trigger("click");
+					top.location.href='../html/login.html';
+                    return;
+                }
+            }
             if(callbackFun){
                 callbackFun(result);
             }
@@ -66,12 +143,12 @@ function ajaxToServer(url, data, callbackFun){//传送的参数是josnString时
 }
 function ajaxToServer1(url, data, callbackFun){  //传送的参数是string时
     var layerIndex = layer.load(2);
-    url = url.toLowerCase().indexOf("http://") == 0? url : (urlPrefix + url);
+    url = url.toLowerCase().indexOf("http://") == 0? url : (admin_domain + url);
+    // console.log("发起Ajax-1请求：", url, '参数：',data);
     $.ajax({
         headers:{
             Accept: "application/json; charset=utf-8",
-            // Authorization: getCookie("token_type")+" " +getCookie("authorization")
-            Authorization: "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlzcyI6ImFkbWluIiwiYXVkIjoiQWRtaW4gSldUIE9ubGluZSJ9.0fEB0SHaUfc10ARex-BCLPmOxbbr5vgcMfvivQKY1Rc"
+            Authorization: getCookie("token_type")+" " +getCookie("authorization")
         },
         type: "post",
         url: url,
@@ -79,7 +156,16 @@ function ajaxToServer1(url, data, callbackFun){  //传送的参数是string时
         dataType: 'json',
         contentType:'application/x-www-form-urlencoded',
         success: function(result){
+            // console.log("返回：",result);
             layer.close(layerIndex);
+            if(result.success == false){
+                if(result.retCode == "30009"){  //用户登录信息失效
+                    alert('用户登录信息失效,请重新登录');
+                    //$("#quit-btn",top.document).children("i").trigger("click");
+					top.location.href='../html/login.html';
+                    return;
+                }
+            }
             if(callbackFun){
                 callbackFun(result);
             }
@@ -152,15 +238,17 @@ function getQueryString(name, url) {
 }
 
 //动态添加Select的option
-function createSelect(url,appendEl){
+function createSelect(url,appendEl,valueField, labelFile){
     ajaxToServer(url,{},function(result){
         if(result.success){
             $(appendEl).html();
+            valueField = valueField||'value';
+            labelFile = labelFile||'label';
             var rows = result.rows,
                 len = rows.length,
-                html ='<option value="" selected="selected"></option>';
+                html ='<option value="" selected="selected">--请选择--</option>';
             for(var i = 0;i<len;i++){
-                html += '<option value="'+rows[i].type+'">'+rows[i].type +'</option>'
+                html += '<option value="'+rows[i][valueField]+'">'+rows[i][labelFile] +'</option>'
             }
             $(appendEl).append(html);
         }else{
@@ -183,6 +271,8 @@ function appendOptionsValue(obj, rows, valueField, labelFile){
     }
     if(rows && rows.length > 0){
         var options = new Array();
+        valueField = valueField||'value';
+        labelFile = labelFile||'label';
         $(rows).each(function(i,o){
             options.push({'value':o[valueField], 'label':o[labelFile]});
         });
@@ -272,7 +362,7 @@ function openDialog(title,url,width,height,innerCallbackFn){
         type: 2,
         area: [width, height],
         title: title,
-        maxmin: true, //开启最大化最小化按钮
+        maxmin: false, //开启最大化最小化按钮
         content: url ,
         btn: btns
     };
@@ -311,7 +401,7 @@ function openEditDialog(title,url,width,height,innerCallbackFn){
         type: 2,
         area: [width, height],
         title: title,
-        maxmin: true, //开启最大化最小化按钮
+        maxmin: false, //开启最大化最小化按钮
         content: url ,
         btn: ['确定', '关闭'],
         yes: function(index, layero){
@@ -322,7 +412,9 @@ function openEditDialog(title,url,width,height,innerCallbackFn){
                     iframeWin.contentWindow.doSubmit(iframeWin.contentWindow,body,index);
                 }else{
                     //iframeWin.contentWindow[innerCallbackFn]();   //有bug  innerCallbackFn必须是字符串 待解决
-                    innerCallbackFn.call(iframeWin.contentWindow,iframeWin.contentWindow,body,index);
+                    // innerCallbackFn.call(iframeWin, body, index);
+                    innerCallbackFn(iframeWin, body, index);
+
                 }
                 clickFlag = false;
                 setTimeout(function(){
@@ -403,7 +495,7 @@ function openDialogView(title,url,width,height){
         type: 2,
         area: [width, height],
         title: title,
-        maxmin: true, //开启最大化最小化按钮
+        maxmin: false, //开启最大化最小化按钮
         content: url ,
         btn: ['关闭'],
         cancel: function(index){
@@ -601,6 +693,7 @@ $("#iconButton").click(function(){
     var selVal = $('#icon').val();
     top.layer.open({
         type: 2,
+        maxmin: false,
         title:"选择图标",
         area: ['700px',  $(top.document).height()-180+"px"],
         content: '../html/iconselect.html?selVal='+selVal,
@@ -623,8 +716,53 @@ $("#iconclear").click(function(){
     $("#icon").val("");
 
 });
+/**
+ * 动态创建iframe
+ * @param frameDivID
+ * @param frameId
+ * @param action
+ * @returns {Element}
+ */
+function createTagFrame(frameDivID,action,frameId){
+    frameId = frameId || action;
+    var frameDivCont = document.getElementById(frameDivID);
+    var tabFrame = document.getElementById(frameId);
+    if(tabFrame==null || tabFrame==undefined){
+        tabFrame = document.createElement("iframe");
+        tabFrame.id=frameId;
+        tabFrame.style.width="100%";
+        tabFrame.marginWidth="0";
+        tabFrame.frameBorder="0";
+        tabFrame.frameSpacing="0";
+        tabFrame.scrolling="no";
+        tabFrame.style.overflow = "hidden";
+        frameDivCont.appendChild(tabFrame);
+    }
+    if(action!=undefined && action!='' && tabFrame.src==""){
+        tabFrame.src = action;
+    }
+    /* if(tabFrame.attachEvent){
+         tabFrame.attachEvent("onload",setFrameHeight);
+     }else{
+         tabFrame.oncload=setFrameHeight;
+     }*/
+    tabFrame.style.display="inline";
+    return frameDivCont;
+}
 
-
+/**
+ * 设置iFrame高度，在iframe内部页面调用
+ */
+function setFrameHeight(offsetHeight_){
+    var frames = window.parent.document.getElementsByTagName("iframe");
+    for(var i = 0; i < frames.length; i++) {
+        var f = frames[i];
+        if (null != f && f.style.display != "none") {
+            var h = document.body.scrollHeight+50+(offsetHeight_||0);
+            f.style.height = h+"px";
+        }
+    }
+}
 /*jQuery.validator.addMethod("notblank", function(value, element) {
     var pwdblank = /^\S*$/;
     return this.optional(element) ||(pwdblank.test(value));

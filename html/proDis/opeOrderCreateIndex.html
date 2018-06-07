@@ -61,9 +61,6 @@
                             指令级别：
                             <select name="grade" id="grade">
                                 <option value="">请选择</option>
-                                <option value="1">一级</option>
-                                <option value="2">二级</option>
-                                <option value="3">三级</option>
                             </select>
                         </li>
                         <li class="kind">
@@ -110,6 +107,7 @@
 <script src="../../plugins/bootStrapPager/js/extendPagination.js"></script>
 <script src="../../plugins/ztree/js/jquery.ztree.core.js"></script>
 <!--自定义文件-->
+<script src="../../js/apiDomain.js"></script>
 <script src="../../js/customForm-aps.js"></script>
 <script src="../../js/page.js"></script>
 
@@ -117,13 +115,14 @@
     $(document).ready(function(){
         $('#officeContent').attr('src','./opeOrderCreateInner.html');
         getOption();
+        loadGrade();
         ajaxproc();
         ajaxkind();
         reloadZtree('#proc','/api/ctrl/BaseDirectiveCZ/getZTtree');
         reloadZtree('#kind','/api/ctrl/BaseDirectiveCZ/getZTtree');
         reloadZtree('#grade','/api/ctrl/BaseDirectiveCZ/getZTtree');
         $('#btn-add').click(function () {
-            openEditDialog('添加指令', './proDis/opeOrderCVAdd.html?level=1&id=""', '462px', '425px')
+            openEditDialog('添加指令', './proDis/opeOrderCVAdd.html?level=1&id=""', '600px', '450px')
         });
 
 
@@ -146,55 +145,64 @@
     }
 
 
+    //获取工序数据
+    //chengdabin-2018-05-25-取工序根据当前用户获取
     //获取工序
+//    function ajaxproc(){
+//        ajaxToServer(admin_domain+'/api/sys/SysOrg/selectGx/4',{},function (result) {
+//            console.log(result);
+//            if(result.success){
+//                var rows = result.rows;
+//                // appendOptionsValue($('#proc'), rows, 'name', 'name');
+//                appendOptionsValue($('#proc'), rows, 'code', 'name'); //工序值取编码，update by qiyh 2018-05-24
+//            }else{
+//                layer.msg(result.message);
+//            }
+//        });
+//
+//    }
+    //取工序名称，后续修改，原因
+    //1：涉及的地方比较多
+    //2：如果用code，需要关联，没有人员
+    //3：获取工序，根据当前用户获取，
+    //4：chengdabin-2018-05-25
     function ajaxproc(){
-        ajaxToServerS('/api/sys/SysOrg/selectGx/3',{},function (result) {
+        ajaxToServer(admin_domain + '/api/sys/SysAuthProperty/getAttributeValue/GXJQ/syswp',{},function (result) {
             if(result.success){
                 var rows = result.rows;
-                appendOptionsValue($('#proc'), rows, 'code', 'name');
+                // appendOptionsValue($('#proc'), rows, 'name', 'name');
+                appendOptionsValue($('#proc'), rows, 'name', 'name'); //工序值取编码，update by qiyh 2018-05-24
             }else{
                 layer.msg(result.message);
             }
         });
 
     }
+
+    //获取等级
+    function loadGrade() {
+        var url=admin_domain+'/api/sys/SysDict/type/directiveLeaveyType';
+        ajaxToServer(url,{},function (result) {
+            console.log(result);
+            if(result.success){
+                var rows = result.rows;
+                appendOptionsValue($('#grade'), rows, 'value', 'label');
+            }else{
+                layer.msg(result.message);
+            }
+        });
+    }
+
+
 
     //获取指令分类
     function ajaxkind() {
-        ajaxToServerS('/api/sys/SysDict/type/directiveCassifyType',{},function (result) {
+        ajaxToServer(admin_domain+'/api/sys/SysDict/type/directiveCassifyType',{},function (result) {
             if(result.success){
                 var rows = result.rows;
-                appendOptionsValue($('#kind'), rows, 'value', 'label');
+                appendOptionsValue($('#kind'), rows, 'label', 'label');
             }else{
                 layer.msg(result.message);
-            }
-        });
-    }
-
-    //8080 admin-api端口专用ajax
-    function ajaxToServerS(url, data, callbackFun){
-        var layerIndex = layer.load(2);
-        url = url.toLowerCase().indexOf("http://") == 0? url : ("http://114.115.165.184:8080/admin-api" + url);
-        $.ajax({
-            headers:{
-                Accept: "application/json; charset=utf-8",
-                // Authorization: getCookie("token_type")+" " +getCookie("authorization")，
-                Authorization: "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJhZG1pbiIsImlzcyI6ImFkbWluIiwiYXVkIjoiQWRtaW4gSldUIE9ubGluZSJ9.0fEB0SHaUfc10ARex-BCLPmOxbbr5vgcMfvivQKY1Rc"
-            },
-            type: "post",
-            url: url,
-            data: data,
-            dataType: 'json',
-            contentType:'application/json',
-            success: function(result){
-                layer.close(layerIndex);
-                if(callbackFun){
-                    callbackFun(result);
-                }
-            },
-            error:function(){
-                layer.close(layerIndex);
-                layer.msg('请求服务器异常.');
             }
         });
     }

@@ -13,20 +13,31 @@
     <!--自定义样式-->
     <link rel="stylesheet" href="../../css/common.css">
     <link rel="stylesheet" href="../../css/customDataTable.css">
+    <style>
+        #assignRole{height:100%;overflow: hidden;}
+        #assignRole>.col-sm-4{height:100%;overflow: auto;}
+        .searchQuery{width:100px;line-height: 22px;padding:2px 4px;outline: none;border:1px solid #ddd;border-radius: 5px;}
+    </style>
 </head>
 <body>
-<div id="assignRole" class="row wrapper wrapper-content">
+<div id="assignRole" class=" wrapper wrapper-content">
     <div class="col-sm-4" style="border-right: 1px solid #A8A8A8;">
         <p>所在部门：</p>
         <input type="text" hidden="hidden" name="deptId" value id="dept">
         <div id="officeTree" class="ztree"></div>
     </div>
     <div class="col-sm-4">
-        <p>待选人员：</p>
+        <p>待选人员：<input type="text" id="waitQuery"  class="searchQuery" style="width:80px">
+            &nbsp;&nbsp;&nbsp;&nbsp;
+            <a href="javascript:;" onclick="checkAll();">全选</a>
+        </p>
         <div id="userTree" class="ztree"></div>
     </div>
     <div class="col-sm-4" style="padding-left:16px;border-left: 1px solid #A8A8A8;">
-        <p>已选人员：</p>
+        <p>已选人员：
+            &nbsp;&nbsp;&nbsp;&nbsp;
+            <a href="javascript:;" onclick="revert();">还原</a>
+        </p>
         <div id="selectedTree" class="ztree"></div>
     </div>
 </div>
@@ -38,20 +49,31 @@
     <script src="../../plugins/datatables/js/jquery.dataTables.min.js"></script>
     <script src="../../plugins/ztree/js/jquery.ztree.core.min.js"></script>
     <script src="../../plugins/ztree/js/jquery.ztree.excheck.js"></script>
+    <script src="../../plugins/ztree/js/jquery.ztree.exhide.js"></script>
     <script src="../../plugins/datatables/js/jquery.dataTables.min.js"></script>
     <!--自定义文件-->
     <script src="../../js/common.js"></script>
+    <script src="../../js/apiDomain.js"></script>
     <script src="../../js/customForm.js"></script>
     <script>
-        var officeTree,selectedTree,pre_selectedNodes;//分别为 所有部门、zTree已选择对象、zTree未选择对象
+        //数组是否包含
+        Array.prototype.contains = function(item){
+            return RegExp("(^|,)" + item.toString() + "($|,)").test(this);
+        };
+
+        //分别为 所有部门、zTree已选择对象、zTree未选择对象
+        var officeTree,selectedTree,pre_selectedNodes;
         var id = getQueryString('id');
-        console.log(id)
+        var type = getQueryString('type');
+
         var pre_ids = [], ids = [];
+
         var allDepUrl = "/api/sys/SysOrg/leftTree", //全部部门
-            // unallotUrl = "/api/sys/SysUser/selectUser", //待选
-            allotUrl = "/api/sys/SysOrg/assign/"+id;  //已选
+             unallotUrl = "/api/sys/SysUser/selectUser", //待选
+            allotUrl = "/api/sys/SysOrg/assign/";  //已选
+
+        /*部门tree*/
         ajaxToServer(allDepUrl, {}, function (result) {
-            console.log(result)
             if (result.success) {
                 officeTree = $.fn.zTree.init($("#officeTree"), setting1, result.rows);
             } else {
@@ -59,10 +81,22 @@
             }
         });
         //已选人员
-        ajaxToServer(allotUrl, {}, function (result) {
+        function selectUserInit(){
+            if(type!=1){
+                dataval={
+                    deptId:id
+                }
+            }else{
+                dataval={
+                    companyId:id
+                }
+            }
+        ajaxToServer("/api/sys/SysOrg/assign1/", JSON.stringify(dataval), function (result) {
             if (result.success) {
                 var hasList = [];
-                $.each(result.userList,function(ind,item){
+                ids=[], pre_ids=[];
+                $.each(result.page,function(ind,item){
+                    ids.push(item.id)
                     pre_ids.push(item.id);//将已选加入数组
                     hasList.push({
                         id:item.id,
@@ -70,10 +104,18 @@
                     });
                 });
                 selectedTree = $.fn.zTree.init($("#selectedTree"), setting2, hasList);
+
+                //绑定筛选框事件
+                $('#waitQuery2').unbind('keyup').keyup(function(event){
+                    searchNode("selectedTree", 'name', $(this).val());
+                });
             } else {
                 layer.msg(result.message);
             }
         });
+        }
+
+        selectUserInit();
         var setting1 = {view: {selectedMulti:false,nameIsHTML:true,showTitle:false,dblClickExpand:false},
             data: {simpleData: {enable: true}},
             callback: {onClick: treeOnClick}};
@@ -83,18 +125,44 @@
             callback: {onDblClick: treeOnClick}};
         //点击选择项回调
         function treeOnClick(event, treeId, treeNode, clickFlag){
-                $.fn.zTree.getZTreeObj(treeId).expandNode(treeNode);
+            $.fn.zTree.getZTreeObj(treeId).expandNode(treeNode);
+            console.log(type);
+
             if("officeTree"==treeId){
-                var data = {
-                    deptId:treeNode.id,
-                    companyId:treeNode.pId
-                };
-                data = JSON.stringify(data);
-                console.log(data)
-                ajaxToServer('/api/sys/SysUser/selectUser',data, function (result) {
-                    console.log(result)
+                if(treeNode.type=="1"){
+                    if(type=="1"){
+                        datas={
+                            companyId1:id,
+                            companyId2:treeNode.id
+                        }
+                    }else{
+                        datas={
+                            deptId1:id,
+                            companyId2:treeNode.id
+                        }
+                    }
+                }else{
+                    if(type=="1"){
+                        datas={
+                            companyId1:id,
+                            deptId2:treeNode.id
+                        }
+                    }else{
+                        datas={
+                            deptId1:id,
+                            deptId2:treeNode.id
+                        }
+                    }
+
+                }
+                console.log(typeof(type), datas);
+                ajaxToServer1('/api/sys/SysOrg/selectUser1',datas, function (result) {
                     if (result.success) {
-                        $.fn.zTree.init($("#userTree"), setting2, result.rows);
+                        console.log(result);
+                        userTree =$.fn.zTree.init($("#userTree"), setting2, result.userList);
+                        $('#waitQuery').unbind('keyup').keyup(function(event){
+                            searchNode("userTree", 'name', $(this).val());
+                        });
                     } else {
                         layer.msg(result.message);
                     }
@@ -103,73 +171,43 @@
             }
             //待选人员，双击后加入到已选列表
             if("userTree"==treeId){
-                var arr= [];
-                arr.push(treeNode.id);
-                if(checkArr(arr,pre_ids)){
-                    layerAlert('请勿重复递交')
-                }else{
-                    ids.push(String(treeNode.id));
+                if($.inArray(String(treeNode.id), ids)<0){
                     selectedTree.addNodes(null, treeNode);
+                    ids.push(String(treeNode.id));
                 }
-
-                /*数组重复判断*/
-                function  checkArr(arr1,arr2){
-                    var rs=false;
-                    for (var i=0; i<arr1.length; i++){
-                        for (var j=0;j<arr2.length;j++){
-                            if( arr1[i]== arr2[j]){
-                                rs=true;
-                            }
-                        }
-                    }
-                    return rs;
-                }
-
-
-                /*if($.inArray(String(treeNode.id), ids)<0){
-                 selectedTree.addNodes(null, treeNode);
-                 ids.push(String(treeNode.id));
-                 }*/
-
             };
             //已选择人员，双击后移除
             if("selectedTree"==treeId){
-
-                    if($.inArray(String(treeNode.id), pre_ids)<0){
-                        selectedTree.removeNode(treeNode);
-                        ids.splice($.inArray(String(treeNode.id), ids), 1);
-                    }else{
-                        layerAlert("角色原有成员不能清除！", 'info');
-                    }
+                selectedTree.removeNode(treeNode);
+                ids.splice($.inArray(String(treeNode.id), ids), 1);
                 }
 
         };
-        function clearAssign(){
-            var submit = function (v, h, f) {
-                if (v == 'ok'){
-                    var tips="";
-                    if(pre_ids.sort().toString() == ids.sort().toString()){
-                        tips = "未给角色【管理员】分配新成员！";
-                    }else{
-                        tips = "已选人员清除成功！";
+        //全选
+        function checkAll(){
+            if(userTree){
+//                var nodes = userTree.getNodes();
+                var nodes = userTree.getNodesByParam("isHidden", false);
+                if(nodes.length > 0){
+                    for(var i=0; i<nodes.length; i++){
+                        var treeNode = nodes[i];
+                        if($.inArray(String(treeNode.id), ids)<0){
+                            selectedTree.addNodes(null, treeNode);
+                            ids.push(String(treeNode.id));
+                        }
                     }
-                    ids=pre_ids.slice(0);
-                    selectedNodes=pre_selectedNodes;
-                    $.fn.zTree.init($("#selectedTree"), setting, selectedNodes);
-                    top.$.jBox.tip(tips, 'info');
-                } else if (v == 'cancel'){
-                    // 取消
-                    top.$.jBox.tip("取消清除操作！", 'info');
                 }
-                return true;
-            };
-            tips="确定清除角色【管理员】下的已选人员？";
-            top.$.jBox.confirm(tips, "清除确认", submit);
-        };
-        /*    function getSubmitFormId(){
-         return "#assignRoleForm";
-         };*/
+            }
+        }
 
+        //还原
+        function revert(){
+            var p_ = top;
+            p_.layer.confirm('确认还原吗?', {icon:3, title:'系统提示'}, function(index, layero){
+                selectUserInit();
+                p_.layer.close(index);
+            });
+        }
     </script>
 </body>
 </html>

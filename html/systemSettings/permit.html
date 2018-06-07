@@ -44,7 +44,7 @@
             <!--搜索区-->
             <div class="row">
                 <div class="col-sm-12">
-                    <form id="searchForm" class="form-inline" method="post" action="/api/sys/SysAuthClass/authClassPage">
+                    <div id="searchForm" class="form-inline">
                         <div class="form-group">
                             <span>许可名称：</span>
                             <input id="permitName" name="nameParam" class="form-control" type="text" value="" maxlength="50">
@@ -57,7 +57,7 @@
                                 <option value="0">禁用</option>
                             </select>
                         </div>
-                    </form>
+                    </div>
                     <br>
                 </div>
             </div>
@@ -74,7 +74,7 @@
                         <button class="btn btn-white btn-sm"  id = "delete-btn" data-toggle="tooltip" onclick="deleteAll('确认要删除该许可吗？','/api/sys/SysPermission/delete','#treeTable')"
                                 data-placement="top"><i class="fa fa-trash-o"> </i>删除
                         </button>
-                        <button class="btn btn-white btn-sm " id="refresh-btn" data-toggle="tooltip" data-placement="left" onclick="Page.reload()"
+                        <button class="btn btn-white btn-sm " id="refresh-btn" data-toggle="tooltip" data-placement="left" onclick="window.location.reload()"
                                 title="刷新"><i class="glyphicon glyphicon-repeat"></i> 刷新
                         </button>
                     </div>
@@ -111,24 +111,7 @@
 
             </table>
             <div class="clearfix pagination-box">
-                <div class="pagination-detail pull-left">
-                    <div class="page-info pull-left"></div>
-                    <div class="page-list pull-left">
-                        <span>每页显示</span>
-                        <select name="" id="pag-sel">
-                            <option value="">请选择</option>
-                            <option value="5">5</option>
-                            <option value="10" selected>10</option>
-                            <option value="20">20</option>
-                            <option value="25">25</option>
-                            <option value="30">30</option>
-                            <option value="40">40</option>
-                            <option value="50">50</option>
-                            <option value="-1">all</option>
-                        </select>
-                        条记录
-                    </div>
-                </div>
+                <div class="page-info pull-left"></div>
                 <div id="pagination" class="pagination-roll pull-right"></div>
             </div>
 
@@ -158,6 +141,7 @@
 <!--自定义文件-->
 <script src="../../js/common.js"></script>
 <script src="../../js/jeeplus.js"></script>
+<script src="../../js/apiDomain.js"></script>
 <script src="../../js/customForm.js"></script>
 <script src="../../js/page.js"></script>
 
@@ -166,8 +150,8 @@
     $(function(){
         window.pageLoad = function (){
             var data = {
-                name: $("#permitName").val(),
-                code: $("#permitCode").val(),
+                nameParam: $("#permitName").val(),
+                codeParam: $("#permitCode").val(),
                 enable:$("#permitEnable").val()
             };
             Page.init("/api/sys/SysPermission/page",data,true,function(tableData){
@@ -193,12 +177,20 @@
                     $("#permitEnable option:first").prop("selected", 'selected');
                     $("#permitName").val(""),
                     $("#permitCode").val(""),
-                    Page.reset(["name","code","enable"]);
+                    Page.reset(["nameParam","codeParam","enable"]);
                 });
             });
         };
         pageLoad();
         windowclick();
+    });
+
+    //点击重置按钮
+    $('#reset-btn').click(function(){
+        $("#permitEnable option:first").prop("selected", 'selected');
+        $("#permitName").val(""),
+        $("#permitCode").val(""),
+        Page.reset(["nameParam","codeParam","enable"]);
     });
     function getSubmitFormId(){
         return "#inputForm";
@@ -227,10 +219,10 @@
                     }
                 },
                 {"data": "name",'sClass':" alignCenter"},
-                {"data": "code",'sClass':"alignCenter autoWidth"},
-                {"data": "des",'sClass':"alignCenter"},
-                {"data": "sort",'sClass':"alignCenter"},
-                {"data": "enable",'sClass':"alignCenter", "defaultContent": "","render":function (data, type, row, meta){
+                {"data": "code",'sClass':"alignCenter ","width":"15%"},
+                {"data": "des",'sClass':"alignCenter","width":"15%"},
+                {"data": "sort",'sClass':"alignCenter","width":"8%"},
+                {"data": "enable",'sClass':"alignCenter","width":"8%", "defaultContent": "","render":function (data, type, row, meta){
                         var chahgeType;
                         return chahgeType = row.enable==0?"否":"是";
                     }},
@@ -259,7 +251,7 @@
             yes: function(index, layero){
                 var body = top.layer.getChildFrame('body', index);  //获取子iframe
                 var iframeWin = layero.find('iframe')[0]; //得到iframe页的窗口对象，执行iframe页的方法：iframeWin.method();
-
+                var _index = index;
                 var inputForm = body.find('#inputForm');
                 var url = inputForm.attr('action');
                 var formdata = JSON.stringify(inputForm.serializeJSON());
@@ -269,11 +261,12 @@
                         setTimeout(function () {
 //                        var src =top.getActiveTab().attr('src');
                             //获取父层
-                            // var index = top.layer.getFrameIndex(window.name);
+                             var index = top.layer.getFrameIndex(window.name);
+                            console.log(_index)
                             //关闭弹出层
-                           // top.layer.close(index);
+                            top.layer.close(_index);
                             //刷新
-                           // refreshLoad();
+//                            refreshLoad();
                             iframeWin.contentWindow.refreshLoad();
                         }, 1000);
                     } else {

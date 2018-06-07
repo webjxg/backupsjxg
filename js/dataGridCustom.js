@@ -52,8 +52,10 @@ var dataGridObj = {
         }
     },
     filterItem:function (arr,item) { //判断元素是否存在于数组中
+
         for( var i=0;i<arr.length;i++){
-            if((arr[i].id)===(item.id)){
+            var filterEle = arr[i].id==""?"itemCode":"id";
+            if( (arr[i][filterEle])===(item[filterEle])){
                 dataGridObj.arrIndex = i;
                 return ;
             }else{
@@ -82,7 +84,36 @@ var dataGridObj = {
             //触发每个table隐藏的保存按钮，从而获取到表格中最后一条被修改的数据并将其放入到saveItemArr中。
             $("#td"+i).parents('.datagrid-view').siblings(".datagrid-toolbar").find(".l-btn-text").trigger('click');
         }
+        // console.log(dataGridObj.saveItemArr);
         return dataGridObj.saveItemArr;
+    },
+    checkDatagridNotNull:function(dgName, dgId, checkRowArr, checkFieldArr){ //校验datagrid中指定的列是否为空 dgName指dataGrid的描述  dgId指dataGrid  checkColArr指要检查的列名称
+        var rows = $(dgId).datagrid('getRows');
+        for(var i=0; checkRowArr&&i<rows.length; i++){
+            if(checkRowArr.contains(i)){
+                $(dgId).datagrid('endEdit', i);
+                var row = rows[i];
+                for(var j=0; checkFieldArr&&j<checkFieldArr.length; j++){
+                    var fieldName = checkFieldArr[j];
+                    var fieldTitle = $(dgId).datagrid('getColumnOption',fieldName).title;
+                    var colVal =  row[fieldName];
+                    if(colVal == ''){
+                        layerAlert(dgName+' 第'+(i+1)+'行:'+fieldTitle+' 的值不能为空!');
+                        return false;
+                    }
+                }
+            }
+        }
+        return true;
+    },
+    eachCheckDataGrid:function(checkDGArr){   //对要进行核对操作的dataGrid进行遍历
+        for(var i=0; i<checkDGArr.length; i++){
+            var item = checkDGArr[i];
+            var checkFlag = dataGridObj.checkDatagridNotNull(item.dgName, item.dgId, item.checkRowArr, item.checkFieldArr);
+            if(checkFlag == false){
+                return false;
+            }
+        }
     }
 
 }

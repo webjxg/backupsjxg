@@ -42,12 +42,11 @@
         <tbody id="treeTableBody" >
 
         </tbody>
+        <input type="hidden" name="proc" id = "proc">
+
     </table>
-
+    <p id="wsConnError"></p>
 </div>
-
-
-
 
 <!--核心插件-->
 <script src="../../js/jquery-2.2.4.min.js"></script>
@@ -58,15 +57,23 @@
 <script src="../../plugins/treetable/jquery.treetable.js"></script>
 <!--公共样式-->
 <script src="../../js/public.js"></script>
+<script src="../../js/apiDomain.js"></script>
 <script src="../../js/customForm-aps.js"></script>
-
+<script src="../../js/stomp.min.js"></script>
+<script src="../../js/sockjs.min.js"></script>
 <script>
     $(document).ready(function(){
-        var data={};
-        parent.ajaxTo('/api/ctrl/DirectiveIssued/list',JSON.stringify(data),function (data) {
-            issuedUser=data.rows[0].issuedUser;
-            groupsId=data.rows[0].id;
-            shiftId=data.rows[0].shift.id;
+        connect();
+        var data={
+            // proc:$("#proc option:selected").val()
+        };
+        parent.ajaxToServer('/api/ctrl/DirectiveIssued/list1',JSON.stringify(data),function (data) {
+            if(data.rows.length!==0){
+                console.log(data);
+                issuedUser=data.rows[0].issuedUser;
+                groupsId=data.rows[0].id;
+                shiftId=data.rows[0].shift.id;
+            }
         });
 
     });
@@ -76,6 +83,7 @@
         };
         var da=JSON.stringify(data);
         ajaxToServer("/api/ctrl/BaseDirective/rightList/",da,function(tableData){
+            $("#proc").val(tableData.pList[0].proc);
             renderTableData(tableData);
         })
     }
@@ -87,60 +95,97 @@
                     str+=","+$(this).attr("id");
                 }
             });
+         var proc =  $("#proc").val();
             if(str.length>0){
                 ids=str.substr(1);
                 var data={
                     ids:ids,
                     issuedUser:issuedUser,
                     groupsId:groupsId,
-                    shiftId:shiftId
+                    shiftId:shiftId,
+                    process:proc
                 };
-                ajaxToServer("/api/ctrl/DirectiveIssued/save/",JSON.stringify(data),function(result){
+                console.log(data)
+                var url = aps_domain + "/api/ctrl/DirectiveIssued/save/";
+                ajaxToServer(url,JSON.stringify(data),function(result){
                     if(result.success){
+                        sendName();
                         top.layer.alert('请求成功',function () {
                             top.layer.closeAll();
                             window.location.reload();
                             parent.location.reload();
-
                         });
-
                     }else{
                         layer.msg(result.message);
                     }
-
                 });
-
             }else{
                 top.layer.alert('请至少选择一条数据递交!', {icon: 0, title:'警告'});
             }
     }
-
     //渲染表
     function renderTableData(data) {
         //↓接口到后修改↓
         var tablehead=
                 "<tr>" +
                     "<td>" +
-                        "<input type='checkbox' id='" + data.pList[0].id+ "' class='i-checks'>"+
+                        // "<input type='checkbox' id='" + data.pList[0].id+ "' class='i-checks'>"+
                     "</td>" +
                     "<td>"+data.pList[0].content+"</td>"+
                 "</tr>";
         var datas=data.childList;
         var tableStr = "";
         for (var i =0; i < datas.length; i++) {
-            tableStr += "<tr class='alignCenter' >"
-                            + "<td>" +
+            tableStr += "<tr>"
+                            + "<td  class='alignCenter' >" +
                                 "<input type='checkbox' id='" + datas[i].id+ "' class='i-checks'>"+
                               "</td>" +
                               "<td>"+datas[i].content+"</td>"
                       + "</tr>";
         }
         $('#treeTableBody').html(tablehead+tableStr);
-        icheckinner()
+        icheckinner();
+        setFrameHeight()
     }
 
 
-
+    //重试次数
+    var tryConnCount = 3;
+    // webscoket连接方法
+    function connect() {
+        //var socket = new SockJS('/endpointWisel.y'); //链接SockJS 的endpoint 名称为"/endpointWisely"
+        var socket = new SockJS(aps_domain + '/endpointWisely'); //链接SockJS 的endpoint 名称为"/endpointWisely"
+        stompClient = Stomp.over(socket);//使用stomp子协议的WebSocket 客户端
+        stompClient.connect({},
+            function connectCallback(frame) {//链接Web Socket的服务端。
+                console.log('WebSocket连接成功【' + frame + '】');
+                $('#wsConnError').hide();
+                //连接成功后，客户端可使用 send() 方法向服务器发送信息：
+                stompClient.subscribe('/topic/getZljkResponse',function(respnose){ //订阅/topic/getResponse 目标发送的消息。这个是在控制器的@SendTo中定义的。
+                    var result = JSON.parse(respnose.body);
+                    if(result.success==true){
+                    }else{
+                        top.layer.alert(result.message);
+                    }
+                });
+            },
+            function errorCallBack (error) {
+                // 连接失败时（服务器响应 ERROR 帧）的回调方法
+                console.log('WebSocket连接失败【' + error + '】');
+                if(tryConnCount > 0){
+                    $('#wsConnError').html('WebSocket连接失败，正在进行第 '+(4-tryConnCount) + ' 次重连....').show();
+                    tryConnCount --;
+                    connect();
+                }else{
+                    $('#wsConnError').html('WebSocket连接失败. ').show();
+                }
+            }
+        );
+    }
+    function sendName() {
+        //通过stompClient.send 向/welcome 目标 发送消息,这个是在控制器的@messageMapping 中定义的。
+        stompClient.send("/directiveMonitor", {}, JSON.stringify({'name': ""}));
+    }
 </script>
 </body>
 </html>

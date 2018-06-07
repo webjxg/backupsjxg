@@ -9,7 +9,7 @@
         复晟铝业MOM平台
     </title>
     <!--插件样式-->
-    <link rel="stylesheet" href="../plugins/metismenu-master/metisMenu.css">
+    <link rel=  "stylesheet" href="../plugins/metismenu-master/metisMenu.css">
     <link rel="stylesheet" href="../plugins/font-awesome/css/font-awesome.min.css">
     <link rel="stylesheet" href="../plugins/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="../plugins/layer/theme/default/layer.css">
@@ -19,19 +19,52 @@
     <link rel="stylesheet" href="../css/index.css">
     <link rel="stylesheet" href="../css/customDataTable.css">
     <style>
+        .modal-body{
+            width: 300px;
+            height: 300px;
+        }
+        .logo .logo-right ul li .numberafter{
+            width: 25px;
+        }
+        .logo .logo-right ul li .num{
+            min-width:18px;
+        }
+        .logo .logo-right ul li .number{
+            width: 28px;
+            padding: 2px 4px;
+            padding-right: 10px;
+        }
+        .logo .logo-right ul li .number:after{
+            content: '+';
+            position: absolute;
+            top:-3px;
+            right: 2px;
+        }
+        .navItem-con{
+            position: relative;
+
+        }
+        .iframeShow,.iframeHide{position: absolute;top:0;left:0;display: block !important;}
+        .iframeShow{z-index: 99;}
+        .iframeHide{z-index: -1;}
     </style>
 </head>
 <body class="nav-mini">
 <div id="wrapper">
     <!--顶部导航开始-->
     <div class="logo">
-        <img src="../images/5.3logo.png">
+        <img src="../images/5.5logo.png">
         <div class="logo-right">
+           <div id="userName">
+               <span class="userName"></span>
+               <span class="job"></span>
+               <span class="time"></span>
+           </div>
             <ul>
-                <li><i class="fa fa-cog"></i></li>
-                <li><i class="fa fa-user"></i></li>
-                <li><i class="fa fa-user-circle"></i></li>
-                <li><i class="fa fa-envelope"></i></li>
+                <li class="icon"><i class="fa fa-cog"></i></li>
+                <li>
+                    <span class="num"> </span>
+                    <i class="fa fa-commenting"></i></li>
             </ul>
         </div>
     </div>
@@ -46,7 +79,6 @@
             </a>
         </nav>
 
-
         <div class="navScrollView">
             <ul class="sidebar-nav" id="side-menu">
             </ul>
@@ -59,7 +91,7 @@
             <!--<nav class="navbar-static-top clearfix">-->
             <!--&lt;!&ndash;请输入查找内容&ndash;&gt;-->
             <!--&lt;!&ndash;<div class="navbar-header pull-left">&ndash;&gt;-->
-                <!--<a class="navbar-mini-btn btn" href="#">-->
+            <!--<a class="navbar-mini-btn btn" href="#">-->
             <!--<i class="fa fa-bars"></i>-->
             <!--</a>-->
             <!--</nav>-->
@@ -69,10 +101,9 @@
             <!--</div>-->
             <!--</form>-->
             <!--</div>-->
-
             <div class="content-tabs">
                 <button class="tabs-lBtn tabs-btnIcon">
-                    <i class="fa fa-backward"></i>
+                    <i class="fa icon-left"></i>
                 </button>
                 <div class="tabs-menu">
                     <div class="tabs-nav">
@@ -80,7 +111,7 @@
                     </div>
                 </div>
                 <button class="tabs-rBtn tabs-btnIcon">
-                    <i class="fa fa-forward"></i>
+                    <i class="fa icon-right"></i>
                 </button>
                 <div class="btn-group navBtns">
                     <button class="dropdown" data-toggle="dropdown">关闭操作<span class="caret"></span>
@@ -97,7 +128,6 @@
                 </div>
                 <!--退出部分-->
                 <ul class="pull-right role-box logout">
-                    <!--<li class="role-name" id="userName"></li>-->
                     <li>
                         <a href="javascript:;" class="role-quit-btn" id="quit-btn">
                             <i class="fa fa fa-sign-out"></i>
@@ -109,7 +139,8 @@
         </div>
         <div class="wrap-con">
             <div class="navItem-con">
-                <iframe class="J_iframe" name="iframe0" width="100%" height="100%" src="./home.html" frameborder="0" data-id="./home.html" seamless></iframe>
+                <iframe class="J_iframe" name="iframe0" width="100%" height="100%" src="home.html" frameborder="0" data-id="./home.html" seamless ></iframe>
+
             </div>
         </div>
         <!--<div class="wrap-footer"></div>-->
@@ -126,19 +157,42 @@
 <script src="../plugins/icheck/icheck.min.js"></script>
 <!--自定义文件-->
 <script src="../js/common.js"></script>
-<!--<script src="../js/checkUser.js"></script>-->
+<script src="../js/apiDomain.js"></script>
+<script src="../js/customForm.js"></script>
 <script src="../js/tabsNav.js"></script>
 <script src="../js/jeeplus.js"></script>
-<script src="../js/customForm.js"></script>
 <script src="../js/page.js"></script>
+<script src="../js/date.js"></script>
 <script>
     $(function(){
-        $("#userName").text("您好,"+unescape(getCookie('userName')));
-        top.layer.config({
-            skin:'innerlist'
-        });
+        $("#userName .userName").text(unescape(getCookie('userName'))+"!");
+        $("#userName .job").text(unescape(getCookie('job')));
+        $('.num').hide();
+        ajaxToServer1(admin_domain+"/api/mes/AlertMsg/alarm",'',function(result) {
+            $('.num').show();
+            if(result.success){
+                if(result.rows.length>9&&result.rows.length<99) {
+                    $('.num').text(result.rows.length).addClass('numberafter')
+                }else if(result.rows.length>99){
+                    $('.num').text(99).addClass('number')
+                }else{
+                    $('.num').text(result.rows.length)
+                }
+            }else{
+                $('.num').text('x');
+            }
+        })
+    });
+    $("#userName .time").text(getLocalDate()+" "+ getLocalWeek());
+    $(".content-tabs").click(function () {
+        $("body").addClass('nav-mini');
+    });
+    $(".num").click(function () {
+        openTab("../html/information.html","通知列表",false);
     })
-
+    $(".icon").click(function () {
+        openTab("../html/systemSettings/changePassword.html","更改密码",false);
+    })
 </script>
 </body>
 </html>
