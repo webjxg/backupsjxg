@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" content="width=device-width,initial-scale=1.0">
+    <title>安全、环保、设备管理总体指标计划</title>
+    <!--插件样式-->
+    <link rel="stylesheet" href="../../plugins/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../plugins/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../../plugins/easyui/themes/default/easyui.css">
+    <link rel="stylesheet" href="../../plugins/easyui/themes/default/datagrid.css">
+    <!--引入样式-->
+    <link rel="stylesheet" href="../../css/common.css">
+    <link rel="stylesheet" href="../../css/customDatagrid.css">
+    <link rel="stylesheet" href="../../css/aps.css">
+</head>
+
+<body>
+<div  class="wrapper ">
+    <div class="ibox">
+        <div class="ibox-content">
+            <div class="clearfix btn-box mgb-20">
+                <button class="btn  btn-bgf29 btn-save pull-right" type="button" data-status="0"><i class="fa fa-save"></i>保存</button>
+            </div>
+            <div class="tableItemBox">
+                <table id="td0"  class="tableItem"></table>
+            </div>
+        </div>
+    </div>
+</div>
+<!--表格区-->
+</body>
+<script src="../../js/jquery-2.2.4.min.js"></script>
+<script src="../../plugins/bootstrap/js/bootstrap.min.js"></script>
+<!--附属插件-->
+<script src="../../plugins/layer/layer.js"></script>
+<script src="../../plugins/easyui/js/jquery.easyui.min.js"></script>
+<script src="../../js/dataGridCustom.js"></script>
+<script src="../../js/apiDomain.js"></script>
+<script src="../../js/customForm-aps.js"></script>
+<script>
+    var arr = []
+    var planarr = [];
+    var year =getQueryString('year')||'某',
+        month =getQueryString('month')||'某',
+        id =getQueryString('id')|| "";
+    ajaxToServer("/api/aps/ApsMonthAdjustAqhbjh/queryMonthAdjustAqhbjh",JSON.stringify({}),function (result) {
+        planarr = result.aqhbsbglztzbjh;
+        createTbody(planarr);
+        setFrameHeight();
+    });
+    function createTbody(planarr) {
+        for(var i=0;i<planarr.length;i++){
+             //每种类型的数据，放在一个数组里边
+                msgobj = {
+                    "id":planarr[i].id,
+                    "itemCode":planarr[i].itemCode,
+                    "itemName":planarr[i].itemName,
+                    "itemUnit":planarr[i].itemUnit,
+                    "indexValue":planarr[i].indexValue,
+                    "remark":planarr[i].remark,
+                    "mainId":planarr[i].mainId
+                };
+                arr.push(msgobj)
+            }
+            $('#td0').datagrid('loadData',arr);
+
+    };
+    function dataGrid(){
+        $("#td0").datagrid({
+            fitColumns:true,
+            collapsible:true,
+            singleSelect: true,
+            onClickRow: function(index){
+                dataGridObj.startEditing(index,"#td0")
+            },
+            //创建table
+            columns:[[
+                {field:'id',title:'id',hideColumn:'id'},
+                {field:'itemCode',title:'itemCode',hideColumn:'itemCode'},
+                {field:'mainId',title:'mainId',hideColumn:'mainId'},
+                {field:'itemName',title:'指标名称',width:100,align:'center'},
+                {field:'itemUnit',title:'单位',width:100,align:'center'},
+                {field:'indexValue',title:'指标值',editor:'numberbox',width:100,align:'center'},
+                {field:'remark',title:'备注',editor:'text',width:100,align:'center'},
+            ]],
+            onAfterEdit: function (rowIndex, rowData, changes) {
+                dataGridObj.pushRowData(rowData);
+                dataGridObj.setEditIndex("#td0",undefined);
+                dataGridObj.mergeCells(loadedData,"#td0","groupName");
+            },
+            //合并单元格
+            onLoadSuccess:function (data) {
+                loadedData = data;
+                dataGridObj.mergeCells(data,"#td0","groupName");
+            },
+            toolbar: [{
+                text: '保存', iconCls: 'icon-save', handler: function () {
+                    //保存时结束当前编辑的行，自动触发onAfterEdit事件如果要与后台交互可将数据通过Ajax提交后台
+                    $('#td0').datagrid('endEdit', dataGridObj.getEditIndex("#td0"));
+                }
+            }]
+        });
+    }
+
+    //隐藏id列
+    $(function(){
+        dataGrid();
+        hideDatagrid();
+        $(window).resize(function(){  //浏览器窗口改变时dataGrid数据重置
+            $('#td0').datagrid('resize');
+        });
+    });
+    function hideDatagrid(){
+        var hideColumnEle = ['id','itemCode','mainId'];
+        $(hideColumnEle).each(function(index,item){
+            $('#td0').datagrid('hideColumn',item);
+        });
+    }
+    // 点击保存按钮
+     $(".btn-save").click(function () {
+         var dataStatus = $(this).attr("data-status");
+         if(year != "某" && month != "某"){
+             postData(dataStatus);
+         }else{
+             layerAlert("新创建的月计划时间不能为空，请选择时间！")
+         }
+        });
+        //将点击状态添加到数组里边
+        function postData(status) {
+            var editItems = dataGridObj.getSaveItemArr();
+            var data={
+                "status":status,
+                "adYear":year,
+                "adMonth": month,
+                "mainId":id,
+                "busPlans":JSON.stringify(editItems),
+            };
+            ajaxToServer1("/api/aps/ApsMonthAdjustAqhbjh/saveAqhbjhInfo",data,function(result){
+                if(result.success){
+                    layer.msg('保存成功，即将返回月计划列表页！',{icon: 1});
+                    setTimeout(function(){
+                        refreshActiveTab();
+                    },2000)
+                }
+             })
+        }
+
+</script>
+</html>

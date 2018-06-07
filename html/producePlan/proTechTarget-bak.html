@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>全厂主要生产技术指标计划</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="stylesheet" href="../../plugins/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../plugins/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../../plugins/easyui/themes/default/easyui.css">
+    <link rel="stylesheet" href="../../plugins/layer/theme/default/layer.css">
+    <link rel="stylesheet" href="../../plugins/easyui/themes/default/datagrid.css">
+    <!--引入样式-->
+    <link rel="stylesheet" href="../../css/common.css">
+    <link rel="stylesheet" href="../../css/customDatagrid.css">
+    <link rel="stylesheet" href="../../css/aps.css">
+</head>
+<body>
+<div class="wrapper">
+    <div class="ibox">
+        <div class="ibox-content">
+                <div class="clearfix btn-box mgb-20">
+                    <button class="btn btn-adjust pull-right btn-white" id="btn-adjust" type="button">调整</button>
+                    <button class="btn pull-right btn-save" type="button" data-status="0">
+                        <i class="fa fa-save"></i>保存
+                    </button>
+                </div>
+            <div class="commercePurCon proTargetPlanItem">
+                <div class="tableItemBox">
+                    <table id="td0" class="tableItem"  title="产量指标计划">
+                    </table>
+                </div>
+                <div class="tableItemBox">
+                    <table id="td1" class="tableItem"  title="质量指标计划">
+                    </table>
+                </div>
+                <div class="tableItemBox">
+                    <table id="td2" class="tableItem"  title="技术指标计划">
+                    </table>
+                </div>
+                <div class="tableItemBox">
+                    <table id="td3" class="tableItem"  title="各项单耗指标计划">
+                    </table>
+                </div>
+                <div class="tableItemBox">
+                    <table id="td4" class="tableItem"  title="动力消耗计划">
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!--核心插件-->
+<script src="../../js/jquery-2.2.4.min.js"></script>
+<script src="../../plugins/bootstrap/js/bootstrap.min.js"></script>
+<!--附属插件-->
+<script src="../../plugins/layer/layer.js"></script>
+<script src="../../plugins/easyui/js/jquery.easyui.min.js"></script>
+<script src="../../js/dataGridCustom.js"></script>
+<script src="../../js/apiDomain.js"></script>
+<script src="../../js/customForm-aps.js"></script>
+<script>
+   var year =getQueryString('year')||'某',
+       month =getQueryString('month')||'某';
+       id =getQueryString('id')|| "";
+   var dataGridArr = [];
+   var clzbjhArr =[],zlzbjhArr = [],gxdhzbjhArr = [],jszbjhArr  =[],dlxhjhArr = [];
+   var data =JSON.stringify({
+       "id":id
+   });
+   ajaxToServer("/api/aps/ApsMonthAdjustTech/queryMonthAdjustTech",data,function(result){
+        if(result.success){
+            var clzbjh = result.clzbjh;
+            var zlzbjh = result.zlzbjh;
+            var gxdhzbjh  =result.gxdhzbjh;
+            var jszbjh = result.jszbjh;
+            var dlxhjh = result.dlxhjh;
+
+            //产量指标计划
+            for(var i=0;i<clzbjh.length;i++){
+                var itemmsg = {
+                    "id":clzbjh[i].id,
+                    "itemCode":clzbjh[i].itemCode,
+                    "mainId":clzbjh[i].mainId,
+                    "itemName":clzbjh[i].itemName,
+                    "itemUnit":clzbjh[i].itemUnit,
+                    "yearTarget":clzbjh[i].yearTarget,
+                    "monthPlan":clzbjh[i].monthPlan,
+                    "remark":clzbjh[i].remark
+                };
+                clzbjhArr.push(itemmsg);
+            }
+            //质量指标计划
+            for(var i=0;i<zlzbjh.length;i++){
+                var itemmsg = {
+                    "id":zlzbjh[i].id,
+                    "itemCode":zlzbjh[i].itemCode,
+                    "mainId":zlzbjh[i].mainId,
+                    "pName":zlzbjh[i].pName,
+                    "itemName":zlzbjh[i].itemName,
+                    "itemUnit":zlzbjh[i].itemUnit,
+                    "yearTarget":zlzbjh[i].yearTarget,
+                    "monthPlan":zlzbjh[i].monthPlan,
+                    "remark":zlzbjh[i].remark
+                };
+                zlzbjhArr.push(itemmsg);
+            }
+            //各项单耗指标计划
+            for(var i=0;i<gxdhzbjh.length;i++){
+                var itemmsg = {
+                    "id":gxdhzbjh[i].id,
+                    "itemCode":gxdhzbjh[i].itemCode,
+                    "mainId":gxdhzbjh[i].mainId,
+                    "itemName":gxdhzbjh[i].itemName,
+                    "itemUnit":gxdhzbjh[i].itemUnit,
+                    "yearTarget":gxdhzbjh[i].yearTarget,
+                    "monthPlan":gxdhzbjh[i].monthPlan,
+                    "remark":gxdhzbjh[i].remark
+                };
+                gxdhzbjhArr.push(itemmsg);
+            }
+            //计划指标计划
+            for(var i=0;i<jszbjh.length;i++){
+                var itemmsg = {
+                    "id":jszbjh[i].id,
+                    "itemCode":jszbjh[i].itemCode,
+                    "mainId":jszbjh[i].mainId,
+                    "itemName":jszbjh[i].itemName,
+                    "itemUnit":jszbjh[i].itemUnit,
+                    "yearTarget":jszbjh[i].yearTarget,
+                    "monthPlan":jszbjh[i].monthPlan,
+                    "remark":jszbjh[i].remark
+                };
+                jszbjhArr.push(itemmsg);
+            }
+            //动力消耗计划
+            for(var i=0;i<dlxhjh.length;i++){
+                var itemmsg = {
+                    "id":dlxhjh[i].id,
+                    "itemCode":dlxhjh[i].itemCode,
+                    "mainId":dlxhjh[i].mainId,
+                    "itemName":dlxhjh[i].itemName,
+                    "itemUnit":dlxhjh[i].itemUnit,
+                    "yearTarget":dlxhjh[i].yearTarget,
+                    "monthPlan":dlxhjh[i].monthPlan,
+                    "remark":dlxhjh[i].remark
+                };
+                dlxhjhArr.push(itemmsg);
+            }
+            dataGridArr.push(clzbjhArr,zlzbjhArr,gxdhzbjhArr,jszbjhArr,dlxhjhArr);
+            $(dataGridArr).each(function(index,item){
+                $('#td'+index).datagrid('loadData',item);
+            });
+            console.log(dataGridArr);
+            setFrameHeight();
+            $("#btn-adjust").click(function(){ //月计划调整功能
+                function adjustMonth(title,url,width,height,){
+                    top.layer.open({
+                        type: 2,
+                        area: [width, height],
+                        title: title,
+                        maxmin: true, //开启最大化最小化按钮
+                        content: url ,
+                        btn: ['确定', '关闭'],
+                        yes: function(index, layero){
+                            var iframeInnerWin = layero.find('iframe')[0].contentWindow;
+                            top.layer.close(index);
+                            var data = iframeInnerWin.getInnerVal();
+                            var ParameArr =["scscwd","bsbswd"];  //获取到调整之后的月计划数据
+
+                            $(ParameArr).each(function(index,item){ //把获取的数据作为指定表格（#td0）的数据，重新对表格进行数据渲染。
+                                $('#td0').datagrid('updateRow',{ index: index, row: {  yearTarget: data.colSumVal[item],  monthPlan: data.colMonthVal[item] }});
+                            });
+                        },
+                        cancel: function(index){
+                        }
+                    });
+                }
+                if(year != "某" && month != "某"){
+                    adjustMonth(year+"年月计划调整","producePlan/monthAdjust.html?year="+year+"&month="+month,"1000px","500px",);
+                }else{
+                    layerAlert("月调整时间选择之后才可进行调整操作哦！")
+                }
+
+
+            });
+        }
+
+
+   });
+   $(document).ready(function(){
+       dataGrid();
+       hideDatagrid();
+       $(window).resize(function(){  //浏览器窗口改变时dataGrid数据重置
+           $('#td0,#td1,#td2,#td3,#td4').datagrid('resize');
+       });
+   });
+   function hideDatagrid(){
+       var hideColumnEle = ['id','itemCode','mainId'];
+       $(hideColumnEle).each(function(index,item){
+           $('#td0,#td1,#td2,#td3,#td4').datagrid('hideColumn',item);
+       });
+
+   }
+    function dataGrid(){
+      // 产量指标计划
+      $("#td0").datagrid({
+          fitColumns:true,
+          collapsible:true,
+          singleSelect: true,
+          onClickRow: function(index){
+              dataGridObj.startEditing(index,"#td0")
+          },
+          columns:[[
+              {field:'id',title:'id',hideColumn:'id'},
+              {field:'itemCode',title:'itemCode',hideColumn:'itemCode'},
+              {field:'mainId',title:'mainId',hideColumn:'mainId'},
+              {field:'itemName',title:'项目',width:100,align:'center'},
+              {field:'itemUnit',title:'单位',width:100,align:'center'},
+              {field:'yearTarget',title:'全年基本目标',editor:'numberbox',width:100,align:'center',className:"aa"},
+              {field:'monthPlan',title:month+'月计划',editor:'numberbox',width:100,align:'center'},
+              {field:'remark',title:'备注',editor:'text',width:100,align:'center'}
+          ]],
+          onAfterEdit: function (rowIndex, rowData, changes) {
+              dataGridObj.pushRowData(rowData);
+              dataGridObj.setEditIndex("#td0",undefined);
+              dataGridObj.mergeCells(loadedData,"#td0","itemName");
+          },
+          //合并单元格
+          onLoadSuccess:function (data) {
+              loadedData = data;
+              dataGridObj.mergeCells(data,"#td0","itemName");
+          },
+          toolbar: [{
+              text: '保存', iconCls: 'icon-save', handler: function () {
+                  //保存时结束当前编辑的行，自动触发onAfterEdit事件如果要与后台交互可将数据通过Ajax提交后台
+                  $('#td0').datagrid('endEdit',dataGridObj.getEditIndex("#td0"));
+              }
+          }]
+      })
+      // 质量指标计划
+      $("#td1").datagrid({
+            fitColumns:true,
+            collapsible:true,
+            singleSelect: true,
+            onClickRow: function(index){
+                dataGridObj.startEditing(index,"#td3")
+            },
+            //创建table
+            columns:[[
+                {field:'id',title:'id',hideColumn:'id'},
+                {field:'itemCode',title:'itemCode',hideColumn:'itemCode'},
+                {field:'mainId',title:'mainId',hideColumn:'mainId'},
+                {field:'pName',title:'名称',width:100,align:'center'},
+                {field:'itemName',title:'项目',width:100,align:'center'},
+                {field:'itemUnit',title:'单位',width:100,align:'center'},
+                {field:'yearTarget',title:'全年基本目标',editor:'numberbox',width:100,align:'center'},
+                {field:'monthPlan',title:month+'月计划',editor:'numberbox',width:100,align:'center'},
+                {field:'remark',title:'备注',editor:'text',width:100,align:'center'}
+            ]],
+            onAfterEdit: function (rowIndex, rowData, changes) {
+                dataGridObj.pushRowData(rowData);
+                dataGridObj.setEditIndex("#td3",undefined);
+                dataGridObj.mergeCells(loadedData,"#td3","groupName");
+            },
+            //合并单元格
+            onLoadSuccess:function (data) {
+                loadedData = data;
+                dataGridObj.mergeCells(data,"#td3","groupName");
+            },
+            toolbar: [{
+                text: '保存', iconCls: 'icon-save', handler: function () {
+                    //保存时结束当前编辑的行，自动触发onAfterEdit事件如果要与后台交互可将数据通过Ajax提交后台
+                    $('#td3').datagrid('endEdit',dataGridObj.getEditIndex("#td3"));
+                }
+            }]
+        })
+      // 技术指标计划
+      $("#td2").datagrid({
+          fitColumns:true,
+          collapsible:true,
+          singleSelect: true,
+          onClickRow: function(index){
+              dataGridObj.startEditing(index,"#td2")
+          },
+          //创建table
+          columns:[[
+              {field:'id',title:'id',hideColumn:'id'},
+              {field:'itemCode',title:'itemCode',hideColumn:'itemCode'},
+              {field:'mainId',title:'mainId',hideColumn:'mainId'},
+              {field:'itemName',title:'项目',width:100,align:'center'},
+              {field:'itemUnit',title:'单位',width:100,align:'center'},
+              {field:'yearTarget',title:'全年基本目标',editor:'numberbox',width:100,align:'center'},
+              {field:'monthPlan',title:month+'月计划',editor:'numberbox',width:100,align:'center'},
+              {field:'remark',title:'备注',editor:'text',width:100,align:'center'}
+          ]],
+          onAfterEdit: function (rowIndex, rowData, changes) {
+              dataGridObj.pushRowData(rowData);
+              dataGridObj.setEditIndex("#td2",undefined);
+              dataGridObj.mergeCells(loadedData,"#td2","groupName");
+          },
+          //合并单元格
+          onLoadSuccess:function (data) {
+              loadedData = data;
+              dataGridObj.mergeCells(data,"#td2","groupName");
+          },
+          toolbar: [{
+              text: '保存', iconCls: 'icon-save', handler: function () {
+                  //保存时结束当前编辑的行，自动触发onAfterEdit事件如果要与后台交互可将数据通过Ajax提交后台
+                  $('#td2').datagrid('endEdit',dataGridObj.getEditIndex("#td2"));
+              }
+          }]
+      });
+      // 各项单耗指标计划
+      $("#td3").datagrid({
+            fitColumns:true,
+            collapsible:true,
+            singleSelect: true,
+            onClickRow: function(index){
+                dataGridObj.startEditing(index,"#td1")
+            },
+            //创建table
+            columns:[[
+                {field:'id',title:'id',hideColumn:'id'},
+                {field:'itemCode',title:'itemCode',hideColumn:'itemCode'},
+                {field:'mainId',title:'mainId',hideColumn:'mainId'},
+                {field:'itemName',title:'项目',width:100,align:'center'},
+                {field:'itemUnit',title:'单位',width:100,align:'center'},
+                {field:'yearTarget',title:'全年基本目标',editor:'numberbox',width:100,align:'center'},
+                {field:'monthPlan',title:month+'月计划',editor:'numberbox',width:100,align:'center'},
+                {field:'remark',title:'备注',editor:'text',width:100,align:'center'}
+            ]],
+            onAfterEdit: function (rowIndex, rowData, changes) {
+                dataGridObj.pushRowData(rowData);
+                dataGridObj.setEditIndex("#td1",undefined);
+                dataGridObj.mergeCells(loadedData,"#td1","groupName");
+            },
+            //合并单元格
+            onLoadSuccess:function (data) {
+                loadedData = data;
+                dataGridObj.mergeCells(data,"#td1","groupName");
+            },
+            toolbar: [{
+                text: '保存', iconCls: 'icon-save', handler: function () {
+                    //保存时结束当前编辑的行，自动触发onAfterEdit事件如果要与后台交互可将数据通过Ajax提交后台
+                    $('#td1').datagrid('endEdit',dataGridObj.getEditIndex("#td1"));
+                }
+            }]
+        });
+      // 动力消耗计划
+      $("#td4").datagrid({
+            fitColumns:true,
+            collapsible:true,
+            singleSelect: true,
+            onClickRow: function(index){
+                dataGridObj.startEditing(index,"#td1")
+            },
+            //创建table
+            columns:[[
+                {field:'id',title:'id',hideColumn:'id'},
+                {field:'itemCode',title:'itemCode',hideColumn:'itemCode'},
+                {field:'mainId',title:'mainId',hideColumn:'mainId'},
+                {field:'itemName',title:'项目',width:100,align:'center'},
+                {field:'itemUnit',title:'单位',width:100,align:'center'},
+                {field:'yearTarget',title:'全年基本目标',editor:'numberbox',width:100,align:'center'},
+                {field:'monthPlan',title:month+'月计划',editor:'numberbox',width:100,align:'center'},
+                {field:'remark',title:'备注',editor:'text',width:100,align:'center'}
+            ]],
+            onAfterEdit: function (rowIndex, rowData, changes) {
+                dataGridObj.pushRowData(rowData);
+                dataGridObj.setEditIndex("#td1",undefined);
+                dataGridObj.mergeCells(loadedData,"#td1","groupName");
+            },
+            //合并单元格
+            onLoadSuccess:function (data) {
+                loadedData = data;
+                dataGridObj.mergeCells(data,"#td1","groupName");
+            },
+            toolbar: [{
+                text: '保存', iconCls: 'icon-save', handler: function () {
+                    //保存时结束当前编辑的行，自动触发onAfterEdit事件如果要与后台交互可将数据通过Ajax提交后台
+                    $('#td1').datagrid('endEdit',dataGridObj.getEditIndex("#td1"));
+                }
+            }]
+        });
+
+  }
+
+    //点击时获取到信息
+    $(".btn-save").click(function () {
+        var dataStatus = $(this).attr("data-status");
+        if(year != "某" && month != "某"){
+            postData(dataStatus);
+        }else{
+            layerAlert("新创建的月计划时间不能为空，请选择时间！")
+        }
+    });
+    //将点击状态添加到数组里边
+    function postData(status) {
+        var editItems = dataGridObj.getSaveItemArr();
+        var data={
+            "status":status,
+            "adYear":year,
+            "adMonth": month,
+            "mainId":id,
+            "techPlans":JSON.stringify(editItems)
+        };
+        ajaxToServer1("/api/aps/ApsMonthAdjustTech/saveTechInfo",data,function(result){
+            if(result.success){
+                layer.msg('保存成功，即将返回月计划列表页！',{icon: 1});
+                setTimeout(function(){
+                    refreshActiveTab();
+                },2000)
+            }
+
+        });
+
+    }
+
+
+
+
+
+
+</script>
+
+</body>
+</html>

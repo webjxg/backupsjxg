@@ -1,0 +1,277 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>登录页面</title>
+    <link rel="stylesheet" href="../plugins/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/login.css">
+    <link rel="stylesheet" href="../plugins/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../plugins/ztree/css/metroStyle/metroStyle.css">
+    <!--<link rel="stylesheet" href="../plugins/datatables/css/jquery.dataTables.min.css">-->
+    <link rel="stylesheet" href="../plugins/icheck/skins/square/green.css">
+
+</head>
+
+<body>
+    <div id="box">
+        <!--头部-->
+        <div class="title col-12">
+            <ul>
+                <li class="left">
+                    <img src="../images/title.png">
+                    <span>BEST MOM PLATFORM</span>
+                </li>
+                <li class="mobile-col-12 spread">
+                    <span>基于人工智能创造智慧管理方案</span>
+                </li>
+            </ul>
+
+        </div>
+        <!--中间部分-->
+        <div class="yinying">
+            <p class="new">新的一天从良好的工作习惯开始</p>
+            <div class="middle">
+
+                <div class="times">
+                    <p class="month"></p>
+                    <p class="year"></p>
+                    <p class="week"></p>
+                </div>
+
+                <!--登录部分-->
+                <div class="login">
+                    <ul class="logo">
+                        <li>
+                            <img src="../images/logo.png">
+                        </li>
+                    </ul>
+                    <div class="login-box ">
+                        <p class="user">用户登录</p>
+                        <form action="index.html" method="post" id="loginSubmit">
+                            <input id="user" type="hidden" name="clientId" value="admin">
+                            <label class="block">
+                                <i class="fa fa-user"></i>
+                                <input id="loginName" type="text" name="loginName" placeholder="用户名" required="required" >
+                            </label>
+                            <label class="block">
+                                <i class="fa fa-unlock-alt"></i>
+                                <input id="password" type="password" name="password" placeholder="密码" required="required">
+                            <div class="login-error"></div>
+                            </label>
+                                <label><input class="check" type="checkbox" id="rememberMe">五天内免登
+                                    <span>忘记密码？</span>
+                                </label>
+                            <div>
+                                <button id="login-btn" type="button" class="login-btn">登录</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                </div>
+                <!--结束登录部分-->
+            </div>
+
+        </div>
+
+        <!--脚部-->
+        <div class="footer">
+            <ul>
+                <li>
+                    <img src="../images/light.png"/>
+                    <p>创新</p>
+                </li>
+                <li>
+                    <img src="../images/middle.png"/>
+                    <p>人工智能</p>
+                </li>
+                <li>
+                    <img src="../images/text.png"/>
+                    <p>高效管理</p>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <script src="../js/jquery-2.2.4.min.js"></script>
+    <script src="../plugins/validate/jquery.validate.min.js"></script>
+    <script src="../plugins/layer/layer.js"></script>
+    <script src="../plugins/validate/messages_zh.min.js"></script>
+    <script src="../js/common.js"></script>
+    <script src="../js/apiDomain.js"></script>
+    <script src="../js/customForm.js"></script>
+    <script>
+        $(function(){
+            $("#loginName,#password").keyup(function () {
+               var $val = $.trim($(this).val());
+                if($val == ""){
+                    $(".login-error").empty().fadeIn(1000).html("用户名或密码不能为空格!");
+                }else{
+                    $(".login-error").fadeOut(400);
+                }
+            });
+            //提交按钮
+            $(".login-btn").click(function(){
+                if($.trim($("#loginName").val())== "" || $.trim($("#password").val()) == "") {
+                    $(".login-error").empty().fadeIn(1000).html("用户名或密码不能为空!");
+                }else{
+                    var data = JSON.stringify($("#loginSubmit").serializeJSON());
+                    console.log(data);
+                    ajaxToServer("/oauth/token",data,function(result){
+                        console.log(result);
+                        if(result.success){
+                            alert("chen");
+                            setCookie("authorization",result.accessToken.authorization);
+                            setCookie("token_type",result.accessToken.token_type);
+                            setCookie("userName",result.user.name);
+                            setCookie("loginName",result.user.loginName);
+                            location.href="index.html";
+                        }else{
+                            $(".login-error").empty().fadeIn(1000).html("用户名或密码不正确!");
+                        }
+                    })
+                }
+            });
+
+            // 记住密码
+            $("#rememberMe").change(function(){
+                setCookie("rememberMe",this.checked?"true":"false");
+            });
+           var rememberMe = getCookie("rememberMe");
+           if(rememberMe == "true"){
+                var tokenType = getCookie("token_type"),
+                    authorization = getCookie("authorization");
+                if(tokenType && tokenType != "" && authorization && authorization != ""){
+                    location.href="index.html";
+                }else{
+                    $("#loginName").val(getCookie("loginName"));
+                    $("#rememberMe").prop("checked",true);
+                }
+           }
+        });
+        /*$("#loginSubmit").validate({
+            onkeyup: function(element, event) {
+                //去除左侧空格
+                var value = this.elementValue(element).replace(/^\s+/g, "");
+                $(element).val(value);
+            },
+            rules:{
+                loginName:{
+                    required:true,//必填
+                    minlength:3, //最少6个字符
+                    maxlength:32,//最多20个字符
+                },
+                password:{
+                    required:true,
+                    minlength:3,
+                    maxlength:32,
+                },
+            },
+            //错误信息提示
+            messages:{
+                loginName:{
+                    required:"必须填写用户名",
+                    minlength:"用户名至少为3个字符",
+                    maxlength:"用户名至多为32个字符",
+                    remote: "用户名已存在",
+                },
+                password:{
+                    required:"必须填写密码",
+                    minlength:"密码至少为3个字符",
+                    maxlength:"密码至多为32个字符",
+                },
+            },
+            submitHandler:function(){
+               var data = JSON.stringify($("#loginSubmit").serializeJSON());
+               console.log(data);
+                ajaxToServer("/oauth/token",data,function(result){
+                    if(result.success){
+                        alert("chen");
+                        setCookie("authorization",result.accessToken.authorization);
+                        setCookie("token_type",result.accessToken.token_type);
+                        setCookie("userName",result.user.name);
+                        setCookie("loginName",result.user.loginName);
+
+                        location.href="index.html";
+                    }else{
+                        alert(result.message);
+                    }
+                })
+            },
+            errorContainer: "#messageBox",
+            errorElement:"span",
+            errorPlacement: function(error, element) {
+                $("#messageBox").text("输入有误，请先更正。");
+                if (element.is(":checkbox")||element.is(":radio")||element.parent().is(".input-append")){
+                    error.appendTo(element.parent().parent());
+                } else {
+                    error.insertAfter(element);
+                }
+            }
+        });*/
+            //测试按钮
+        $(".test-btn").click(function(){
+            var url = $("#url").val();
+            ajaxToServer(url,{},function(result){
+                console.log(result)
+            });
+        });
+
+
+
+		animation();
+		function animation(){
+			requestAnimationFrame(animation);
+			gettime()
+		}
+		//获取到时间的方法
+		function gettime(){
+			var data = new Date();
+			var years = data.getYear()+1900 //获取到年
+			var month = data.getMonth()+1//获取到月
+			var day = data.getDate()   //获取到日
+			var hours = data.getHours() //获取到时
+			var m = data.getMinutes()  //获取到分钟
+			var sec = data.getSeconds() //获取到秒
+			var week = data.getDay();
+			var str;
+			if(hours-12<=0){
+				str = "Am"
+			}else{
+				str = "Pm"
+			}
+			if(m<10){
+				m = "0"+m
+			}
+			// console.log(years+"年"+month+"月"+day+"日"+hours+"时"+m+"分"+sec+"秒"+week);
+			var months = document.getElementsByClassName("month")[0];
+			var year = document.getElementsByClassName("year")[0]
+			months.textContent = month+"月"+day+"日";
+			year.textContent = years;
+			var weeks = document.getElementsByClassName("week")[0];
+			  if (week==0) week='星期日';
+ 			  if (week==1) week='星期一';
+  			  if (week==2) week='星期二';
+ 			  if (week==3) week='星期三';
+ 			  if (week==4) week='星期四';
+  			  if (week==5) week='星期五';
+  			  if (week==6) week='星期六';
+  			  weeks.textContent = week+hours+":"+m+str
+		}
+
+        //背景图片高度设置为自适应
+        $(window).load(function(){
+            var h = $(window).height() - $(".title").height() - $(".footer").height() +"px";
+            $(".yinying").css({
+                "height":h
+            })
+            var h1 = $(window).height() - $(".title").height();
+            $(".login").css({
+                "height":h1
+            })
+        })
+    </script>
+</body>
+</html>

@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>计划模版</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <!--插件样式-->
+    <link rel="stylesheet" href="../../plugins/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../plugins/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../../plugins/easyui/themes/default/easyui.css">
+    <link rel="stylesheet" href="../../plugins/easyui/themes/default/datagrid.css">
+    <link rel="stylesheet" href="../../plugins/datetimepicker/css/bootstrap-datetimepicker.css">
+    <!--引入样式-->
+    <link rel="stylesheet" href="../../css/common.css">
+    <link rel="stylesheet" href="../../css/aps.css">
+    <link rel="stylesheet" href="../../css/customDatagrid.css">
+    <style>
+        .row {
+            margin-bottom: 20px;
+        }
+
+        .pull-left {
+            font-size: 0;
+        }
+
+        .pull-left span {
+            margin: 10px 0;
+            font-size: 16px;
+            font-weight: 100;
+        }
+
+        .pull-left select {
+            width: 100px;
+            height: 30px;
+            line-height: 30px;
+            font-size: 16px;
+            border-radius: 5px;
+            border-color: #acbad5;
+            padding: 0 5px 0 5px;
+            /*margin-left: 15px;*/
+        }
+
+        .panel-group {
+            width: 100%;
+        }
+
+        .panel-group .panel + .panel {
+            margin-top: 15px;
+        }
+
+        .panel-heading {
+            padding: 10px 25px;
+        }
+
+        .panel-heading > span {
+            color: white;
+        }
+
+        tr th {
+            text-align: center;
+        }
+
+        tr td input {
+            width: 80%;
+            height: 100%;
+            line-height: 100%;
+            border: 1px solid #e5e6e7;
+            border-radius: 2px;
+        }
+    </style>
+
+</head>
+<body>
+<div class="wrapper wrapper-content ibox-content">
+    <div>
+        <h1 class="titName">日计划</h1>
+    </div>
+    <!--按钮条-->
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="pull-left">
+                <input type="text" hidden="hidden" name="id" id="id">
+                <input type="text" name="dpYear" id="dpYear" hidden="hidden">
+                <input type="text" name="dpMonth" id="dpMonth" hidden="hidden">
+                <input type="text" name="dpWeek" id="dpWeek" hidden="hidden">
+                <ul class="apsType-linkage">
+                    <li class="month">
+                        计划周期（年月）：
+                        <input type="text" value="请选择" id="yMPicker" class="time-input form-control datePicker">
+                    </li>
+                    <li class="week">
+                        计划周期（周）：
+                        <select name="" id="apsWeek">
+                            <option value="">请选择</option>
+                            <option value="1">第一周</option>
+                            <option value="2">第二周</option>
+                            <option value="3">第三周</option>
+                            <option value="4">第四周</option>
+                        </select>
+                    </li>
+                </ul>
+            </div>
+            <div class="pull-right">
+                <button class="btn btn-white btn-back" id="back-btn"><i
+                        class="fa fa-reply"></i> 返回
+                </button>
+                <input type="hidden" name="state" id="state" value>
+                <button class="btn btn-primary bg-ffa82d btn-submit" id="submit-btn"><i
+                        class="fa fa-upload"></i> 提交
+                </button>
+                <button class="btn btn-white btn-save" id="save-btn"><i
+                        class="fa fa-save"></i> 保存
+                </button>
+            </div>
+        </div>
+    </div>
+    <!--表格区-->
+    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+        <!--班计划-->
+        <div class="panel panel-default ">
+            <div class="tableItemBox">
+                <table id="td0"
+                       class="table-striped table-bordered table-hover table-condensed dataTables-example dataTable tableItem" title="班计划">
+                </table>
+            </div>
+        </div>
+        <!--产量-->
+        <div class="panel panel-default">
+            <div class="tableItemBox">
+                <table id="td1"
+                       class="table-striped table-bordered table-hover table-condensed dataTables-example dataTable tableItem " title="产量计划">
+                </table>
+            </div>
+        </div>
+
+        <!--质量指标计划-->
+        <div class="panel panel-default">
+            <div class="tableItemBox">
+                <table id="td2"
+                       class="table-striped table-bordered table-hover table-condensed dataTables-example dataTable"  title="质量指标计划">
+                </table>
+            </div>
+        </div>
+        <!--技术指标计划-->
+        <div class="panel panel-default">
+            <div class="tableItemBox">
+                <table id="td3"
+                       class="table-striped table-bordered table-hover table-condensed dataTables-example dataTable" title="技术指标计划">
+                </table>
+            </div>
+        </div>
+        <!--各项单耗指标计划-->
+        <div class="panel panel-default">
+            <div class="tableItemBox">
+                <table id="td4"
+                       class="table-striped table-bordered table-hover table-condensed dataTables-example dataTable" title="各项单耗指标计划">
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+<!--核心插件-->
+<script src="../../js/jquery-2.2.4.min.js"></script>
+<script src="../../plugins/bootstrap/js/bootstrap.min.js"></script>
+<!--附属插件-->
+<script src="../../plugins/layer/layer.js"></script>
+<script src="../../plugins/easyui/js/jquery.easyui.min.js"></script>
+<script src="../../plugins/datetimepicker/js/bootstrap-datetimepicker.js"></script>
+<script src="../../js/dataGridCustom.js"></script>
+<script src="../../js/apiDomain.js"></script>
+<script src="../../js/customForm-aps.js"></script>
+
+
+</body>
+<script>
+    $(function () {
+        //接收url父页面参数放到input的val里
+            btnclick();
+            $("#yMPicker").datetimepicker({
+                format:"yyyy-mm",
+                language:'cn',
+                weekStart: 1,
+                pickTime: false,
+                autoclose:true,
+                startView: 3, //月视图
+                minView: "3",
+                forceParse: 0,
+                startDate:"2018-01-01"
+            });
+            //渲染表格
+
+            tabledatagrid();
+
+            selectChange()
+
+
+
+    });
+    function getDataFn(){
+        $year = $('.datePicker').val().split("-")[0];
+        $status =$("#apsState").val();
+        $month=$('.datePicker').val().split("-")[1];
+        $week=$('#apsWeek').val();
+
+    }
+
+    function btnclick() {
+
+        $('div.row').on('click','.btn-save',function () {
+            getDataFn();
+            var yMPicker=$('#yMPicker').val();
+            var apsWeek=$('#apsWeek').val();
+            if(yMPicker==''||apsWeek==''){
+                layer.msg('请选择年、月、周')
+            }else{
+                btnSubSave(0);
+            }
+
+        });
+        $('div.row').on('click','.btn-submit',function () {
+            getDataFn();
+            var yMPicker=$('#yMPicker').val();
+            var apsWeek=$('#apsWeek').val();
+            if(yMPicker==''||apsWeek==''){
+                layer.msg('请选择年、月、周')
+            }else {
+                btnSubSave(1);
+            }
+        });
+        $(".btn-back").click(function () {
+            refreshActiveTab();
+        });
+    }
+    //多表格请求数据渲染方法
+    function tabledatagrid() {
+        //建立空数组
+        var cljhArr = [],
+            bjhArr = [],
+            zlzbjhArr = [],
+            jszbjhArr = [],
+            gxdhzbjhArr = []; //请求数据渲染表格 以及实现datagrid部分功能
+        var data0 = {
+            "id":"",
+            "dpYear": "",
+            "dpMonth": "",
+            "dpWeek": ""
+        };
+        var da = JSON.stringify(data0);
+        ajaxToServer("/api/aps/DayPlan/form", da, table);
+        function table(result) {
+//            $("#id").val(result.DayPlan.id);
+            var bjh = result.bjh,
+                cljh = result.cljh,
+                zlzbjh = result.zlzbjh,
+                gxdhzbjh = result.gxdhzbjh,
+                jszbjh = result.jszbjh;
+            //班计划
+            for (var item in bjh) {
+                var arrItem = {
+                    'id': bjh[item].id,
+                    'itemName': bjh[item].itemName,
+                    'itemUnit': bjh[item].itemUnit,
+                    'weekPlan': bjh[item].weekPlan,
+                    'dayPlan': bjh[item].dayPlan,
+                    'classPlan': bjh[item].classPlan
+                };
+                bjhArr.push(arrItem);
+            }
+            //产量计划
+            for (var item in cljh) {
+                var arrItem = {
+                    'id': cljh[item].id,
+                    'itemName': cljh[item].itemName,
+                    'itemUnit': cljh[item].itemUnit,
+                    'monthPlan': cljh[item].monthPlan,
+                    'weekPlan': cljh[item].weekPlan,
+                    'dayPlan': cljh[item].dayPlan
+                };
+                cljhArr.push(arrItem);
+            }
+            //质量指标计划
+            for (var item in zlzbjh) {
+                var arrItem = {
+                    'id': zlzbjh[item].id,
+                    'pName': zlzbjh[item].pName,
+                    'itemName': zlzbjh[item].itemName,
+                    'itemUnit': zlzbjh[item].itemUnit,
+                    'weekPlan': zlzbjh[item].weekPlan,
+                    'dayPlan': zlzbjh[item].dayPlan,
+                    'classPlan': zlzbjh[item].classPlan
+                };
+                zlzbjhArr.push(arrItem);
+            }
+            //技术指标计划
+            for (var item in jszbjh) {
+                var arrItem = {
+                    'id': jszbjh[item].id,
+                    'itemName': jszbjh[item].itemName,
+                    'itemUnit': jszbjh[item].itemUnit,
+                    'monthPlan': jszbjh[item].monthPlan,
+                    'weekPlan': jszbjh[item].weekPlan,
+                    'dayPlan': jszbjh[item].dayPlan
+                };
+                jszbjhArr.push(arrItem);
+            }
+            //各项单耗指标计划
+            for (var item in gxdhzbjh) {
+                var arrItem = {
+                    'id': gxdhzbjh[item].id,
+                    'itemName': gxdhzbjh[item].itemName,
+                    'itemUnit': gxdhzbjh[item].itemUnit,
+                    'monthPlan': gxdhzbjh[item].monthPlan,
+                    'weekPlan': gxdhzbjh[item].weekPlan,
+                    'dayPlan': gxdhzbjh[item].dayPlan
+                };
+                gxdhzbjhArr.push(arrItem);
+            }
+            $('#td0').datagrid('loadData', bjh);
+            $('#td1').datagrid('loadData', cljh);
+            $('#td2').datagrid('loadData', zlzbjh);
+            $('#td3').datagrid('loadData', jszbjh);
+            $('#td4').datagrid('loadData', gxdhzbjh);
+        }
+
+
+
+        //班计划
+        $('#td0').datagrid({
+            fitColumns: true,
+            rownumbers: true,
+            collapsible: true,
+            singleSelect: true,
+            onClickRow: function (index) {
+                dataGridObj.startEditing(index, "#td0")
+            },
+            columns: [[
+                {field: 'id', title: 'id', hideColumn: 'id'},
+                {field: 'itemName', title: '项目', width: 100, align: 'center'},
+                {field: 'itemUnit', title: '单位', width: 100, align: 'center'},
+                {
+                    field: 'weekPlan',
+                    title: '周计划',
+                    width: 100,
+                    align: 'center',
+                    editor: {type: 'numberbox', options: {precision: 1}}
+                },
+                {field: 'dayPlan', title: '日计划', editor: 'numberbox', width: 100, align: 'center'},
+                {field: 'classPlan', title: '班计划', editor: 'numberbox', width: 150, align: 'center'}
+            ]],
+            onAfterEdit: function (rowIndex, rowData, changes) {
+                dataGridObj.pushRowData(rowData);
+                dataGridObj.setEditIndex("#td0", undefined);
+            },
+            toolbar: [{
+                text: '存1', iconCls: 'icon-save', handler: function () {
+                    //保存时结束当前编辑的行，自动触发onAfterEdit事件如果要与后台交互可将数据通过Ajax提交后台
+                    $('#td0').datagrid('endEdit', dataGridObj.getEditIndex("#td0"));
+                }
+            }]
+        });
+        //产量计划
+        $('#td1').datagrid({
+            fitColumns: true,
+            rownumbers: true,
+            collapsible: true,
+            singleSelect: true,
+            onClickRow: function (index) {
+                dataGridObj.startEditing(index, "#td1")
+            },
+            columns: [[
+                {field: 'id', title: 'id', hideColumn: 'id'},
+                {field: 'itemName', title: '项目', width: 100, align: 'center'},
+                {field: 'itemUnit', title: '单位', width: 100, align: 'center'},
+                {
+                    field: 'mouthPlan',
+                    title: '月计划',
+                    width: 100,
+                    align: 'center',
+                    editor: {type: 'numberbox', options: {precision: 1}}
+                },
+                {field: 'weekPlan', title: '周计划', editor: 'numberbox', width: 100, align: 'center'},
+                {field: 'dayPlan', title: '日计划', editor: 'numberbox', width: 150, align: 'center'},
+            ]],
+            onAfterEdit: function (rowIndex, rowData, changes) {
+                dataGridObj.pushRowData(rowData);
+                dataGridObj.setEditIndex("#td1", undefined);
+            },
+            toolbar: [{
+                text: '存2', iconCls: 'icon-save', handler: function () {
+                    //保存时结束当前编辑的行，自动触发onAfterEdit事件如果要与后台交互可将数据通过Ajax提交后台
+                    $('#td1').datagrid('endEdit', dataGridObj.getEditIndex("#td1"));
+                }
+            }]
+        });
+        //质量指标计划
+        $('#td2').datagrid({
+            fitColumns: true,
+            rownumbers: true,
+            collapsible: true,
+            singleSelect: true,
+            onClickRow: function (index) {
+                dataGridObj.startEditing(index, "#td2")
+            },
+            columns: [[
+                {field: 'id', title: 'id', hideColumn: 'id'},
+                {field: 'pname', title: '名称', width: 100, align: 'center'},
+                {field: 'itemName', title: '项目', width: 100, align: 'center'},
+                {field: 'itemUnit', title: '单位', width: 100, align: 'center'},
+                {
+                    field: 'weekPlan',
+                    title: '周计划',
+                    width: 100,
+                    align: 'center',
+                    editor: {type: 'numberbox', options: {precision: 1}}
+                },
+                {field: 'dayPlan', title: '日计划', editor: 'numberbox', width: 100, align: 'center'},
+                {field: 'classPlan', title: '班计划', editor: 'numberbox', width: 150, align: 'center'},
+            ]],
+            onAfterEdit: function (rowIndex, rowData, changes) {
+                dataGridObj.pushRowData(rowData);
+                dataGridObj.setEditIndex("#td2", undefined);
+                dataGridObj.mergeCells(loadedData,"#td2","pname");
+            },
+            onLoadSuccess: function(data){                      //data是默认的表格加载数据，包括rows和Total
+                loadedData = data;
+                dataGridObj.mergeCells(data,"#td2","pname");
+            },toolbar: [{
+                text: '存3', iconCls: 'icon-save', handler: function () {
+                    //保存时结束当前编辑的行，自动触发onAfterEdit事件如果要与后台交互可将数据通过Ajax提交后台
+                    $('#td2').datagrid('endEdit', dataGridObj.getEditIndex("#td2"));
+                }
+            }]
+        });
+        //技术指标计划
+        $('#td3').datagrid({
+            fitColumns: true,
+            rownumbers: true,
+            collapsible: true,
+            singleSelect: true,
+            onClickRow: function (index) {
+                dataGridObj.startEditing(index, "#td3")
+            },
+            columns: [[
+                {field: 'id', title: 'id', hideColumn: 'id'},
+                {field: 'itemName', title: '项目', width: 100, align: 'center'},
+                {field: 'itemUnit', title: '单位', width: 100, align: 'center'},
+                {
+                    field: 'mouthPlan',
+                    title: '月计划',
+                    width: 100,
+                    align: 'center',
+                    editor: {type: 'numberbox', options: {precision: 1}}
+                },
+                {field: 'weekPlan', title: '周计划', editor: 'numberbox', width: 100, align: 'center'},
+                {field: 'dayPlan', title: '日计划', editor: 'numberbox', width: 150, align: 'center'},
+            ]],
+            onAfterEdit: function (rowIndex, rowData, changes) {
+                dataGridObj.pushRowData(rowData);
+                dataGridObj.setEditIndex("#td3", undefined);
+            },toolbar: [{
+                text: '存4', iconCls: 'icon-save', handler: function () {
+                    //保存时结束当前编辑的行，自动触发onAfterEdit事件如果要与后台交互可将数据通过Ajax提交后台
+                    $('#td3').datagrid('endEdit', dataGridObj.getEditIndex("#td3"));
+                }
+            }]
+        });
+        //各项单耗指标计划
+        $('#td4').datagrid({
+            fitColumns: true,
+            rownumbers: true,
+            collapsible: true,
+            singleSelect: true,
+            onClickRow: function (index) {
+                dataGridObj.startEditing(index, "#td4")
+            },
+            columns: [[
+                {field: 'id', title: 'id', hideColumn: 'id'},
+                {field: 'itemName', title: '项目', width: 100, align: 'center'},
+                {field: 'itemUnit', title: '单位', width: 100, align: 'center'},
+                {
+                    field: 'mouthPlan',
+                    title: '月计划',
+                    width: 100,
+                    align: 'center',
+                    editor: {type: 'numberbox', options: {precision: 1}}
+                },
+                {field: 'weekPlan', title: '周计划', editor: 'numberbox', width: 100, align: 'center'},
+                {field: 'dayPlan', title: '日计划', editor: 'numberbox', width: 150, align: 'center'},
+            ]],
+            onAfterEdit: function (rowIndex, rowData, changes) {
+                dataGridObj.pushRowData(rowData);
+                dataGridObj.setEditIndex("#td4", undefined);
+            },toolbar: [{
+                text: '存5', iconCls: 'icon-save', handler: function () {
+                    //保存时结束当前编辑的行，自动触发onAfterEdit事件如果要与后台交互可将数据通过Ajax提交后台
+                    $('#td4').datagrid('endEdit', dataGridObj.getEditIndex("#td4"));
+                }
+            }]
+        });
+        $('#td0,#td1,#td2,#td3,#td4').datagrid('hideColumn', 'id');
+    }
+    //日期变化提醒
+    function selectChange() {
+        $('div.row').on('change','#apsWeek',function () {
+            getDataFn();
+            if($year!=='请选择'){
+                layerTimer()
+            }else{
+                layer.msg('请选择年、月周期');
+                $('div.row').on('change','#yMPicker',function () {
+                    layerTimer();
+                })
+            }
+            })
+    }
+    //按时间判断弹窗
+    function layerTimer() {
+        var data={
+            dpYear:$year,
+            dpMonth:$month,
+            dpWeek:$week
+        };
+        var da=JSON.stringify(data);
+        ajaxToServer('/api/aps/DayPlan/query',da,function (result) {
+            console.log(da,result);
+            if(result.rows.length>0){
+                layer.confirm('已有此周期数据，请重新选择时间周期！');
+            }
+        })
+    }
+
+    //暂存递交
+    function btnSubSave(status) {
+        getDataFn()
+        var editItems = dataGridObj.getSaveItemArr();
+//        /api/aps/DayPlan/query
+        if(editItems==''){
+            layer.alert('数据无变化，请改动数据后再进行保存')
+        }else{
+            var data={
+                "dpYear":$year,
+                "dpMonth":$month,
+                "dpWeek":$week,
+                "dayPlans":JSON.stringify(editItems),
+                "status":status,
+                "id":$('#id').val()
+            };
+            ajaxToServer1('/api/aps/DayPlan/save',data, function(result){
+                if (result.success) {
+                    layer.msg('提交成功');
+                    refreshActiveTab();
+                } else {
+                    layer.msg(result.message)
+                }
+            });
+        }
+    }
+
+
+</script>
+
+</html>

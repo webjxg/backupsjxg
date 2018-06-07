@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>磁贴管理</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="stylesheet" href="../../plugins/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../plugins/font-awesome/css/font-awesome.min.css">
+    <!--引入样式-->
+    <link rel="stylesheet" href="../../plugins/layer/theme/default/layer.css">
+    <link rel="stylesheet" href="../../plugins/ztree/css/metroStyle/metroStyle.css">
+    <!--样式-->
+    <link rel="stylesheet" href="../../css/comInnerTable.css">
+    <link rel="stylesheet" href="../../css/customDatagrid.css">
+    <link rel="stylesheet" href="../../css/customDataTable.css">
+    <link rel="stylesheet" href="../../css/aps.css">
+    <link rel="stylesheet" href="../../css/common.css">
+    <!--个人工作台样式-->
+    <link rel="stylesheet" href="../../css/privatelyOwned.css">
+</head>
+<body>
+<div class="wrapper wrapper-content bg-gray">
+    <button id="refresh-btn" hidden="hidden" onclick="window.location.reload()"></button>
+    <div class="ibox">
+        <!--标题 按钮-->
+        <div class="ibox-content">
+            <div style="border-bottom: 1px solid #eee; height: 45px;">
+                <h1 class="titName">注册磁贴</h1>
+                <div class="pull-right btn-box">
+                    <button hidden="hidden" class="fa-refresh" onclick="window.location.reload()"></button>
+                    <button class="btn btn-white btn-back" id="back-btn"><i class="fa fa-reply"></i> 返回
+                    </button>
+                </div>
+
+            </div>
+
+            <!--内容区-->
+            <div class="clearfix">
+                <div class="regHeader">
+                    <ul>
+                        <li><img class="choose" src="../../images/reg-title_r1_c1.png" alt=""><span class="choose">选择磁贴类型</span>
+                        </li>
+                        <li><img class="write" src="../../images/reg-title_r2_c2.png" alt=""><span
+                                class="write">填写磁贴类型</span></li>
+                        <li><img class="subSuccess" src="../../images/reg-title_r2_c3.png" alt=""><span
+                                class="subSuccess">递交成功</span></li>
+                    </ul>
+                </div>
+                <div class="regContent">
+                    <div class="rCchange">
+                        <div class="title">选择磁贴类型</div>
+                        <ul class="leftlist">
+                        </ul>
+                        <div class="footbtngo"><img src="../../images/reg-Mnlist-go.jpg" alt="img" title="下一步"></div>
+                    </div>
+                    <div class="rCsave">
+                        <div class="title">请填写磁贴信息</div>
+                        <!--递交信息-->
+                        <form id="inputForm" class="form-horizontal"
+                              action="/api/workbench/WorkbenchTileTemplate/ajaxSave" method="post">
+                            <!--————————————————————————————————表格区-->
+                            <table>
+                                <tbody class="formtbody">
+
+
+                                </tbody>
+                            </table>
+                            <input type="hidden" name="type" id="mMtype">
+                            <input type="hidden" name="templateId" id="mMid">
+                            <!--——————————————————————————————表格结束-->
+                        </form>
+
+                        <div class="footbtn">
+                            <img class="footbtn-back pull-left" src="../../images/reg-Mnlist-back.jpg" alt="img"
+                                 title="返回">
+                            <img class="footbtn-go pull-right" src="../../images/reg-Mnlist-go.jpg" alt="img"
+                                 title="保存">
+                        </div>
+
+                    </div>
+                    <div class="rCsubmit">
+                        <div class="title">提交结果</div>
+                        <div class="submitSucc">
+                            <img src="../../images/submit-Success.jpg" alt="">
+                            <span>提交成功</span>
+                        </div>
+                        <div class="subContent">
+                            <ul class="leftlist pull-left">
+                            </ul>
+                            <ul class="rightlist pull-left">
+
+                            </ul>
+                        </div>
+                        <div class="subfooterbtn">
+                            <input type="button" class="btn btn-levels regGoOn" value="继续注册">
+                            <input type="button" class="btn mManagement" value="磁贴管理">
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+</body>
+<script src="../../js/jquery-2.2.4.min.js"></script>
+<script src="../../plugins/bootstrap/js/bootstrap.min.js"></script>
+<!--附属插件-->
+<script src="../../plugins/layer/layer.js"></script>
+<script src="../../plugins/validate/jquery.validate.min.js"></script>
+<script src="../../plugins/validate/messages_zh.min.js"></script>
+<script src="../../plugins/webUpLoader/webuploader.js"></script>
+<!--自定义文件-->
+<script src="../../js/apiDomain.js"></script>
+<script src="../../js/customForm-aps.js"></script>
+<script src="../../js/public.js"></script>
+<script src="../../js/page.js"></script>
+
+<script>
+    $('document').ready(function () {
+        ajaxToServer(admin_domain + '/api/workbench/WorkbenchTileTemplate/tileTypeList', {}, function (result) {
+            if (result.success) {
+                renderleftlist(result);
+                btnclick();
+
+            } else {
+                layer.msg(result.message)
+            }
+        });
+        $('.rCsave').hide();
+        $('.rCsubmit').hide();
+    });
+
+    /*按钮操作*/
+    function btnclick() {
+//        /*选择左侧磁贴修改样式*/
+        var $list = $('.rCchange').find('li');
+
+        ifelesleft();
+        /*磁贴框下一步*/
+        $('.footbtngo').click(function () {
+            var iconbox = $list.find('.iconbox')
+            var type = $(iconbox).siblings('input.leftype').val();
+            var id = $(iconbox).siblings('input.leftid').val();
+            if (iconbox.length == 0) {
+                top.layer.confirm('请选择磁贴类型', {
+                    btn: '继续',
+                    icon: 0
+                });
+            } else {
+                $('.rCsave').show();
+                renderRContent(type, id);
+                rendertitle('.formtbody', 'img.write', 'span.write', '../../images/reg-title_r1_c2.png', '../../images/reg-title_r2_c2.png')
+
+            }
+
+        });
+        $(".btn-back").click(function () {
+            refreshActiveTab();
+        });
+        /*磁贴信息返回磁贴类型选择*/
+        $('.footbtn-back').click(function () {
+            top.layer.confirm(
+                '确定返回上一步？<br>当前编辑内容将会被清空', {
+                    btn: ['返回', '取消'],
+                    icon: 0
+                }, function () {
+                    $('.formtbody').find('tr').remove();
+                    $('.rCsave').hide();
+                    top.layer.closeAll()
+                    rendertitle('.formtbody', 'img.write', 'span.write', '../../images/reg-title_r1_c2.png', '../../images/reg-title_r2_c2.png')
+
+                }
+            )
+
+        });
+
+        /*填写信息后下一步*/
+        $('.footbtn-go').click(function () {
+            var $appval = $('#appCode option:selected').text();
+            $('#appName').val($appval);
+            doSubmit1();
+
+
+        })
+
+        /*继续注册*/
+        $('.regGoOn').click(function () {
+            refreshActiveTab()
+        })
+
+        /*管理磁贴*/
+
+        $('.mManagement').click(function () {
+            window.location.href = './magnetManageMent.html'
+        })
+
+    }
+    /*所有数据对应html*/
+    var dataMmhtml = {
+        /*编码-----*/
+        tileTemplateCode: '<tr><td class="width-10" ><label class="pull-right"><font color="red">*</font>编码:</label></td>' +
+        '<td class="width-80"><input id="tileTemplateCode" name="tileTemplateCode" type="text" required="required" value="" class="form-control valid1" > ' +
+        '<label id="tileTemplateCode-error" class="error" for="tileTemplateCode" style="display:none"></label></td></tr>',
+        /*应用-----*/
+        appCode: '<tr><td class="width-10"><label class="pull-right"><font color="red">*</font>应用:</label></td>' +
+        '<td class="width-80">' +
+        '<select class="form-control" name="appCode" id="appCode" required="required"></select>' + '<input type="hidden" name="appName" id="appName" value="">' +
+        '<input id="appCodeId"  name="appCodeId" type="hidden"  value="" class="form-control valid1" >' +
+        '<label id="appCode-error" class="error" for="appCode" style="display:none"></label></td></tr>',
+        /*标题-----*/
+        title: '<tr><td class="width-10"><label class="pull-right"><font color="red">*</font>标题:</label></td>' +
+        '<td class="width-80"><input id="title" name="title" type="text" required="required" value="" class="form-control valid1">' +
+        '<label id="title-error" class="error" for="title" style="display:none"></label></td></tr>',
+        /*数据源----*/
+        dataSource: '<tr><td class="width-10"><label class="pull-right"><font color="red">*</font>数据源:</label></td>' +
+        '<td class="width-80"><input id="dataSource" name="dataSource" type="text"  value="" class="form-control valid1">' +
+        '<label id="dataSource-error" class="error" for="title" style="display:none"></label></td></tr>',
+        /*磁贴大小--*/
+        size: '<tr><td class="width-10"><label class="pull-right">磁贴大小:</label></td>' +
+        '<td class="width-80">' +
+        '<select id="sizex" name="sizex"  class="form-control valid1"></select>' + '<i class="iconx">×</i>' +
+        '<select id="sizey" name="sizey"  class="form-control "></select>' +
+        '<label id="sizex-error" class="error" for="sizex" style="display:none"></label></td></tr>',
+        /*描述*/
+        des: '<tr><td class="width-10"><label class="pull-right">描述:</label></td>' +
+        '<td class="width-80">' +
+        '<textarea name="des" rows="4" id="des" class="form-control valid1"></textarea></td></tr>',
+        /*字段配置*/
+        displayName: '<tr><td class="width-10"><label class="pull-right"><font color="red">*</font>字段配置:</label></td>' +
+        '<td class="width-80"><input id="displayName" name="displayName" type="text" required="required" value="" class="form-control valid1">' +
+        '<label id="displayName-error" class="error" for="displayName" style="display:none"></label></td></tr>',
+        /*间隔时间*/
+        timeInterval: '<tr><td class="width-10"><label class="pull-right">刷新频率:</label></td>' +
+        '<td class="width-80"><input style="width:64%" id="timeInterval" name="timeInterval" type="number"  value="0" class="form-control valid1">（秒）' +
+        '<label id="timeInterval-error" class="error" for="timeInterval" style="display:none"></label></td></tr>',
+        /*列名*/
+        columnName: '<tr><td class="width-10"><label class="pull-right"><font color="red">*</font>列名:</label></td>' +
+        '<td class="width-80"><input id="columnName" name="columnName" type="text" required="required" value="" class="form-control valid1">' +
+        '<label id="columnName-error" class="error" for="columnName" style="display:none"></label></td></tr>',
+        /*每页条数*/
+        pageSize: '<tr><td class="width-10"><label class="pull-right"><font color="red">*</font>每页条数:</label></td>' +
+        '<td class="width-80"><input id="pageSize" name="pageSize" type="text" required="required" value="" class="form-control valid1">' +
+        '<label id="pageSize-error" class="error" for="pageSize" style="display:none"></label></td></tr>',
+        /*图标*/
+        icon: '<tr><td class="width-10"><label class="pull-right">图标</label></td><td class="width-80 "> <input id="nameImage" name="icon" maxlength="255" class="input-xlarge valid1" type="hidden" value=""/><ol id="nameImagePreview"></ol><a href="javascript:" id="filePicker" >+</a><label id="nameImage-error" class="error" for="nameImage" style="display:none"></label></td></tr>',
+        /*打开方式*/
+        targer: '<tr><td class="width-10"><label class="pull-right"><font color="red">*</font>打开方式:</label></td>' +
+        '<td class="width-80"><select class="form-control" required="required" name="targer" id="targer"><option value="">请选择</option><option value="0">Tab选项卡</option><option value="1">页签</option></select>' +
+        '<input id="targerId" name="targerId" type="hidden" required="required" value="" class="form-control valid1"  >'
+        +
+        '<label id="targer-error" class="error" for="targer" style="display:none"></label></td></tr>',
+        /*文本内容*/
+        content: '<tr><td class="width-10"><label class="pull-right"><font color="red">*</font>文本内容:</label></td>' +
+        '<td class="width-80"><textarea name="content" rows="4" id="content" required="required" class="form-control valid1"></textarea>' +
+        '<label id="content-error" class="error" for="content" style="display:none"></label></td></tr>',
+
+        /*——————背景颜色选择————————*/
+        bgColor: '<tr class="bgColor"><td class="width-10"><label class="pull-right"><font color="red">*</font>背景颜色:</label></td>' +
+        '<td class="width-80"><input type="hidden" id="bgColor" name="bgColor" >' + '<li class="dropdown color-picker open">' +
+        '<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="true">' +
+        '<span><i class="fa fa-circle"></i></span>' +
+        '</a>' +
+        '<ul class="dropdown-menu pull-right animated fadeIn" role="menu">' +
+        '<li class="padder-h-xs">' +
+        '	<table class="table color-swatches-table text-center no-m-b">' +
+        '		<tbody>' +
+        '           <tr>' +
+        '				<td class="text-center colorr">' +
+        '				    <a href="#" data-theme="blue" class="theme-picker">' +
+        '					<i class="fa fa-circle blue-base"></i>' +
+        '				    </a>' +
+        '				</td>' +
+        '				<td class="text-center colorr">' +
+        '					<a href="#" data-theme="green" class="theme-picker">' +
+        '						<i class="fa fa-circle green-base"></i>'+
+        '					</a>'+
+        '				</td>' +
+        '				<td class="text-center colorr">' +
+        '					<a href="#" data-theme="red" class="theme-picker">' +
+        '						<i class="fa fa-circle red-base"></i>' +
+        '					</a>' +
+        '				</td>' +
+        '			</tr>' +
+        '			<tr>' +
+        '			   <td class="text-center colorr">' +
+        '		   	   	<a href="#" data-theme="purple" class="theme-picker">' +
+        '			   		<i class="fa fa-circle purple-base"></i>' +
+        '			   	</a>' +
+        '			   </td>' +
+        '			   <td class="text-center color">' +
+        '			   <a href="#" data-theme="midnight-blue" class="theme-picker">' +
+        '			   	<i class="fa fa-circle midnight-blue-base"></i>' +
+        '		   	   </a>' +
+        '			   </td>' +
+        '				<td class="text-center colorr">' +
+        '					<a href="#" data-theme="lynch" class="theme-picker">' +
+        '						<i class="fa fa-circle lynch-base"></i>' +
+        '					</a>' +
+        '				</td>' +
+        '			</tr>' +
+        '       </tbody></table>' +
+        '</li>' +
+        '</ul>' +
+        '</li>' +
+        '</td></tr>'
+
+    };
+    /*渲染左侧磁贴列表*/
+    function renderleftlist(result) {
+        console.log(result);
+        var $tileTypeList = result.tileTypeList;
+        var imgdata = [
+            "../../images/shortcut.jpg", /* shortcut1:*/
+            "../../images/text.jpg", /* text:     */
+            "../../images/number.jpg", /* number1:  */
+            "../../images/line.jpg", /* line1:    */
+            "../../images/gauge.jpg", /* gauge1:   */
+            "../../images/pie.jpg", /* pie1:     */
+            "../../images/bar.jpg", /* bar1:     */
+            "../../images/list.jpg", /* list1:    */
+            "../../images/panel.jpg", /* panel:    */
+            "../../images/card.jpg", /* card:     */
+            "../../images/card.jpg"        /* image:    */
+        ];
+        $($tileTypeList).each(function (i) {
+            if ($tileTypeList[i].type == 5) {
+                var leftlistMm = '';
+            } else {
+                var leftlistMm = '<li>' +
+                    '<img src="' + imgdata[i] + '" alt="">' +
+                    '<span>' + $tileTypeList[i].templateName + '</span>' +
+                    '<input type="hidden" class="leftype" value="' + $tileTypeList[i].type + '">' +
+                    '<input type="hidden" class="leftid" value="' + $tileTypeList[i].id + '">' +
+                    '</li>';
+            }
+            $('.rCchange').find('.leftlist').append(leftlistMm);
+        })
+    }
+
+    /*渲染右侧input*/
+    function renderRContent(data, id) {
+        var opXcommon = '<option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option>';
+        var opYcommon = '<option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option>';
+
+
+        if (data == 1) {
+            html = dataMmhtml.tileTemplateCode +
+                dataMmhtml.appCode +
+                dataMmhtml.title +
+                dataMmhtml.dataSource +
+                dataMmhtml.size +
+                dataMmhtml.icon +
+                dataMmhtml.targer +
+                dataMmhtml.des;
+            $('.formtbody').html(html);
+            var optionx = '<option value="1">1</option>';
+            var optiony = '<option value="1">1</option>';
+            $('#sizex').append(optionx);
+            $('#sizey').append(optiony);
+
+        } else if (data == 2) {
+            html = dataMmhtml.tileTemplateCode +
+                dataMmhtml.appCode +
+                dataMmhtml.title +
+                dataMmhtml.dataSource +
+                dataMmhtml.size +
+                dataMmhtml.icon + dataMmhtml.bgColor +
+                dataMmhtml.timeInterval +
+                dataMmhtml.des;
+            $('.formtbody').html(html);
+            var optionx = '<option value="2">2</option>';
+            var optiony = '<option value="1">1</option>';
+            $('#sizex').append(optionx);
+            $('#sizey').append(optiony);
+        } else if (data == 3) {
+            html = dataMmhtml.tileTemplateCode +
+                dataMmhtml.appCode +
+                dataMmhtml.title +
+                dataMmhtml.dataSource +
+                dataMmhtml.size +
+                dataMmhtml.timeInterval +
+                dataMmhtml.des;
+            $('.formtbody').html(html);
+            $('#sizex').append(opXcommon);
+            $('#sizey').append(opYcommon);
+        } else if (data == 4) {
+            html = dataMmhtml.tileTemplateCode +
+                dataMmhtml.appCode +
+                dataMmhtml.title +
+                dataMmhtml.dataSource +
+                dataMmhtml.size +
+                dataMmhtml.columnName +
+                dataMmhtml.pageSize +
+                dataMmhtml.timeInterval +
+                dataMmhtml.des;
+            $('.formtbody').html(html);
+            $('#sizex').append(opXcommon);
+            $('#sizey').append(opYcommon);
+            /*} else if(data==5){
+             html=dataMmhtml.tileTemplateCode+
+             dataMmhtml.appCode+
+             dataMmhtml.title+
+             dataMmhtml.dataSource+
+             dataMmhtml.displayName+
+             dataMmhtml.size+
+             dataMmhtml.des;
+             $('.formtbody').html(html);
+             $('#sizex').append(opXcommon);
+             $('#sizey').append(opYcommon);*/
+        } else if (data == 6) {
+            html = dataMmhtml.tileTemplateCode +
+                dataMmhtml.appCode +
+                dataMmhtml.title +
+                dataMmhtml.content +
+                dataMmhtml.size +
+                dataMmhtml.des;
+            $('.formtbody').html(html);
+            $('#sizex').append(opXcommon);
+            $('#sizey').append(opYcommon);
+        } else if (data == 7) {
+            html = dataMmhtml.tileTemplateCode +
+                dataMmhtml.appCode +
+                dataMmhtml.title +
+                dataMmhtml.dataSource +
+                dataMmhtml.size +
+                dataMmhtml.des;
+            $('.formtbody').html(html);
+            $('#sizex').append(opXcommon);
+            $('#sizey').append(opYcommon);
+        }
+        $('#mMtype').val(data);//每次点击左侧磁贴 这个参数更新
+        $('#mMid').val(id);
+        ajaxToServer(admin_domain + '/api/workbench/WorkbenchTileTemplate/selectAppName', {}, function (result) {
+            renderSelect(result)
+        })
+
+        /*上传头像*/
+        if ($('#nameImagePreview')) {
+            initWebuploader('/img/sys/SysUpload/upimg?imgPath=img',
+                '#filePicker',
+                '#nameImagePreview',
+                admin_domain + '/img/sys/SysUpload/showImg/' + id
+            );
+        }
+    }
+
+    /*渲染递交内容的标题*/
+    function rendertitle(tbody, writeimg, span, src1, src2) {
+        var trList = $(tbody).find('tr');
+        if (trList.length > 0) {
+            $(writeimg).attr('src', src1);
+            $(span).css({'color': '#1ab394'}).parent('li').css({'border-bottom': '1px solid #1ba394'})
+        } else {
+            $(writeimg).attr('src', src2);
+            $(span).css({'color': 'black'}).parent('li').css({'border-bottom': '1px solid #e7e7e7'})
+        }
+
+    }
+
+    /*渲染应用下拉内容*/
+    function renderSelect(data) {
+        var appList = data.appList;
+        $(appList).each(function () {
+            var option = '<option value="' + this.appCode + '">' + this.appName + '</option>';
+            $('#appCode').append(option);
+        })
+
+    }
+
+    /*渲染右侧成功内容*/
+    function renderRight() {
+        $('#targerId').val($('#targer option:selected').text());
+        $('#appCodeId').val($('#appCode option:selected').text());
+        var listLi = $('.iconbox').parent('li').clone();
+        $('.subContent').find('ul.leftlist').html(listLi);
+        var $trListtext = $('.formtbody').find('label.pull-right').clone()
+        $($trListtext).find('font').remove();
+        $('#nameImage').val($('.thumbnail>img').attr('src'))
+
+        $($trListtext).each(function (i, item) {
+            var spaninner = $('.valid1').eq(i).val();
+            console.log($('.valid1').eq(i));
+            var $successList = '<li><div class="leftboxdiv">' + $(this).text() + '</div><span>' + spaninner + '</span></li>';
+            $('.subContent').find('ul.rightlist').append($successList);
+        })
+        var sizey = $('#sizey').val(), sizespan = '×<span>' + sizey + '</span>'
+        $('.subContent').find('div:contains("磁贴大小")').parent('li').append(sizespan)
+
+    }
+    /*判断左侧已选择后不能再选磁贴*/
+    function ifelesleft() {
+        var $list = $('.rCchange').find('li')
+        var iconbox = $list.find('.iconbox')
+        var icon = '<div class="iconbox"><i class="fa fa-check-circle"></i></div>';
+        $list.each(function () {
+            $(this).click(function () {
+                var trList = $('.formtbody').find('tr');
+                if (trList.length !== 0) {
+                    top.layer.confirm('请点击返回按钮后，再重新选则磁贴', {
+                        btn: '继续',
+                        icon: 0
+                    });
+                } else {
+                    var type = $(iconbox).siblings('input').val();
+
+                    $(this).append(icon).css('border-color', '#1ab394').siblings('li').css('border-color', '#e7e7e7').find('div.iconbox').remove();
+                }
+            });
+        })
+
+    }
+
+    /*8080端口提交数据*/
+    function doSubmit1() {
+        var formId = getSubmitFormId();
+        var formObj = $(formId);
+        var url = formObj.attr('action');
+        var validateFlag = formObj.validate({
+            submitHandler: function (form) {
+                var formdata = JSON.stringify(formObj.serializeJSON());
+                layer.msg('正在提交，请稍等...', {time: 1000});
+                ajaxToServer(admin_domain + url, formdata, function (result) {
+                    console.log(formdata, result);
+                    if (result.success == true) {
+                        layer.msg('已成功提交', {time: 1000});
+                        $('.rCsubmit').show()
+                        renderRight(result)
+                        $('.footbtngo,.footbtn-back,.footbtn-go').hide()
+                        $('span.subSuccess').css({'color': '#1ab394'}).parent('li').css({'border-bottom': '1px solid #1ba394'})
+                        $('img.subSuccess').attr('src', '../../images/reg-title_r1_c3.png')
+                    } else {
+                        layerAlert(result.message)
+                    }
+                });
+            },
+            errorContainer: "#messageBox",
+            errorPlacement: function (error, element) {
+                $("#messageBox").text("输入有误，请先更正。");
+                if (element.is(":checkbox") || element.is(":radio") || element.parent().is(".input-append")) {
+                    error.appendTo(element.parent().parent());
+                } else {
+                    error.insertAfter(element);
+                }
+            }
+        }).form;
+        if (validateFlag) {
+            formObj.submit();
+        }
+    }
+
+    /*提交时使用*/
+    function getSubmitFormId() {
+        return "#inputForm";
+    };
+</script>
+
+
+</html>

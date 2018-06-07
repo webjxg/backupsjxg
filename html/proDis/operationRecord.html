@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>交接班记录</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+</head>
+<!--插件样式-->
+<link rel="stylesheet" href="../../plugins/bootstrap/css/bootstrap.min.css">
+<link rel="stylesheet" href="../../plugins/font-awesome/css/font-awesome.min.css">
+<link rel="stylesheet" href="../../plugins/datetimepicker/css/bootstrap-datetimepicker.css">
+<link rel="stylesheet" href="../../plugins/datatables/css/jquery.dataTables.min.css">
+<link rel="stylesheet" href="../../plugins/icheck/skins/square/green.css">
+<link rel="stylesheet" href="../../plugins/datatables/css/mydatatable.css">
+<!--引入样式-->
+<link rel="stylesheet" href="../../css/common.css">
+<link rel="stylesheet" href="../../css/customDataTable.css">
+<link rel="stylesheet" href="../../css/aps.css">
+<link rel="stylesheet" href="../../css/proDis.css">
+<body id="menu-content">
+<div class="wrapper wrapper-content">
+    <div class="ibox">
+        <div class="ibox-title">
+            <h1 class="titName">交接班记录</h1>
+            <hr/>
+        </div>
+        <div class="ibox-content">
+            <div class="row">
+                <div class="col-sm-12">
+                    <div class="pull-left">
+                        <label>
+                            <div class="execution time">
+                                <span>执行时间:</span>
+                                <input type="text" value="" id="startDateParam" class="time-input datePicker" placeholder="开始时间"><i class="fa fa-calendar"></i>
+                                &nbsp;&nbsp;—
+                                <input type="text" value="" id="endDateParam" class="time-input datePicker" placeholder="结束时间"><i class="fa fa-calendar"></i>
+                            </div>
+                        </label>
+                        <ul class="apsType-linkage">
+                            <li class="year">
+                                工序:
+                                <select name="" id="process">
+                                    <option value="">-- 全部 --</option>
+                                </select>
+                            </li>
+                            <li>
+                                班次:
+                                <select name="" id="time">
+                                    <option value="">-- 全部 --</option>
+                                </select>
+                            </li>
+                            <li >
+                                班组:
+                                <select name="" id="team">
+                                    <option value="">-- 全部 --</option>
+                                </select>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="pull-right">
+                        <label>
+                            <button class="btn btn-search  bg-ffa82d btn-white" id="search-btn" type="button">
+                                <i class="fa fa-search"></i>
+                                查询</button>
+                        </label>
+                    </div>
+
+                </div>
+            </div>
+
+            <div id="treeTable_wrapper" class="dataTable_wrapper form-inline dt-bootstrap no-footer">
+                <div class="row">
+                    <div class="col-sm-12">
+                        <!--表格区-->
+                        <table id="treeTable" class="table table-striped table-bordered table-hover table-condensed dataTables-example dataTable tree_table">
+                            <thead>
+                            <tr>
+                                <th>工序</th>
+                                <th>班次</th>
+                                <th>班组</th>
+                                <th>交班人</th>
+                                <th>接班人</th>
+                                <th>交班日期</th>
+                                <th>接班日期</th>
+                            </tr>
+                            </thead>
+                            <tbody id="treeTableBody">
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+            </div>
+            <!--分页显示-->
+            <div class="clearfix pagination-box">
+                <div class="page-info pull-left"></div>
+                <div id="pagination" class="pagination-roll pull-right"></div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<!--核心插件-->
+<script src="../../js/jquery-2.2.4.min.js"></script>
+<script src="../../plugins/bootstrap/js/bootstrap.min.js"></script>
+<!--附属插件-->
+<script src="../../plugins/layer/layer.js"></script>
+<script src="../../plugins/icheck/icheck.min.js"></script>
+<script src="../../plugins/ztree/js/jquery.ztree.core.js"></script>
+<script src="../../plugins/datatables/js/jquery.dataTables.min.js"></script>
+<script src="../../plugins/datatables/js/dataTables.bootstrap.js"></script>
+<script src="../../plugins/bootStrapPager/js/extendPagination.js"></script>
+<script src="../../plugins/datetimepicker/js/bootstrap-datetimepicker.js"></script>
+
+<!--自定义文件-->
+<script src="../../js/apiDomain.js"></script>
+<script src="../../js/customForm-aps.js"></script>
+<script src="../../js/page.js"></script>
+<script>
+    $(function () {
+        //获取班次数据
+        loadShift();
+        //获取班组数据
+        loadGroups();
+        //获取工序数据
+        loadProcess();
+        window.pageLoad = function () {
+            var data = {
+                process:$("#process option:selected").text()=="-- 全部 --"?"":$("#process option:selected").text(),//工序
+                groupName:$("#team option:selected").text()=="-- 全部 --"?"":$("#team option:selected").text(), //班组
+                shift:{                                        //班次
+                    id:$("#time option:selected").text()=="-- 全部 --"?"":$("#time option:selected").val()
+                },
+                startOverDate:$("#startDateParam").val(),   //开始时间
+                endOverDate:$("#endDateParam").val(),//结束时间
+                bigKind:"CZ"
+            };
+            Page.init("/api/ctrl/ShiftMain/page",data,true,function (tableDta) {
+                createTable(tableDta)
+            })
+        }
+        pageLoad();
+    })
+
+    //获取年月日日期
+    //获取年月日日期
+    $("#startDateParam").datetimepicker({
+        format: "yyyy-mm-dd",   //保留到日
+        language:'cn',          //中文显示
+        minView: "month",      //月视图
+        todayBtn: true,       //切换到今天
+        clearBtn: true,       //清除全部
+        autoclose:true  //选择时间后自动隐藏
+    });
+    $("#endDateParam").datetimepicker({
+        format: "yyyy-mm-dd",   //保留到日
+        language:'cn',          //中文显示
+        minView: "month",      //月视图
+        todayBtn: true,       //切换到今天
+        clearBtn: true,       //清除全部
+        autoclose:true  //选择时间后自动隐藏
+    });
+
+    //获取工序数据
+//    function loadProcess(){
+//        var url_ = 'http://114.115.165.184:8080/admin-api/api/sys/SysOrg/selectGx/4';
+//        ajaxToServer(url_, {}, function(result){
+//            if(result.success){
+//                var rows = result.rows;
+//                // appendOptionsValue($('#process'), rows, 'name', 'name');
+//                appendOptionsValue($('#process'), rows, 'code', 'name'); //工序值取编码，update by qiyh 2018-05-24
+//            }else{
+//                layer.msg(result.message);
+//            }
+//        });
+//    }
+    //获取工序数据
+    function loadProcess(){
+        id = getCookie("loginUserid")
+        ajaxToServer(admin_domain+'/api/sys/SysAuthProperty/getAttributeValue/'+id+'/GXJQ/syswp',{},function (result) {
+            if(result.success){
+                var rows = result.rows;
+                 appendOptionsValue($('#process'), rows, 'name', 'name');
+                //appendOptionsValue($('#process'), rows, 'code', 'name');//工序的值存编码 update by qiyh 2018-05-24
+            }else{
+                layer.msg(result.message);
+            }
+        });
+
+    }
+
+    //获取班次数据
+    function loadShift(){
+        var url_ = '/api/ctrl/Shift/list';
+        ajaxToServer(url_, {}, function(result){
+            if(result.success){
+                var rows = result.rows;
+                // resetSelect($('#time'));
+                var options = new Array();
+                $(rows).each(function(i,o){
+                    var label = o['name']+'('+o['startTime']+'-'+o['endTime']+')';
+                    options.push({'value':o['id'], 'label':label});
+                });
+                appendOptions($('#time'), options);
+            }else{
+                layer.msg(result.message);
+            }
+        });
+    }
+    //获取班组数据
+    function loadGroups(){
+        var url_ = '/api/aps/Groups/list';
+        ajaxToServer(url_, {}, function(result){
+            if(result.success){
+                var rows = result.rows;
+                appendOptionsValue($('#team'), rows, 'id', 'name');
+            }else{
+                layer.msg(result.message);
+            }
+        });
+    }
+    //创建table
+    function createTable(data) {
+        console.log(data);
+        //  datatables使用ajax
+        $('#treeTable').dataTable({
+            "bPaginate": false,
+            "bAutoWidth": false,
+            "bDestroy": true,
+            "paging": false,
+            "bProcessing": true,
+            "searching": false, //禁用aa原生搜索
+            "info": false,  //底部文字
+            "order": [],
+            "ordering": false,
+            "oLanguage": lang,
+            "data": data,
+            //定义列 宽度 以及在json中的列名
+            "aoColumns": [
+                {"data": "process", 'sClass': " alignCenter authName","width":"20%"},
+                {"data": "shift.name", 'sClass': "alignCenter ","width":"15%"},
+                {"data": "groupName", 'sClass': "alignCenter","width":"15%"},
+                {"data": "overUserName", 'sClass': "alignCenter","width":"10%"},
+                {"data": "reciveUserName", 'sClass': "alignCenter","width":"10%"},
+                {"data": "overDate", 'sClass': "alignCenter","width":"15%"},
+                {"data": "reciveDate", 'sClass': "alignCenter","width":"15%"}
+            ]
+        });
+    }
+    $('i').click(function(){
+        return false
+    })
+</script>
+</html>

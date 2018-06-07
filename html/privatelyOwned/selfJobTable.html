@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <title>首页</title>
+    <!--插件样式-->
+    <link rel="stylesheet" href="../../plugins/metismenu-master/metisMenu.css">
+    <link rel="stylesheet" href="../../plugins/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../../plugins/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../css/customDataTable.css">
+    <link rel="stylesheet" href="../../plugins/datetimepicker/css/bootstrap-datetimepicker.css">
+
+    <!--自定义样式-->
+    <link rel="stylesheet" href="../../css/common.css">
+    <link rel="stylesheet" href="../../css/home.css">
+    <style>
+        .navtopstyle {
+            width: 40px;
+            height: 40px;
+            font-size: 12px;
+            color: rgb(255, 255, 255);
+            background: rgb(83, 100, 121);
+            text-align: center;
+            line-height: 20px;
+            z-index: 999;
+            bottom: 20px;
+            right: 30px;
+            position: fixed;
+        }
+        .navtopstyle>a>i {
+            display: block;
+            width: 100%;
+            height: 100%;
+            background: url(../../images/self-Edit.png) no-repeat;
+            background-size: 100% 100%;
+        }
+        .sumenlist {
+            width: 40px;
+            z-index: 999;
+            bottom: 20px;
+            right: 30px;
+            position: fixed;
+        }
+        .sumenlist>a>i {
+            display: block;
+            width: 40px;
+            height: 40px;
+        }
+        .succesesed_ok>i {
+            margin: 0px 0px 10px 0px;
+            background: url(../../images/self-Submit.png) no-repeat;
+            background-size: 100% 100%;
+        }
+        .appendtext>i {
+            background: url(../../images/self-Choose.png) no-repeat;
+            background-size: 100% 100%;
+        }
+        #rightfloatbox{
+            width:550px;
+            height:500px;
+            background-color:white;
+            border: 1px solid #d7d7d7;
+            position: fixed;
+            right: 0;
+            top:0;
+            z-index: 2;
+            box-sizing: border-box;
+            padding: 25px;
+
+        }
+        /*圆*/
+        .hide-btn{
+            width: 50px;
+            height: 50px;
+            position: fixed;
+            top: 215px;
+            right:-25px;
+            border-radius: 50%;
+            background-color:white;
+            border: 1px solid #d7d7d7;
+            z-index: 1;
+        }
+        .hide-btn>i,.hide-btn-move>i{
+            position: absolute;
+            top: 10px;
+            left:11px;
+            font-size: 25px;
+            color: #1ab394;
+            font-weight: 600;
+
+        }
+        /*方块*/
+        .hide-btn2{
+            width: 50px;
+            height: 20px;
+            position: fixed;
+            top: 215px;
+            right:-50px;
+            background-color:white;
+            z-index: 3;
+        }
+        .hide-btn-move{
+            width: 50px;
+            height: 50px;
+            position: fixed;
+            top: 215px;
+            right:525px;
+            border-radius: 50%;
+            background-color:white;
+            border: 1px solid #d7d7d7;
+            z-index: 1;
+        }
+        .hide-btn2-move{
+            width: 20px;
+            height: 50px;
+            position: fixed;
+            top: 215px;
+            right:530px;
+            background-color:white;
+            z-index: 3;
+        }
+        /*磁贴商店*/
+        h1{
+            height: 30px;
+            margin-bottom: 10px;
+        }
+        h1>i{
+            color: #1ab394;
+        }
+        .searchshop>select{
+            width: 30%;
+            margin-right: 14px;
+
+        }
+        .searchshop>select,.searchshop>input{
+            float: left;
+            border: 1px solid #e7e7e7;
+            border-radius: 2px;
+        }
+        .searchshop>input{
+            width: 27%;
+            border-right:none;
+        }
+        .searchshop>.btn{
+            height:34px;
+            width: 34px;
+            margin: 0;
+            border: 1px solid #e7e7e7;
+            border-left:none;
+        }
+        .searchshop>.btn>i{
+            font-size: 17px;
+        }
+        .form-control:focus{
+            border-color: #e7e7e7 !important;
+        }
+        /*磁贴列表*/
+        .mMShopBox{
+            margin-top: 20px;
+            width: 100%;
+            height:80%;
+        }
+        .mMShopUl{
+            width:100%;
+            height:100%;
+        }
+        .mMShopUl>li{
+            width: 14%;
+            height: 75px;
+            float: left;
+            margin: 5px;
+            border: 1px solid #e7e7e7;
+            border-radius: 5px;
+        }
+        .mMShopUl>li>img{
+            display: block;
+            margin: 5px auto;
+            width: 40px;
+            height: 40px;
+            margin-bottom: 5px;
+        }
+        .mMShopUl>li>span{
+            display: block;
+            width: 100%;
+            text-align: center;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            overflow: hidden;
+        }
+    </style>
+
+
+
+</head>
+<body>
+<div class="wrapper pagh-30 bg-f3">
+    <h1 class="tit">我的工作台</h1>
+    <!--控制按钮-->
+    <div id="Editbtn"  class="navtopstyle">
+        <a href="javascript:void(0);" class="sjkhs" title="点击编辑">
+            <i></i>
+        </a>
+    </div>
+    <div class="sumenlist">
+        <a href="javascript:void(0);" class="succesesed_ok" title="点击保存"><i></i></a>
+        <a href="javascript:void(0);" class="appendtext" data-p="off" title="点开选项"><i></i></a>
+    </div>
+    <!--右侧漂浮框-->
+    <div id="rightfloatbox" class=" rightfloatbox">
+        <h1 class="tit"><i class="fa fa-shopping-cart">&nbsp&nbsp</i>磁贴商店</h1>
+        <div class="searchshop">
+            <select name="appName" id="appName" class="form-control">
+                <option value="">全部业务</option>
+            </select>
+            <select name="templateName" id="templateName" class="form-control">
+            </select>
+            <input type="text" name="title" id="title" class="form-control">
+            <div class="search-btn btn"><i class="fa fa-search"></i></div>
+        </div>
+        <div class="mMShopBox">
+            <ul class="mMShopUl">
+
+            </ul>
+        </div>
+    </div>
+
+
+
+
+
+    <!--调用图标类型-->
+    <!--<div id="test" style="width: 600px;height: 360px"></div>-->
+    <!--<div id="test1" style="width: 600px;height: 360px"></div>-->
+    <!--<div id="test2" style="width: 600px;height: 360px"></div>-->
+    <!--<div id="test3" style="width: 600px;height: 360px"></div>-->
+    <!--<div id="test4" style="width: 600px;height: 360px"></div>-->
+
+
+
+    <div class="box">
+
+    </div>
+
+    <!--操作隐藏按钮-->
+    <div class="hide-btn"><i class="fa fa-angle-left"></i></div>
+    <div class="hide-btn2"></div>
+</div>
+
+
+<!--核心插件-->
+<script src="../../js/jquery-2.2.4.min.js"></script>
+<!--附属插件-->
+<script src="../../plugins/bootstrap/js/bootstrap.min.js"></script>
+<script src="../../plugins/echarts/js/echarts.js"></script>
+<script src="../../plugins/datetimepicker/js/bootstrap-datetimepicker.js"></script>
+<script src="../../plugins/datatables/js/jquery.dataTables.min.js"></script>
+<script src="../../plugins/datatables/js/dataTables.bootstrap.js"></script>
+<script src="../../plugins/layer/layer.js"></script>
+<script src="../../js/page.js"></script>
+<script src="../../plugins/bootStrapPager/js/extendPagination.js"></script>
+<script src="../../js/theme.js"></script>
+<script src="../../js/workTableSelf.js"></script>
+<script src="../../plugins/jsrander/jsrender.min.js"></script>
+
+
+<!--自定义文件-->
+<script src="../../js/common.js"></script>
+<script src="../../js/apiDomain.js"></script>
+<script src="../../js/customForm.js"></script>
+
+
+
+
+<!--磁贴商店模板-->
+<script id="tile_store_Tmpl" type="text/x-jsrender">
+        {{for apps}}
+        {{if total > "0"}}
+        <div class="mainCon">
+            <span class="title">{{:appName}}<span id="tiles_total_{{:appCode}}">({{:total}})</span></span>
+            <ul class="totleCon" id="store_group_{{:appCode}}">
+                {{for tiles}}
+                <li id="breviary_{{:tileTemplateCode}}" class="tile_li">
+                    <span class="headCon" title="{{:title}}">{{:title}}({{:sizex}}×{{:sizey}})</span>
+                    <p class="midCon" id="store_tile_{{:tileTemplateId}}">
+                        <img style="max-height:85px;max-width:110px" data-code="{{:code}}" src="{{:thumbnail}}">
+                    </p>
+                    <span class="bottomCon"><img src="Content/img/addB.png" /></span>
+                </li>
+                {{/for}}
+            </ul>
+        </div>
+        {{/if}}
+        {{/for}}
+    </script>
+
+<script id="tile_store_panel_tmpl" type="text/x-jsrender">
+        <li id="breviary_panel_{{:panelCode}}" class="tile_li">
+            <span class="headCon" title="{{:title}}">{{:title}}({{:sizex}}×{{:sizey}})</span>
+            <p class="midCon" id="store_tile_panel_{{:panelId}}">
+                <img style="max-height:85px;max-width:110px;backgroundcolor:{{:bgc}}" data-code="{{:panelCode}}" src="Content/img/panelshow.png">
+            </p>
+            <span class="bottomCon"><img src="Content/img/addB.png" /></span>
+        </li>
+    </script>
+
+<!--快捷入口类磁贴-->
+<script id="tmpl1" type="text/x-jsrender">
+        <div id="box-shortcut" class="{{:className}}" style="{{:sizeStyle}}">
+            <img id="{{:tileId}}" data-needid="tile-{{:tileTemplateId}}" data-type="shortcut" src="Content/img/close.png" class="ingsht">
+            {{if status == -1}}
+            <div class="disabled-tile-mask" title="权限被取消，请联系管理员"><div>无权限</div></div>
+        	{{/if}}
+            <a href="javascript:void(0);" data-url="{{:dataSource}}" data-target="{{:target}}" data-id="{{:tileTemplateCode}}" data-title="{{:title}}">
+                <span class="short_span">
+                    <img src="{{:icon}}">
+                    <p title="{{:title}}">{{:title}}</p>
+                </span>
+            </a>
+        </div>
+    </script>
+
+<!--数字类磁贴-->
+<script id="tmpl2" type="text/x-jsrender">
+        <div id="box-number" class="{{:className}} box-number" style="{{:sizeStyle}}">
+            <img id="{{:tileId}}" data-needid="tile-{{:tileTemplateId}}" data-type="number" src="Content/img/close.png" class="ingsht">
+            {{if status == -1}}
+            <div class="disabled-tile-mask" title="权限被取消，请联系管理员"><div>无权限</div></div>
+        	{{/if}}
+            <div id="{{:tileTemplateCode}}" data-number="{{:tileTemplateCode}}" class="comant">
+                <span class="information-title" title="{{:title}}">{{:title}}</span>
+                <p class="information" style="font-size: 26px;" id="num{{:tileTemplateCode}}"></p>
+                <span class="upnumber"></span>
+                <span class="describe" title="{{:des}}">{{:des}}</span>
+            </div>
+            <span class="imgcorteg"><img class="view-picture" src="{{:icon}}"></span>
+        </div>
+    </script>
+
+<!--图表类磁贴-->
+<script id="tmpl-chart" type="text/x-jsrender">
+        <div id="box-chart" class="{{:className}} box-chart" style="{{:sizeStyle}}">
+            <img id="{{:tileId}}" data-needid="tile-{{:tileTemplateId}}" data-type="freedom" src="Content/img/close.png" class="eacstrslist">
+            {{if status == -1}}
+            <div class="disabled-tile-mask" title="权限被取消，请联系管理员"><div>无权限</div></div>
+        	{{/if}}
+            <div id="{{:tileTemplateCode}}" style="{{:sizeStyle}}">
+
+            </div>
+        </div>
+    </script>
+
+<!--列表类磁贴-->
+<script id="tmpl7" type="text/x-jsrender">
+        <div id="box-list" class="{{:className}} box-list" style="{{:sizeStyle}}">
+            <img id="{{:tileId}}" data-needid="tile-{{:tileTemplateId}}" data-type="freedom" src="Content/img/close.png" class="lbdestlist">
+            {{if status == -1}}
+            <div class="disabled-tile-mask" title="权限被取消，请联系管理员"><div>无权限</div></div>
+        	{{/if}}
+            <div class="iframe-mask"></div>
+            <div class="table-list-title">{{:title}}</div>
+            <div class="table-list-table">
+                <table id='{{:tileTemplateCode}}' class="table-no-bordered" >
+
+                </table>
+            </div>
+        </div>
+    </script>
+
+<!--卡片类磁贴-->
+<script id="tmpl10" type="text/x-jsrender">
+        <div id="box-card" class="{{:className}} box-card" style="{{:sizeStyle}}">
+            <img id="{{:tileId}}" data-needid="tile-{{:tileTemplateId}}" data-type="freedom" src="Content/img/close.png" class="shewidt">
+            {{if status == -1}}
+            <div class="disabled-tile-mask" title="权限被取消，请联系管理员"><div>无权限</div></div>
+        	{{/if}}
+            <div class="card_registerBox">
+                <div class="card-registerCon">
+                    <h5 id="card-registerCon-title">{{:title}}</h5>
+                    <ul class="card-registerCon-ul">
+
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </script>
+
+<!--文本类磁贴-->
+<script id="tmpl12" type="text/x-jsrender">
+        <div id="box-text" class="{{:className}} box-text" style="{{:sizeStyle}}">
+            <img id="{{:tileId}}" data-needid="tile-{{:tileTemplateId}}" data-type="freedom" src="Content/img/close.png" class="shewidt">
+            {{if status == -1}}
+            <div class="disabled-tile-mask" title="权限被取消，请联系管理员"><div>无权限</div></div>
+        	{{/if}}
+            <div class="text_registerBox">
+                <div class="text-shadow-div"></div>
+                <div class="text-content-title">{{:title}}</div>
+                <textarea name="content" id="text-content-prev{{:tileTemplateId}}" class="text-content-prev" readonly></textarea>
+            </div>
+        </div>
+    </script>
+
+<!--自定义磁贴-->
+<script id="tmpl9" type="text/x-jsrender">
+        <div id="box-custom" class="{{:className}}" style="{{:sizeStyle}}">
+            <img id="{{:tileId}}" data-needid="tile-{{:tileTemplateId}}" data-type="freedom" src="Content/img/close.png" class="ingsht">
+            {{if status == -1}}
+            <div class="disabled-tile-mask" title="权限被取消，请联系管理员"><div>无权限</div></div>
+        	{{/if}}
+            <div class="iframe-mask"></div>
+            <div id="cus{{:tileTemplateCode}}" style="{{:sizeStyle}}">
+            </div>
+        </div>
+    </script>
+
+<!-- 多媒体类 -->
+<script id="tmpl11" type="text/x-jsrender">
+        <div id="box-audioFrequency" class="{{:className}}" style="{{:sizeStyle}}">
+            <img id="{{:tileId}}" data-needid="tile-{{:tileTemplateId}}" data-type="freedom" src="Content/img/close.png" class="shewidt">
+            {{if status == -1}}
+            <div class="disabled-tile-mask" title="权限被取消，请联系管理员"><div>无权限</div></div>
+        	{{/if}}
+            <div class="audio-contentBox" style="height: 100%;">
+            </div>
+        </div>
+    </script>
+
+<!-- 面板类 -->
+<script id="panel-tmpl" type="text/x-jsrender">
+        <div class="group-wrap" style="{{:sizeStyle}}">
+            <img id="{{:panelId}}" data-needid="panel-{{:panelId}}" data-group="panel" data-type="freedom" data-pid="{{:panelId}}" src="Content/img/close.png" class="ingsht">
+            <div class="group-title">
+                <h3 class="group-title-h" onclick="spantoinput(this)">
+                    <span class="group-title-nameSp">{{:title}}</span>
+                    <input class="group-title-nameInp" data-oid="{{:panelId}}" onblur="saveGroupTitle(this)">（<span id="selectCount{{:panelId}}">0</span>）
+                    <b></b>
+                </h3>
+                <i id="icon-set-{{:panelId}}" class="icon-setting" data-tileId="{{:tileId}}" data-panelid="{{:panelId}}" data-tempid="{{:panelId}}" onclick="layerOpenPanel(this)" style="display:none;"></i>
+            </div>
+            <div id="div-group-panel-{{:panelId}}" class="group-tiles-div tile-ul">
+                <div class="div-group-shadows"></div>
+                <ul id="ul-group-panel-{{:panelId}}" class="group-panel-ul"></ul>
+            </div>
+        </div>
+    </script>
+
+
+
+
+
+<script>
+    ajaxToServer('/api/workbench/WorkbenchHomePage/list',{},function (result) {
+        console.log(result);
+    });
+
+    (function(jq, g) {
+        //传入一个简单对象
+        var data = {
+                'className': 'alice',
+                'sizeStyle': 'width:200px',
+                'tileId': 'imgtitle',
+                'tileTemplateId': 'tTId',
+                'status': -1,
+                'title': '我的文本类型'
+
+            },
+            //获取模板
+            jsRenderTpl = $.templates('#tmpl12'),
+            //末班与数据结合
+            finalTpl = jsRenderTpl(data);
+
+        $('.box').html(finalTpl);
+    })(jQuery, window);
+</script>
+
+
+</body>
+</html>

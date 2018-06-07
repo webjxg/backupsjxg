@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>参数管理</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <!--插件样式-->
+    <link rel="stylesheet" href="../../plugins/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../css/comInnerTable.css">
+    <link rel="stylesheet" href="../../css/privatelyOwned.css">
+    <style>
+        #des{
+            width: 100%;
+            border: 1px solid rgb(204,204,204);
+        }
+
+        #dataTable,.formtbody{
+            width: 100%;
+            height: 100%;
+        }
+        #dataTable tr th {
+            width: 23%;
+            border: none;
+            background-color: #f5f5f5;
+            vertical-align: middle;
+        }
+        .form-control, td .form-control {
+            width: 100%;
+
+        }
+        #nameImage{
+            display: block;
+            float: right;
+            width: 73%;
+
+        }
+        label{
+            margin-bottom: 0;
+        }
+        td{
+            position: relative;
+        }
+        td>#filePicker {
+            line-height: 35px;
+            width: 27%;
+            height:35px;
+            opacity: 1;
+            position: relative;
+            left: 0;
+            cursor: pointer;
+            padding: 0 10px;
+            border: 1px solid #e7e7e7;
+            border-radius: 3px;
+            background-color: #e7e7e7;
+            border-right:none;
+
+        }
+        #filePicker>div,#filePicker>div>input{
+            color: #000;
+            width: 100%;
+            height: 100%;
+            cursor: pointer;
+            line-height:32px;
+
+
+        }
+        form > .table > tbody > tr > td{
+            border: none;
+        }
+        .form-horizontal {padding-top: 10px;}
+    </style>
+    <script>
+    </script>
+
+
+
+</head>
+
+<body>
+<form id="inputForm" class="form-horizontal" action="/api/workbench/WorkbenchTileTemplate/ajaxSave" method="post">
+    <input id="id" name="id" type="hidden" />
+    <table id="dataTable" class="table table-bordered  table-condensed dataTables-example id no-footer">
+        <tbody class="formtbody">
+
+
+        </tbody>
+    </table>
+    <input type="hidden" name="type" id="mMtype">
+    <input type="hidden" name="templateId" id="mMid">
+    <input type="hidden" name="appName" id="appName">
+</form>
+<!--核心插件-->
+<script src="../../js/jquery-2.2.4.min.js"></script>
+<script src="../../plugins/bootstrap/js/bootstrap.min.js"></script>
+<!--附属插件-->
+<script src="../../plugins/validate/jquery.validate.min.js"></script>
+<script src="../../plugins/validate/messages_zh.min.js"></script>
+<script src="../../plugins/layer/layer.js"></script>
+<script src="../../plugins/icheck/icheck.min.js"></script>
+<script src="../../plugins/webUpLoader/webuploader.js"></script>
+<!--自定义文件-->
+<script src="../../js/apiDomain.js"></script>
+<script src="../../js/jeeplus.js"></script>
+<script src="../../js/customForm.js"></script>
+<script src="../../js/public.js"></script>
+<script src="../../js/page.js"></script>
+
+
+
+
+
+
+<script>
+    var Id = getQueryString('typeId'), type = getQueryString('type');
+    $('document').ready(function () {
+        var data = {
+            "type": type,
+            "id": Id
+        };
+        ajaxToServer1(admin_domain+'/api/workbench/WorkbenchTileTemplate/form', data, function (result) {
+            console.log(result);
+            renderRContent(type,id,result);
+        });
+    });
+
+    /*所有数据对应html*/
+    var dataMmhtml = {
+        /*编码-----*/
+        tileTemplateCode:
+        '<tr><th class="" ><label class="pull-right"><font color="red">*</font>编码:</label></th>' +
+        '<td class=""><input id="tileTemplateCode" name="tileTemplateCode" type="text" required="required" value="" class="form-control valid" > ' +
+        '<label id="tileTemplateCode-error" class="error" for="tileTemplateCode" style="display:none"></label></td></tr>',
+        /*应用-----*/
+        appCode:
+        '<tr><th class=""><label class="pull-right"><font color="red">*</font>应用:</label></th>' +
+        '<td class="">' +
+        '<select class="form-control valid" name="appCode" id="appCode" required="required"><option value="">请选择</option></select>' +
+        '<label id="appCode-error" class="error" for="appCode"style="display:none"></label></td></tr>',
+        /*标题-----*/
+        title:
+        '<tr><th class=""><label class="pull-right"><font color="red">*</font>标题:</label></th>' +
+        '<td class=""><input id="title" name="title" type="text" required="required" value="" class="form-control valid">' +
+        '<label id="title-error" class="error" for="title" style="display:none"></label></td></tr>',
+        /*数据源----*/
+        dataSource:
+        '<tr><th class=""><label class="pull-right"><font color="red">*</font>数据源:</label></th>' +
+        '<td class=""><input id="dataSource" name="dataSource" type="text"  value="" class="form-control valid">' +
+        '<label id="dataSource-error" class="error" for="title" style="display:none"></label></td></tr>',
+        /*磁贴大小--*/
+        size:
+        '<tr class="sizexy"><th class=""><label class="pull-right">磁贴大小:</label></th>' +
+        '<td class="" colspan="3">' +
+        '<select id="sizex" name="sizex"  class="form-control valid"></select>' +
+        '<i class="iconx">×</i>'+
+        '<select id="sizey" name="sizey"  class="form-control "></select>' +
+        '</td>'+
+        '<label id="sizex-error" class="error" for="sizex" style="display:none"></label></tr>',
+        /*描述*/
+        des:
+        '<tr><th class=""><label class="pull-right">描述:</label></th>' +
+        '<td class="">' +
+        '<textarea name="des" rows="4" id="des" class="form-control valid"></textarea></td></tr>',
+        /*字段配置*/
+        displayName:
+        '<tr><th class=""><label class="pull-right"><font color="red">*</font>字段配置:</label></th>' +
+        '<td class=""><input id="displayName" name="displayName" type="text" required="required" value="" class="form-control valid">' +
+        '<label id="displayName-error" class="error" for="displayName" style="display:none"></label></td></tr>',
+        /*间隔时间*/
+        timeInterval:
+        '<tr><th class=""><label class="pull-right">刷新间隔:</label></th>' +
+        '<td class=""><input id="timeInterval" name="timeInterval" type="text"  value="" onkeyup="clearNoNum(this)" class="form-control valid" style="width:90%">（秒）' +
+        '<label id="timeInterval-error" class="error" for="timeInterval" style="display:none"></label></td></tr>',
+        /*列名*/
+        columnName:
+        '<tr><th class=""><label class="pull-right"><font color="red">*</font>列名:</label></th>' +
+        '<td class="" colspan="3"><textarea id="columnName" name="columnName" rows="4" required="required" class="form-control valid"></textarea>' +
+        '<label id="columnName-error" class="error" for="columnName" style="display:none"></label></td></tr>',
+        /*每页条数*/
+        pageSize:
+        '<tr><th class=""><label class="pull-right"><font color="red">*</font>每页条数:</label></th>' +
+        '<td class=""><input id="pageSize" name="pageSize" type="text" required="required" value="" class="form-control valid">' +
+        '<label id="pageSize-error" class="error" for="pageSize" style="display:none"></label></td></tr>',
+        /*图标*/
+        icon:
+            '<tr><th class=""><label class="pull-right"><font color="red">*</font>图标:</label></th><td class=" "><a href="javascript:" class="" id="filePicker" >选择</a><input id="nameImage" name="icon" maxlength="255" class="input-xlarge form-control valid" type="text" value="0"/></td></tr>',
+        /*打开方式*/
+        targer:
+        '<tr><th class=""><label class="pull-right"><font color="red">*</font>打开方式:</label></th>' +
+        '<td class=""><select class="form-control valid" required="required" name="targer" id="targer"><option value="">请选择</option><option value="0">Tab选项卡</option><option value="1">页签</option></select>'+
+        '<label id="targer-error" class="error" for="targer" style="display:none"></label></td></tr>',
+        /*文本内容*/
+        content:
+        '<tr><th class=""><label class="pull-right"><font color="red">*</font>文本内容:</label></th>' +
+        '<td class=""><textarea name="content" rows="4" id="content" required="required" class="form-control valid"></textarea>' +
+        '<label id="content-error" class="error" for="content" style="display:none"></label></td></tr>'
+
+
+    }
+    /*渲染右侧input*/
+    function renderRContent(data,id,results) {
+        if(data==1){
+            html=dataMmhtml.tileTemplateCode+
+                dataMmhtml.appCode+
+                dataMmhtml.title+
+                dataMmhtml.dataSource+
+                dataMmhtml.size+
+                dataMmhtml.icon+
+                dataMmhtml.targer+
+                dataMmhtml.des;
+            $('.formtbody').html(html);
+            var optionx='<option value="1">1</option>';
+            var optiony='<option value="1">1</option>';
+            $('#sizex').append(optionx);
+            $('#sizey').append(optiony);
+
+        } else if(data==2){
+            html=dataMmhtml.tileTemplateCode+
+                dataMmhtml.appCode+
+                dataMmhtml.title+
+                dataMmhtml.dataSource+
+                dataMmhtml.size+
+                dataMmhtml.icon+
+                dataMmhtml.timeInterval+
+                dataMmhtml.des;
+            $('.formtbody').html(html);
+            var optionx='<option value="2">2</option>';
+            var optiony='<option value="1">1</option>';
+            $('#sizex').append(optionx);
+            $('#sizey').append(optiony);
+        } else if(data==3){
+            html=dataMmhtml.tileTemplateCode+
+                dataMmhtml.appCode+
+                dataMmhtml.title+
+                dataMmhtml.dataSource+
+                dataMmhtml.size+
+                dataMmhtml.timeInterval+
+                dataMmhtml.des;
+            $('.formtbody').html(html);
+            var optionx='<option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option>';
+            var optiony='<option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option>';
+            $('#sizex').append(optionx);
+            $('#sizey').append(optiony);
+        } else if(data==4){
+            html=dataMmhtml.tileTemplateCode+
+                dataMmhtml.appCode+
+                dataMmhtml.title+
+                dataMmhtml.dataSource+
+                dataMmhtml.size+
+                dataMmhtml.pageSize+
+                dataMmhtml.timeInterval+
+                dataMmhtml.columnName+
+                dataMmhtml.des;
+            $('.formtbody').html(html);
+            var optionx='<option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option>';
+            var optiony='<option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option>';
+            $('#sizex').append(optionx);
+            $('#sizey').append(optiony);
+        } else if(data==5){
+            html=dataMmhtml.tileTemplateCode+
+                dataMmhtml.appCode+
+                dataMmhtml.title+
+                dataMmhtml.dataSource+
+                dataMmhtml.size+
+                dataMmhtml.displayName+
+                dataMmhtml.des;
+            $('.formtbody').html(html);
+            var optionx='<option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option>';
+            var optiony='<option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option>';
+            $('#sizex').append(optionx);
+            $('#sizey').append(optiony);
+        }else if(data==6){
+            html=
+                dataMmhtml.tileTemplateCode+
+                dataMmhtml.title+
+                dataMmhtml.appCode+
+                dataMmhtml.size+
+                dataMmhtml.content+
+                dataMmhtml.des
+                ;
+            $('.formtbody').html(html);
+            var optionx='<option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option>';
+            var optiony='<option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option>';
+            $('#sizex').append(optionx);
+            $('#sizey').append(optiony);
+        }else if(data==7){
+            html=dataMmhtml.tileTemplateCode+
+                dataMmhtml.appCode+
+                dataMmhtml.title+
+                dataMmhtml.dataSource+
+                dataMmhtml.size+
+                dataMmhtml.des;
+            $('.formtbody').html(html);
+            var optionx='<option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option>';
+            var optiony='<option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option>';
+            $('#sizex').append(optionx);
+            $('#sizey').append(optiony);
+        }
+        $('#mMtype').val(data);//每次点击左侧磁贴 这个参数更新
+        $('#mMid').val(id);
+        ajaxToServer(admin_domain+'/api/workbench/WorkbenchTileTemplate/selectAppName', {}, function (result) {
+            renderSelect(result)
+            renderData(results.workbenchTileTemplate,'#inputForm');
+        });
+
+        /*上传头像*/
+        if($('#nameImagePreview')){
+            initWebuploader('/img/sys/SysUpload/upimg?imgPath=img', '#filePicker');
+        }
+
+    }
+
+    function clearNoNum(obj){
+        obj.value = obj.value.replace(/[^\d.]/g,"");  //清除“数字”和“.”以外的字符
+        obj.value = obj.value.replace(/\.{2,}/g,"."); //只保留第一个. 清除多余的
+        obj.value = obj.value.replace(".","$#$").replace(/\./g,"").replace("$#$",".");
+        obj.value = obj.value.replace(/^(\-)*(\d+)\.(\d).*$/,'$1$2.$3');//只能输入两个小数
+        if(obj.value.indexOf(".")< 0 && obj.value !=""){//以上已经过滤，此处控制的是如果没有小数点，首位不能为类似于 01、02的金额
+            obj.value= parseFloat(obj.value);
+        }
+    }
+
+
+    //    修改图片
+    function initWebuploader(url,filePicker) {
+        var uploader = WebUploader.create({
+            // 选完文件后，是否自动上传。
+            auto: true,
+            // // swf文件路径
+            swf: admin_domain + '/plugins/webUploader/Uploader.swf',
+
+            // 文件接收服务端。
+            server: admin_domain + url,
+            // 选择文件的按钮。可选。
+            // 内部根据当前运行是创建，可能是input元素，也可能是flash.
+            pick: {
+                id: filePicker,
+                multiple:false
+            },
+
+            // 只允许选择图片文件。
+            accept: {
+                title: 'Images',
+                extensions: 'gif,jpg,jpeg,bmp,png',
+                mimeTypes: 'image/*'
+            },
+            fileNumLimit: 1
+
+        });
+        uploader.on( 'uploadSuccess', function( file,response) {
+            console.log(file,response);
+            $('#nameImage').val(response.saveName);
+        });
+    }
+
+    /*渲染应用下拉内容*/
+    function renderSelect(data) {
+        var appList = data.appList;
+        $(appList).each(function () {
+            var option = '<option value="' + this.appCode + '">' + this.appName + '</option>'
+            $('#appCode').append(option);
+        })
+
+    }
+    /*清除头像*/
+    function getSubmitFormId(){
+        return "#inputForm";
+    }
+    //回调函数，在修改和添加时，供openDialog调用提交表单。
+    function doSubmitForm(layIdx, callbackFn){
+        var formId = getSubmitFormId();
+        var formObj =$(formId);
+        var url = formObj.attr('action');
+        var validateFlag = formObj.validate({
+            submitHandler: function(form){
+                var formdata = JSON.stringify(formObj.serializeJSON());
+                console.log(formdata);
+                layer.msg('正在提交，请稍等...',{time: 1000});
+                ajaxToServer(url,formdata,function(result){
+                    if(result.success == true){
+                        layer.msg('已成功提交',{time: 1000});
+                        setTimeout(function(){
+                           // var src =top.getActiveTab().attr('src');
+                            //获取父层
+                            // var index = top.layer.getFrameIndex(window.name);
+                            //关闭弹出层
+                            top.layer.close(layIdx);
+                            if(callbackFn){
+                                callbackFn();
+                            }
+                        },1000);
+                    }else{
+                        layerAlert(result.message)
+                    }
+                });
+            },
+            errorContainer: "#messageBox",
+            errorPlacement: function(error, element) {
+                $("#messageBox").text("输入有误，请先更正。");
+                if (element.is(":checkbox")||element.is(":radio")||element.parent().is(".input-append")){
+                    error.appendTo(element.parent().parent());
+                } else {
+                    error.insertAfter(element);
+                }
+            }
+        }).form;
+        if(validateFlag){
+            formObj.submit();
+            // $(".layui-layer-btn0").css({"background":'red'});
+        }
+    }
+
+
+
+
+
+</script>
+</body>
+</html>

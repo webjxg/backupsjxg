@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>指令查看</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+</head>
+<!--插件样式-->
+<link rel="stylesheet" href="../../plugins/bootstrap/css/bootstrap.min.css">
+<link rel="stylesheet" href="../../plugins/font-awesome/css/font-awesome.min.css">
+<link rel="stylesheet" href="../../plugins/datetimepicker/css/bootstrap-datetimepicker.css">
+<link rel="stylesheet" href="../../plugins/datatables/css/jquery.dataTables.min.css">
+<link rel="stylesheet" href="../../plugins/icheck/skins/square/green.css">
+<link rel="stylesheet" href="../../plugins/datatables/css/mydatatable.css">
+<link rel="stylesheet" href="../../plugins/treetable/css/jquery.treetable.theme.default.css">
+<link rel="stylesheet" href="../../plugins/treetable/css/jquery.treetable.css">
+<!--引入样式-->
+<link rel="stylesheet" href="../../css/common.css">
+<link rel="stylesheet" href="../../css/customDataTable.css">
+<link rel="stylesheet" href="../../css/aps.css">
+<link rel="stylesheet" href="../../css/proDis.css">
+<style>
+    .setStyle{
+        background-color: white !important;
+    }
+    .setStyle tr{
+        border-bottom: 1px solid #E8EAF0 !important;
+    }
+    .setStyle td{
+        border: none !important;
+        display: none;
+    }
+    .setStyle td:first-child{
+        display: inline-block;
+    }
+    .branch{
+        border-bottom: 1px solid #E8EAF0 !important;
+    }
+</style>
+<body id="menu-content">
+<div class="wrapper wrapper-content">
+    <div class="ibox">
+        <div class="ibox-title">
+            <h1 class="titName">指令查看</h1>
+            <hr/>
+        </div>
+        <div class="ibox-content">
+
+            <div class="row">
+                <div class="col-sm-12">
+                    <label>
+                        <div class="execution">
+                            <span>执行时间:</span>
+                            <input type="text" value="" placeholder="开始时间" id="startDateParam" class="time-input form-control datePicker"><i class="fa fa-calendar"></i>
+                        </div>
+                    </label>
+                    <label>
+                        <ul class="apsType-linkage">
+                            <li id="class-hidden">
+                                班次:
+                                <select name="" id="time">
+                                    <option value="">-- 全部 --</option>
+                                </select>
+                            </li>
+                            <li>
+                                班组:
+                                <select name="" id="team">
+                                    <option value="">-- 全部 --</option>
+                                </select>
+                            </li>
+                            <li >
+                                工序:
+                                <select name="" id="process">
+                                    <option value="">-- 全部 --</option>
+                                </select>
+                            </li>
+                        </ul>
+                    </label>
+                    <div class="pull-right">
+                        <label>
+                            <button class="btn bg-ffa82d btn-search btn-white" id="search-btn" type="button">
+                                <i class="fa fa-search"></i>
+                                查询</button>
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <!--状态-->
+            <!--<div class="row distance">-->
+                <!--<div class="col-sm-12">-->
+                    <!--<div class="pull-right">-->
+                        <!--<label>-->
+                            <!--<button class="btn bg-ffa82d btn-search btn-white" id="search-btn" type="button">-->
+                                <!--<i class="fa fa-search"></i>-->
+                                <!--查询</button>-->
+                        <!--</label>-->
+                    <!--</div>-->
+                <!--</div>-->
+            <!--</div>-->
+            <!--表格区-->
+            <form id="listFrom" method="post">
+                <table id="treeTable" class="table table-striped table-bordered table-hover table-condensed dataTables-example dataTable tree_table">
+                    <thead class="treeTable">
+                    <tr>
+                        <th>名称</th>
+                        <th width='60px;'>工序</th>
+                        <th>班次</th>
+                        <th>班组</th>
+                        <th>状态</th>
+                        <th>执行时间</th>
+                    </tr>
+                    </thead>
+                    <tbody id="treeTableBody">
+                    </tbody>
+                </table>
+            </form>
+
+            <!--分页显示-->
+            <div class="clearfix pagination-box">
+                <div class="page-info pull-left"></div>
+                <div id="pagination" class="pagination-roll pull-right"></div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+<!--核心插件-->
+<script src="../../js/jquery-2.2.4.min.js"></script>
+<script src="../../plugins/bootstrap/js/bootstrap.min.js"></script>
+<!--附属插件-->
+<script src="../../plugins/layer/layer.js"></script>
+<script src="../../plugins/icheck/icheck.min.js"></script>
+<script src="../../plugins/ztree/js/jquery.ztree.core.js"></script>
+<script src="../../plugins/datatables/js/jquery.dataTables.min.js"></script>
+<script src="../../plugins/datatables/js/dataTables.bootstrap.js"></script>
+<script src="../../plugins/bootStrapPager/js/extendPagination.js"></script>
+<script src="../../plugins/datetimepicker/js/bootstrap-datetimepicker.js"></script>
+<script src="../../plugins/treetable/jquery.treetable.js"></script>
+<!--自定义文件-->
+<script src="../../js/common.js"></script>
+<script src="../../js/apiDomain.js"></script>
+<script src="../../js/customForm-aps.js"></script>
+<script src="../../js/page.js"></script>
+<script>
+    $(function () {
+        window.pageLoad = function () {
+            //时间拼接班次
+            var time = $("#time option:selected").text()=="-- 全部 --"?"":$("#time option:selected").text();
+            var temp,startTime,endTime;
+            var exctTime = $("#startDateParam").val();
+            if(time!=""){
+                temp = time.split("(")[1].split(")")[0];
+                startTime = temp.split("-")[0];
+                endTime = temp.split("-")[1];
+                console.log("startTime:"+startTime+" ,endTime:"+endTime);
+                startTime = exctTime +" "+ startTime;
+                endTime = exctTime + " "+endTime;
+            }else{
+                startTime = exctTime;
+                endTime = "";
+            }
+            var data = {
+                proc:$("#process option:selected").text()=="-- 全部 --"?"":$("#process option:selected").text(), //工序
+                startIssuedTime:startTime,
+                endIssuedTime:endTime,
+                main:{
+                    groupsId:$("#team option:selected").val(),
+                },
+            };
+            var _url = "/api/ctrl/DirectiveDetail/queryReceiveDirective";
+            ajaxToServer(_url,JSON.stringify(data),function (result) {
+                renderTableData(result.rows)
+            })
+        }
+        //     //获取工序数据
+        loadProcess();
+        //     //获取班次数据
+        loadShift();
+        //     //获取班组数据
+        loadGroups();
+        pageLoad()
+    });
+    //获取年月日日期
+    $("#startDateParam").datetimepicker({
+        format: "yyyy-mm-dd",  //保留到日
+        showMeridian: true,     //显示上、下午
+        language:'cn',         //中文显示
+        minView: "month",    //月视图
+        todayBtn: true,   //切换到今天
+        clearBtn: true,   //清除全部
+        autoclose:true  //选择时间后自动隐藏
+    });
+
+
+    //获取工序数据
+    function loadProcess(){
+        id = getCookie("loginUserid")
+        ajaxToServer(admin_domain+'/api/sys/SysAuthProperty/getAttributeValue/'+id+'/GXJQ/syswp',{},function (result) {
+            if(result.success){
+                var rows = result.rows;
+                appendOptionsValue($('#process'), rows, 'name', 'name');
+                //appendOptionsValue($('#process'), rows, 'code', 'name');//工序的值存编码 update by qiyh 2018-05-24
+            }else{
+                layer.msg(result.message);
+            }
+        });
+    }
+    //获取班次数据
+    function loadShift(){
+        var url_ = '/api/ctrl/Shift/list';
+        ajaxToServer(url_, {}, function(result){
+            if(result.success){
+                var rows = result.rows;
+                // resetSelect($('#time'));
+                var options = new Array();
+                $(rows).each(function(i,o){
+                    var label = o['name']+'('+o['startTime']+'-'+o['endTime']+')';
+                    options.push({'value':o['id'], 'label':label});
+                });
+                appendOptions($('#time'), options);
+            }else{
+                layer.msg(result.message);
+            }
+        });
+    }
+    //获取班组数据
+    function loadGroups(){
+        var url_ = '/api/aps/Groups/list';
+        ajaxToServer(url_, {}, function(result){
+            if(result.success){
+                var rows = result.rows;
+                var options = new Array();
+                $(rows).each(function(i,o){
+                    var label = o['name'];
+                    options.push({'value':o['id'], 'label':label});
+                });
+                appendOptions($('#team'), options);
+            }else{
+                layer.msg(result.message);
+            }
+        });
+    }
+    function renderTableData(data) {
+        console.log(data);
+        var classText;
+        var tableStr = "";
+        var updataDatastr;
+        var setClass;
+        for (var i = 0; i < data.length; i++) {
+            var count = 'data-tt-id=' + data[i].id;
+            if (data[i].parentId && data[i].parentId != '') {
+                count += ' data-tt-parent-id=' + data[i].parentId;
+            }
+            if(data[i].updateDate==null){
+                updataDatastr='';
+            }else{
+                updataDatastr=data[i].updateDate;
+            }
+            if(data[i].status == "wait"){
+                data[i].status =  "待完成";
+                classText = "col-ffa82d";
+                setClass=""
+            }else if(data[i].status=="finish"){
+                data[i].status = "已完成";
+                classText = "col-1ab394";
+                setClass=""
+            }else if(data[i].status == ""){
+                setClass="setStyle"
+            }
+            tableStr += "<tr class='"+setClass+"' " + count + " >"+
+                "<td >" + data[i].content + "</td>"
+                + "<td  class='alignCenter' width='10%'>" + data[i].proc + "</td>"
+                + "<td class='alignCenter'>" + data[i].shiftName + "</td>"
+                + "<td class='alignCenter'>" + data[i].groupName + "</td>"
+                + "<td class='alignCenter "+classText+"'>" + data[i].status + "</td>"
+                + "<td class='alignCenter'>" + updataDatastr + "</td>"
+                + "</tr>";
+        }
+        if (tableStr.length == 0) {
+            var len = $("#treeTable thead tr").children("th").length;
+            tableStr = "<tr style='text-align: center'><td colspan='" + len + "'><font color='#cd0a0a'>暂无记录</font></td></tr>";
+        }
+        $('#treeTableBody').html(tableStr); //tbody
+        $("#treeTable").treetable({expandable: true, column:0}, true);  //第二个参数表示为true时强制重新初始化树。
+        // setFrameHeight();
+    }
+
+    //  下拉时间为空，班次隐藏
+    if($('#startDateParam').val() === '' ) {
+        $('#class-hidden').css('display','none')
+    }else{
+        $('#class-hidden').css('display','block')
+    }
+    $('#startDateParam').change(function(){
+        if($('#startDateParam').val() === '' ) {
+            $('#class-hidden').css('display','none')
+        }else{
+            $('#class-hidden').css({
+                display:'block',
+                display:'inline-block'
+            })
+        }
+    })
+</script>
+</html>
