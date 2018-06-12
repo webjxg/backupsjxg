@@ -15,8 +15,17 @@
     <link rel="stylesheet" href="../../css/customDataTable.css">
     <link rel="stylesheet" href="../../css/aps.css">
     <link rel="stylesheet" href="../../css/common.css">
+    <link rel="stylesheet" href="../../plugins/select2/dist/css/select2.min.css">
     <!--个人工作台样式-->
     <link rel="stylesheet" href="../../css/privatelyOwned.css">
+    <style>
+        /*背景色修改*/
+        .bgColor{
+            position: absolute;
+            right:74px;
+            top: 290px;
+        }
+    </style>
 </head>
 <body>
 <div class="wrapper wrapper-content bg-gray">
@@ -114,6 +123,8 @@
 <script src="../../plugins/validate/jquery.validate.min.js"></script>
 <script src="../../plugins/validate/messages_zh.min.js"></script>
 <script src="../../plugins/webUpLoader/webuploader.js"></script>
+<script src="../../plugins/select2/dist/js/select2.min.js"></script>
+<script src="../../plugins/select2/dist/js/i18n/zh-CN.js"></script>
 <!--自定义文件-->
 <script src="../../js/apiDomain.js"></script>
 <script src="../../js/customForm-aps.js"></script>
@@ -126,6 +137,7 @@
             if (result.success) {
                 renderleftlist(result);
                 btnclick();
+                colorChange();
 
             } else {
                 layer.msg(result.message)
@@ -218,7 +230,7 @@
         '<label id="title-error" class="error" for="title" style="display:none"></label></td></tr>',
         /*数据源----*/
         dataSource: '<tr><td class="width-10"><label class="pull-right"><font color="red">*</font>数据源:</label></td>' +
-        '<td class="width-80"><input id="dataSource" name="dataSource" type="text"  value="" class="form-control valid1">' +
+        '<td class="width-80"><select id="dataSource" name="dataSource" type="text"  class="form-control valid1" ></select>' +
         '<label id="dataSource-error" class="error" for="title" style="display:none"></label></td></tr>',
         /*磁贴大小--*/
         size: '<tr><td class="width-10"><label class="pull-right">磁贴大小:</label></td>' +
@@ -260,8 +272,8 @@
         '<label id="content-error" class="error" for="content" style="display:none"></label></td></tr>',
 
         /*——————背景颜色选择————————*/
-        bgColor: '<tr class="bgColor"><td class="width-10"><label class="pull-right"><font color="red">*</font>背景颜色:</label></td>' +
-        '<td class="width-80"><input type="hidden" id="bgColor" name="bgColor" >' + '<li class="dropdown color-picker open">' +
+        bgColor: '<tr class="bgColor"><td><label class="pull-right">背景颜色:</label></td>' +
+        '<td class="width-80"><input class="valid1" type="hidden" id="bgColor" name="bgColor" >' + '<li class="dropdown color-picker">' +
         '<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="true">' +
         '<span><i class="fa fa-circle"></i></span>' +
         '</a>' +
@@ -271,34 +283,34 @@
         '		<tbody>' +
         '           <tr>' +
         '				<td class="text-center colorr">' +
-        '				    <a href="#" data-theme="blue" class="theme-picker">' +
+        '				    <a onclick=col(this) data-theme="blue" class="theme-picker">' +
         '					<i class="fa fa-circle blue-base"></i>' +
         '				    </a>' +
         '				</td>' +
         '				<td class="text-center colorr">' +
-        '					<a href="#" data-theme="green" class="theme-picker">' +
+        '					<a onclick=col(this) data-theme="green" class="theme-picker">' +
         '						<i class="fa fa-circle green-base"></i>'+
         '					</a>'+
         '				</td>' +
         '				<td class="text-center colorr">' +
-        '					<a href="#" data-theme="red" class="theme-picker">' +
+        '					<a  onclick=col(this) data-theme="red" class="theme-picker">' +
         '						<i class="fa fa-circle red-base"></i>' +
         '					</a>' +
         '				</td>' +
         '			</tr>' +
         '			<tr>' +
         '			   <td class="text-center colorr">' +
-        '		   	   	<a href="#" data-theme="purple" class="theme-picker">' +
+        '		   	   	<a onclick=col(this) data-theme="purple" class="theme-picker">' +
         '			   		<i class="fa fa-circle purple-base"></i>' +
         '			   	</a>' +
         '			   </td>' +
-        '			   <td class="text-center color">' +
-        '			   <a href="#" data-theme="midnight-blue" class="theme-picker">' +
+        '			   <td class="text-center colorr">' +
+        '			   <a onclick=col(this) data-theme="midnight-blue" class="theme-picker">' +
         '			   	<i class="fa fa-circle midnight-blue-base"></i>' +
         '		   	   </a>' +
         '			   </td>' +
         '				<td class="text-center colorr">' +
-        '					<a href="#" data-theme="lynch" class="theme-picker">' +
+        '					<a onclick=col(this) data-theme="lynch" class="theme-picker">' +
         '						<i class="fa fa-circle lynch-base"></i>' +
         '					</a>' +
         '				</td>' +
@@ -307,32 +319,56 @@
         '</li>' +
         '</ul>' +
         '</li>' +
-        '</td></tr>'
-
+        '</td></tr>',
+        /*图片*/
+        icon1: '<tr class="picture"><td class="width-10"><label class="pull-right">图片上传</label></td><td class="width-80 "> <input id="nameImage" name="icon" maxlength="255" class="input-xlarge valid1" type="hidden" value=""/><ol id="nameImagePreview"></ol><a href="javascript:" id="filePicker" >+</a><label id="nameImage1-error" class="error" for="nameImage" style="display:none"></label></td></tr>'
     };
+    /*调色版*/
+    function colorChange() {
+        var colorBoxArr=['blue-base','green-base','red-base','purple-base','midnight-blue-base','lynch-base'];
+
+        ajaxToServer(admin_domain+'/api/sys/SysDict/type/workbench_bgcolor_num',{},function (result) {
+            for(var i=0;i<colorBoxArr.length;i++){
+                $('.'+colorBoxArr[i]).css({'color':result.rows[i].value});
+            }
+        });
+
+    }
+    function col(this_) {
+        var itemColor=colorRGB2Hex($(this_).children('i.fa-circle').css('color'));
+        $('.bgColor>td>li>a i').css({'color':itemColor});
+        console.log($('.bgColor>td>li>a i').css('color'));
+        $('#bgColor').val(colorRGB2Hex($('.bgColor>td>li>a i').css('color')))
+    }
+
+    //rgb转换成16进制
+    function colorRGB2Hex(color) {
+        if(color==undefined){
+            layerAlert('未选定颜色请重新选择')
+        }else{
+            var rgb = color.split(',');
+            var r = parseInt(rgb[0].split('(')[1]);
+            var g = parseInt(rgb[1]);
+            var b = parseInt(rgb[2].split(')')[0]);
+
+            var hex = "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+            return hex;
+        }
+    }
+
+
     /*渲染左侧磁贴列表*/
     function renderleftlist(result) {
-        console.log(result);
         var $tileTypeList = result.tileTypeList;
-        var imgdata = [
-            "../../images/shortcut.jpg", /* shortcut1:*/
-            "../../images/text.jpg", /* text:     */
-            "../../images/number.jpg", /* number1:  */
-            "../../images/line.jpg", /* line1:    */
-            "../../images/gauge.jpg", /* gauge1:   */
-            "../../images/pie.jpg", /* pie1:     */
-            "../../images/bar.jpg", /* bar1:     */
-            "../../images/list.jpg", /* list1:    */
-            "../../images/panel.jpg", /* panel:    */
-            "../../images/card.jpg", /* card:     */
-            "../../images/card.jpg"        /* image:    */
-        ];
+        console.log(result);
+
         $($tileTypeList).each(function (i) {
+            var imgdata = "../../images/"+$tileTypeList[i].icon;
             if ($tileTypeList[i].type == 5) {
                 var leftlistMm = '';
             } else {
                 var leftlistMm = '<li>' +
-                    '<img src="' + imgdata[i] + '" alt="">' +
+                    '<img src="' + imgdata + '" alt="">' +
                     '<span>' + $tileTypeList[i].templateName + '</span>' +
                     '<input type="hidden" class="leftype" value="' + $tileTypeList[i].type + '">' +
                     '<input type="hidden" class="leftid" value="' + $tileTypeList[i].id + '">' +
@@ -346,8 +382,6 @@
     function renderRContent(data, id) {
         var opXcommon = '<option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option>';
         var opYcommon = '<option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option>';
-
-
         if (data == 1) {
             html = dataMmhtml.tileTemplateCode +
                 dataMmhtml.appCode +
@@ -362,6 +396,8 @@
             var optiony = '<option value="1">1</option>';
             $('#sizex').append(optionx);
             $('#sizey').append(optiony);
+            dsRender('shortcut');
+
 
         } else if (data == 2) {
             html = dataMmhtml.tileTemplateCode +
@@ -377,6 +413,7 @@
             var optiony = '<option value="1">1</option>';
             $('#sizex').append(optionx);
             $('#sizey').append(optiony);
+            dsRender('num');
         } else if (data == 3) {
             html = dataMmhtml.tileTemplateCode +
                 dataMmhtml.appCode +
@@ -388,6 +425,17 @@
             $('.formtbody').html(html);
             $('#sizex').append(opXcommon);
             $('#sizey').append(opYcommon);
+            if(id==3){
+                console.log(1);
+                dsRender('chart_line');
+            }else if(id==4){
+                dsRender('chart_gauge');
+            }else if(id==5){
+                dsRender('chart_pie');
+            }else if(id==6){
+                dsRender('chart_bar');
+            }
+
         } else if (data == 4) {
             html = dataMmhtml.tileTemplateCode +
                 dataMmhtml.appCode +
@@ -401,6 +449,12 @@
             $('.formtbody').html(html);
             $('#sizex').append(opXcommon);
             $('#sizey').append(opYcommon);
+            dsRender('list');
+            /**作者：贾旭光
+             *日期：2018.6.7
+             *描述：根据与产品沟通卡片类型磁贴目前不体现
+             */
+
             /*} else if(data==5){
              html=dataMmhtml.tileTemplateCode+
              dataMmhtml.appCode+
@@ -432,6 +486,17 @@
             $('.formtbody').html(html);
             $('#sizex').append(opXcommon);
             $('#sizey').append(opYcommon);
+            dsRender('panel');
+        }else if (data == 8) {
+            html = dataMmhtml.tileTemplateCode +
+                dataMmhtml.appCode +
+                dataMmhtml.title +
+                dataMmhtml.size +
+                dataMmhtml.icon1 +
+                dataMmhtml.des;
+            $('.formtbody').html(html);
+            $('#sizex').append(opXcommon);
+            $('#sizey').append(opYcommon);
         }
         $('#mMtype').val(data);//每次点击左侧磁贴 这个参数更新
         $('#mMid').val(id);
@@ -447,6 +512,19 @@
                 admin_domain + '/img/sys/SysUpload/showImg/' + id
             );
         }
+        /*数据源下拉框渲染*/
+        function dsRender(type) {
+            ajaxToServer(admin_domain+'/api/sys/SysDict/type/workbench_datasource_'+type,{},function (result) {
+                console.log(type,result);
+                if(result.success) {
+                    appendOptionsValue($('#dataSource'),result.rows,'value','label');
+                    $('#dataSource').select2();
+                }
+            });
+        }
+
+
+
     }
 
     /*渲染递交内容的标题*/
@@ -492,6 +570,7 @@
         $('.subContent').find('div:contains("磁贴大小")').parent('li').append(sizespan)
 
     }
+
     /*判断左侧已选择后不能再选磁贴*/
     function ifelesleft() {
         var $list = $('.rCchange').find('li')

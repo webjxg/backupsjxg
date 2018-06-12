@@ -9,7 +9,7 @@ $(function(){
 				loadFn();
 			}else{
 				alert('您没有菜单权限，即将返回登录页');
-				location.href='../html/login.html';
+				location.href='../login.html';
 			}
         }else{
             layer.msg(result.message);
@@ -32,7 +32,7 @@ function ajaxToServer1(url, data, callbackFun){  //传送的参数是string时
             if(result.success == false){
                 if(result.retCode == "30009"){  //用户登录信息失效
                     alert('用户登录信息失效,请重新登录');
-                    top.location.href='../html/login.html';
+                    top.location.href='../login.html';
                     return;
                 }
             }
@@ -114,6 +114,7 @@ function ActiveNavItem(elType) {
     $('.navItem-con .J_iframe').each(function () {
         if ($(this).data('id') == elType) {
             $(this).show().siblings('.J_iframe').hide();
+            // $(this).show().siblings('.J_iframe').hide().eq(0).show();
             return false;
         }
     });
@@ -164,9 +165,8 @@ function menuItem(e) {
         $('.navItem-tabTag').removeClass('active');
         // 添加选项卡对应的iframe
         var str1 = '<iframe class="J_iframe" name="iframe' + dataIndex + '" width="100%" height="100%" src="' + dataUrl + '" frameborder="0" data-id="' + dataUrl + '" seamless></iframe>';
-
-        $('.navItem-con').find('iframe.J_iframe').hide();
-        $('.navItem-con').append(str1)
+        $('.navItem-con').find("iframe.J_iframe").hide().eq(0).removeClass('iframeShow').addClass('iframeHide');
+        $('.navItem-con').append(str1);
         //显示loading提示
         var loading = layer.load();
         $('.navItem-con iframe:visible').load(function () {
@@ -184,10 +184,16 @@ function menuItem(e) {
 function activeTab() {
     if (!$(this).hasClass('active')) {
         var currentId = $(this).data('id');
+        var tabsNavIndex = $(this).index();
         // 显示tab对应的内容区
+
         $('.navItem-con .J_iframe').each(function () {
             if ($(this).data('id') == currentId) {
-                $(this).show().siblings('.J_iframe').hide();
+                if(tabsNavIndex == 0){
+                    $(this).show().removeClass('iframeHide').addClass('iframeShow').siblings('.J_iframe').hide();
+                }else{
+                    $(this).show().siblings('.J_iframe').hide().eq(0).removeClass('iframeShow').addClass('iframeHide');
+                }
                 return false;
             }
         });
@@ -268,7 +274,8 @@ function refreshActiveTab() {
 
 //获取显示的iframe
 function getActiveTab(){
-    return $(".J_iframe:visible");
+    var activeTabs = $(".J_iframe:visible");
+    return activeTabs.eq(activeTabs.length-1);
 }
 //计算元素集合的总宽度
 function calSumWidth(elements) {

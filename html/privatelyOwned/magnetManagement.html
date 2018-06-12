@@ -68,7 +68,6 @@
 
        });
        function rendertitle(result) {
-           console.log(result);
            var typelist = result.typeList;
            for (var i = 0; i < typelist.length; i++) {
                var html = '<li id="' + typelist[i].id + '">' +
@@ -88,19 +87,19 @@
 
 
            $ifrTab.click(function () {
-               var ind = $(this).index(), typeId = $(this).attr('id');
-               var $ifrurl = [
-                   "./mMshortcut.html?typeid=" + typeId,
-                   "./mMnumber.html?typeid=" + typeId,
-                   "./mMchart.html?typeid=" + typeId,
-                   "./mMlist.html?typeid=" + typeId,
-                   "./mMcard.html?typeid=" + typeId,
-                   "./mMtext.html?typeid=" + typeId,
-                   "./mMcustom.html?typeid=" + typeId
-               ];
+               var typeId = $(this).attr('id');/*ind = $(this).index(),*/
+//               var $ifrurl = [
+//                   "./mMshortcut.html?typeid=" + typeId,
+//                   "./mMnumber.html?typeid=" + typeId,
+//                   "./mMchart.html?typeid=" + typeId,
+//                   "./mMlist.html?typeid=" + typeId,
+//                   "./mMcard.html?typeid=" + typeId,
+//                   "./mMtext.html?typeid=" + typeId,
+//                   "./mMcustom.html?typeid=" + typeId
+//               ];
                $ifrBox.children("iframe").remove();
                $(this).addClass('active').siblings("li").removeClass('active');
-               createTagFrame("iframeCon", $ifrurl[ind]);
+               createTagFrame("iframeCon", "./mMtypeList.html?typeid=" + typeId);
 //           $('#iframeCon>iframe').contentWindow.giveval(typeId)
 
            });

@@ -6,7 +6,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <!--插件样式-->
     <link rel="stylesheet" href="../../plugins/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../plugins/font-awesome/css/font-awesome.min.css">
     <link rel="stylesheet" href="../../css/comInnerTable.css">
+    <link rel="stylesheet" href="../../plugins/layer/theme/default/layer.css">
+    <link rel="stylesheet" href="../../plugins/ztree/css/metroStyle/metroStyle.css">
+    <link rel="stylesheet" href="../../plugins/select2/dist/css/select2.min.css">
     <link rel="stylesheet" href="../../css/privatelyOwned.css">
     <style>
         #des{
@@ -98,6 +102,8 @@
 <script src="../../plugins/layer/layer.js"></script>
 <script src="../../plugins/icheck/icheck.min.js"></script>
 <script src="../../plugins/webUpLoader/webuploader.js"></script>
+<script src="../../plugins/select2/dist/js/select2.min.js"></script>
+<script src="../../plugins/select2/dist/js/i18n/zh-CN.js"></script>
 <!--自定义文件-->
 <script src="../../js/apiDomain.js"></script>
 <script src="../../js/jeeplus.js"></script>
@@ -120,6 +126,8 @@
         ajaxToServer1(admin_domain+'/api/workbench/WorkbenchTileTemplate/form', data, function (result) {
             console.log(result);
             renderRContent(type,id,result);
+            $('.bgColor>td>li>a i').css('color',result.workbenchTileTemplate.bgColor)
+            colorChange();
         });
     });
 
@@ -142,9 +150,8 @@
         '<td class=""><input id="title" name="title" type="text" required="required" value="" class="form-control valid">' +
         '<label id="title-error" class="error" for="title" style="display:none"></label></td></tr>',
         /*数据源----*/
-        dataSource:
-        '<tr><th class=""><label class="pull-right"><font color="red">*</font>数据源:</label></th>' +
-        '<td class=""><input id="dataSource" name="dataSource" type="text"  value="" class="form-control valid">' +
+        dataSource: '<tr><th class="width-10"><label class="pull-right"><font color="red">*</font>数据源:</label></th>' +
+        '<td class="width-80"><select id="dataSource" name="dataSource" type="text"  class="form-control valid1" ></select>' +
         '<label id="dataSource-error" class="error" for="title" style="display:none"></label></td></tr>',
         /*磁贴大小--*/
         size:
@@ -192,12 +199,65 @@
         content:
         '<tr><th class=""><label class="pull-right"><font color="red">*</font>文本内容:</label></th>' +
         '<td class=""><textarea name="content" rows="4" id="content" required="required" class="form-control valid"></textarea>' +
-        '<label id="content-error" class="error" for="content" style="display:none"></label></td></tr>'
-
+        '<label id="content-error" class="error" for="content" style="display:none"></label></td></tr>',
+        /*背景颜色*/
+        bgColor: '<tr class="bgColor"><th><label class="pull-right">背景颜色:</label></th>' +
+        '<td class="width-80"><input class="valid1" type="hidden" id="bgColor" name="bgColor" >' + '<li class="dropdown color-picker">' +
+        '<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="true">' +
+        '<span><i class="fa fa-circle"></i></span>' +
+        '</a>' +
+        '<ul class="dropdown-menu pull-right animated fadeIn" role="menu">' +
+        '<li class="padder-h-xs">' +
+        '	<table class="table color-swatches-table text-center no-m-b">' +
+        '		<tbody>' +
+        '           <tr>' +
+        '				<td class="text-center colorr">' +
+        '				    <a onclick=col(this) data-theme="blue" class="theme-picker">' +
+        '					<i class="fa fa-circle blue-base"></i>' +
+        '				    </a>' +
+        '				</td>' +
+        '				<td class="text-center colorr">' +
+        '					<a onclick=col(this) data-theme="green" class="theme-picker">' +
+        '						<i class="fa fa-circle green-base"></i>'+
+        '					</a>'+
+        '				</td>' +
+        '				<td class="text-center colorr">' +
+        '					<a  onclick=col(this) data-theme="red" class="theme-picker">' +
+        '						<i class="fa fa-circle red-base"></i>' +
+        '					</a>' +
+        '				</td>' +
+        '			</tr>' +
+        '			<tr>' +
+        '			   <td class="text-center colorr">' +
+        '		   	   	<a onclick=col(this) data-theme="purple" class="theme-picker">' +
+        '			   		<i class="fa fa-circle purple-base"></i>' +
+        '			   	</a>' +
+        '			   </td>' +
+        '			   <td class="text-center colorr">' +
+        '			   <a onclick=col(this) data-theme="midnight-blue" class="theme-picker">' +
+        '			   	<i class="fa fa-circle midnight-blue-base"></i>' +
+        '		   	   </a>' +
+        '			   </td>' +
+        '				<td class="text-center colorr">' +
+        '					<a onclick=col(this) data-theme="lynch" class="theme-picker">' +
+        '						<i class="fa fa-circle lynch-base"></i>' +
+        '					</a>' +
+        '				</td>' +
+        '			</tr>' +
+        '       </tbody></table>' +
+        '</li>' +
+        '</ul>' +
+        '</li>' +
+        '</td></tr>',
+        /*图片*/
+        icon1:
+            '<tr><th class=""><label class="pull-right"><font color="red">*</font>图片:</label></th><td class=" "><a href="javascript:" class="" id="filePicker" >选择</a><input id="nameImage" name="icon" maxlength="255" class="input-xlarge form-control valid" type="text" value="0"/></td></tr>',
 
     }
     /*渲染右侧input*/
     function renderRContent(data,id,results) {
+        var opXcommon = '<option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option>';
+        var opYcommon = '<option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option>';
         if(data==1){
             html=dataMmhtml.tileTemplateCode+
                 dataMmhtml.appCode+
@@ -212,6 +272,7 @@
             var optiony='<option value="1">1</option>';
             $('#sizex').append(optionx);
             $('#sizey').append(optiony);
+            dsRender('shortcut');
 
         } else if(data==2){
             html=dataMmhtml.tileTemplateCode+
@@ -227,6 +288,9 @@
             var optiony='<option value="1">1</option>';
             $('#sizex').append(optionx);
             $('#sizey').append(optiony);
+            dsRender('num');
+
+
         } else if(data==3){
             html=dataMmhtml.tileTemplateCode+
                 dataMmhtml.appCode+
@@ -236,10 +300,22 @@
                 dataMmhtml.timeInterval+
                 dataMmhtml.des;
             $('.formtbody').html(html);
-            var optionx='<option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option>';
-            var optiony='<option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option>';
-            $('#sizex').append(optionx);
-            $('#sizey').append(optiony);
+            $('#sizex').append(opXcommon);
+            $('#sizey').append(opYcommon);
+            var tpid=results.workbenchTileTemplate.templateId;
+            if(tpid==3){
+                console.log(1);
+                dsRender('chart_line');
+            }else if(tpid==4){
+                dsRender('chart_gauge');
+            }else if(tpid==5){
+                dsRender('chart_pie');
+            }else if(tpid==6){
+                dsRender('chart_bar');
+            }
+
+
+
         } else if(data==4){
             html=dataMmhtml.tileTemplateCode+
                 dataMmhtml.appCode+
@@ -251,11 +327,17 @@
                 dataMmhtml.columnName+
                 dataMmhtml.des;
             $('.formtbody').html(html);
-            var optionx='<option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option>';
-            var optiony='<option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option>';
-            $('#sizex').append(optionx);
-            $('#sizey').append(optiony);
-        } else if(data==5){
+            $('#sizex').append(opXcommon);
+            $('#sizey').append(opYcommon);
+            dsRender('list');
+
+
+        }
+        /**作者：贾旭光
+         *日期：2018.6.7
+         *描述：根据与产品沟通卡片类型磁贴目前不体现
+         */
+        /*else if(data==5){
             html=dataMmhtml.tileTemplateCode+
                 dataMmhtml.appCode+
                 dataMmhtml.title+
@@ -264,11 +346,9 @@
                 dataMmhtml.displayName+
                 dataMmhtml.des;
             $('.formtbody').html(html);
-            var optionx='<option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option>';
-            var optiony='<option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option>';
-            $('#sizex').append(optionx);
-            $('#sizey').append(optiony);
-        }else if(data==6){
+            $('#sizex').append(opXcommon);
+            $('#sizey').append(opYcommon);*/
+        else if(data==6){
             html=
                 dataMmhtml.tileTemplateCode+
                 dataMmhtml.title+
@@ -276,12 +356,11 @@
                 dataMmhtml.size+
                 dataMmhtml.content+
                 dataMmhtml.des
-                ;
+            ;
             $('.formtbody').html(html);
-            var optionx='<option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option>';
-            var optiony='<option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option>';
-            $('#sizex').append(optionx);
-            $('#sizey').append(optiony);
+            $('#sizex').append(opXcommon);
+            $('#sizey').append(opYcommon);
+
         }else if(data==7){
             html=dataMmhtml.tileTemplateCode+
                 dataMmhtml.appCode+
@@ -290,21 +369,42 @@
                 dataMmhtml.size+
                 dataMmhtml.des;
             $('.formtbody').html(html);
-            var optionx='<option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option><option value="6">6</option><option value="7">7</option><option value="8">8</option>';
-            var optiony='<option value="1">1</option><option value="2">2</option><option value="3">3</option><option value="4">4</option><option value="5">5</option>';
-            $('#sizex').append(optionx);
-            $('#sizey').append(optiony);
+            $('#sizex').append(opXcommon);
+            $('#sizey').append(opYcommon);
+            dsRender('panel');
+        }else if (data == 8) {
+            html = dataMmhtml.tileTemplateCode +
+                dataMmhtml.appCode +
+                dataMmhtml.title +
+                dataMmhtml.size +
+                dataMmhtml.icon1 +
+                dataMmhtml.des;
+            $('.formtbody').html(html);
+            $('#sizex').append(opXcommon);
+            $('#sizey').append(opYcommon);
         }
         $('#mMtype').val(data);//每次点击左侧磁贴 这个参数更新
         $('#mMid').val(id);
         ajaxToServer(admin_domain+'/api/workbench/WorkbenchTileTemplate/selectAppName', {}, function (result) {
+            console.log(results);
             renderSelect(result)
             renderData(results.workbenchTileTemplate,'#inputForm');
+            //角色赋值
+            $('#dataSource').select2().val(results.workbenchTileTemplate.dataSource).trigger('change');
         });
 
         /*上传头像*/
         if($('#nameImagePreview')){
             initWebuploader('/img/sys/SysUpload/upimg?imgPath=img', '#filePicker');
+        }
+        function dsRender(type) {
+            ajaxToServer(admin_domain+'/api/sys/SysDict/type/workbench_datasource_'+type,{},function (result) {
+                console.log(type,result);
+                if(result.success) {
+                    appendOptionsValue($('#dataSource'),result.rows,'value','label');
+                    $('#dataSource').select2();
+                }
+            });
         }
 
     }
@@ -318,6 +418,39 @@
             obj.value= parseFloat(obj.value);
         }
     }
+    /*调色版*/
+    function colorChange() {
+        var colorBoxArr=['blue-base','green-base','red-base','purple-base','midnight-blue-base','lynch-base'];
+
+        ajaxToServer(admin_domain+'/api/sys/SysDict/type/workbench_bgcolor_num',{},function (result) {
+            for(var i=0;i<colorBoxArr.length;i++){
+                $('.'+colorBoxArr[i]).css({'color':result.rows[i].value});
+            }
+        });
+
+    }
+    function col(this_) {
+        var itemColor=colorRGB2Hex($(this_).children('i.fa-circle').css('color'));
+        $('.bgColor>td>li>a i').css({'color':itemColor});
+        console.log($('.bgColor>td>li>a i').css('color'));
+        $('#bgColor').val(colorRGB2Hex($('.bgColor>td>li>a i').css('color')))
+    }
+
+    //rgb转换成16进制
+    function colorRGB2Hex(color) {
+        if(color==undefined){
+            layerAlert('未选定颜色请重新选择')
+        }else{
+            var rgb = color.split(',');
+            var r = parseInt(rgb[0].split('(')[1]);
+            var g = parseInt(rgb[1]);
+            var b = parseInt(rgb[2].split(')')[0]);
+
+            var hex = "#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+            return hex;
+        }
+    }
+
 
 
     //    修改图片

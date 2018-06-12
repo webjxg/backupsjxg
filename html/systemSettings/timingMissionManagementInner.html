@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>定时任务管理</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <!--插件样式-->
+    <link rel="stylesheet" href="../../plugins/metismenu-master/metisMenu.css">
+    <link rel="stylesheet" href="../../plugins/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../../plugins/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../plugins/layer/theme/default/layer.css">
+    <link rel="stylesheet" href="../../plugins/icheck/skins/square/green.css">
+    <link rel="stylesheet" href="../../plugins/select2/dist/css/select2.min.css">
+
+    <!--自定义样式-->
+    <link rel="stylesheet" href="../../css/comInnerTable.css">
+    <link rel="stylesheet" href="../../css/common.css">
+
+</head>
+<body>
+<form id="inputForm" class="form-horizontal" action="/api/sys/SysRole/ajaxSave" method="post" novalidate="novalidate">
+    <input id="id" name="id" type="hidden" value="">
+    <table class="table table-bordered  table-condensed dataTables-example dataTable no-footer">
+        <tbody>
+        <tr>
+            <td class="width-15"><label class="pull-right"><font color="red">*</font>调度名称:</label></td>
+            <td class="width-35">
+                <input id="jobName" name="jobName" class="form-control required valid" type="text" value="" maxlength="50"
+                       aria-required="true" aria-invalid="false"></td>
+            <td class="width-15 active"><label class="pull-right"><font color="red">*</font>表达式:</label></td>
+            <td class="width-35">
+                <input id="cron" name="cron" class="form-control required valid" type="text" value=""
+                       maxlength="50" aria-required="true" aria-invalid="false"></td>
+        </tr>
+        <tr>
+            <td class="width-15"><label class="pull-right">执行类路径:</label>
+            </td>
+            <td class="width-35">
+                <select id="clazzPath" name="clazzPath" class="form-control required valid">
+                    <option>--请选择--</option>
+                </select>
+            </td>
+            <td class="width-15 active"><label class="pull-right">是否启用:</label>
+            </td>
+            <td class="width-35">
+             <select id="status" class="form-control required">
+                 <option value="true">启用</option>
+                 <option value="false">禁用</option>
+             </select>
+            </td>
+        </tr>
+        <tr>
+            <td class="width-15 active"><label class="pull-right">备注:</label></td>
+            <td class="width-35">
+                <textarea id="jobDesc" name="jobDesc" maxlength="200" class="form-control " rows="3"></textarea>
+            </td>
+            <td class="width-15 active"><label class="pull-right"></label></td>
+            <td class="width-35">
+
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</form>
+</body>
+<!--核心插件-->
+<script src="../../js/jquery-2.2.4.min.js"></script>
+<script src="../../plugins/bootstrap/js/bootstrap.min.js"></script>
+<!--附属插件-->
+<script src="../../plugins/validate/jquery.validate.min.js"></script>
+<script src="../../plugins/validate/messages_zh.min.js"></script>
+<script src="../../plugins/jBox/jquery.jBox-2.3.min.js"></script>
+<script src="../../plugins/ibox.2.2/ibox.js"></script>
+<script src="../../plugins/layer/layer.js"></script>
+<script src="../../plugins/icheck/icheck.min.js"></script>
+<script src="../../plugins/slimScroll/jquery.slimscroll.min.js"></script>
+<script src="../../plugins/datatables/js/jquery.dataTables.min.js"></script>
+<script src="../../plugins/select2/dist/js/select2.min.js"></script>
+<script src="../../plugins/select2/dist/js/i18n/zh-CN.js"></script>
+<!--自定义文件-->
+<script src="../../js/common.js"></script>
+<script src="../../js/apiDomain.js"></script>
+<script src="../../js/customForm.js"></script>
+<script>
+    var id = getQueryString('id');
+    var api = getQueryString('api');
+    $(function () {
+        LoadJobpathList();
+        window.pageLoad = function () {
+            var data = {
+                id:id
+            };
+            var url = pi_domain + "/api/SysJob/" +api;
+            ajaxToServer1(url,data,function (result) {
+                if(result.success){
+                    var SysMenu = result.SysJob;
+                    $("#clazzPath option:selected").text(SysMenu.clazzPath);
+                    $('#clazzPath').attr('disabled','disabled').css({"cursor":"not-allowed"});
+                    $("#status option").each(function () {
+                        SysMenu.status = SysMenu.status.toString()
+                        if(SysMenu.status == $(this).attr('value')){
+                            $(this).attr("selected",true);
+                            $('#status').attr('disabled','disabled').css({"cursor":"not-allowed"});
+                        }
+                    });
+                    $('#jobName').val(SysMenu.jobName).attr('disabled','disabled').css({"cursor":"not-allowed"});
+                    $('#cron').val(SysMenu.cron).attr('disabled','disabled').css({"cursor":"not-allowed"});
+                    $('#jobDesc').val(SysMenu.jobDesc).attr('disabled','disabled').css({"cursor":"not-allowed"});
+                }else{
+                    layer.msg(result.message);
+                }
+            })
+        };
+        if(id != null && api != null){
+            pageLoad()
+        }
+    })
+    function LoadJobpathList() {
+        var url_ = pi_domain + '/api/SysJob/findJobpathList';
+        ajaxToServer1(url_, {}, function(result){
+            if(result.success){
+                var rows = result.jobpathList;
+                appendOptionsValue($('#clazzPath'), rows, 'clazzPath', 'clazzPath');
+            }else{
+                layer.msg(result.message);
+            }
+        });
+    }
+</script>
+</html>

@@ -53,7 +53,7 @@
                             <select id="type" name="type" class="form-control m-b">
                             </select>
                             <span>描述 ：</span>
-                            <input id="description" name="descriptionParam" class="form-control" type="text" value="" maxlength="50" onkeydown="if(event.keyCode==13){return false;}">
+                            <input id="description" name="descriptionParam" class="form-control" type="text" value="" maxlength="50" >
                         </div>
                     </div>
                 </div>
@@ -175,6 +175,7 @@
 
     function refresh() {
         $("#type").html("");//刷新重新添加select，避免重复，先清空
+        $('#description').val("");
         pageLoad();
         createSelect("/api/sys/SysDict/allType","#type",'type','type');  //动态添加Select的option
     }

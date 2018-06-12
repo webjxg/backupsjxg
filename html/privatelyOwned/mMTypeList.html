@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>图表类</title>
+    <title>卡片类</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <link rel="stylesheet" href="../../plugins/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="../../plugins/font-awesome/css/font-awesome.min.css">
@@ -74,6 +74,7 @@
     }
 
     function deleteIt(mess,url,type,id){
+        //var ids= eleP.find('input.i-checks').attr('id')
         var data = {
             type:type,
             id:id
@@ -93,6 +94,7 @@
         });
         return false;
     }
+
     /*渲染磁贴*/
     function renderul(result) {
         var tileList=result.tileList;
@@ -119,6 +121,7 @@
                         '</li>';
                     $('.notapproval').append(list)
                     setFrameHeight();
+
                 }
             }else{
                 top.layer.confirm('无相关数据，请注册磁贴后再进行查看！',{icon:0,btn:'关闭'})
@@ -129,7 +132,6 @@
 
 
     }
-
     function getSubmitFormId(){
         return "#inputForm";
     }

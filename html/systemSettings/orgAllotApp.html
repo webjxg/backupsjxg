@@ -44,7 +44,7 @@
             <input type="hidden" name="deptId" id="roleId" value="">
             <input type="hidden" name="companyId" id="companyList" value="">
         </form>
-        <button id="assignButton" type="submit" class="btn btn-outline btn-primary btn-sm" title="添加人员"><i
+        <button id="assignButton" type="submit" class="btn btn-outline btn-primary btn-sm" title="添加应用"><i
                 class="fa fa-plus"></i> 添加应用
         </button>
         <button class="btn btn-danger btn-sm" id="delete-btn" data-toggle="tooltip" onclick="removeUserBatch()"
@@ -115,7 +115,7 @@
                 //alert(roleName);改BUG时候用的
             var data = {
                 appIds: userIds,
-                orgId: id,
+                orgId: id
             };
             deleteACallback('确认要将应用从<b>[' + $(".roleType b").text() + ']</b>中移除吗？', function (layIdx) {
                 var url = '/api/sys/SysOrg/delApp';

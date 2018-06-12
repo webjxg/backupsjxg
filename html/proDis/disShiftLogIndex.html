@@ -330,6 +330,7 @@
                 console.log(result.shiftMain.overStatus == "0")
                 if (result.shiftMain.overStatus == "0") {
                     $('.apsType-box').append('<input type="button" class="giveWork btn bg-1ab394" value="交班">')
+                    $('.apsType-box').append('<input type="button" class="save_btn btn " value="保存">')
                 } else if (result.lastShiftMain.reciveStatus == "0") {
                     console.log(2);
                     $('textarea').attr('readonly','readonly');
@@ -441,6 +442,40 @@
                             shiftId: result.shiftMain.shift.id,
                             shiftMainId: result.shiftMain.id,
                             overStatus: "1",
+                            groupName: result.shiftMain.groupName,
+                            shiftDate: result.shiftMain.shiftDate
+
+                        };
+                        $("#reciveStatus").val("1");
+                        for (var i = 0; i < keyArr.length; i++) {
+                            data[keyArr[i] + "_dataArr"] = JSON.stringify(getItemArrJson($('#' + keyArr[i] + ''), keyArr[i], result));
+                        }
+                        ajaxToServer1('/api/ctrl/ShiftMain/over', data, function (result) {
+                            if(result.success){
+                                top.layer.closeAll();
+                                window.location.reload()
+                            }else{
+                                layer.msg(result.massage)
+                            }
+                        });
+                    }
+                )
+            }else{
+                layerAlert('用户信息不匹配')
+            }
+
+
+        });
+        $('.apsType-box').on('click', '.save_btn', function () {
+            if(banName==result.shiftMain.groupName&&banId==result.shiftMain.shift.id){
+                top.layer.confirm('是否确定保存',{
+                        btn:['确定', '取消'],
+                        icon: 3},function () {
+                        var data = {
+                            bigKind: "DD",
+                            shiftId: result.shiftMain.shift.id,
+                            shiftMainId: result.shiftMain.id,
+                            overStatus: "0",
                             groupName: result.shiftMain.groupName,
                             shiftDate: result.shiftMain.shiftDate
 

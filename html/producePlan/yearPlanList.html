@@ -127,9 +127,7 @@
                 adYear:$(".datePicker").val(),
                 status:$("#status").val()
             };
-            console.log(data)
             Page.init("/api/aps/ApsYearPlan/page",data,true,function (tableDate) {
-                console.log(tableDate)
                 for(var i=0;i<tableDate.length;i++){
                     if(tableDate[i].status == "0" && tableDate[i].monthPcStatus != "1"){
                         tableDate[i].status = "0"
@@ -209,7 +207,7 @@
                         return "<span class='"+classSet+"'>"+setText+"</span >";
                     }
                 },
-                {"data":null,"orderable":false,"defaultContent":"",'sClass':"alignCenter",
+                {"data":null,"orderable":false,"defaultContent":"",'sClass':"alignCenter autoWidthx",
                     "render":function (data,type,row,meta) {
                         var html = "";
                         if(row.status == "0"){
@@ -251,7 +249,6 @@
         var url = admin_domain + "/api/sys/SysOperation/currentUserOperation/PPMYPP_PAC";
         ajaxToServer(url, {} ,function (result) {
             if(result.success){
-                console.log(result)
                 if(result.rows.length>0){
                     for(var i=0;i<result.rows.length;i++){
                         if(result.rows[i].code == "PPMYPP_ADO"){  //新增

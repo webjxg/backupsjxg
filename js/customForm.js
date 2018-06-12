@@ -15,7 +15,7 @@ $("#search-btn").click(function(){
 $("#quit-btn").click(function(){
     delCookie("authorization");
     delCookie("token_type");
-    location.href="../html/login.html";
+    location.href="../login.html";
 });
 var layerAlert = function (info, icon){
     icon = icon||0;
@@ -58,7 +58,8 @@ var getFileExt = function(FileName){
 var basePath = function(){
     var obj=window.location;
     var contextPath=obj.pathname.split("/")[1];
-    var path=obj.protocol+"//"+obj.host+"/"+contextPath;
+    // var path=obj.protocol+"//"+obj.host+"/"+contextPath;
+    var path=obj.protocol+"//"+obj.host;
     return path;
 };
 
@@ -127,7 +128,7 @@ function ajaxToServer(url, data, callbackFun){//传送的参数是josnString时
                 if(result.retCode == "30009"){  //用户登录信息失效
 					alert('用户登录信息失效,请重新登录');
                     //$("#quit-btn",top.document).children("i").trigger("click");
-					top.location.href='../html/login.html';
+					top.location.href='../login.html';
                     return;
                 }
             }
@@ -162,7 +163,7 @@ function ajaxToServer1(url, data, callbackFun){  //传送的参数是string时
                 if(result.retCode == "30009"){  //用户登录信息失效
                     alert('用户登录信息失效,请重新登录');
                     //$("#quit-btn",top.document).children("i").trigger("click");
-					top.location.href='../html/login.html';
+					top.location.href='../login.html';
                     return;
                 }
             }
@@ -696,7 +697,7 @@ $("#iconButton").click(function(){
         maxmin: false,
         title:"选择图标",
         area: ['700px',  $(top.document).height()-180+"px"],
-        content: '../html/iconselect.html?selVal='+selVal,
+        content: '../iconselect.html?selVal='+selVal,
         btn: ['确定', '关闭'],
         yes: function(index, layero){ //或者使用btn1
             var icon = layero.find("iframe")[0].contentWindow.$("#icon").val();

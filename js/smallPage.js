@@ -1,6 +1,6 @@
 //分页插件
 var SmallPage = window.SmallPage || (function(){
-	var dataList,pageNo,pageSize,pageCount,pageRender;
+	var dataList,pageNo,pageSize,pageCount,pageRender,container;
 
 	//初始化
 	var init = function(pageCfg, pageRender_){
@@ -11,16 +11,15 @@ var SmallPage = window.SmallPage || (function(){
         if(SmallPage.dataList.length % SmallPage.pageSize!=0){
             SmallPage.pageCount++;
         }
-
-		var container = pageCfg.container;
-		if(container){
-			var exist = $(container).find('.small-page').length;
+        SmallPage.container = pageCfg.container;
+		if(SmallPage.container){
+			var exist = $(SmallPage.container).find('.small-page').length;
 			if(exist==0){
 				var html = "<a class='firstP' href='javascript:SmallPage.first();'>首页</a>";
 				html += "<a  class='preP' href='javascript:SmallPage.pre();'>上页</a>";
 				html += "<a class='nextP' href='javascript:SmallPage.next();'>下页</a>";
 				html += "<a class='lastP' href='javascript:SmallPage.last();'>末页</a>";
-				$(container).append("<div class='small-page'>"+html+"</div>");
+				$(SmallPage.container).append("<div class='small-page'>"+html+"</div>");
 			}
 		}
 		if(pageRender_){

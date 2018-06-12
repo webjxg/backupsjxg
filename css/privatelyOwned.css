@@ -409,3 +409,89 @@ label.error{
     height: 100%;
     cursor: pointer;
 }
+
+.bgColor>td>li{
+    font-size: 24px;
+    margin: 0;
+    /*border: 1px solid #EEEEEE;*/
+    color: #2c3e50;
+    width: 45px;
+    height: 45px;
+    position: relative;
+    float: left;
+}
+.bgColor>td label{
+    margin-bottom: 3px;
+}
+
+/*.bgColor li{*/
+    /*margin: 0;*/
+    /*width: 45px;*/
+    /*height: 45px;*/
+/*}*/
+.bgColor>td>li:hover{
+    background-color: #efefef;
+    cursor: pointer;
+}
+.bgColor>td>li>ul.fadeIn{
+    position: absolute;
+    right: -161px;
+    top:-1px;
+}
+.bgColor>td>li>a{
+    display: block;
+    margin: 8px 11px;
+}
+
+.bgColor>td>li>ul>li{
+    margin: 0;
+    font-size: 24px;
+}
+.bgColor>td>li>ul>li td{
+    border: 1px solid #efefef;
+}
+.bgColor>td>li>ul>li td:hover{
+    background-color: #efefef;
+
+}
+.bgColor>td>li>a i{
+    color:black;
+}
+
+.dropdown-menu{
+    margin: 0;
+    padding: 0;
+}
+
+
+
+/*六色*/
+a .blue-base {
+    color: #3CA2E0;
+}
+a .red-base {
+    color: #D24D57;
+}
+a .green-base {
+    color: #27ae60;
+}
+a .purple-base {
+    color: #957BBD;
+}
+a .midnight-blue-base {
+    color: #2c3e50;
+}
+a .lynch-base {
+    color: #6C7A89;
+}
+
+/*select2边框颜色*/
+.select2-container--default .select2-selection--single{
+    border: 1px solid #e7e7e7;
+}
+.select2-container--default .select2-selection--single .select2-selection__rendered {
+    font-size:12px
+}
+.select2-container .select2-selection--single .select2-selection__rendered{
+    padding-left: 12px;
+}

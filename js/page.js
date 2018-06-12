@@ -88,9 +88,11 @@ var Page = {
                 if( Page.renderTableFn){
                     Page.renderTableFn(page.rows, result);
                 }
+                // debugger;
                 if(vari){
                     Page.callBackPagination(page.pageSize,page.pageCount,page.count);
                 }
+                $('html,body').animate({scrollTop: '0px'}, 300);
             }else{
                 layer.msg(result.message);
             }
@@ -98,18 +100,17 @@ var Page = {
         })
     },
     callBackPagination:function(limit,showCount,totalCount) {
-    //createTable(pagNo, limit, totalCount);
-    $('#pagination').extendPagination({
-        totalCount: totalCount,
-        showCount: showCount,
-        limit: limit,
-        callback: function (curr,limit, totalCount) {
-            Page.paramData.page = {
-                pageSize:limit,
-                pageNo:curr
-            };
-            Page.init(Page.url_,Page.paramData,false);
-        }
-    });
-}
+        $('#pagination').extendPagination({
+            totalCount: totalCount,
+            showCount: showCount,
+            limit: limit,
+            callback: function (curr,limit, totalCount) {
+                Page.paramData.page = {
+                    pageSize:limit,
+                    pageNo:curr
+                };
+                Page.init(Page.url_,Page.paramData,false);
+            }
+        });
+    }
 };

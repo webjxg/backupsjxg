@@ -93,11 +93,12 @@
             "id": Id
         };
         ajaxToServer1(admin_domain+'/api/workbench/WorkbenchTileTemplate/view', data, function (result) {
+            console.log(result);
             if(result.success){
                 renderul(result)
                 var type=result.workbenchTileTemplate.type;
                 var imgUrl=result.workbenchTileTemplate.icon.split('.')[0];
-                if(type==1||type==2){
+                if(type==1||type==2||type==8){
                     var id=result.workbenchTileTemplate.id;
                     var imgName='<img src="http://114.115.165.184:8080/admin-api/img/sys/SysUpload/showTileImg?id='+id+'&type='+type+'"  alt="">';
                     $('.iconImage').append(imgName)

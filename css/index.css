@@ -96,9 +96,10 @@ body.nav-mini .wrapper-con {
 
 .wrapper-con {
     margin: 0 0 0 210px;
-    padding: 0 0 40px 0;
+    padding: 0 0 0 0;
     height: calc(100% - 70px);
     position: relative;
+    overflow: auto;
 }
 .navbar-static-top{
     display: block;

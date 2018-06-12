@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title><!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <title>定时任务管理</title>
+            <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+            <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+            <!--插件样式-->
+            <link rel="stylesheet" href="../../plugins/metismenu-master/metisMenu.css">
+            <link rel="stylesheet" href="../../plugins/font-awesome/css/font-awesome.min.css">
+            <link rel="stylesheet" href="../../plugins/bootstrap/css/bootstrap.min.css">
+            <link rel="stylesheet" href="../../plugins/layer/theme/default/layer.css">
+            <link rel="stylesheet" href="../../plugins/icheck/skins/square/green.css">
+            <link rel="stylesheet" href="../../plugins/select2/dist/css/select2.min.css">
+
+            <!--自定义样式-->
+            <link rel="stylesheet" href="../../css/comInnerTable.css">
+            <link rel="stylesheet" href="../../css/common.css">
+
+        </head>
+<body>
+<form id="inputForm" class="form-horizontal"  method="post" novalidate="novalidate">
+    <input id="id" name="id" type="hidden" value="">
+    <table class="table table-bordered  table-condensed dataTables-example dataTable no-footer">
+        <tbody>
+        <tr>
+            <td class="width-15"><label class="pull-right"><font color="red">*</font>调度名称:</label></td>
+            <td class="width-35">
+                <input id="jobName" name="jobName" class="form-control required valid" type="text" value="" maxlength="50"
+                       aria-required="true" aria-invalid="false"></td>
+            <td class="width-15 active"><label class="pull-right"><font color="red">*</font>表达式:</label></td>
+            <td class="width-35">
+                <select id="cron" name="cron" class="form-control required valid">
+                    <option value=""></option>
+                </select>
+        </tr>
+        <tr>
+            <td class="width-15"><label class="pull-right">执行类路径:</label>
+            </td>
+            <td class="width-35">
+                <select id="clazzPath" name="clazzPath" class="form-control required valid">
+                    <option>--请选择--</option>
+                </select>
+            </td>
+            <td class="width-15 active"><label class="pull-right">是否启用:</label>
+            </td>
+            <td class="width-35">
+                <select id="status" class="form-control required">
+                    <option value="true">启用</option>
+                    <option value="false">禁用</option>
+                </select>
+            </td>
+        </tr>
+        <tr>
+            <td class="width-15 active"><label class="pull-right">备注:</label></td>
+            <td class="width-35">
+                <textarea id="jobDesc" name="jobDesc" maxlength="200" class="form-control " rows="3"></textarea>
+            </td>
+            <td class="width-15 active"><label class="pull-right"></label></td>
+            <td class="width-35">
+
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</form>
+</body>
+<!--核心插件-->
+<script src="../../js/jquery-2.2.4.min.js"></script>
+<script src="../../plugins/bootstrap/js/bootstrap.min.js"></script>
+<!--附属插件-->
+<script src="../../plugins/validate/jquery.validate.min.js"></script>
+<script src="../../plugins/validate/messages_zh.min.js"></script>
+<script src="../../plugins/jBox/jquery.jBox-2.3.min.js"></script>
+<script src="../../plugins/ibox.2.2/ibox.js"></script>
+<script src="../../plugins/layer/layer.js"></script>
+<script src="../../plugins/icheck/icheck.min.js"></script>
+<script src="../../plugins/slimScroll/jquery.slimscroll.min.js"></script>
+<script src="../../plugins/datatables/js/jquery.dataTables.min.js"></script>
+<script src="../../plugins/select2/dist/js/select2.min.js"></script>
+<script src="../../plugins/select2/dist/js/i18n/zh-CN.js"></script>
+<script src="../../js/jquery.editable-select.js"></script>
+<!--自定义文件-->
+<script src="../../js/common.js"></script>
+<script src="../../js/apiDomain.js"></script>
+<script src="../../js/customForm.js"></script>
+<script>
+    var id = getQueryString('id');
+    var api = getQueryString('api');
+    $(function () {
+        //执行类路径集合
+        $("form").attr("action",pi_domain + "/api/SysJob/ajaxSave");
+        LoadJobpathList();
+        Loadcron() //表达式
+        var data = {
+            id:id
+        };
+        if(id != null || api != null){
+            var url = pi_domain + "/api/SysJob/form";
+            ajaxToServer1(url,data,function (result) {
+                var SysMenu = result.SysJob;
+                $("#clazzPath option").each(function () {
+                    if(SysMenu.clazzPath == $(this).attr('value')){
+                        $(this).attr("selected",true);
+                    }
+                });
+                $("#cron option").each(function () {
+                    console.log(SysMenu.cron,$(this).attr('value'))
+                    if(SysMenu.cron == $(this).attr('value')){
+                        $(this).attr("selected",true);
+                    }
+                });
+                $("#status option").each(function () {
+                    SysMenu.status = SysMenu.status.toString()
+                    if(SysMenu.status == $(this).attr('value')){
+                        $(this).attr("selected",true);
+                    }
+                });
+                $("#jobName").val(SysMenu.jobName);
+                $("#id").val(id);
+                $("#cron").val(SysMenu.cron);
+                $("#jobDesc").val(SysMenu.jobDesc);
+            })
+        }
+    })
+    function LoadJobpathList() {
+            var url_ = pi_domain + '/api/SysJob/findJobpathList';
+            ajaxToServer1(url_, {}, function(result){
+                if(result.success){
+                    var rows = result.jobpathList;
+                    appendOptionsValue($('#clazzPath'), rows, 'clazzPath', 'clazzPath');
+                }else{
+                    layer.msg(result.message);
+                }
+            });
+    }
+    function Loadcron() {
+        var url_ = pi_domain + '/api/SysJob/findJobcronList';
+        ajaxToServer1(url_, {}, function(result){
+            console.log(result);
+            if(result.success){
+                var rows = result.jobcronList;
+                appendOptionsValue($('#cron'),rows , 'cron', 'cron');
+            }else{
+                layer.msg(result.message);
+            }
+        });
+    }
+    /*清除头像*/
+    function getSubmitFormId(){
+        return "#inputForm";
+    }
+</script>
+</html>

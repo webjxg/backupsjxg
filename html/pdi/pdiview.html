@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <link rel="shortcut icon" type="image/x-icon" href="../images/logo5.1.png" media="screen" />
+    <title>复晟铝业MOM平台</title>
+</head>
+<body class="nav-mini">
+    <div id="pdiContainer">
+
+    </div>
+<script src="../../js/jquery-2.2.4.min.js"></script>
+<script src="../../js/apiDomain.js"></script>
+<script src="../../js/customForm.js"></script>
+<script>
+//限制浏览器IE
+if (!!window.ActiveXObject || "ActiveXObject" in window){
+    var name=getQueryString('name');
+    if(name!=null && name!=''){
+        var url = pi_domain+'/api/pocs/Pdi/load/'+name;
+        var html = "<object classid='clsid:4F26B906-2854-11D1-9597-00A0C931BFC8' id='Pbd1' width='100%' height='100%'>" +
+            "<Param name='DisplayURL' value='"+url+"'/></object>";
+        $('#pdiContainer').html(html);
+    }
+}else{
+    alert('请使用IE浏览器访问');
+}
+</script>
+</body>
+</html>

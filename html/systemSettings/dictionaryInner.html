@@ -97,11 +97,12 @@
     $(document).ready(function() {
         var id =getQueryString('id'),
             api = getQueryString('api') || 'form';
+            console.log(api);
         $("#value").focus();
         if(id){
             var url = "/api/sys/SysDict/"+api+"/"+id;
             ajaxToServer(url,{},function(result){
-                console.log(result)
+                console.log(url,result)
                 if(result.success){
                     renderData(result.SysDict,$('#inputForm'));
                 }else{

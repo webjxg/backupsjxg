@@ -287,7 +287,7 @@ var cancel_Alarm;
 function cancelAlarm(event){
     var id = $(event).attr('data-id');
         cancel_Alarm = event;
-    openEditDialog("取消报警","../html/mes/cancelAlarm.html?dataId="+id,"390px","240px",cancelAlarm_callback);
+    openEditDialog("取消报警","../mes/cancelAlarm.html?dataId="+id,"390px","240px",cancelAlarm_callback);
 
 }
 function cancelAlarm_callback(iframeWin, body, layIdx){

@@ -9,7 +9,7 @@
         复晟铝业MOM平台
     </title>
     <!--插件样式-->
-    <link rel=  "stylesheet" href="../plugins/metismenu-master/metisMenu.css">
+    <link rel="stylesheet" href="../plugins/metismenu-master/metisMenu.css">
     <link rel="stylesheet" href="../plugins/font-awesome/css/font-awesome.min.css">
     <link rel="stylesheet" href="../plugins/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="../plugins/layer/theme/default/layer.css">
@@ -179,7 +179,7 @@
                     $('.num').text(result.rows.length)
                 }
             }else{
-                $('.num').text('x');
+                $('.num').hide();
             }
         })
     });
@@ -188,10 +188,10 @@
         $("body").addClass('nav-mini');
     });
     $(".num").click(function () {
-        openTab("../html/information.html","通知列表",false);
+        openTab("../information.html","通知列表",false);
     })
     $(".icon").click(function () {
-        openTab("../html/systemSettings/changePassword.html","更改密码",false);
+        openTab("../systemSettings/changePassword.html","更改密码",false);
     })
 </script>
 </body>

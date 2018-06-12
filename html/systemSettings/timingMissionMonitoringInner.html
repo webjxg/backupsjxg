@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>定时任务管理</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=Edge,chrome=1">
+    <!--插件样式-->
+    <link rel="stylesheet" href="../../plugins/metismenu-master/metisMenu.css">
+    <link rel="stylesheet" href="../../plugins/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../../plugins/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../plugins/layer/theme/default/layer.css">
+    <link rel="stylesheet" href="../../plugins/icheck/skins/square/green.css">
+    <link rel="stylesheet" href="../../plugins/select2/dist/css/select2.min.css">
+
+    <!--自定义样式-->
+    <link rel="stylesheet" href="../../css/comInnerTable.css">
+    <link rel="stylesheet" href="../../css/common.css">
+
+</head>
+<body>
+<form id="inputForm" class="form-horizontal" method="post" novalidate="novalidate">
+    <input id="id" name="id" type="hidden" value="">
+    <table class="table table-bordered  table-condensed dataTables-example dataTable no-footer">
+        <tbody>
+        <tr>
+            <td class="width-15"><label class="pull-right"><font color="red">*</font>任务名称:</label></td>
+            <td class="width-35">
+                <input id="jobName" name="jobName" class="form-control required valid" type="text" value="" maxlength="50"
+                       aria-required="true" aria-invalid="false"></td>
+            <td class="width-15 active"><label class="pull-right"><font color="red">*</font>描述内容:</label></td>
+            <td class="width-35">
+                <input id="text" name="text" class="form-control required valid" type="text" value=""
+                       maxlength="50" aria-required="true" aria-invalid="false"></td>
+        </tr>
+        <tr>
+            <td class="width-15"><label class="pull-right">执行时间:</label>
+            </td>
+            <td class="width-35">
+                <input id="execDate" name="execDate" class="form-control required valid" type="text" value=""
+                       maxlength="50" aria-required="true" aria-invalid="false"></td>
+            </td>
+            <td class="width-15 active"><label class="pull-right">执行状态:</label>
+            </td>
+            <td class="width-35">
+             <textarea name="remark" id="remark" class="form-control required valid"></textarea>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</form>
+</body>
+<!--核心插件-->
+<script src="../../js/jquery-2.2.4.min.js"></script>
+<script src="../../plugins/bootstrap/js/bootstrap.min.js"></script>
+<!--附属插件-->
+<script src="../../plugins/validate/jquery.validate.min.js"></script>
+<script src="../../plugins/validate/messages_zh.min.js"></script>
+<script src="../../plugins/jBox/jquery.jBox-2.3.min.js"></script>
+<script src="../../plugins/ibox.2.2/ibox.js"></script>
+<script src="../../plugins/layer/layer.js"></script>
+<script src="../../plugins/icheck/icheck.min.js"></script>
+<script src="../../plugins/slimScroll/jquery.slimscroll.min.js"></script>
+<script src="../../plugins/datatables/js/jquery.dataTables.min.js"></script>
+<script src="../../plugins/select2/dist/js/select2.min.js"></script>
+<script src="../../plugins/select2/dist/js/i18n/zh-CN.js"></script>
+<!--自定义文件-->
+<script src="../../js/common.js"></script>
+<script src="../../js/apiDomain.js"></script>
+<script src="../../js/customForm.js"></script>
+<script>
+    var id = getQueryString('id');
+    var api = getQueryString('api');
+    $(function () {
+        window.pageLoad = function () {
+            var data = {
+                id:id
+            }
+            var url = pi_domain + "/api/SysJobLog/view";
+            ajaxToServer1(url,data,function (result) {
+                if(result.success){
+                    var msgobj = result.SysJobLog;
+                    $("#jobName").val(msgobj.jobName).attr('disabled','disabled').css({"cursor":"not-allowed"});
+                    $("#text").val(msgobj.text).attr('disabled','disabled').css({"cursor":"not-allowed"});
+                    $("#execDate").val(msgobj.execDate).attr('disabled','disabled').css({"cursor":"not-allowed"});
+                    $("#remark").val(msgobj.remark).attr('disabled','disabled').css({"cursor":"not-allowed"});
+
+                }else{
+                    layer.msg(result.message);
+                }
+            })
+        }
+        if(id!=null&&api!=null){
+            pageLoad()
+        }
+    })
+</script>
+</html>

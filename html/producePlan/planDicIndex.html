@@ -46,7 +46,40 @@
                 </div>
                 <!--右侧内容-->
                 <div id="right" class="animated fadeInRight" >
-                    <iframe id="officeContent" name="officeContent" width="100%" height="650px" frameborder="0" scrolling="no"></iframe>
+                    <!--<iframe id="officeContent" name="officeContent" width="100%"  frameborder="0" height="650px" scrolling="no"></iframe>-->
+                    <!--按钮条-->
+                    <div class="row">
+                        <div class="col-sm-12">
+                            <div class="pull-left">
+                                <button class="btn btn-white btn-sm" id="addBtn"  data-toggle="tooltip" data-placement="left"
+                                        onclick="openEditDialog('添加指标信息', './producePlan/planDicCheckView.html', '800px', '300px')"  title="添加"><i class="fa fa-plus"></i> 添加
+                                </button>
+                                <button class="btn btn-white btn-sm " id="refresh-btn" data-toggle="tooltip" data-placement="left"
+                                        onclick="window.location.reload()" title="刷新"><i class="glyphicon glyphicon-repeat"></i> 刷新
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <!--内容表格-->
+                    <table id="treeTable" class="table table-striped table-bordered table-hover table-condensed dataTables-example dataTable">
+                        <thead>
+                        <tr>
+                            <th class='autoWidth'>指标名称</th>
+                            <th class='autoWidth'>指标编码</th>
+                            <th class='autoWidth'>年指标值</th>
+                            <th class='autoWidth'>月指标值</th>
+                            <th class='autoWidth'>指标单位</th>
+                            <th class='autoWidth'>操作</th>
+                        </tr>
+                        </thead>
+                        <tbody id="treeTableBody" >
+
+                        </tbody>
+                    </table>
+                    <div class="clearfix pagination-box">
+                        <div class="page-info pull-left"></div>
+                        <div id="pagination" class="pagination-roll pull-right"></div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -109,8 +142,99 @@
     }
 
     function rendersun(data) {
-        $('#officeContent')[0].contentWindow.updatason(data);
+        page(data);
     }
+    window.pageLoad= function () {
+        page(0);
+    };
+    pageLoad();
+    function page(node) {
+        ajaxToServer("/api/aps/Dict/ajaxTreeJson/"+node,{},function(tableData){
+            if(tableData.success){
+                renderTableData(tableData.rows);
+                clickButton();
+            }else{
+                layer.msg(tableData.message)
+            }
+
+        })
+    }
+
+
+
+    function clickButton(node) {
+        $('.btn-check').click(function () {
+            var id = $(this).parents("tr").find('.i-Checks').attr('id');
+            openDialog('查看指标信息', './producePlan/planDicCheckView.html?id=' + id, '800px', '300px')
+        });
+        $('.btn-change').click(function () {
+            var id = $(this).parents("tr").find('.i-Checks').attr('id');
+            openEditDialog('修改指标信息', './producePlan/planDicCheckView.html?id=' + id, '800px', '300px')
+        });
+        $('.btn-delete').click(function () {
+            var id = $(this).parents("tr").find('.i-Checks').attr('id');
+            deleteItem('确定要删除该指标吗', '/api/aps/Dict/delete/',id)
+        });
+        $('.btn-addson').click(function(){
+            var id = $(this).parents("tr").find('.i-Checks').attr('id');
+            openEditDialog('添加下级菜单','./producePlan/planDicCheckView.html?pid='+id,'800px','300px')
+        });
+    }
+    function renderTableData(data) {
+        console.log(data);
+        var tableStr = "";
+        for (var i = 0; i < data.length; i++) {
+            var count = 'data-tt-id=' + data[i].id;
+            if (data[i]._parentId && data[i]._parentId != '') {
+                count += '  data-tt-parent-id=' + data[i]._parentId;
+            }
+            tableStr += "<tr class='alignCenter autoWidth'" + count + " >"
+                + "<td class='i-Checks alignLeft autoWidth' id='" + data[i].id + "'>" + data[i].itemName + "</td>"
+                + "<td class='alignLeft autoWidth'>" + data[i].itemCode + "</td>"
+                + "<td>" + data[i].itemValue + "</td>"
+                +"<td>" + data[i].itemMonthValue + "</td>"
+                + "<td>" + data[i].itemUnit + "</td>"
+                + "<td class='autoWidth' >" +
+                "<a class='btn  btn-info btn-check'><i class='fa fa-search-plus'></i>查看</a>" +
+                " <a class='btn btn-success btn-change'><i class='fa icon-change'></i>修改</a>" +
+                " <a class='btn bg-f75c5c btn-delete'><i class='fa fa-trash'></i> 删除</a>"  +
+                " <a class='btn  btn-addson btn-target'><i class='fa fa-plus'></i>添加下级指标</a>"  +
+                "</td>"
+
+                + "</tr>";
+        }
+        if (tableStr.length == 0) {
+            var len = $("#treeTable thead tr").children("th").length;
+            tableStr = "<tr style='text-align: center'><td colspan='" + len + "'><font color='#cd0a0a'>暂无记录，请点击左侧对应指标</font></td></tr>";
+        }
+        $('#treeTableBody').html(tableStr);
+        $("#treeTable").treetable({
+            expandable: true,
+            column: 0
+        }, true);
+        console.log($('#treeTableBody').outerHeight(true));
+    }
+
+    function deleteIt(mess,url){
+        top.layer.confirm(mess, {icon: 3, title:'系统提示'},function(index){
+            ajaxToServer1(url,{},function(result){
+                console.log(url,result)
+                if(result.success == true){
+                    layer.msg("删除成功");
+                    var frameActive = top.getActiveTab().attr("name");
+                    var obj = $('.fa-refresh', top.window.frames[frameActive].document);
+                    if(obj.length == 0){
+                        obj = $('.fa-refresh', top.window.frames[frameActive].document);
+                    }
+                    obj.trigger('click');
+                }
+            });
+            top.layer.close(index);
+        });
+        return false;
+    }
+
+
 </script>
 </body>
 </html>

@@ -233,7 +233,7 @@ function ajaxToServer(url, data, callbackFun){//传送的参数是josnString时
                 if(result.retCode == "30009"){  //用户登录信息失效
                     alert('用户登录信息失效,请重新登录');
                     //$("#quit-btn",top.document).children("i").trigger("click");
-                    top.location.href='../html/login.html';
+                    top.location.href='../login.html';
                     return;
                 }
             }

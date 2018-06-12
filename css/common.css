@@ -71,7 +71,7 @@ html,body,#wrapper{ height: 100%;}
   border-radius: 15px;
 }
 iframe{border:none;}
-.wrapper{min-height:100%;}
+.wrapper{min-height:100%;height:100%;}
 .wrapper-content{
   padding:4px 4px 4px 4px;
 }
@@ -253,6 +253,12 @@ iframe{border:none;}
 .pagination-box{
   margin-top:0;
   margin-left: 10px;
+}
+.page-info{
+  padding:3px 0;
+}
+.pagination-roll{
+  line-height: 0;
 }
 table.treeTable{
   font-size:14px;
@@ -609,7 +615,9 @@ table.treeTable{
   background-color: transparent;
   border: 1px solid #f75c5a !important;
   border-radius: 3px; }
-
+.wait{
+  color: #ffa82d !important;
+}
 .btn-cancel {
   padding: 3px;
   border-color: #999999;
@@ -658,6 +666,28 @@ table.treeTable{
 .modal-header{
   color: white;
   background-color: #1ab394 !important;
+}
+/*开启*/
+.btn-opens{
+  background-color: white;
+  border: 1px solid #1ab394 !important;
+  color: #1ab394;
+}
+.btn-opens:hover{
+  background-color: #1ab394;
+  border: 1px solid #1ab394;
+  color: white;
+}
+/*停止*/
+.btn-stops{
+  background-color: white;
+  border: 1px solid red !important;
+  color: red;
+}
+.btn-stops:hover{
+  background-color: red;
+  border: 1px solid red;
+  color: white;
 }
 /*确定*/
 #save1Btn{
