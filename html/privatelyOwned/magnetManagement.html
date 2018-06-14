@@ -32,17 +32,19 @@
                 </div>
             </div>
             <!--按钮-->
-            <div class="clearfix" >
+            <div class="clearfix tile-nav" >
                 <div class="apsType-box pull-left ">
                     <ul class="apsType-linkage titleName" id="titleName">
                     </ul>
                 </div>
                 <div id="rfresh-btn" class="btn pull-right"><i class="fa fa-refresh"></i>刷新</div>
             </div>
+            <div class="row" style="border:10px solid #f3f3f3;"></div>
+            <div id="iframeCon">
+                <iframe id="ifr" src="./mMInit.html"  frameborder="0"></iframe>
+            </div>
         </div>
-        <div id="iframeCon">
-            <iframe id="ifr" src="./mMInit.html"  frameborder="0"></iframe>
-        </div>
+
     </div>
 </div>
 
@@ -80,28 +82,11 @@
        }
 
        function rendercontent() {
-
-
            var $ifrTab = $('#titleName').find('li');
-           var $ifrBox = $('#iframeCon');
-
-
            $ifrTab.click(function () {
                var typeId = $(this).attr('id');/*ind = $(this).index(),*/
-//               var $ifrurl = [
-//                   "./mMshortcut.html?typeid=" + typeId,
-//                   "./mMnumber.html?typeid=" + typeId,
-//                   "./mMchart.html?typeid=" + typeId,
-//                   "./mMlist.html?typeid=" + typeId,
-//                   "./mMcard.html?typeid=" + typeId,
-//                   "./mMtext.html?typeid=" + typeId,
-//                   "./mMcustom.html?typeid=" + typeId
-//               ];
-               $ifrBox.children("iframe").remove();
                $(this).addClass('active').siblings("li").removeClass('active');
                createTagFrame("iframeCon", "./mMtypeList.html?typeid=" + typeId);
-//           $('#iframeCon>iframe').contentWindow.giveval(typeId)
-
            });
 
        }

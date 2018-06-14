@@ -150,9 +150,7 @@ function ajaxToServer1_quite(url, data, tile, callbackFun){//传送的参数是S
 
 
 
-setInterval(function(){
 
-},10000);
 
 //将number转换成百分数
 Number.prototype.toPercent = function () {
@@ -175,6 +173,9 @@ function tileErrormes(tile,errorMsg){
     $('#tile-'+tile.tileTemplateId).find('div.error-div').show().html(errorMsg);
 
 }
+
+
+
 
 //加载图表类磁贴
 function loadChartData(tile) {
@@ -302,6 +303,9 @@ function cancelAlarm_callback(iframeWin, body, layIdx){
 //加载数字类磁贴
 function loadNumberData(tile) {
     function loadNumberData_request(){
+        if(tile.bgColor!=''){
+            $('.number-content').css({'background-color':tile.bgColor});
+        }
         // var url="http://localhost:63342/admin-web/json/test.json";
         var url =$.trim(tile.dataSource);
         ajaxToServer_quite(url,{},tile,function(result){
@@ -321,7 +325,46 @@ function loadNumberData(tile) {
 
 };
 
+/**作者：贾旭光
+ *日期：2018.6.13
+ *描述：制作文本磁贴、图片类型磁贴、数字磁贴背景色
+ */
+//加载文本类磁贴
+function loadText(tile,isFirst) {
+    var ohtml
+    if(isFirst == "0"){
+        ohtml = tile.wtContent ? tile.wtContent : '';
+    }else{
+        ohtml = tile.content ? tile.content : '';
+    }
+    if(ohtml ==''){
+        $("#text-content-prev"+tile.tileTemplateId).val(ohtml);
+    }else{
+        $("#text-content-prev"+tile.tileTemplateId).val(ohtml).css({'overflow':'auto','word-wrap':'break-word','word-break':'break-all'});
+    }
+}
+//加载图片类型磁贴
+function loadPicture(tile) {
+    console.log(tile);
+}
 
+//加载自定义类磁贴
+function loadCustom(tile,isFirst) {
+    var needUrl = '',
+        randomNumber = Math.floor(Math.random()*10000);
+    if(isFirst == "0"){
+        $(".iframe-mask").show();
+    };
+    if(tile.dataSource.indexOf("?") < 0){
+        needUrl = tile.dataSource + "?randomNumber=" + randomNumber;
+    }else{
+        needUrl = tile.dataSource + "&randomNumber=" + randomNumber;
+    }
+
+    var ohtm = '<iframe src="' + needUrl +'" scrolling="no" frameborder="0" width="200%" height="100%"></iframe>';
+    $("#cus" + tile.tileTemplateCode).append(ohtm).css({'overflow':'auto','height':'79%'});
+    $("#cus" + tile.tileTemplateCode + " > .iframe-mask").show();// tj add
+}
 
 
 
@@ -385,7 +428,7 @@ function addTileWidget(oindex, tile, isFirst, closeDel){
             loadCustom(tile,isFirst);
             break;
         case "8":
-            loadAudio(tile);
+            loadPicture(tile);
             break;
         default:
             break;
@@ -393,12 +436,13 @@ function addTileWidget(oindex, tile, isFirst, closeDel){
 }
 function load_tile(ispush){  //页面加载的时候调用    左侧磁贴管理快捷入口的json数据
     ajaxToServer1("/api/workbench/WorkbenchHomePage/list",{},function(result){
+        console.log(result);
         if(result.success){
             var tiles = result.rows;
             if(tiles.length >0){
                 tiles.forEach(function (t) {
                     if(ispush){
-                        if(t.templateCode == "shortcut"  || t.templateCode == "number"){
+                        if(t.templateCode == "shortcut"  || t.templateCode == "number"||t.templateCode == "picture"){
                             t['imgSrc'] = admin_domain+'/img/sys/SysUpload/showTileImg?id='+t.tileTemplateId+'&type='+t.type;
                         }
                         cu_panel_tiles.push(t);
@@ -761,6 +805,7 @@ function load_tiles_store() {    //每次下拉框选择完具体的磁贴类型
         ele.tiles = [];
     });
     ajaxToServer1("/api/workbench/WorkbenchHomePage/shopList",data,function(result){
+        console.log(result);
         if(result.success){
             var data = result.allTile;
             store_tiles = data;

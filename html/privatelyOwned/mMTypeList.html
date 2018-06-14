@@ -42,7 +42,8 @@
     $('document').ready(function () {
         ajaxToServer1(admin_domain+'/api/workbench/WorkbenchTileTemplate/tileList',{typeId:typeId},function (result) {
             btnclick(result);
-            renderul(result)
+            renderul(result);
+
         })
     });
     function btnclick() {
@@ -120,9 +121,9 @@
                         '</ul>'+
                         '</li>';
                     $('.notapproval').append(list)
-                    setFrameHeight();
-
                 }
+
+                setFrameHeight();
             }else{
                 top.layer.confirm('无相关数据，请注册磁贴后再进行查看！',{icon:0,btn:'关闭'})
             }
@@ -143,6 +144,7 @@
             location.href = location.href;
         });
     }
+
 </script>
 
 </html>

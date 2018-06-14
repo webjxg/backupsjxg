@@ -195,6 +195,10 @@
         $('.footbtn-go').click(function () {
             var $appval = $('#appCode option:selected').text();
             $('#appName').val($appval);
+            if($('#nameImage').val()==''){
+                console.log(123);
+                $('.picture label.error').text('这是必填字段').css({'color':'red','height':'16px'})
+            }
             doSubmit1();
 
 
@@ -321,7 +325,7 @@
         '</li>' +
         '</td></tr>',
         /*图片*/
-        icon1: '<tr class="picture"><td class="width-10"><label class="pull-right">图片上传</label></td><td class="width-80 "> <input id="nameImage" name="icon" maxlength="255" class="input-xlarge valid1" type="hidden" value=""/><ol id="nameImagePreview"></ol><a href="javascript:" id="filePicker" >+</a><label id="nameImage1-error" class="error" for="nameImage" style="display:none"></label></td></tr>'
+        icon1: '<tr class="picture"><td class="width-10"><label class="pull-right"><font color="red">*</font>图片上传</label></td><td class="width-80 "> <input id="nameImage" name="icon" maxlength="255" class="input-xlarge valid1" type="hidden" value=""/><ol id="nameImagePreview"></ol><a href="javascript:" id="filePicker" >+</a><label id="nameImage-error" class="error" for="nameImage" ></label></td></tr>'
     };
     /*调色版*/
     function colorChange() {
@@ -397,8 +401,6 @@
             $('#sizex').append(optionx);
             $('#sizey').append(optiony);
             dsRender('shortcut');
-
-
         } else if (data == 2) {
             html = dataMmhtml.tileTemplateCode +
                 dataMmhtml.appCode +

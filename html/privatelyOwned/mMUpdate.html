@@ -281,6 +281,7 @@
                 dataMmhtml.dataSource+
                 dataMmhtml.size+
                 dataMmhtml.icon+
+                dataMmhtml.bgColor+
                 dataMmhtml.timeInterval+
                 dataMmhtml.des;
             $('.formtbody').html(html);
@@ -432,7 +433,6 @@
     function col(this_) {
         var itemColor=colorRGB2Hex($(this_).children('i.fa-circle').css('color'));
         $('.bgColor>td>li>a i').css({'color':itemColor});
-        console.log($('.bgColor>td>li>a i').css('color'));
         $('#bgColor').val(colorRGB2Hex($('.bgColor>td>li>a i').css('color')))
     }
 
@@ -506,9 +506,9 @@
         var validateFlag = formObj.validate({
             submitHandler: function(form){
                 var formdata = JSON.stringify(formObj.serializeJSON());
-                console.log(formdata);
                 layer.msg('正在提交，请稍等...',{time: 1000});
                 ajaxToServer(url,formdata,function(result){
+                    console.log(formdata,result);
                     if(result.success == true){
                         layer.msg('已成功提交',{time: 1000});
                         setTimeout(function(){

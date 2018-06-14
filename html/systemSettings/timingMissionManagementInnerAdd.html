@@ -95,12 +95,13 @@
         //执行类路径集合
         $("form").attr("action",pi_domain + "/api/SysJob/ajaxSave");
         LoadJobpathList();
-        Loadcron() //表达式
+        Loadcron(); //表达式
         var data = {
             id:id
         };
         if(id != null || api != null){
             var url = pi_domain + "/api/SysJob/form";
+            //回显
             ajaxToServer1(url,data,function (result) {
                 var SysMenu = result.SysJob;
                 $("#clazzPath option").each(function () {

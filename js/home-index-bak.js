@@ -307,7 +307,8 @@ function loadText(tile,isFirst) {
     //    $(".text-shadow-div").show();
     //};
     var ohtml = textTransToArea(tile.content ? tile.content : '');
-    $("#text-content-prev"+tile.tileTemplateId).val(ohtml);
+    console.log(tile);
+    $("#text-content-prev"+tile.tileTemplateId).val(ohtml).css({'overflow-y':});
 }
 //加载卡片类磁贴
 function loadCard(obj) {

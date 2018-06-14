@@ -39,7 +39,7 @@
 
 <script>
     var typeId=getQueryString('typeid');
-    $('document').ready(function () {
+    $(document).ready(function () {
         ajaxToServer(admin_domain+'/api/workbench/WorkbenchTileTemplate/tileList/',{'typeId':''},function (result) {
             btnclick(result);
             renderul(result)
@@ -81,7 +81,6 @@
         };
         top.layer.confirm(mess, {icon: 3, title:'系统提示'},function(index){
             ajaxToServer1(url,data,function(result){
-                console.log(url,result);
                 if(result.success == true){
                     top.layer.confirm('删除成功！',{icon:0,btn:'关闭'},function () {
                         location.reload();
@@ -120,8 +119,9 @@
                         '</ul>'+
                         '</li>';
                     $('.notapproval').append(list)
-                    setFrameHeight();
+
                 }
+                setFrameHeight();
 
             }else{
                 top.layer.confirm('无相关数据，请注册磁贴后再进行查看！',{icon:0,btn:'关闭'})

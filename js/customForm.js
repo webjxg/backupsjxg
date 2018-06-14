@@ -22,6 +22,19 @@ var layerAlert = function (info, icon){
     var title = icon==0?'警告':'消息';
     top.layer.alert(info, {skin:'layui-layer-molv', icon:icon, title:title});
 };
+var layerConfirm = function(info, callback){
+    var p_ = top;//window.parent?window.parent:top;
+    p_.layer.confirm(info, {icon:3, title:'系统提示'}, function(index, layero){
+        var ret = true;
+        if(callback){
+            ret = callback(index, layero);
+        }
+        if(ret == true){
+            p_.layer.close(index);
+        }
+    });
+};
+
 //设置cookies
 var setCookie = function(name,value,path) {
     var Days = 30;//30天
@@ -224,7 +237,7 @@ var lang = { //dataTable国际化配置
     "sInfoFiltered": "(从 _MAX_ 条数据中检索)",
     "sZeroRecords": "没有找到符合条件的数据",
     "sLoadingRecords": "载入中..."
-}
+};
 
 // 获取URL地址参数
 function getQueryString(name, url) {
@@ -331,12 +344,11 @@ function allotCancelItem(tableId,opflag,ifAllot,dataPrama,url){
         top.layer.alert('请至少选择一条数据!', {icon: 0, title:'警告'});
     }
     if(flag){
-
         var data = {
-            [dataPrama[0]]:id,
-            [dataPrama[1]]:str.substr(1),
-            opflag:opflag
+            opflag: opflag
         };
+        data[dataPrama[0]] = id;
+        data[dataPrama[1]] = str.substr(1);
         ajaxToServer1(url,data,function (result) {
             if (result.success == true) {
                 document.location.reload();
@@ -725,9 +737,15 @@ $("#iconclear").click(function(){
  * @returns {Element}
  */
 function createTagFrame(frameDivID,action,frameId){
-    frameId = frameId || action;
+    frameId = (frameId || action).replaceAll("\\.","\\.");
     var frameDivCont = document.getElementById(frameDivID);
+    var frames=frameDivCont.getElementsByTagName("iframe");
     var tabFrame = document.getElementById(frameId);
+    for(var i=0;i<frames.length;i++){
+        if(frames[i].id != action){
+            frames[i].style.display="none";
+        }
+    }
     if(tabFrame==null || tabFrame==undefined){
         tabFrame = document.createElement("iframe");
         tabFrame.id=frameId;
@@ -752,8 +770,9 @@ function createTagFrame(frameDivID,action,frameId){
 }
 
 /**
- * 设置iFrame高度，在iframe内部页面调用
+ * 设置iFrame高度，在iframe内部页面调用  切记使用该方法的时候不应设置body,html的高度
  */
+
 function setFrameHeight(offsetHeight_){
     var frames = window.parent.document.getElementsByTagName("iframe");
     for(var i = 0; i < frames.length; i++) {

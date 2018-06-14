@@ -46,22 +46,22 @@
                     <div class="renderTable-box">
                         <table id="renderTable" class="customTable">
                             <thead>
-                                <tr>
-                                    <th></th>
-                                    <th>1月<i class="fa fa-edit"></i></th>
-                                    <th>2月</th>
-                                    <th>3月</th>
-                                    <th>4月</th>
-                                    <th>5月</th>
-                                    <th>6月</th>
-                                    <th>7月</th>
-                                    <th>8月</th>
-                                    <th>9月</th>
-                                    <th>10月</th>
-                                    <th>11月</th>
-                                    <th>12月</th>
-                                    <th>合计</th>
-                                </tr>
+                            <tr>
+                                <th></th>
+                                <th>1月</th>
+                                <th>2月</th>
+                                <th>3月</th>
+                                <th>4月</th>
+                                <th>5月</th>
+                                <th>6月</th>
+                                <th>7月</th>
+                                <th>8月</th>
+                                <th>9月</th>
+                                <th>10月</th>
+                                <th>11月</th>
+                                <th>12月</th>
+                                <th>合计</th>
+                            </tr>
                             </thead>
                             <tbody>
 
@@ -136,30 +136,30 @@
             }
             //遍历数据，将数据渲染到#td0表单中
             $(zzyzjhArr).each(function(index,item){
-                    tBodyHtml += "<tr id='"+itemCode[index]+"'>";
-                    var ind= 0;
-                    for(var key in item){
-                        if(ind == month){
-                            colMonthVal_[itemCode[index]] = item[key];
-                            var eleInd = editEleArr.indexOf(itemCode[index]);
-                            if(eleInd == (-1)){ //判断editEleArr数组中是否有itemCode[index]  如何没有则直接创建td,反之td中包含input
-                                tBodyHtml += "<td>"+item[key]+"</td>";
-                            }else{
-                                tBodyHtml += "<td><input class='changeVla' type='number' name='"+itemCode[index]+"' value='"+item[key]+"'></td>";
-                            }
-
-                        }else{
+                tBodyHtml += "<tr id='"+itemCode[index]+"'>";
+                var ind= 0;
+                for(var key in item){
+                    if(ind == month){
+                        colMonthVal_[itemCode[index]] = item[key];
+                        var eleInd = editEleArr.indexOf(itemCode[index]);
+                        if(eleInd == (-1)){ //判断editEleArr数组中是否有itemCode[index]  如何没有则直接创建td,反之td中包含input
                             tBodyHtml += "<td>"+item[key]+"</td>";
-                            if(ind == 13){
-                                colSumVal_[itemCode[index]] = item[key];
-                            }
+                        }else{
+                            tBodyHtml += "<td><input class='changeVla' type='number' name='"+itemCode[index]+"' value='"+item[key]+"'></td>";
                         }
-                        ind ++;
-                    }
 
-                    tBodyHtml +="</tr>";
-                    colMonthVal = colMonthVal_;
-                    colSumVal = colSumVal_;
+                    }else{
+                        tBodyHtml += "<td>"+item[key]+"</td>";
+                        if(ind == 13){
+                            colSumVal_[itemCode[index]] = item[key];
+                        }
+                    }
+                    ind ++;
+                }
+
+                tBodyHtml +="</tr>";
+                colMonthVal = colMonthVal_;
+                colSumVal = colSumVal_;
             });
             $("#renderTable tbody").append(tBodyHtml);
 
@@ -227,8 +227,8 @@
                     if(result.success) {
                         var colMonthValArr = result.value,  //返回要计算的某个月份结果的数组集合
                             colSumArr = result.valueSum;  //返回合计的数组集合
-                            colMonthVal = colMonthValArr[0];  //返回的是数组对象
-                            colSumVal = colSumArr[0];  //同理
+                        colMonthVal = colMonthValArr[0];  //返回的是数组对象
+                        colSumVal = colSumArr[0];  //同理
                         if(colMonthValArr && colMonthValArr.length>0 && colSumArr && colSumArr.length>0 ){
                             $("#renderTable tbody tr").each(function(index,item){
                                 var eleId = $(this).attr("id"),

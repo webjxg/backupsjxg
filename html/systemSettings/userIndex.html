@@ -54,7 +54,7 @@
                                         </div>
                                         <label id="companyName-error" class="error" for="officeId" style="display:none"></label>
                                         <span >归属部门：</span>
-                                        <!--<input id="officeId" name="office.id" class=" form-control input-sm " type="hidden" value="">-->
+                                        <input id="officeId" name="office.id" class=" form-control input-sm " type="hidden" value="">
                                         <div class="input-group second-input-group">
                                             <input id="officeName" name="office.name" readonly="readonly" type="text" value=""
                                                    data-msg-required="" class=" form-control input-sm " style="">
@@ -64,7 +64,7 @@
                                  </button>
                             </span>
                                         </div>
-                                        <label id="officeName-error" class="error" for="officeId" style="display:none"></label>
+
                                     </div>
                                     <div class="user col-sm-12">
                                         <span>姓&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;名：</span>
@@ -126,6 +126,7 @@
 
                         </tbody>
                     </table>
+                    <!--分页-->
                     <div class="clearfix pagination-box">
                         <div class="page-info pull-left"></div>
                         <div id="pagination" class="pagination-roll pull-right"></div>
@@ -228,11 +229,10 @@
 
     }
     window.pageLoad = function () {
-
         var data = {
-            companyId: $("#companyName").val(),
+            companyId: $("#companyId").val(),
             loginNameParam: $('#loginName').val(),
-            deptId: $('#officeName').val(),
+            deptId: $('#officeId').val(),
             nameParam: $('#name').val(),
             treeId: $('#treeId').val()
         };

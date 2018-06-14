@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <!--插件样式-->
+    <link rel="stylesheet" href="../../plugins/metismenu-master/metisMenu.css">
+    <link rel="stylesheet" href="../../plugins/font-awesome/css/font-awesome.min.css">
+    <link rel="stylesheet" href="../../plugins/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../../plugins/layer/theme/default/layer.css">
+    <link rel="stylesheet" href="../../plugins/icheck/skins/square/green.css">
+    <link rel="stylesheet" href="../../plugins/select2/dist/css/select2.min.css">
+    <!--自定义样式-->
+    <link rel="stylesheet" href="../../css/comInnerTable.css">
+    <link rel="stylesheet" href="../../css/common.css">
+</head>
+<body>
+<form id="inputForm" class="form-horizontal" action="/api/sys/SysUserRel/save" method="post" novalidate="novalidate">
+    <table class="table table-bordered  table-condensed dataTables-example dataTable no-footer">
+        <tbody>
+        <tr>
+            <td class="width-15"><label class="pull-right"><font color="red">*</font>用户名:</label></td>
+            <td class="width-35">
+                <input id="id" name="id" type="hidden" value="">
+                <input id="name" name="name" class="form-control required valid" type="text" value="" maxlength="50"
+                       aria-required="true" aria-invalid="false"></td>
+            <td class="width-15 active"><label class="pull-right"><font color="red">*</font>登录名:</label></td>
+            <td class="width-35">
+                <input id="loginName" name="loginName" class="form-control required valid" type="text" value="" maxlength="50" aria-required="true" aria-invalid="false"></td>
+        </tr>
+        <tr>
+            <td class="width-15"><label class="pull-right">部门编码:</label>
+            </td>
+            <td class="width-35">
+                <input id="deptCode" name="deptCode" class="form-control required valid" type="text" value="" maxlength="50" aria-required="true" aria-invalid="false">
+            </td>
+            <td class="width-15 active"><label class="pull-right">部门名称:</label>
+            </td>
+            <td class="width-35">
+                <input id="deptLabel" name="deptLabel" class="form-control required valid" type="text" value="" maxlength="50" aria-required="true" aria-invalid="false">
+            </td>
+        </tr>
+        <tr>
+            <td class="width-15"><label class="pull-right">岗位编码</label></td>
+            <td class="width-35">
+                <input id="jobCode" name="jobCode" class="form-control required valid" type="text" value="" maxlength="50" aria-required="true" aria-invalid="false">
+            </td>
+            <td class="width-15 active"><label class="pull-right">岗位名称:</label></td>
+            <td class="width-35">
+                <input id="jobLabel" name="jobLabel" class="form-control required valid" type="text" value="" maxlength="50" aria-required="true" aria-invalid="false">
+            </td>
+        </tr>
+        <tr>
+            <td class="width-15"><label class="pull-right">手机号码</label></td>
+            <td class="width-35">
+                <input id="mobile" name="mobile" class="form-control required valid" type="text" value="" maxlength="50" aria-required="true" aria-invalid="false">
+            </td>
+            <td class="width-15 active"><label class="pull-right">电话</label></td>
+            <td class="width-35">
+                <input id="tel" name="tel" class="form-control  valid" type="text" value="" maxlength="50" aria-required="true" aria-invalid="false">
+            </td>
+        </tr>
+        <tr>
+            <td class="width-15"><label class="pull-right">邮箱</label></td>
+            <td class="width-35">
+                <input id="email" name="email" class="form-control required valid" type="text" value="" maxlength="50" aria-required="true" aria-invalid="false">
+            </td>
+            <td class="width-15 active"><label class="pull-right">专业</label></td>
+            <td class="width-35">
+                <input id="professional" name="professional" class="form-control required valid" type="text" value="" maxlength="50" aria-required="true" aria-invalid="false">
+            </td>
+        </tr>
+        <tr>
+            <td class="width-15"><label class="pull-right">应用</label></td>
+            <td class="width-35">
+                <select id="sys" name="sys" maxlength="1" type="text" value="" data-msg-required="" class="form-control required" style="" aria-required="true">
+                    <option value="">--请选择--</option>
+                </select>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</form>
+</body>
+<!--核心插件-->
+<script src="../../js/jquery-2.2.4.min.js"></script>
+<script src="../../plugins/bootstrap/js/bootstrap.min.js"></script>
+<!--附属插件-->
+<script src="../../plugins/validate/jquery.validate.min.js"></script>
+<script src="../../plugins/validate/messages_zh.min.js"></script>
+<script src="../../plugins/jBox/jquery.jBox-2.3.min.js"></script>
+<script src="../../plugins/ibox.2.2/ibox.js"></script>
+<script src="../../plugins/layer/layer.js"></script>
+<script src="../../plugins/icheck/icheck.min.js"></script>
+<script src="../../plugins/slimScroll/jquery.slimscroll.min.js"></script>
+<script src="../../plugins/datatables/js/jquery.dataTables.min.js"></script>
+<script src="../../plugins/select2/dist/js/select2.min.js"></script>
+<script src="../../plugins/select2/dist/js/i18n/zh-CN.js"></script>
+<!--自定义文件-->
+<script src="../../js/common.js"></script>
+<script src="../../js/apiDomain.js"></script>
+<script src="../../js/customForm.js"></script>
+<script>
+    $(function () {
+        var id = getQueryString('id');
+        var api = getQueryString('api');
+        if(id != null && api != null){
+            ajaxToServer1("/api/sys/SysUserRel/view/"+id,{},function (result) {
+                if(result.success){
+                    setInput(result);
+                    setSys()
+                }else{
+                    layer.msg(result.message);
+                }
+            })
+        }
+    });
+    function setInput(result) {
+        var msgInput = result.SysUserRell;
+        $("#name").val(msgInput.name);
+        $("#id").val(msgInput.id);
+        $("#loginName").val(msgInput.loginName);
+        $("#deptCode").val(msgInput.deptCode);
+        $("#deptLabel").val(msgInput.deptLabel);
+        $("#jobCode").val(msgInput.jobCode);
+        $("#jobLabel").val(msgInput.jobLabel);
+        $("#mobile").val(msgInput.mobile);
+        $("#tel").val(msgInput.tel);
+        $("#email").val(msgInput.email);
+        $("#professional").val(msgInput.professional);
+    }
+
+    function setSys() {
+            var ids = getCookie("loginUserid");
+            ajaxToServer(admin_domain+'/api/sys/SysDict/type/app',{},function (result) {
+                if(result.success){
+                    var rows = result.rows;
+                    appendOptionsValue($('#sys'), rows, 'value', 'label');
+                }else{
+                    layer.msg(result.message);
+                }
+            });
+    }
+
+    /*得到传后台的表单*/
+    function getSubmitFormId(){
+        return "#inputForm";
+    }
+</script>
+</html>

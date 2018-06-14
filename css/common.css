@@ -71,7 +71,7 @@ html,body,#wrapper{ height: 100%;}
   border-radius: 15px;
 }
 iframe{border:none;}
-.wrapper{min-height:100%;height:100%;}
+.wrapper{height:100%;}
 .wrapper-content{
   padding:4px 4px 4px 4px;
 }
@@ -162,7 +162,7 @@ iframe{border:none;}
 
 /* sidebar-nav start */
 .navbar-static-side{
-  width:210px;position: fixed;top:70px; z-index: 99;height:100%;
+  width:210px;position: fixed;top:70px;bottom:0; z-index: 99;
   background: #2f4050;transition: all 0.5s;
 }
 .wrap-con,.navItem-con{
@@ -702,7 +702,7 @@ table.treeTable{
 }
 /*针对折叠表折叠样式*/
 span.indenter{
-  padding-left:0!important;
+  /*padding-left:0!important;*/
 }
 
 /* layer全局弹窗样式*/

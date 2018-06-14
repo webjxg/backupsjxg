@@ -1,11 +1,15 @@
 /*磁贴管理*/
+html,body{height:auto;}
+.bg-gray{background: #fff;}
+.apsType-linkage{height:auto;}
+#rfresh-btn{margin-top:7px;}
 li{
   list-style: none;
 }
 .ibox{
-    background-color: #f3f3f4;
+    /*background-color: #f3f3f4;*/
     position: relative;
-    height:80%;
+    /*height:80%;*/
 }
 .titName{
     float:left ;
@@ -15,10 +19,16 @@ li{
     margin-top: 0;
 
 }
-.clearfix li{
-    margin-right: 20px;
-    font-size: 13px;
+.tile-nav li{
+    margin:5px 10px 5px 0;
+    font-size: 12px;
+    padding:5px;
+    cursor: pointer;
 }
+.tile-nav li a{
+    display: block;
+}
+#iframeCon{padding-top:20px;}
 .ibox-content:nth-of-type(1),.ibox-content:nth-of-type(2){
     margin-bottom: 20px;
 }
@@ -31,11 +41,12 @@ li{
 
 }
 .notapproval{
-    height: 500px;
+    /*height: 500px;*/
+    overflow: auto;
 }
 .notapproval>li,.alreadyapproval>li{
     width: 19%;
-    height: 50%;
+    height: 250px;
     float:left;
     margin-right: 13px;
     margin-bottom: 15px;
@@ -126,9 +137,6 @@ li{
 }
 .btn-change:hover .icon-change{
     background-position: -22px -34px;
-}
-div#iframeCon{
-    height: 100%;
 }
 #iframeCon iframe{
     height:100%;
@@ -409,6 +417,16 @@ label.error{
     height: 100%;
     cursor: pointer;
 }
+
+tr.picture{
+    position: relative;
+}
+label.error{
+    height: 30px;
+    position: absolute;
+    right: 0;
+}
+
 
 .bgColor>td>li{
     font-size: 24px;

@@ -780,7 +780,7 @@ span.short_span>img{
 	top: 25%;
 }
 .function img.view-picture{
-	/*width:50%;*/
+	width:50%;
 	height:100%;
 	display: inline-block;
 	vertical-align: middle;
@@ -1008,7 +1008,7 @@ span.short_span>img{
 textarea.text-content-prev{
 	display: block;
 	width: 96%;
-	height: calc(100% - 35px);
+	/*height: calc(100% - 35px);*/
 	margin:0 auto;
 	border:0;
 	font-size: 0.9em;

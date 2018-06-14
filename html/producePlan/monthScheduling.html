@@ -22,9 +22,12 @@
             border-top-left-radius: 5px;
             border-top-right-radius: 5px;
         }
-        .datagrid-header-inner{
-            background: #1ab394;
+       .datagrid-header-inner,.datagrid-header-row{
+            background: #1ab394 !important;
         }
+       #td0{
+           /*table-layout:fixed;*/
+       }
         .datagrid-header-row td{
             color:#fff;
         }
@@ -33,11 +36,31 @@
             height: 30px;
             border: 1px solid gainsboro;
             border-radius: 3px;
+            outline: none;
+            padding:0 5px;
+        }
+        .schOp-item input:focus{
+            border-color:#1ab394 !important;
         }
         #btn-build{
             display: none;
         }
         #btn-save{
+            display: none;
+        }
+        .customTable tbody tr td {
+            width: 100px;
+            white-space: nowrap;
+        }
+        .customTable tbody input{border:1px solid #1ab394;}
+        table thead th {position: relative;}
+        table thead th i.fa {
+            font-size: 20px;
+            position: absolute;
+            top: 5px;
+            right: 5px;
+        }
+        table thead th i.fa-edit{
             display: none;
         }
     </style>
@@ -48,13 +71,17 @@
         <div class="ibox-content">
             <div class="scheduling-option clearfix mgb-15">
                 <div class="pull-right btn-box">
+                    <button class="btn btn-back btn-white" id="back-btn">
+                        <i class="fa fa-reply"></i> 返回
+                    </button>
                     <button class="btn btn-white" id="btn-build" type="button" data-status="0">
                         <i class="fa fa-file-text"></i>
-                        排产</button>
+                        排产
+                    </button>
                     <button class="btn btn-white" id="btn-save" type="button" data-status="1">
                         <i class="fa fa-upload"></i>
-                        提交</button>
-
+                        提交
+                    </button>
                 </div>
                 <div class="schOp-item schOp-sc">
                     <!--<cite><i></i></cite>-->
@@ -70,23 +97,16 @@
 
                     <!--</span>-->
                 </div>
-                <!--                <div class="pull-right">
-                                    <button type="button" class="back-btn btn btn-white">
-                                        <i class="fa fa-reply"></i>
-                                        返回上级</button>
-                                </div>-->
-                <div class="pull-right">
-                    <button class="btn-back btn-white" id="back-btn">
-                        <i class="fa fa-reply"></i> 返回
-                    </button>
-                </div>
-
             </div>
             <div class="dataGridList">
                 <div class="tableItemBox">
                     <h1 class="titName">装置运转计划</h1>
-                    <table id="td0" class="tableItem" >
-                    </table>
+                    <div style="border: 1px solid #dddddd; border-radius: 4px;  overflow: hidden;">
+                        <table id="td0" class="tableItem customTable" >
+                            <thead></thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
                 </div>
                 <div class="tableItemBox">
                     <h1 class="titName">原料计划</h1>
@@ -113,6 +133,7 @@
 <script src="../../plugins/layer/layer.js"></script>
 <!--自定义文件-->
 <script src="../../js/apiDomain.js"></script>
+<script src="../../js/editTable.js"></script>
 <script src="../../js/customForm-aps.js"></script>
 <script src="../../js/dataGridCustom.js"></script>
 
@@ -122,96 +143,23 @@
     if(status == "col-62b519"){
         $(".btn").hide();
     }
-    var zzyzjhArr =[],yljhArr = [],xhjhArr=[];  //分别对应装置运转计划、原料计划、消耗计划
+
     $(document).ready(function(){
         var data = {
             mYear:year
         };
         ajaxToServer("/api/aps/ApsMonthPc/queryMonthPc",JSON.stringify(data),function(result){
-            var zzyzjh = result.zzyzjh;
-            var yljh  =result.yljh;
-            var xhjh = result.xhjh;
+
             //装置运转计划
-            for(var i=0;i<zzyzjh.length;i++){
-                var itemmsg = {
-                    "id":zzyzjh[i].id,
-                    "mainId":zzyzjh[i].mainId,
-                    "itemCode":zzyzjh[i].itemCode,
-                    "itemName":zzyzjh[i].itemName,
-                    "value1":zzyzjh[i].value1,
-                    "value2":zzyzjh[i].value2,
-                    "value3":zzyzjh[i].value3,
-                    "value4":zzyzjh[i].value4,
-                    "value5":zzyzjh[i].value5,
-                    "value6":zzyzjh[i].value6,
-                    "value7":zzyzjh[i].value7,
-                    "value8":zzyzjh[i].value8,
-                    "value9":zzyzjh[i].value9,
-                    "value10":zzyzjh[i].value10,
-                    "value11":zzyzjh[i].value11,
-                    "value12":zzyzjh[i].value12,
-                    "valueSum":zzyzjh[i].valueSum
-                };
-                zzyzjhArr.push(itemmsg);
-            }
-            console.log(zzyzjhArr)
-            for(var i=0;i<zzyzjhArr.length;i++){
-                if(zzyzjhArr[i].itemCode == "scscwd"){
-                    $("#scValue").val(zzyzjhArr[i].valueSum);
-                };
-                if(zzyzjhArr[i].itemCode == "bsbswd"){
-                    $("#psValue").val(zzyzjhArr[i].valueSum);
-                }
-            };
+            renderTableFn_zzyzjh(result.zzyzjh);
+
             //原料计划
-            for(var i=0;i<yljh.length;i++){
-                var itemmsg = {
-                    "id":yljh[i].id,
-                    "mainId":yljh[i].mainId,
-                    "pName":yljh[i].pName,
-                    "itemName":yljh[i].itemName,
-                    "value1":yljh[i].value1,
-                    "value2":yljh[i].value2,
-                    "value3":yljh[i].value3,
-                    "value4":yljh[i].value4,
-                    "value5":yljh[i].value5,
-                    "value6":yljh[i].value6,
-                    "value7":yljh[i].value7,
-                    "value8":yljh[i].value8,
-                    "value9":yljh[i].value9,
-                    "value10":yljh[i].value10,
-                    "value11":yljh[i].value11,
-                    "value12":yljh[i].value12,
-                    "valueSum":yljh[i].valueSum
-                };
-                yljhArr.push(itemmsg);
-            }
+            renderTableFn_yljh(result.yljh);
+
             //消耗计划
-            for(var i=0;i<xhjh.length;i++){
-                var itemmsg = {
-                    "id":xhjh[i].id,
-                    "mainId":xhjh[i].mainId,
-                    "pName":xhjh[i].pName,
-                    "itemName":xhjh[i].itemName,
-                    "value1":xhjh[i].value1,
-                    "value2":xhjh[i].value2,
-                    "value3":xhjh[i].value3,
-                    "value4":xhjh[i].value4,
-                    "value5":xhjh[i].value5,
-                    "value6":xhjh[i].value6,
-                    "value7":xhjh[i].value7,
-                    "value8":xhjh[i].value8,
-                    "value9":xhjh[i].value9,
-                    "value10":xhjh[i].value10,
-                    "value11":xhjh[i].value11,
-                    "value12":xhjh[i].value12,
-                    "valueSum":xhjh[i].valueSum
-                };
-                xhjhArr.push(itemmsg);
-            }
-            $('#td0').datagrid('loadData',zzyzjhArr);
-            $('#td1').datagrid('loadData',yljhArr);
-            $('#td2').datagrid('loadData',xhjhArr);
+            renderTableFn_xhjh(result.xhjh);
+
+
             //提交按钮
             $("#btn-save").click(function(){
                 var rows = [];
@@ -221,9 +169,8 @@
                 var data={
                     status : "1",
                     pcPlans:rows,
-                    mainId:$(".datagrid-body").find('td').eq(1).text(),
+                    mainId:$(".datagrid-body").find('td').eq(1).text()
                 };
-                console.log(data)
                 ajaxToServer1("/api/aps/ApsMonthPc/saveMonthInfo",data,function(result){
                     if(result.success){
                         refreshActiveTab();
@@ -250,45 +197,241 @@
             });
         });
     });
+    var editEleArr=["scjxsj","scrlts","scfzcjczhsj","scshsc","xsps","sczhb","bsjxsj","bsfzcjczhsj"];
+
 
     //装置运转计划
-    $("#td0").datagrid({
-        fitColumns:true,
-        collapsible:true,
-        singleSelect: true,
-        onClickRow: function(index){
-            dataGridObj.startEditing(index,"#td0")
-        },
-        columns:[[
-            {field:'id',title:'id',hideColumn:'id'},
-            {field:'mainId',title:'mainId',hideColumn:'mainId'},
-            {field:'itemName',title:'',width:200,align:'center'},
-            {field:'value1',title:'1月',width:100,align:'center'},
-            {field:'value2',title:'2月',width:100,align:'center'},
-            {field:'value3',title:'3月',width:100,align:'center'},
-            {field:'value4',title:'4月',width:100,align:'center'},
-            {field:'value5',title:'5月',width:100,align:'center'},
-            {field:'value6',title:'6月',width:100,align:'center'},
-            {field:'value7',title:'7月',width:100,align:'center'},
-            {field:'value8',title:'8月',width:100,align:'center'},
-            {field:'value9',title:'9月',width:100,align:'center'},
-            {field:'value10',title:'10月',width:100,align:'center'},
-            {field:'value11',title:'11月',width:100,align:'center'},
-            {field:'value12',title:'12月',width:100,align:'center'},
-            {field:'valueSum',title:'合计',width:100,align:'center'}
-
-        ]],
-        onAfterEdit: function (rowIndex, rowData, changes) {
-            dataGridObj.pushRowData(rowData);
-            dataGridObj.setEditIndex("#td0",undefined);
-        },
-        toolbar: [{
-            text: '保存', iconCls: 'icon-save', handler: function () {
-                //保存时结束当前编辑的行，自动触发onAfterEdit事件如果要与后台交互可将数据通过Ajax提交后台
-                $('#td0').datagrid('endEdit',dataGridObj.getEditIndex("#td0"));
+    function renderTableFn_zzyzjh(zzyzjh){
+        var zzyzjhArr = [],zzyzjhiCodeArr=[];
+        //装置运转计划
+        for(var i=0;i<zzyzjh.length;i++){
+            zzyzjhiCodeArr.push(zzyzjh[i].itemCode);
+            var itemmsg = {
+                "id":{value:zzyzjh[i].id,hidden:true},
+                "mainId":{value:zzyzjh[i].mainId,hidden:true},
+                "itemCode":{value:zzyzjh[i].itemCode,hidden:true},
+                "itemName":{value:zzyzjh[i].itemName,title:''},
+                "value1":{value:zzyzjh[i].value1,title:'<span>1</span>月',edit:true},
+                "value2":{value:zzyzjh[i].value2,title:'<span>2</span>月',edit:true},
+                "value3":{value:zzyzjh[i].value3,title:'<span>3</span>月',edit:true},
+                "value4":{value:zzyzjh[i].value4,title:'<span>4</span>月',edit:true},
+                "value5":{value:zzyzjh[i].value5,title:'<span>5</span>月',edit:true},
+                "value6":{value:zzyzjh[i].value6,title:'<span>6</span>月',edit:true},
+                "value7":{value:zzyzjh[i].value7,title:'<span>7</span>月',edit:true},
+                "value8":{value:zzyzjh[i].value8,title:'<span>8</span>月',edit:true},
+                "value9":{value:zzyzjh[i].value9,title:'<span>9</span>月',edit:true},
+                "value10":{value:zzyzjh[i].value10,title:'<span>10</span>月',edit:true},
+                "value11":{value:zzyzjh[i].value11,title:'<span>11</span>月',edit:true},
+                "value12":{value:zzyzjh[i].value12,title:'<span>12</span>月',edit:true},
+                "valueSum":{value:zzyzjh[i].valueSum,title:'合计'}
+            };
+            zzyzjhArr.push(itemmsg);
+        }
+        for(var i=0;i<zzyzjhArr.length;i++){
+            if(zzyzjhArr[i].itemCode == "scscwd"){
+                $("#scValue").val(zzyzjhArr[i].valueSum);
+            };
+            if(zzyzjhArr[i].itemCode == "bsbswd"){
+                $("#psValue").val(zzyzjhArr[i].valueSum);
             }
-        }]
-    });
+        };
+
+        var theadHtml="",bodyHtml ="";
+        for(var i= 0;i< zzyzjhArr.length;i++){
+            var item = zzyzjhArr[i],
+                trClass = editEleArr.indexOf(item['itemCode'].value)>-1?"edit":"";
+            bodyHtml += "<tr class='"+trClass+"' data-field='"+ zzyzjhiCodeArr[i]+"'>";
+            for(var key in item){
+                var valObj = item[key];
+                var style = (valObj.hidden && valObj.hidden== true)?" display: none;":"";
+                if(key == 'itemName'){
+                    style += " width:auto;";
+                }
+                bodyHtml += "<td style='"+style+"' >"+valObj.value+"</td>";
+            }
+            bodyHtml += "</tr>";
+            if(i== 0){
+                theadHtml +="<tr>";
+                for(var key in item){
+                    var valObj = item[key],
+                        title = valObj['title'],
+                        edit = valObj['edit'];
+                    var disp = (valObj.hidden && valObj.hidden== true)?" style='display: none;'":"";
+                    if(edit){
+                        title += " <i class='fa fa-edit'></i>";
+                    }
+                    theadHtml += "<th"+disp+">"+title+"</th>";
+                }
+                theadHtml +="</tr>";
+            }
+        }
+        $('#td0 thead').append(theadHtml);
+        $('#td0 tbody').append(bodyHtml);
+        editTable.tdEdit("#td0");
+
+        //鼠标经过时显示编辑按钮
+        $("#td0 thead th").hover(function(){
+            $(this).find('i.fa-edit').fadeIn();
+        },function(){
+            $(this).find('i.fa-edit').fadeOut();
+        });
+
+        //编辑按钮事件
+        $("#td0 thead th i").click(function(){
+            var _this = this;
+            if($(_this).hasClass('fa-edit')) {
+                //检查是否有正在编辑中的列
+                var editingIcons = $("#td0").find('thead th i.fa-save');
+                if(editingIcons.length > 0){
+                    layerConfirm('有未保存的月份，要保存吗？',function(){
+                        $(editingIcons[0]).trigger('click').fadeOut();
+                        return true;
+                    });
+                }else{
+                    editTable.editCol = $(this).parent().index();
+                    //设置单元格编辑效果
+                    $("#td0").find('tbody tr.edit td').trigger('click');
+                    $(this).removeClass('fa-edit').addClass('fa-save');
+                }
+            }else{
+                var year =getQueryString('year');
+                //调用接口保存数据
+                var changeVlaArr =[];
+                var getMonthObj={
+                    mYear:year,
+                    flag:$(this).parent().find('span').text(),
+                };
+                $('#td0 tbody input').each(function(){
+                    var field = $(this).parents('tr').attr('data-field');
+                    getMonthObj[field] = $(this).val();
+                });
+                changeVlaArr.push(getMonthObj);
+                var data_ = JSON.stringify(changeVlaArr);
+                ajaxToServer("/api/aps/ApsMonthPc/dtpcJs", data_, function(result){
+                    if(result.success==true){
+                        //重新渲染数据：装置运转计划
+                        renderTableFn_zzyzjh_js('#td0', result.value, result.valueSum);
+                        $(_this).removeClass('fa-save').addClass('fa-edit');
+                    }
+                });
+
+            }
+        });
+        $("#td0 td").hover(function(){ //装置运转计划table添加划过效果。
+            $(this).parent('tr').addClass('active').siblings('tr').removeClass('active');
+        },function(){
+            $("#td0 tr").removeClass('active');
+        });
+        $("#td0 thead th").eq(3).find('i').hide();
+
+    };
+
+    function renderTableFn_zzyzjh_js(tableId, valueArr, valueSumArr){
+        var table = $(tableId);
+        $(valueArr).each(function(i,vo){
+            //获取value中的月份
+            var editMonth = vo.flag;
+            //根据编辑的月份找到当前可编辑的列
+            var editColIdx;
+            var ths = table.find('thead span');
+            for(var ii=0; ii<ths.length; ii++){
+                if($(ths[ii]).text() == editMonth){
+                    editColIdx = $(ths[ii]).parents('th').index();
+                    break;
+                }
+            }
+
+            if(editColIdx){
+                table.find('tbody tr').each(function(j, tro){
+                    var tdObject = $(tro).find('td').eq(editColIdx);
+                    var val = '';
+                    for(var key in vo){
+                        if($(tro).attr('data-field')==key) {
+                            val = vo[key];
+                        }
+                    }
+                    //将计算后的结果回显到td里
+                    $(tdObject).text(val);
+                });
+                table.find('thead th').eq(editColIdx).children('i').removeClass('fa-save').addClass('fa-edit')
+            }
+        });
+        //合计
+        if(valueSumArr && valueSumArr.length>0){
+            var valueSum = valueSumArr[0];
+            var sumColIdx = table.find('thead th').length-1;
+            table.find('tbody tr').each(function(j, tro){
+                var tdObject = $(tro).find('td').eq(sumColIdx);
+                var val = '';
+                for(var key in valueSum){
+                    if($(tro).attr('data-field')==key) {
+                        val = valueSum[key];
+                    }
+                }
+                //将计算后的结果回显到td里
+                $(tdObject).text(val);
+            });
+        }
+    }
+
+    //原料计划
+    function renderTableFn_yljh(yljh){
+        var yljhArr = [];
+        for(var i=0;i<yljh.length;i++){
+            var itemmsg = {
+                "id":yljh[i].id,
+                "mainId":yljh[i].mainId,
+                "pName":yljh[i].pName,
+                "itemName":yljh[i].itemName,
+                "value1":yljh[i].value1,
+                "value2":yljh[i].value2,
+                "value3":yljh[i].value3,
+                "value4":yljh[i].value4,
+                "value5":yljh[i].value5,
+                "value6":yljh[i].value6,
+                "value7":yljh[i].value7,
+                "value8":yljh[i].value8,
+                "value9":yljh[i].value9,
+                "value10":yljh[i].value10,
+                "value11":yljh[i].value11,
+                "value12":yljh[i].value12,
+                "valueSum":yljh[i].valueSum
+            };
+            yljhArr.push(itemmsg);
+        }
+        $('#td1').datagrid('loadData',yljhArr);
+    }
+
+    //消耗计划
+    function renderTableFn_xhjh(xhjh){
+        var xhjhArr=[];
+        for(var i=0;i<xhjh.length;i++){
+            var itemmsg = {
+                "id":xhjh[i].id,
+                "mainId":xhjh[i].mainId,
+                "pName":xhjh[i].pName,
+                "itemName":xhjh[i].itemName,
+                "value1":xhjh[i].value1,
+                "value2":xhjh[i].value2,
+                "value3":xhjh[i].value3,
+                "value4":xhjh[i].value4,
+                "value5":xhjh[i].value5,
+                "value6":xhjh[i].value6,
+                "value7":xhjh[i].value7,
+                "value8":xhjh[i].value8,
+                "value9":xhjh[i].value9,
+                "value10":xhjh[i].value10,
+                "value11":xhjh[i].value11,
+                "value12":xhjh[i].value12,
+                "valueSum":xhjh[i].valueSum
+            };
+            xhjhArr.push(itemmsg);
+        }
+
+        $('#td2').datagrid('loadData',xhjhArr);
+    }
+
+
     //原料计划
     $("#td1").datagrid({
         fitColumns:true,
@@ -376,8 +519,8 @@
 
 
     $(function(){
-        $('#td0,#td1,#td2').datagrid('hideColumn','id');
-        $('#td0,#td1,#td2').datagrid('hideColumn','mainId');
+        $('#td1,#td2').datagrid('hideColumn','id');
+        $('#td1,#td2').datagrid('hideColumn','mainId');
     });
     hidebutton();////////////权限
     //点击时获取到信息
@@ -406,7 +549,7 @@
         })
     }
     $(window).resize(function(){  //浏览器窗口改变时dataGrid数据重置
-        $('#td0,#td1,#td2').datagrid('resize');
+        $('#td1,#td2').datagrid('resize');
     });
 
     $(".btn-back").click(function(){
@@ -420,7 +563,6 @@
           var url = admin_domain + "/api/sys/SysOperation/currentUserOperation/PPMYPP_PAC";
           ajaxToServer(url, {} ,function (result) {
               if(result.success){
-                  console.log(result)
                   if(result.rows.length>0){
                       for(var i=0;i<result.rows.length;i++){
                           if(result.rows[i].code == "PPMYPP_SDO"){//排产

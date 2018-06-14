@@ -137,21 +137,8 @@
             tableStr = "<tr style='text-align: center'><td colspan='" + len + "'><font color='#cd0a0a'>暂无记录，请点击左侧对应指标</font></td></tr>";
         }
         $('#treeTableBody').html(tableStr);
-        $("#treeTable").treetable({
-            expandable: true,
-            column: 0,
-            onNodeExpand:function () {
-                var h=$('#treeTableBody').outerHeight();
-                var frames = window.parent.document.getElementsByTagName("iframe");
-                for(var i = 0; i < frames.length; i++) {
-                    var f = frames[i];
-                    if (null != f && f.style.display != "none") {
-                        f.style.height = h+100+"px";
-                    }
-                }
-            }
-        }, true);
-        console.log($('#treeTableBody').outerHeight(true));
+        setFrameHeight();
+        $("#treeTable").treetable({expandable: true, column: 0}, true);
     }
 
     function deleteIt(mess,url){

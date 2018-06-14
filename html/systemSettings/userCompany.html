@@ -20,7 +20,7 @@
             var data = {
                 type:"1"
             }
-            ajaxToServer1(admin_domain+'/api/sys/SysOrg/selectOrg',data, ztreeCompany);
+            ajaxToServer1(admin_domain+'/api/sys/SysOrg/selectOrg',data, ztreecompany);
         });
 
 
@@ -34,7 +34,39 @@
 //            }
 //        }
 
+//  卢毛赛于2018/6/9修改，不让用户点击归属公司的根节点
+        var zTreeObj;
+        function ztreecompany(data) {
+            var da=data.rows;
+            var arr = [];
+            da.filter(function (a) {
+                // if (a.pId == 0) {
+                arr.push(a)
+                // }
+            })
+            var setting = {
+                data: {
+                    simpleData: {
+                        enable: true,   //设置是否使用简单数据模式(Array)
+                        idKey: "id",    //设置节点唯一标识属性名称
+                        pIdKey: "pId"      //设置父节点唯一标识属性名称
+                    },
+                    key: {
+                        name: "name",//zTree 节点数据保存节点名称的属性名称
+                        title: "name" //zTree 节点数据保存节点提示信息的属性名称
+                    }
+                }
+            };
 
+            var zNodes = arr;
+            zTreeObj= $.fn.zTree.init($('#tree'), setting, zNodes);
+            var nodes = zTreeObj.getNodes();
+            for (var i = 0; i < nodes.length; i++) { //设置节点展开
+                zTreeObj.expandNode(nodes[i], true, false, true);
+            }
+            if(zTreeObj)
+            {return getSelectVal}
+        }
 
 
 
