@@ -136,7 +136,6 @@
         window.pageLoad= function () {
             ajaxToServer("/api/sys/SysOrg/treeJson/0",{},function(tableData){
                 renderTableData(tableData.rows);
-                console.log(tableData);
                 $('.i-Checks span').css('padding-left',0);
                 clickButton();
             });
@@ -172,7 +171,6 @@
             });
         }
         function renderTableData(data) {
-            console.log(data)
             var tableStr = "";
             for (var i = 0; i < data.length; i++) {
                 var count = 'data-tt-id=' + data[i].id;

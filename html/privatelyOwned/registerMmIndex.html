@@ -325,7 +325,15 @@
         '</li>' +
         '</td></tr>',
         /*图片*/
-        icon1: '<tr class="picture"><td class="width-10"><label class="pull-right"><font color="red">*</font>图片上传</label></td><td class="width-80 "> <input id="nameImage" name="icon" maxlength="255" class="input-xlarge valid1" type="hidden" value=""/><ol id="nameImagePreview"></ol><a href="javascript:" id="filePicker" >+</a><label id="nameImage-error" class="error" for="nameImage" ></label></td></tr>'
+        icon1: '<tr class="picture"><td class="width-10"><label class="pull-right"><font color="red">*</font>图片上传</label></td><td class="width-80 "> <input id="nameImage" name="icon" maxlength="255" class="input-xlarge valid1" type="hidden" value=""/><ol id="nameImagePreview"></ol><a href="javascript:" id="filePicker" >+</a><label id="nameImage-error" class="error" for="nameImage" ></label></td></tr>',
+        /*开放类型*/
+        isPublic:'<tr><td class="width-10"><label class="pull-right"><font color="red">*</font>开放类型:</label></td>' +
+        '<td class="width-80">' +
+        '<select class="form-control valid1" name="isPublic" id="isPublic" required="required">' +
+        '<option value=0>私有磁贴</option>'    +
+        '<option value=1>公用磁贴</option>'    +
+        '</select>'+
+        '<label id="isPublic-error" class="error" for="isPublic" style="display:none"></label></td></tr>'
     };
     /*调色版*/
     function colorChange() {
@@ -391,6 +399,7 @@
                 dataMmhtml.appCode +
                 dataMmhtml.title +
                 dataMmhtml.dataSource +
+                dataMmhtml.isPublic +
                 dataMmhtml.size +
                 dataMmhtml.icon +
                 dataMmhtml.targer +
@@ -406,6 +415,7 @@
                 dataMmhtml.appCode +
                 dataMmhtml.title +
                 dataMmhtml.dataSource +
+                dataMmhtml.isPublic +
                 dataMmhtml.size +
                 dataMmhtml.icon + dataMmhtml.bgColor +
                 dataMmhtml.timeInterval +
@@ -421,6 +431,7 @@
                 dataMmhtml.appCode +
                 dataMmhtml.title +
                 dataMmhtml.dataSource +
+                dataMmhtml.isPublic +
                 dataMmhtml.size +
                 dataMmhtml.timeInterval +
                 dataMmhtml.des;
@@ -443,6 +454,7 @@
                 dataMmhtml.appCode +
                 dataMmhtml.title +
                 dataMmhtml.dataSource +
+                dataMmhtml.isPublic +
                 dataMmhtml.size +
                 dataMmhtml.columnName +
                 dataMmhtml.pageSize +
@@ -472,6 +484,7 @@
             html = dataMmhtml.tileTemplateCode +
                 dataMmhtml.appCode +
                 dataMmhtml.title +
+                dataMmhtml.isPublic +
                 dataMmhtml.content +
                 dataMmhtml.size +
                 dataMmhtml.des;
@@ -483,6 +496,7 @@
                 dataMmhtml.appCode +
                 dataMmhtml.title +
                 dataMmhtml.dataSource +
+                dataMmhtml.isPublic +
                 dataMmhtml.size +
                 dataMmhtml.des;
             $('.formtbody').html(html);
@@ -493,6 +507,7 @@
             html = dataMmhtml.tileTemplateCode +
                 dataMmhtml.appCode +
                 dataMmhtml.title +
+                dataMmhtml.isPublic +
                 dataMmhtml.size +
                 dataMmhtml.icon1 +
                 dataMmhtml.des;

@@ -252,7 +252,14 @@
         /*图片*/
         icon1:
             '<tr><th class=""><label class="pull-right"><font color="red">*</font>图片:</label></th><td class=" "><a href="javascript:" class="" id="filePicker" >选择</a><input id="nameImage" name="icon" maxlength="255" class="input-xlarge form-control valid" type="text" value="0"/></td></tr>',
-
+        /*开放类型*/
+        isPublic:'<tr><th class="width-10"><label class="pull-right"><font color="red">*</font>开放类型:</label></th>' +
+        '<td class="width-80">' +
+        '<select class="form-control valid1" name="isPublic" id="isPublic" required="required">' +
+        '<option value=0>私有磁贴</option>'    +
+        '<option value=1>公用磁贴</option>'    +
+        '</select>'+
+        '<label id="isPublic-error" class="error" for="isPublic" style="display:none"></label></td></tr>'
     }
     /*渲染右侧input*/
     function renderRContent(data,id,results) {
@@ -263,6 +270,7 @@
                 dataMmhtml.appCode+
                 dataMmhtml.title+
                 dataMmhtml.dataSource+
+                dataMmhtml.isPublic +
                 dataMmhtml.size+
                 dataMmhtml.icon+
                 dataMmhtml.targer+
@@ -279,6 +287,7 @@
                 dataMmhtml.appCode+
                 dataMmhtml.title+
                 dataMmhtml.dataSource+
+                dataMmhtml.isPublic +
                 dataMmhtml.size+
                 dataMmhtml.icon+
                 dataMmhtml.bgColor+
@@ -297,6 +306,7 @@
                 dataMmhtml.appCode+
                 dataMmhtml.title+
                 dataMmhtml.dataSource+
+                dataMmhtml.isPublic +
                 dataMmhtml.size+
                 dataMmhtml.timeInterval+
                 dataMmhtml.des;
@@ -322,6 +332,7 @@
                 dataMmhtml.appCode+
                 dataMmhtml.title+
                 dataMmhtml.dataSource+
+                dataMmhtml.isPublic +
                 dataMmhtml.size+
                 dataMmhtml.pageSize+
                 dataMmhtml.timeInterval+
@@ -354,6 +365,7 @@
                 dataMmhtml.tileTemplateCode+
                 dataMmhtml.title+
                 dataMmhtml.appCode+
+                dataMmhtml.isPublic +
                 dataMmhtml.size+
                 dataMmhtml.content+
                 dataMmhtml.des
@@ -367,6 +379,7 @@
                 dataMmhtml.appCode+
                 dataMmhtml.title+
                 dataMmhtml.dataSource+
+                dataMmhtml.isPublic +
                 dataMmhtml.size+
                 dataMmhtml.des;
             $('.formtbody').html(html);
@@ -377,6 +390,7 @@
             html = dataMmhtml.tileTemplateCode +
                 dataMmhtml.appCode +
                 dataMmhtml.title +
+                dataMmhtml.isPublic +
                 dataMmhtml.size +
                 dataMmhtml.icon1 +
                 dataMmhtml.des;

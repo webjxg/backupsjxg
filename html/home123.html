@@ -88,8 +88,8 @@
         {{for apps}}
         {{if total > "0"}}
         <div class="mainCon">
-            <span class="title">{{:appName}}<span id="tiles_total_{{:=}}">({{:total}})</span></span>
-            <ul class="totleCon" id="store_group_{{:appCode}}">
+            <span class="title">{{:appName}}<span id="tiles_total_{{:=}}">({{:tiles.length}})</span></span>
+            <ul class="totleCon " id="store_group_{{:appCode}}">
                 {{for tiles}}
                 <li id="breviary_{{:tileTemplateId}}" class="tile_li">
                     <span class="headCon" title="{{:title}}">{{:title}}({{:sizex}}×{{:sizey}})</span>
@@ -244,11 +244,11 @@
             {{if status == -1}}
             <div class="disabled-tile-mask" title="权限被取消，请联系管理员"><div>无权限</div></div>
         	{{/if}}
-            <div class="tile-content">
-                <div class="tile-title">{{:title}}</div>
+            <div class="text_registerBox">
+                <div class="text-shadow-div"></div>
+                <div class="text-content-title">{{:title}}</div>
                 <textarea name="content" id="text-content-prev{{:tileTemplateId}}" class="text-content-prev" readonly></textarea>
             </div>
-
         </div>
     </script>
 
@@ -259,37 +259,20 @@
             {{if status == -1}}
             <div class="disabled-tile-mask" title="权限被取消，请联系管理员"><div>无权限</div></div>
         	{{/if}}
-        	<div class="tile-content">
-                <div class="tile-title">{{:title}}</div>
-                <div id="cus{{:tileTemplateCode}}">
-                </div>
+            <div class="iframe-mask"></div>
+            <div id="cus{{:tileTemplateCode}}" style="{{:sizeStyle}}">
             </div>
-
         </div>
     </script>
 
 <!-- 多媒体类 -->
-<!--多媒体类型改为图片类型磁贴
-修改人：贾旭光
-描述：后台传参type类型8为图片类型，固修改
--->
 <script id="tmpl8" type="text/x-jsrender">
         <div id="box-audioFrequency" class="{{:className}}" style="{{:sizeStyle}}">
             <img id="{{:tileId}}" data-needid="tile-{{:tileTemplateId}}" data-type="freedom" src="../images/close.png" class="shewidt">
             {{if status == -1}}
             <div class="disabled-tile-mask" title="权限被取消，请联系管理员"><div>无权限</div></div>
         	{{/if}}
-            <div class="tile-content" >
-                <div class="tile-title">{{:title}}</div>
-                <div class="error-div"></div>
-                <div id="{{:tileTemplateId}}" data-picture="{{:tileTemplateId}}" class="picture-div">
-                    <div class="picture-content">
-                        <img class="view-picture" src="{{:imgSrc}}" title="img">
-                    </div>
-                </div>
-        	</div>
-            <div class="loading-img">
-                <img src="../images/loading-2.gif" alt="img" title="正在加载中">
+            <div class="audio-contentBox" style="height: 100%;">
             </div>
         </div>
     </script>
