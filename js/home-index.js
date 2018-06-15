@@ -774,7 +774,7 @@ function appsInit() {    //页面每次加载的时候都会调用该方法 然�
             for (var i = 0,j = tile_datas.length; i < j; i++) {  //将磁贴集合的数据通过addOptions方法动态创建option标签然后放入到#apps中。
                 var app = tile_datas[i];
                 $("#apps").addOptions(app.appName, app.appCode);   //addOptions方法将获取到的数组对象进行遍历然后动态创建option标签
-                var a = { "appName": app.appName, "appCode": app.appCode,"total": 0, "tiles": [] };
+                var a = { "appName": app.appName, "appCode": app.appCode,"total": 0, "tiles": [],"publicTiles":[] };
                 app_array.push(a);   //返回一个新的关于#apps的数据对象。
             };
             $("#tile_type").empty();
@@ -803,26 +803,37 @@ function load_tiles_store() {    //每次下拉框选择完具体的磁贴类型
     app_array.forEach(function (ele,index) {
         ele.total = 0;
         ele.tiles = [];
+        ele.publicTiles=[];
     });
+
     ajaxToServer1("/api/workbench/WorkbenchHomePage/shopList",data,function(result){
-        console.log(result);
         if(result.success){
             var data = result.allTile;
+            var publicData = result.publicTile;
             store_tiles = data;
-            for (var i = 0; i < data.length; i++) {
-                var tile = data[i];
-                tile.code = tile_type;  //shortcut
-              //  tile["thumbnail"] = getThumbnail(tile);   //判断图片是否存在 有的话直接返回该图片 没有的话使用switch语句根据tempId的值指定图片。
-                app_array.forEach(function (ele,index) {
-                    if (ele.appCode == tile.appCode) {
-                        var tileType=$("#tile_type option:selected").attr('data-id');
-                        tile['imgSrc'] = admin_domain+'/img/sys/SysUpload/showTileImg?id='+tile.tileTemplateId+'&type='+tileType;
-                        ele.tiles.push(tile);
-                        ele.total++;
-                    }
-                });
-            };
-            template.apps = app_array;  //template={};
+            function renderTile(tilesData){
+                for (var i = 0; i < tilesData.length; i++) {
+                    var tile = tilesData[i];
+                    tile.code = tile_type;  //shortcut
+                    //  tile["thumbnail"] = getThumbnail(tile);   //判断图片是否存在 有的话直接返回该图片 没有的话使用switch语句根据tempId的值指定图片。
+                    app_array.forEach(function (ele,index) {
+                        if (ele.appCode == tile.appCode) {
+                            var tileType=$("#tile_type option:selected").attr('data-id');
+                            tile['imgSrc'] = admin_domain+'/img/sys/SysUpload/showTileImg?id='+tile.tileTemplateId+'&type='+tileType;
+                            if(tile.isPublic!=1){
+                                ele.tiles.push(tile);
+                            }else{
+                                ele.publicTiles.push(tile);
+                            }
+                            ele.total++;
+                        }
+                    });
+                }
+            }
+            renderTile(data);
+            renderTile(publicData);
+            template.apps = app_array;//template={};
+            console.log(template);
             var tmpl;
             var htmlOutput;
             if(tile_type == "panel"){
@@ -836,7 +847,7 @@ function load_tiles_store() {    //每次下拉框选择完具体的磁贴类型
             }
 
             store_tiles_event();   //为右侧内容区域中动态添加的元素添加拖拽事件
-             store_tiles_unmove_style();
+            store_tiles_unmove_style();
         }else{
             layer.msg(result.message);
         }
