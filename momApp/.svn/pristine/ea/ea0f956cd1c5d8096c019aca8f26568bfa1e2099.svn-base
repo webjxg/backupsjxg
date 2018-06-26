@@ -1,0 +1,87 @@
+<template>
+    <div class="instructOperation">
+      <!--<h1>指令接收</h1>-->
+      <div class="finish">
+        <p>已完成指令</p>
+        <ul v-if="finish.length>0">
+          <li v-for="item in finish">
+            <router-link :to="{name:'instructOperationInner',params:{id:item.id} }">
+              {{item.content}}
+            </router-link>
+          </li>
+        </ul>
+        <ul v-else>
+          <li>{{err}}</li>
+        </ul>
+      </div>
+      <div class="wait">
+        <p>待完成指令</p>
+        <ul v-if="wait.length>0">
+           <li v-for="item in wait">
+             <router-link :to="{name:'instructOperationInner',params:{id:item.id} }">
+             {{item.content}}
+             </router-link>
+           </li>
+        </ul>
+        <ul v-else>{{err}}</ul>
+      </div>
+    </div>
+</template>
+
+<script>
+    export default {
+        name: "instructOperation",
+        data(){
+          return {
+              finish:[],
+              wait:[],
+              err:"当前没有指令"
+          }
+        },
+      methods:{
+          loadData:function () {
+            var data = {};
+            this.ApiMethod.ajaxServer1(this.apiD.aps_domain + "/api/ctrl/DirectiveDetail/getReceiveDirective",data)
+              .then(response=>{
+                console.log(response);
+                for(var i=0;i<response.data.rows.length;i++){
+                  if(response.data.rows[i].status=="finish"){
+                    this.finish.push(response.data.rows[i])
+                  }else if(response.data.rows[i].status=="wait"){
+                    this.wait.push(response.data.rows[i])
+                  }
+                }
+              })
+          }
+      },
+      mounted:function () {
+        this.loadData()
+      }
+    }
+</script>
+
+<style scoped>
+  *{
+    padding: 0;
+    margin: 0;
+  }
+  ul{
+    list-style: none;
+  }
+  li{
+    width: 100%;
+    line-height: 30px;
+  }
+  a{
+    text-decoration:none;
+    color: #000;
+  }
+.instructOperation{
+  width: 100%;
+  margin-left: 2%;
+}
+  .instructOperation p{
+    font-size: 16px;
+    font-weight: bold;
+  }
+</style>

@@ -1,0 +1,217 @@
+<template>
+<div id="forgetPword">
+    <div class="box">
+      <div class="title"><i class="el-icon-warning"></i><span>{{title1}}</span></div>
+      <form id="inputForm" action="">
+        <label for="acc" style="color:red;">
+            <img src="../assets/image/acc.jpg" alt="acc" class="acc">
+            <input id="acc" type="text" @input="change" v-model="userName" placeholder="请输入用户名" class="placeholder"/> 
+        </label>
+        <span v-if="userNames==''">用户名不能为空</span>
+        <label for="startTime">
+          <span class="goTo">至</span>
+          <el-date-picker
+            id="startTime"
+            type="datetime"
+            placeholder="选择日期时间"
+            name="startTime"
+            format="yyyy-MM-dd HH:mm:ss"
+            value-format="yyyy-MM-dd HH:mm:ss"
+            @change="change"
+            v-model="startTime"
+            >
+          </el-date-picker>
+        </label>
+        <span v-if="this.startTimes==''">开始时间不能为空</span>
+        <label for="endTime">
+          <el-date-picker
+            id="endTime"
+            type="datetime"
+            placeholder="选择日期时间"
+            name="endTime"
+            format="yyyy-MM-dd HH:mm:ss"
+            value-format="yyyy-MM-dd HH:mm:ss"
+            @change="change"
+            v-model="endTime"
+            >
+          </el-date-picker> 
+           </label>
+        <span v-if="this.endTimes==''">结束时间不能为空</span>
+      </form>
+    </div>
+    <button @click="change();resetPassword();">申请密码重置</button>
+  </div>
+</template>
+<script>
+  export default {
+    components:{  
+    },
+    data(){
+      return{
+        userName:"",
+        title1:"请选择方便接电话的时间段，管理员将在这个时间里与您电话确认，进行密码重置。",
+        startTime:"",
+        endTime:"",
+        userNames:"1",
+        endTimes:"1",
+        startTimes:"1",
+      }
+    },
+    methods:{
+        change:function () {
+                this.userNames = this.userName;
+                this.endTimes = this.endTime;
+                this.startTimes = this.startTime;
+              },
+        resetPassword() {
+            if(this.userName==""||this.endTime==""){
+              if(this.userName==""){
+                this.userNames=="";  
+              } 
+              if(this.endTime==""){
+                this.endTimes=="";
+              }
+              if(this.startTime==""){
+                this.startTimes=="";
+              }
+            }else{
+              var data = {
+                  loginName:this.userName,
+                  startTime:this.startTime,
+                  endTime:this.endTime
+                  };
+              this.ApiMethod.ajaxServer(this.apiD.admin_domain+'/mobile/ResetPassword/apply',JSON.stringify(data))
+                      .then((response)=>{
+                        console.log(this.apiD.admin_domain+'/mobile/ResetPassword/apply',data,response);
+                        if(response.success){
+                          this.$alert('您的申请已递交', {
+                          type: 'success',
+                          center: true})
+                        }else{
+                          this.$alert(response.message, {
+                          type: 'warning',
+                          center: true})
+                        }
+                      })
+            }
+        },  
+        
+      }
+    }
+
+</script>
+
+<style lang="scss" scoped type="text/scss">
+  div.title{
+    height: .59rem;
+    box-sizing: border-box;
+    padding: .12rem .1rem;
+    background-color: #FFFED7;
+    span{
+    width: 90%;
+    float: right;  
+    }
+     i{
+    float: left;
+    display: block;
+    box-sizing: border-box;
+    padding: 0.05rem;
+    width: 10%;
+    font-size: .22rem;
+    height: 100%;
+    line-height: 100%;
+    color:#00c99f;
+  }
+  }
+  div.box{
+    margin-bottom: 2%;
+  }
+  span,input{
+    font-size: .14rem;
+  }
+  #inputForm{
+    position: relative;
+    span{
+    float: left;
+    height: .2rem;
+    display: block;
+    margin-left:10%; 
+    font-size:.14rem; 
+    color: red;
+  }
+  label{ 
+    width: 100%;
+    float:left;
+    position: relative;
+    display: block;
+    margin: 0 auto;
+    max-width: 7.5rem;
+    color:#efefef;
+    span{
+    position: absolute;
+    right:12%;
+    top: .18rem;
+    z-index: 100;
+    color: black;
+    font-size: 16px;
+  }
+  }
+  }
+  .acc,.pass{
+    width: .14rem;
+    height: .14rem;
+    position: absolute;
+    top:.23rem;
+    left: .47rem;
+  }
+
+  input{
+    box-sizing: border-box;
+    padding: 0 .29rem;
+    display: block;
+    width: 80%;
+    height: .62rem;
+    line-height: .62rem;
+    border: none;
+    border-bottom: 1px solid #eee;
+    font-size: 16px;
+    :focus{
+    outline: none; 
+  }
+  }
+  button{
+    margin-top: .45rem;
+    max-width: 6rem;
+    width: 80%;
+    display: block;
+    border-radius: .03rem;
+    height: .43rem;
+    font-size: 18px;
+    background-color: #00c99f;
+    border: none;
+    color: white;
+  }
+  button,.checkbox,input,#inputForm label,.checkbox label{
+    margin: 0 auto;
+  }
+  /* 日期选择框 */
+  .el-date-editor.el-input{
+    box-sizing: border-box;
+    display: block;
+    width: 80%;
+    height: .62rem;
+    line-height: .62rem;
+    margin: 0 auto;
+    border: none;
+    border-bottom: 1px solid #eee;
+    font-size: 16px;
+  }
+
+
+  input:focus{
+    outline: none; 
+  }
+  
+   
+  
+</style>

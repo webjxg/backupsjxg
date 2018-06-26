@@ -1,0 +1,47 @@
+<template>
+      <div>
+        <Header></Header>
+        <p>主页面</p>
+        <router-view></router-view>
+        <footer>
+          <ul>
+            <router-link to="/proDisindex">
+              <li>生产调度</li>
+            </router-link>
+          </ul>
+        </footer>
+      </div>
+</template>
+
+<script>
+  import Header from '@/components/top.vue'
+    export default {
+        name: "index",
+      components:{
+          Header
+      }
+    }
+</script>
+
+<style scoped>
+p{
+  font-size: .2rem
+}
+  *{
+    padding: 0;
+    margin: 0;
+  }
+  footer{
+    width: 100%;
+    position: fixed;
+    bottom: 10px;
+  }
+  ul{
+    list-style: none;
+  }
+  li{
+    width: 20%;
+    display: inline-block;
+    font-size: .18rem
+  }
+</style>

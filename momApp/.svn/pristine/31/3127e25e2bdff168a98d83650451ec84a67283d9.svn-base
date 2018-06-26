@@ -1,0 +1,137 @@
+<template>
+<div id="forgetPword">
+    <div class="box">
+      <div class="title"><i class="el-icon-warning"></i><span>{{title1}}</span></div>
+      <form id="inputForm" action="">
+        <img src="../images/acc.jpg" alt="acc" class="acc">
+        <input type="text"  v-model="userName" placeholder="请输入账号"/>
+          <el-date-picker
+              v-model="value1"
+              type="datetimerange"
+              range-separator="至"
+              start-placeholder="开始日期"
+              end-placeholder="结束日期">
+          </el-date-picker>
+      </form>
+    </div>
+    <button>申请密码重置</button>
+  </div>
+</template>
+<script>
+  export default {
+    components:{  
+    },
+    data(){
+      return{
+        userName:"",
+        title1:"请选择方便接电话的时间段，管理员将在这个时间里与您电话确认，进行密码重置。",
+        value1:""
+      }
+    }
+  }
+</script>
+
+<style scoped="scoped">
+  div.title{
+    height: .59rem;
+    box-sizing: border-box;
+    padding: .12rem .1rem;
+    background-color: #FFFED7;
+  }
+  div.title span{
+    width: 90%;
+    float: right;  
+  }
+  div.title i{
+    float: left;
+    display: block;
+    box-sizing: border-box;
+    padding: 0.05rem;
+    width: 10%;
+    font-size: .22rem;
+    height: 100%;
+    line-height: 100%;
+    color:#00c99f;
+  }
+  span,input,p{
+    font-size: .14rem;
+  }
+  #inputForm{
+    position: relative;
+    margin-top: .1rem;
+    margin-bottom:0.25rem; 
+  }
+  #inputForm span,#inputForm p{
+    float: left;
+    display: block;
+    margin-left:.36rem; 
+    font-size:.14rem; 
+    color: red;
+  }
+  #inputForm .dateGo{
+    font-size:16px; 
+    position: absolute;
+    right: .42rem;
+    top: .8rem;
+    color: black;
+  }
+  .acc,.date,.date2{
+    width: .19rem;
+    height: .19rem;
+    position: absolute;
+    left:.35rem;
+  }
+  .acc{
+    top:.21rem;
+  }
+  .date{
+    top:.85rem;
+  }
+  .date2{
+    bottom:.21rem;
+  }
+  input{
+    box-sizing: border-box;
+    padding: 0 .31rem;
+    display: block;
+    width: 3.05rem;
+    height: .62rem;
+    line-height: .62rem;
+    margin: 0 auto;
+    border: none;
+    border-bottom: 1px solid #eee;
+    font-size: 16px;
+  }
+  .el-date-editor.el-input{
+    box-sizing: border-box;
+    display: block;
+    width: 3.05rem;
+    height: .62rem;
+    line-height: .62rem;
+    margin: 0 auto;
+    border: none;
+    border-bottom: 1px solid #eee;
+    font-size: 16px;
+  }
+  input.el-input__inner{
+    border: 9px solid red;
+  }
+
+  input:focus{
+    outline: none; 
+  }
+  button{
+    margin-top: .45rem;
+    width: 3.05rem;
+    display: block;
+    margin: 0 auto;
+    height: .43rem;
+    font-size: 18px;
+    background-color: #00c99f;
+    border: none;
+    color: white;
+    border-radius: .03rem;
+  }
+   
+  
+</style>

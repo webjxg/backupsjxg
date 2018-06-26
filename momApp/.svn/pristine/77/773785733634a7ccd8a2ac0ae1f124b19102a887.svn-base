@@ -1,0 +1,99 @@
+<template>
+  <div class="login">
+    <p>登录</p>
+    <input type="text" @input="change" v-model="userName" placeholder="用户名"/>
+    <span v-if="userNames==''">用户名不能为空</span>
+    <input type="password"  @input="change" v-model="passWord" placeholder="密码"/>
+    <span v-if="passWords==''">密码不能为空</span>
+    <p v-if="bol">{{content}}</p>
+    <button @click="clickHandler">登陆</button>
+  </div>
+</template>
+
+<script>
+    export default {
+        name: "login",
+        data(){
+           return{
+             userName:"",
+             userNames:"1",
+             passWord:"",
+             passWords:"1",
+             bol:false,
+             content:""
+           }
+        },
+        methods:{
+              //侦听按钮点击。判断input
+              clickHandler:function () {
+                var that = this;
+                  if(this.userName == "" && this.passWord==""){
+                      this.userNames = "";
+                      this.passWords = "";
+                  }else{
+                    var data = {
+                        clientId:"admin",
+                        loginName:this.userName,
+                        password:this.passWord
+                    };
+                    this.ApiMethod.ajaxServer1(this.apiD.admin_domain + "/oauth/token",JSON.stringify(data))
+                      .then((response)=>{
+                        if(response.data.success){
+                          this.ApiMethod.setCookie("authorization",response.data.accessToken.authorization);
+                          this.ApiMethod.setCookie("token_type",response.data.accessToken.token_type);
+                          this.ApiMethod.setCookie("userName",response.data.user.name);
+                          this.ApiMethod.setCookie("loginName",response.data.user.loginName);
+                          this.ApiMethod.setCookie("loginUserid",response.data.user.id);
+                          that.$router.push("/indexs");
+                        }else if(response.data.retCode == "30006"){
+                           this.bol = true;
+                          this.content = "该账户已经被禁用"
+                          }else{
+                          this.bol = true;
+                          this.content = "密码输入错误，请重新输入"
+                          }
+                      })
+                  }
+              },
+              change:function () {
+                this.userNames = this.userName;
+                this.passWords = this.passWord;
+              }
+          }
+    }
+</script>
+
+<style scoped="scoped">
+  p{
+    text-align: center;
+    font-size: .2rem;
+  }
+  input{
+    display: block;
+    width: 75%;
+    height: 40px;
+    margin: 15px auto;
+    border: 1px solid black;
+    font-size: 16px;
+  }
+  button{
+    width: 30%;
+    display: block;
+    margin: 0 auto;
+    height: 40px;
+    font-size: 18px;
+    background-color: #41b883;
+    border: none;
+    color: white;
+  }
+  .login span{
+    display: block;
+    text-align: center;
+    font-size: .18rem
+  }
+  .login p{
+    display: block;
+    text-align: center;
+  }
+
+</style>

@@ -1,0 +1,292 @@
+<template>
+<!-- 轮播图 -->
+<div class="body">
+  <div class="container">
+    <div class="block">
+      <el-carousel width="100%"  arrow="always">
+        <el-carousel-item v-for="item in imges" :key="item">
+          <img :src="item" alt="">
+        </el-carousel-item>
+      </el-carousel>
+    </div>
+    <div class="navbar">
+      <ul>
+        <li>
+          <router-link to="/event">
+            <div class="navbar-image">
+              <p class="image1"></p>
+            </div>
+            <span>交接班</span>
+        </router-link>
+        </li>
+        <li>
+           <router-link to="/event">
+            <div class="navbar-image">
+              <p class="image2"></p>
+            </div>
+            <span>交接班</span>
+        </router-link>
+        </li>
+        <li>
+           <router-link to="/event">
+            <div class="navbar-image">
+              <p class="image3"></p>
+            </div>
+            <span>交接班</span>
+        </router-link>
+        </li>
+        <li>
+           <router-link to="/event">
+            <div class="navbar-image">
+              <p class="image4"></p>
+            </div>
+            <span>交接班</span>
+        </router-link>
+        </li>
+        <li>
+           <router-link to="/event">
+            <div class="navbar-image">
+              <p class="image5"></p>
+            </div>
+            <span>交接班</span>
+        </router-link>
+        </li>
+      </ul>
+    </div>
+
+    <!-- 生产计划 -->
+    <div class="plan">
+      <h3>生产计划</h3>
+    </div>
+    <div class="echarts-box"></div>
+    <!-- 底部 -->
+    
+  </div>
+  <footer>
+      <ul>
+        <li> 
+            <router-link to="/indexs"><img src="../assets/logo.png" alt="">
+            <p>首页</p></router-link>
+        </li>
+        <li>
+          <router-link to="/breakingNews"><img src="../assets/logo.png" alt="">
+            <p>大事件</p></router-link>
+          
+        </li>
+        <li>
+          <router-link to="/handingOperation"><img src="../assets/logo.png" alt="">
+            <p>管理工作</p></router-link>
+          
+        </li>
+        <li>
+          <router-link to="/my"><img src="../assets/logo.png" alt="">
+            <p>我的</p></router-link>
+          
+        </li> 
+      </ul>
+    </footer>
+</div>
+</template>
+<script>
+import ec from '@/js/ec'
+import echartsTheme from '@/js/macarons'
+export default {
+  data () {
+    return {
+      imges: ['/static/images/card1.png', '/static/images/card2.png', '/static/images/card3.png', '/static/images/card4.png'],
+      lineArray: [],
+      echartArr:[],
+      echartArrLast:{}
+    }
+  },
+  mounted () { 
+    this.loadData()    
+  },
+  methods: {
+    loadData:function () {
+      var data = {};
+      this.ApiMethod.ajaxServer1(this.apiD.admin_domain+'/api/workbench/PhoneWorkBenchHomePage/phoneChartList',{})
+        .then(response=>{
+          console.log(response.rows);
+          for (let i=0; i<response.rows.length; i++){
+            var url= response.rows[i].dataSource;
+           var url = url.toLowerCase().indexOf("http://") == 0? url : (this.apiD.aps_domain + url)
+           let tile = {name:response.rows[i].title};
+           if(response.rows[i].templateCode === 'line'){
+             let title = response.rows[i].title;
+              console.log("line"+response.rows[i].title)
+            this.ApiMethod.ajaxServer1(url,data)
+              .then(response=>{
+                console.log(this);
+                this.getEcId(i,title);
+                var data = response.rows;
+                this.echartArr.push(ec.render.line(data, '', tile));
+                this.echartArrLast = this.echartArr.splice(this.echartArr.length-1);
+                var op = this.echartArrLast;
+                var id ='echart'+i;
+                this.aa(id,this.echartArrLast[0])
+              })
+            }else if(response.rows[i].templateCode === 'bar'){
+               console.log("bar"+response.rows[i].title)
+            this.ApiMethod.ajaxServer1(url,data)
+              .then(response=>{
+                this.getEcId(i,tile.name);
+                var data = response.rows;
+                this.echartArr.push(ec.render.bar(data, '', tile));
+                this.echartArrLast = this.echartArr.splice(this.echartArr.length-1);
+                var op = this.echartArrLast;
+                var id ='echart'+i;
+                this.aa(id,this.echartArrLast[0])
+              
+              })
+            }else if(response.rows[i].templateCode === 'pie'){
+              console.log("pie"+response.rows[i].title)
+            this.ApiMethod.ajaxServer1(url,data)
+              .then(response=>{
+                this.getEcId(i,tile.name);
+                var data = response.rows;
+                this.echartArr.push(ec.render.pie(data, '', tile));
+                this.echartArrLast = this.echartArr.splice(this.echartArr.length-1);
+                var op = this.echartArrLast;
+                var id ='echart'+i;
+                this.aa(id,this.echartArrLast[0])
+              
+              })
+            }
+          }
+        })
+    },
+    getEcId(i,title){
+      console.log(i,title);
+      let html =`<div class="echarts-item">
+                    <h2 class="echarts-tit">${title}</h2>
+                    <div class="echartsEle" id="echart${i}"</div>
+                </div>`;    
+      this.$(html).appendTo('.echarts-box');
+      this.$('.echartsEle').css({"height":"350px"});
+    },
+    aa(echartId,options){
+      console.log(echartId,options);
+         var echartId= this.$echarts.init(document.getElementById(echartId), echartsTheme());
+         echartId.setOption(options);
+    }
+  }
+}
+</script>
+
+<!-- Add "scoped" attribute to limit CSS to this component only -->
+ <style src="../assets/css/common.css"></style>
+
+<style>
+/* 导航 */
+.navbar{
+  width: 100%;
+  height: 100px;
+  padding: 10px;
+  box-sizing: border-box;
+}
+.navbar li{
+  width: 20%;
+  height: 100%;
+  float: left;
+  text-align: center;
+}
+.navbar p{
+  width:48px;
+  height: 48px;
+  background-size: 275px 47px;
+}
+.image1{
+  background-position: 0 0; 
+  background: url('../assets/image/caidan1.png') no-repeat;
+}
+.image2{
+  background: url('../assets/image/caidan1.png') no-repeat;
+  background-position: -57px 0px;
+}
+.image3{
+  background: url('../assets/image/caidan1.png') no-repeat;
+  background-position: -113px 0px;
+}
+.image4{
+  background-position: 0 0; 
+  background: url('../assets/image/caidan1.png') no-repeat;
+  background-position: -170px 0px;
+}
+.image5{
+  background: url('../assets/image/caidan1.png') no-repeat;
+  background-position: -227px 0px;
+}
+.navbar-image{
+    width: 100%;
+    height: 48px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+.echartsEle{height:400px;}
+/* 生产计划 */
+.plan{
+  width: 100%;
+  height: 50px;
+  margin: 0 auto;
+  text-align: center;
+  background-color: #ccc;
+  color:#000;
+  font-size: .18rem;
+}
+.plan h3{
+line-height: 50px;
+}
+
+.block img{
+  width: 100%;
+  height: 100%;
+}
+.el-carousel{
+  height: 200px;
+}
+.el-carousel__container{
+  height: 100%;
+}
+button{
+  display:block;
+}
+
+
+a{
+  text-decoration: none;
+}
+
+footer{
+    position: fixed;
+    width: 100%;
+    height: 100px;
+    bottom: 0px;
+    background-color: #ccc;
+}
+.container{
+  margin-bottom: 100px;
+}
+footer ul{
+  width: 100%;
+  height: 100%;
+}
+footer ul li{
+  float: left;
+  width: 25%;
+  height: 100%;
+  text-align: center
+}
+footer ul a{
+  display: inline-block;
+  width: 100%;
+  height: 100%;
+}
+footer ul img{
+  width: 30%;
+  margin-top: 25px;
+}
+</style>

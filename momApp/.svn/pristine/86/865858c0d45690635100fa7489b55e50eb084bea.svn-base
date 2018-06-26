@@ -1,0 +1,37 @@
+<template>
+  <div class="instructOperationInner">
+    <router-link to="/instructOperation">返回上一级</router-link>
+    <p>指令接收内页</p>
+  </div>
+</template>
+
+<script>
+    export default {
+        name: "instructOperationInner",
+        data(){
+          return {
+            id:""
+          }
+        },
+      methods:{
+          getquery:function () {
+            // 取到路由带过来的参数
+            console.log(this.$route.params);
+            // 将数据放在当前组件的数据内
+            this.id = this.$route.params;
+            var data ={id:this.id}
+            this.ApiMethod.ajaxServer()
+          }
+      },
+      mounted:function () {
+        this.getquery();
+      }
+
+    }
+</script>
+
+<style scoped>
+p{
+  font-size: .16rem
+}
+</style>

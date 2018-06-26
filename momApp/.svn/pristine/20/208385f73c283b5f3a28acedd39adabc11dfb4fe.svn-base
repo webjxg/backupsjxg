@@ -1,0 +1,65 @@
+<template>
+    <div class="operationCheck">
+      <div class="wait">
+        <h3>待完成指令</h3>
+        <ul v-if="wait.length>0">
+          <li v-for="(item,index) in wait">
+            <router-link :to="{name:'instructOperationInner',params:{id:item.id} }">
+              {{item.content}}
+            </router-link>
+          </li>
+        </ul>
+        <ul v-else>{{err}}</ul>
+      </div>
+      <div class="finish">
+        <h3>已完成指令</h3>
+        <ul v-if="finish.length>0">
+          <li v-for="(item,index) in finish">
+            <router-link :to="{name:'instructOperationInner',params:{id:item.id} }">
+              {{item.content}}
+            </router-link>
+          </li>
+        </ul>
+        <ul v-else>{{err}}</ul>
+      </div>
+    </div>
+</template>
+
+<script>
+    export default {
+        name: "operationCheck",
+      data(){
+         return{
+           finish : [],
+           wait:[],
+           err:"当前没有指令"
+         }
+      },
+      methods:{
+          getmsg:function () {
+            var data = {};
+            this.ApiMethod.ajaxServer1(this.apiD.aps_domain + "/api/ctrl/DirectiveDetail/getReceiveDirective",data)
+              .then((response)=>{
+                console.log(response.data.rows)
+                for(var i=0;i<response.data.rows.length;i++){
+                  if(response.data.rows[i].status == "finish"){
+                          this.finish.push(response.data.rows[i]);
+                  }else if(response.data.rows[i].status == "wait"){
+                          this.wait.push(response.data.rows[i])
+                  }
+                }
+              })
+          }
+      },
+      mounted:function () {
+        this.getmsg()
+      }
+    }
+</script>
+
+<style scoped>
+.operationCheck{
+  width: 100%;
+  text-align: center;
+}
+</style>

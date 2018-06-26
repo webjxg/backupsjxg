@@ -1,0 +1,17 @@
+/* 
+创建人：贾旭光
+描述：elementui深层样式修改需要全局引用 固新创建一个css文件全局引用
+日期：2018.6.25 14：45
+*/
+
+/* 日期选择框 */
+.el-input__inner{
+    outline: none;
+    border: 0;
+  }
+
+  /* 修改弹窗样式 */
+  .el-message-box{
+    max-width: 6rem;
+    width: 80%;
+  }

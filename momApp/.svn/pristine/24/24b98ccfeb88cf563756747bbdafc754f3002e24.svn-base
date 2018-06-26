@@ -1,0 +1,89 @@
+<template>
+    <div class="proDis">
+      <div class="heade">
+        <div class="content">
+          <router-link to="/indexs">
+            <p>返回上一级</p>
+          </router-link>
+          <ul>
+            <router-link to="/instructOperation" @click.native="setClass">
+              <li class="active">指令接收</li>
+            </router-link>
+            <router-link to="/operationCheck" @click.native="setClass">
+              <li>指令查看</li>
+            </router-link>
+          </ul>
+        </div>
+      </div>
+      <router-view></router-view>
+    </div>
+
+</template>
+
+<script>
+    export default {
+        name: "index",
+      data(){
+        return {
+          bol:true
+        }
+      },
+      methods:{
+        setClass:function (e) {
+            this.$('li').removeClass('active');
+            e.target.className = "active"
+        }
+      },
+    }
+
+</script>
+
+<style scoped>
+  *{
+    padding: 0;
+    margin: 0;
+  }
+  a{
+    text-decoration:none;
+    color: #000;
+  }
+  .proDis{
+    width: 100%;
+    margin: 0 auto;
+    font-size: .18rem
+  }
+  ul{
+    list-style: none;
+    width: 40%;
+    margin: 0 auto;
+    display: inline-block;
+  }
+  li{
+    display: inline-block;
+    border: 4px solid #41b883;
+    padding: 2px 0px 3px 0px;
+    background-color: #41b883;
+    color: white;
+    border-color: white;
+    font-size: .16rem
+  }
+  .active{
+    background-color: white;
+    color: #41b883;
+    border-color: white;
+  }
+  .heade{
+    width: 100%;
+    height: 70px;
+    background-color: #41b883;
+  }
+  .heade p{
+    display: inline-block;
+  }
+  .content{
+
+  }
+  .content ul{
+
+  }
+</style>

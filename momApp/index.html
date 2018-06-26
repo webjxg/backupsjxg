@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">  
+    <title>adminapp</title>
+    <script>
+      var docEl = document.documentElement,
+        resizeEvt = 'orientationchange' in window ? 'orientationchange' : 'resize',
+        recalc = function() {
+          // fastclick
+          // Fastclick.attach(document.body);
+
+          var clientWidth = docEl.clientWidth;
+          if (!clientWidth) return;
+          // var fontSize = 200 * (clientWidth / 750);
+          var fontSize = 100 * (clientWidth / 375);
+          // 如果是pc访问
+          if (!/windows phone|iphone|android/ig.test(window.navigator.userAgent)) {
+            fontSize = 100;
+          }
+          docEl.style.fontSize = fontSize + 'px';
+        };
+      window.addEventListener(resizeEvt, recalc, false);
+      document.addEventListener('DOMContentLoaded', recalc, false);
+    </script>
+  </head>
+  <body>
+    <div id="app"></div>
+    <!-- built files will be auto injected -->
+  </body>
+
+</html>
