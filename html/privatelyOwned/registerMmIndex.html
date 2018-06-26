@@ -20,10 +20,11 @@
     <link rel="stylesheet" href="../../css/privatelyOwned.css">
     <style>
         /*背景色修改*/
-        .bgColor{
-            position: absolute;
-            right:74px;
-            top: 290px;
+        .width-10 {
+            width: 22%;
+        }
+        #inputForm{
+            overflow: auto;
         }
     </style>
 </head>
@@ -276,11 +277,12 @@
         '<label id="content-error" class="error" for="content" style="display:none"></label></td></tr>',
 
         /*——————背景颜色选择————————*/
-        bgColor: '<tr class="bgColor"><td><label class="pull-right">背景颜色:</label></td>' +
-        '<td class="width-80"><input class="valid1" type="hidden" id="bgColor" name="bgColor" >' + '<li class="dropdown color-picker">' +
-        '<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="true">' +
-        '<span><i class="fa fa-circle"></i></span>' +
-        '</a>' +
+        bgColor:
+            '<tr><td class="width-10"><label class="pull-right">图标</label></td><td class="width-80 "> <input id="nameImage" name="icon" maxlength="255" class="input-xlarge valid1" type="hidden" value=""/><ol id="nameImagePreview"></ol><a href="javascript:" id="filePicker" >+</a><label id="nameImage-error" class="error" for="nameImage" style="display:none"></label><div class="bgColor"><label class="pull-right">背景颜色:</label>' +'<input class="valid1" type="hidden" id="bgColor" name="bgColor" >'+
+            '<li class="dropdown color-picker">' +
+        '   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="true">' +
+            '   <span><i class="fa fa-circle"></i></span>' +
+        '   </a>' +
         '<ul class="dropdown-menu pull-right animated fadeIn" role="menu">' +
         '<li class="padder-h-xs">' +
         '	<table class="table color-swatches-table text-center no-m-b">' +
@@ -322,8 +324,8 @@
         '       </tbody></table>' +
         '</li>' +
         '</ul>' +
-        '</li>' +
-        '</td></tr>',
+        '</li>'+'</div>'+
+            '</td></tr>',
         /*图片*/
         icon1: '<tr class="picture"><td class="width-10"><label class="pull-right"><font color="red">*</font>图片上传</label></td><td class="width-80 "> <input id="nameImage" name="icon" maxlength="255" class="input-xlarge valid1" type="hidden" value=""/><ol id="nameImagePreview"></ol><a href="javascript:" id="filePicker" >+</a><label id="nameImage-error" class="error" for="nameImage" ></label></td></tr>',
         /*开放类型*/
@@ -333,7 +335,15 @@
         '<option value=0>私有磁贴</option>'    +
         '<option value=1>公用磁贴</option>'    +
         '</select>'+
-        '<label id="isPublic-error" class="error" for="isPublic" style="display:none"></label></td></tr>'
+        '<label id="isPublic-error" class="error" for="isPublic" style="display:none"></label></td></tr>',
+        /*是否在手机端显示*/
+        displayMobile:'<tr><td class="width-10"><label class="pull-right"><font color="red">*</font>手机端显示:</label></td>' +
+        '<td class="width-80">' +
+        '<select class="form-control valid1" name="displayMobile" id="displayMobile" required="required">' +
+        '<option value=0>不显示</option>'    +
+        '<option value=1 class="isMobile">显示</option>'    +
+        '</select>'+
+        '<label id="displayMobile-error" class="error" for="displayMobile" style="display:none"></label></td></tr>'
     };
     /*调色版*/
     function colorChange() {
@@ -348,12 +358,12 @@
     }
     function col(this_) {
         var itemColor=colorRGB2Hex($(this_).children('i.fa-circle').css('color'));
-        $('.bgColor>td>li>a i').css({'color':itemColor});
-        console.log($('.bgColor>td>li>a i').css('color'));
-        $('#bgColor').val(colorRGB2Hex($('.bgColor>td>li>a i').css('color')))
+        $('.bgColor>li>a i').css({'color':itemColor});
+        console.log($('.bgColor>li>a i').css('color'));
+        $('#bgColor').val(colorRGB2Hex($('.bgColor>li>a i').css('color')))
     }
 
-    //rgb转换成16进制
+    /*rgb转换成16进制*/
     function colorRGB2Hex(color) {
         if(color==undefined){
             layerAlert('未选定颜色请重新选择')
@@ -416,8 +426,9 @@
                 dataMmhtml.title +
                 dataMmhtml.dataSource +
                 dataMmhtml.isPublic +
+                dataMmhtml.displayMobile +
                 dataMmhtml.size +
-                dataMmhtml.icon + dataMmhtml.bgColor +
+                dataMmhtml.bgColor +
                 dataMmhtml.timeInterval +
                 dataMmhtml.des;
             $('.formtbody').html(html);
@@ -432,6 +443,7 @@
                 dataMmhtml.title +
                 dataMmhtml.dataSource +
                 dataMmhtml.isPublic +
+                dataMmhtml.displayMobile +
                 dataMmhtml.size +
                 dataMmhtml.timeInterval +
                 dataMmhtml.des;
@@ -517,6 +529,14 @@
         }
         $('#mMtype').val(data);//每次点击左侧磁贴 这个参数更新
         $('#mMid').val(id);
+        $('#isPublic').change(function () {
+            if($(this).val()=='1'){
+                $('.isMobile').hide();
+                $('#displayMobile').val(0)
+            }else{
+                $('.isMobile').show();
+            }
+        });
         ajaxToServer(admin_domain + '/api/workbench/WorkbenchTileTemplate/selectAppName', {}, function (result) {
             renderSelect(result)
         })
@@ -532,15 +552,12 @@
         /*数据源下拉框渲染*/
         function dsRender(type) {
             ajaxToServer(admin_domain+'/api/sys/SysDict/type/workbench_datasource_'+type,{},function (result) {
-                console.log(type,result);
                 if(result.success) {
                     appendOptionsValue($('#dataSource'),result.rows,'value','label');
                     $('#dataSource').select2();
                 }
             });
         }
-
-
 
     }
 
@@ -573,10 +590,9 @@
         $('#appCodeId').val($('#appCode option:selected').text());
         var listLi = $('.iconbox').parent('li').clone();
         $('.subContent').find('ul.leftlist').html(listLi);
-        var $trListtext = $('.formtbody').find('label.pull-right').clone()
+        var $trListtext = $('.formtbody').find('label.pull-right').clone();
         $($trListtext).find('font').remove();
         $('#nameImage').val($('.thumbnail>img').attr('src'))
-
         $($trListtext).each(function (i, item) {
             var spaninner = $('.valid1').eq(i).val();
             console.log($('.valid1').eq(i));

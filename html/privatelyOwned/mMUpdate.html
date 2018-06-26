@@ -259,7 +259,15 @@
         '<option value=0>私有磁贴</option>'    +
         '<option value=1>公用磁贴</option>'    +
         '</select>'+
-        '<label id="isPublic-error" class="error" for="isPublic" style="display:none"></label></td></tr>'
+        '<label id="isPublic-error" class="error" for="isPublic" style="display:none"></label></td></tr>',
+        /*是否在手机端显示*/
+        displayMobile:'<tr><th class="width-10"><label class="pull-right"><font color="red">*</font>手机端显示:</label></th>' +
+        '<td class="width-80">' +
+        '<select class="form-control valid1" name="displayMobile" id="displayMobile" required="required">' +
+        '<option value=0>不显示</option>'    +
+        '<option class="isMobile" value=1>显示</option>'    +
+        '</select>'+
+        '<label id="displayMobile-error" class="error" for="displayMobile" style="display:none"></label></td></tr>'
     }
     /*渲染右侧input*/
     function renderRContent(data,id,results) {
@@ -287,6 +295,7 @@
                 dataMmhtml.appCode+
                 dataMmhtml.title+
                 dataMmhtml.dataSource+
+                dataMmhtml.displayMobile+
                 dataMmhtml.isPublic +
                 dataMmhtml.size+
                 dataMmhtml.icon+
@@ -299,13 +308,12 @@
             $('#sizex').append(optionx);
             $('#sizey').append(optiony);
             dsRender('num');
-
-
         } else if(data==3){
             html=dataMmhtml.tileTemplateCode+
                 dataMmhtml.appCode+
                 dataMmhtml.title+
                 dataMmhtml.dataSource+
+                dataMmhtml.displayMobile+
                 dataMmhtml.isPublic +
                 dataMmhtml.size+
                 dataMmhtml.timeInterval+
@@ -315,7 +323,6 @@
             $('#sizey').append(opYcommon);
             var tpid=results.workbenchTileTemplate.templateId;
             if(tpid==3){
-                console.log(1);
                 dsRender('chart_line');
             }else if(tpid==4){
                 dsRender('chart_gauge');
@@ -324,8 +331,6 @@
             }else if(tpid==6){
                 dsRender('chart_bar');
             }
-
-
 
         } else if(data==4){
             html=dataMmhtml.tileTemplateCode+
@@ -400,10 +405,15 @@
         }
         $('#mMtype').val(data);//每次点击左侧磁贴 这个参数更新
         $('#mMid').val(id);
+        $('#isPublic').change(function () {
+            isPM(this);
+        })
+
         ajaxToServer(admin_domain+'/api/workbench/WorkbenchTileTemplate/selectAppName', {}, function (result) {
             console.log(results);
             renderSelect(result)
             renderData(results.workbenchTileTemplate,'#inputForm');
+            isPM('#isPublic');
             //角色赋值
             $('#dataSource').select2().val(results.workbenchTileTemplate.dataSource).trigger('change');
         });
@@ -411,6 +421,15 @@
         /*上传头像*/
         if($('#nameImagePreview')){
             initWebuploader('/img/sys/SysUpload/upimg?imgPath=img', '#filePicker');
+        }
+
+        function isPM(doc) {
+                if($(doc).val()=='1'){
+                    $('.isMobile').hide();
+                    $('#displayMobile').val(0)
+                }else{
+                    $('.isMobile').show();
+                }
         }
         function dsRender(type) {
             ajaxToServer(admin_domain+'/api/sys/SysDict/type/workbench_datasource_'+type,{},function (result) {
@@ -423,7 +442,7 @@
         }
 
     }
-
+    /*数字格式规范*/
     function clearNoNum(obj){
         obj.value = obj.value.replace(/[^\d.]/g,"");  //清除“数字”和“.”以外的字符
         obj.value = obj.value.replace(/\.{2,}/g,"."); //只保留第一个. 清除多余的

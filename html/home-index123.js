@@ -760,10 +760,12 @@ function load_tiles_store() {    //每次下拉框选择完具体的磁贴类型
         ele.publicTiles = [];
     });
     ajaxToServer1("/api/workbench/WorkbenchHomePage/shopList",data,function(result){
+        console.log(result);
         if(result.success){
             var data = result.allTile;
             var publicData = result.publicTile;
             store_tiles = data.concat(publicData);
+
             function renderTile(tilesData){
                 for (var i = 0; i < tilesData.length; i++) {
                     var tile = tilesData[i];

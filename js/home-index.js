@@ -345,7 +345,6 @@ function loadText(tile,isFirst) {
 }
 //加载图片类型磁贴
 function loadPicture(tile) {
-    console.log(tile);
 }
 
 //加载自定义类磁贴
@@ -551,6 +550,7 @@ $(".succesesed_ok").click(function (e) {   //点击对号（保存）的时候
     };
 
     ajaxToServer1('/api/workbench/WorkbenchHomePage/saveUserTile',data,function(result){
+        console.log(data,result);
         if(result.success){
             shortcut(".function");   //给快捷入口类磁贴绑定点击事件
             del_tiles="";
@@ -810,7 +810,7 @@ function load_tiles_store() {    //每次下拉框选择完具体的磁贴类型
         if(result.success){
             var data = result.allTile;
             var publicData = result.publicTile;
-            store_tiles = data;
+            store_tiles = data.concat(publicData);
             function renderTile(tilesData){
                 for (var i = 0; i < tilesData.length; i++) {
                     var tile = tilesData[i];
@@ -833,7 +833,6 @@ function load_tiles_store() {    //每次下拉框选择完具体的磁贴类型
             renderTile(data);
             renderTile(publicData);
             template.apps = app_array;//template={};
-            console.log(template);
             var tmpl;
             var htmlOutput;
             if(tile_type == "panel"){
@@ -992,8 +991,7 @@ function store_tiles_unmove_style_only(id) {
 function store_tiles_event() {   //为右侧内容区域中动态添加的元素添加拖拽事件
     //单位宽度
     var w = 0; var h = 0; var X = 0; var Y = 0;
-
-    $(".totleCon>li .midCon").each(function () {
+    $(".totleCon>li .midCon").each(function (e,item) {
         $(this).bind('mousedown', function (e) {
             e.preventDefault();
             timeStart = getTimeNow();//获取鼠标按下时的时间  
