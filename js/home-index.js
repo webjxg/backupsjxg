@@ -550,7 +550,6 @@ $(".succesesed_ok").click(function (e) {   //点击对号（保存）的时候
     };
 
     ajaxToServer1('/api/workbench/WorkbenchHomePage/saveUserTile',data,function(result){
-        console.log(data,result);
         if(result.success){
             shortcut(".function");   //给快捷入口类磁贴绑定点击事件
             del_tiles="";
