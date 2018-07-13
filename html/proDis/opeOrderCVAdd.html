@@ -99,19 +99,15 @@
 <script src="../../js/customForm-aps.js"></script>
 <script src="../../js/public.js"></script>
 <script src="../../js/page.js"></script>
-
-
-
-
-
-
 <script>
+    var proc = getQueryString('proc')
     $(document).ready(function() {
         ajaxproc();
         ajaxkind();
         var id=getQueryString('id');
         var pid = getQueryString('pid');
         var level = getQueryString('level');
+        console.log(proc)
         if(level){
             $('#grade').val(1)
             $('#gradeVal').val($('#grade').val())
@@ -168,8 +164,14 @@
         ajaxToServer(url,{},function (result) {
             if(result.success){
                 var rows = result.rows;
-                appendOptionsValue($('#proc'), rows, 'name', 'name');
+                appendOptionsValue($('#proc'), rows, 'value', 'name');
                 //appendOptionsValue($('#proc'), rows, 'code', 'name'); //工序值取编码，update by qiyh 2018-05-24
+                $("#proc option").each(function () {
+                    if(proc == $(this).attr('value')){
+                        $(this).attr("selected",true);
+                        $('#proc').attr('disabled','disabled').css({"cursor":"not-allowed"});
+                    }
+                })
             }else{
                 layer.msg(result.message);
             }

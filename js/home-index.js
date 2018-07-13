@@ -513,6 +513,7 @@ $(".sjkhs").click(function () {
     $(".div-group-shadows").show();
     $(".icon-setting").hide();
     gridster[0].enable();
+    $('.tile-title').addClass('move');
 
     $(".function>li").each(function () {
         //$(this)[0].id;
@@ -537,6 +538,7 @@ $(".succesesed_ok").click(function (e) {   //点击对号（保存）的时候
     $(".div-group-shadows").hide();
     $(".icon-setting").show();
     gridster[0].disable();
+    $('.tile-title').removeClass('move');
     cu_move_tiles.splice(0, cu_move_tiles.length);
 
     $(".tile_li").each(function () {
@@ -986,8 +988,8 @@ function store_tiles_unmove_style_only(id) {
     thisT.parent().find(".bottomCon").children("img").attr("src", "../images/addB.png");
 }
 
-// store_tiles_event();
-function store_tiles_event() {   //为右侧内容区域中动态添加的元素添加拖拽事件
+//为右侧内容区域中动态添加的元素添加拖拽事件
+function store_tiles_event() {   
     //单位宽度
     var w = 0; var h = 0; var X = 0; var Y = 0;
     $(".totleCon>li .midCon").each(function (e,item) {

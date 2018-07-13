@@ -10,6 +10,16 @@
 
     <link rel="stylesheet" href="../plugins/font-awesome/css/font-awesome.min.css">
     <link rel="stylesheet" href="../css/login.css">
+    <script>
+        if(self.frameElement && self.frameElement.tagName=="IFRAME" ){
+            alert('未登录或登录超时。请重新登录，谢谢！');
+            top.location = "../login.html";
+        }
+
+        if (window.top !== window.self) {
+            window.top.location = "../login.html";
+        }
+    </script>
 </head>
 
 <body>

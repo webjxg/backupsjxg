@@ -63,7 +63,9 @@
                     <!--表头-->
                     <thead>
                     <tr role="row">
-                        <th>计划名称</th>
+                        <th>年计划名称</th>
+                        <th>月计划名称</th>
+                        <th>日计划名称</th>
                         <th>计划类型</th>
                         <th>计划周期</th>
                         <th>创建人</th>
@@ -125,11 +127,6 @@
 
     window.pageLoad = function() {
 
-//            getDataFn();
-//            $('#apsWeek').change(function () {
-//                getDataFn();
-//            });
-
         if($('.datePicker').val() ==='请选择'){
             var data = {
                 page: {
@@ -151,28 +148,6 @@
                 };
         }
 
-
-
-
-//            if($week==''||$year==''){
-//                var data = {
-////                    dpYear: $year,
-////                    dpMonth:$month,
-//                    page: {
-//                        pageNo: 1,
-//                        pageSize: 5
-//                    }
-//                }
-//            }else{
-//                var data = {
-//                    id:0,
-//                    dpYear: $year,
-//                    status: $status,
-//                    dpWeek: $week,
-//                    dpMonth:$month
-//                };
-//            }
-
         //找到ichecks显示到
         function getAttr(obj) {
             var $iChecks = obj.parents("tr").find('.i-checks'),
@@ -180,15 +155,20 @@
                 year = $iChecks.attr('data-year'),
                 month= $iChecks.attr('data-month'),
                 week= $iChecks.attr('data-week'),
-                status = $iChecks.attr('data-status');
-            return [id, year,month,week,status];
+                status = $iChecks.attr('data-status'),
+                monthName = escape($iChecks.attr('data-monthName')),
+                dayName = escape($iChecks.attr('data-dayName'));
+            return [id, year,month,week,status,monthName,dayName];
         }
         Page.init("/api/aps/DayPlan/page", data, true, function (tableData) {
+            console.log(tableData);
             renderTableData(tableData);
             //查看
+
             $(".btn-check").click(function () {
                 getDataFn();
                 var attrArr = getAttr($(this));
+                console.log(attrArr);
                 openDialog('查看日计划', 'producePlan/dayPlanCheckIn.html?id=' + attrArr[0] + '&year=' + attrArr[1]+'&month='+attrArr[2]+'&week='+attrArr[3]+'&status='+attrArr[4]+'&check=0', '800px', '500px')
 
             });
@@ -201,7 +181,8 @@
             $(".btn-edit").click(function () {
                 getDataFn();
                 var attrArr = getAttr($(this));
-                location.href = '../producePlan/dayPlanIndex.html?id=' + attrArr[0] + '&year=' + attrArr[1]+'&month='+attrArr[2]+'&week='+attrArr[3]+'&status='+attrArr[4]
+                console.log(attrArr);
+                location.href ='../producePlan/dayPlanIndex.html?id=' + attrArr[0] + '&year=' + attrArr[1]+'&month='+attrArr[2]+'&week='+attrArr[3]+'&status='+attrArr[4]+'&monthName='+attrArr[5]+'&dayName='+attrArr[6];
             });
 
         })
@@ -222,7 +203,6 @@
         var data = {ids:id} || {};
         top.layer.confirm(mess, {icon: 3, title:'系统提示'},function(index){
             ajaxToServer1(url,data,function(result){
-                console.log(result);
                 if(result.success == true){
                     var frameActive = top.getActiveTab().attr("name");
                     var obj = $('#search-btn', top.window.frames[frameActive].document);
@@ -263,7 +243,9 @@
             "data":tableData,
             //定义列 宽度 以及在json中的列名
             "aoColumns": [
-                {"data": "name",'sClass':"alignCenter "},
+                {"data": "yearName",'sClass':"alignCenter "},
+                {"data": "monthName",'sClass':"alignCenter "},
+                {"data": "dayName",'sClass':"alignCenter "},
                 {"data": "typeLabel",'sClass':"alignCenter "},
                 {"data": "period",'sClass':"alignCenter"},
                 {"data": "createUser",'sClass':"alignCenter "},
@@ -288,8 +270,7 @@
                         return "<span class='"+classSet+"'>"+row.statusShow+"</span >";
                     }
                 },
-                {
-                    "data": null, "orderable": false, "defaultContent": "",'sClass':"alignCenter autoWidth",
+                {"data": null, "orderable": false, "defaultContent": "",'sClass':"alignCenter autoWidth",
                     "render": function (data, type, row, meta) {
                         var setText="";
                         if(row.status == "0"){
@@ -300,7 +281,7 @@
                         }
                         var html = setText +
                             "<a  class='btn btn-delete'><i class='fa fa-trash'></i>删除</a >";
-                        return "<input type='hidden'  id='" + row.id + "' data-type="+row.tYPE+" data-id='"+row.id+"' data-year='"+row.dpYear+"' data-month='"+row.dpMonth+"' data-week='"+row.dpWeek+"' data-status='"+row.status+"' class='i-checks'>"+
+                        return "<input type='hidden'  id='" + row.id + "' data-type="+row.tYPE+" data-id='"+row.id+"' data-year='"+row.dpYear+"' data-month='"+row.dpMonth+"' data-week='"+row.dpWeek+"' data-status='"+row.status+"' data-dayName='"+row.dayName+"' data-monthName='"+row.monthName+"' class='i-checks'>"+
                             "<a class='btn btn-check btn-info' ><i class='fa fa-search-plus'></i>查看</a >" +html;
 
                     }
@@ -322,7 +303,6 @@
         var url = admin_domain + "/api/sys/SysOperation/currentUserOperation/PPMDPP_PAC";
         ajaxToServer(url, {} ,function (result) {
             if(result.success){
-                console.log(result)
                 if(result.rows.length>0){
                     for(var i=0;i<result.rows.length;i++){
                         if(result.rows[i].code == "PPMDPP_ADO"){  //新增

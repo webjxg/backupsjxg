@@ -45,7 +45,6 @@
         <input type="hidden" name="proc" id = "proc">
 
     </table>
-    <p id="wsConnError"></p>
 </div>
 
 <!--核心插件-->
@@ -67,14 +66,14 @@
         var data={
             // proc:$("#proc option:selected").val()
         };
-        parent.ajaxToServer('/api/ctrl/DirectiveIssued/list1',JSON.stringify(data),function (data) {
-            if(data.rows.length!==0){
-                console.log(data);
-                issuedUser=data.rows[0].issuedUser;
-                groupsId=data.rows[0].id;
-                shiftId=data.rows[0].shift.id;
-            }
-        });
+        // parent.ajaxToServer('/api/ctrl/DirectiveIssued/list1',JSON.stringify(data),function (data) {
+        //     if(data.rows.length!==0){
+        //         console.log(data);
+        //         issuedUser=data.rows[0].issuedUser;
+        //         groupsId=data.rows[0].id;
+        //         shiftId=data.rows[0].shift.id;
+        //     }
+        // });
 
     });
     function updatason(node){
@@ -83,6 +82,7 @@
         };
         var da=JSON.stringify(data);
         ajaxToServer("/api/ctrl/BaseDirective/rightList/",da,function(tableData){
+            console.log(tableData)
             $("#proc").val(tableData.pList[0].proc);
             renderTableData(tableData);
         })
@@ -100,12 +100,12 @@
                 ids=str.substr(1);
                 var data={
                     ids:ids,
-                    issuedUser:issuedUser,
-                    groupsId:groupsId,
-                    shiftId:shiftId,
+                    // issuedUser:issuedUser,
+                    // groupsId:groupsId,
+                    // shiftId:shiftId,
                     process:proc
                 };
-                console.log(data)
+                console.log(data);
                 var url = aps_domain + "/api/ctrl/DirectiveIssued/save/";
                 ajaxToServer(url,JSON.stringify(data),function(result){
                     if(result.success){
@@ -167,19 +167,7 @@
                         top.layer.alert(result.message);
                     }
                 });
-            },
-            function errorCallBack (error) {
-                // 连接失败时（服务器响应 ERROR 帧）的回调方法
-                console.log('WebSocket连接失败【' + error + '】');
-                if(tryConnCount > 0){
-                    $('#wsConnError').html('WebSocket连接失败，正在进行第 '+(4-tryConnCount) + ' 次重连....').show();
-                    tryConnCount --;
-                    connect();
-                }else{
-                    $('#wsConnError').html('WebSocket连接失败. ').show();
-                }
-            }
-        );
+            });
     }
     function sendName() {
         //通过stompClient.send 向/welcome 目标 发送消息,这个是在控制器的@messageMapping 中定义的。

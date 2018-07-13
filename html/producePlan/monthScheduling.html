@@ -140,66 +140,58 @@
 <script>
     var year =getQueryString('year');
     var status = getQueryString('status');
+    var id = getQueryString('id');
     if(status == "col-62b519"){
         $(".btn").hide();
     }
-
     $(document).ready(function(){
         var data = {
-            mYear:year
+            id:id
         };
-        ajaxToServer("/api/aps/ApsMonthPc/queryMonthPc",JSON.stringify(data),function(result){
-
-            //装置运转计划
-            renderTableFn_zzyzjh(result.zzyzjh);
-
-            //原料计划
-            renderTableFn_yljh(result.yljh);
-
-            //消耗计划
-            renderTableFn_xhjh(result.xhjh);
-
-
-            //提交按钮
-            $("#btn-save").click(function(){
-                var rows = [];
-                $(".tableItemBox").each(function(index,item){
-                    rows = rows.concat($("#td"+index).datagrid("getRows"));
-                });
-                var data={
-                    status : "1",
-                    pcPlans:rows,
-                    mainId:$(".datagrid-body").find('td').eq(1).text()
-                };
-                ajaxToServer1("/api/aps/ApsMonthPc/saveMonthInfo",data,function(result){
-                    if(result.success){
-                        refreshActiveTab();
-                    }
-                });
-            });
-            //排产按钮
-            $("#btn-build").click(function(){
-                var $scValue = $.trim($("#scValue").val()), $psValue = $.trim($("#psValue").val());
-                if($scValue !=="" &&  $psValue !==""){
-                    var data = {
-                        mYear:year,
-                        scTotal:$scValue,
-                        psTotal:$psValue,
-                    };
-                    ajaxToServer1("/api/aps/ApsMonthPc/pcJs",data,function(result){
-                        if(result.success){
-                            location.reload();
-                        }
-                    })
-                }else{
-                    layerAlert("实产合计或焙烧合计数值不能为空!")
-                }
-            });
+        ajaxToServer1("/api/aps/ApsYearPlan/getYearValue",data,function (result) {
+            $('#scValue').val(result.yhlsc).attr('disabled','disabled').css({"cursor":"not-allowed"});
+            $('#psValue').val(result.yhlps).attr('disabled','disabled').css({"cursor":"not-allowed"});
+            initData();
         });
+        function initData(){
+            var $scValue = $.trim($("#scValue").val()), $psValue = $.trim($("#psValue").val());
+            if($scValue !=="" &&  $psValue !==""){
+                var data = {
+                    mYear:year,
+                    scTotal:$scValue,
+                    psTotal:$psValue,
+                    id:id
+                };
+                console.log(data);
+                ajaxToServer1("/api/aps/ApsMonthPc/pcJs",data,function(result){
+                    if(result.success){
+                        //装置运转计划
+                        renderTableFn_zzyzjh(result.zzyzjh);
+                        //原料计划
+                        renderTableFn_yljh(result.yljh);
+                        //消耗计划
+                        renderTableFn_xhjh(result.xhjh);
+                        //提交按钮
+                        $("#btn-save").click(function(){
+                            var data={
+                                status : "1",
+                                mainId:$(".datagrid-body").find('td').eq(1).text()
+                            };
+                            ajaxToServer1("/api/aps/ApsMonthPc/saveMonthInfo",data,function(result){
+                                if(result.success){
+                                    refreshActiveTab();
+                                }
+                            });
+                        });
+                    }
+                })
+            }else{
+                layerAlert("实产合计或焙烧合计数值不能为空!")
+            }
+        }
+        // initData();
     });
     var editEleArr=["scjxsj","scrlts","scfzcjczhsj","scshsc","xsps","sczhb","bsjxsj","bsfzcjczhsj"];
-
-
     //装置运转计划
     function renderTableFn_zzyzjh(zzyzjh){
         var zzyzjhArr = [],zzyzjhiCodeArr=[];
@@ -227,15 +219,6 @@
             };
             zzyzjhArr.push(itemmsg);
         }
-        for(var i=0;i<zzyzjhArr.length;i++){
-            if(zzyzjhArr[i].itemCode == "scscwd"){
-                $("#scValue").val(zzyzjhArr[i].valueSum);
-            };
-            if(zzyzjhArr[i].itemCode == "bsbswd"){
-                $("#psValue").val(zzyzjhArr[i].valueSum);
-            }
-        };
-
         var theadHtml="",bodyHtml ="";
         for(var i= 0;i< zzyzjhArr.length;i++){
             var item = zzyzjhArr[i],
@@ -300,6 +283,8 @@
                 var getMonthObj={
                     mYear:year,
                     flag:$(this).parent().find('span').text(),
+                    signFlag:true,
+                    yearId:id
                 };
                 $('#td0 tbody input').each(function(){
                     var field = $(this).parents('tr').attr('data-field');
@@ -308,10 +293,13 @@
                 changeVlaArr.push(getMonthObj);
                 var data_ = JSON.stringify(changeVlaArr);
                 ajaxToServer("/api/aps/ApsMonthPc/dtpcJs", data_, function(result){
+                    console.log(result)
                     if(result.success==true){
                         //重新渲染数据：装置运转计划
                         renderTableFn_zzyzjh_js('#td0', result.value, result.valueSum);
                         $(_this).removeClass('fa-save').addClass('fa-edit');
+                    }else{
+                        layerAlert(result.message)
                     }
                 });
 
@@ -427,7 +415,6 @@
             };
             xhjhArr.push(itemmsg);
         }
-
         $('#td2').datagrid('loadData',xhjhArr);
     }
 
@@ -559,6 +546,10 @@
     function hidebutton() {
       if(status == "col-62b519"){
           $(".btn").hide();
+          /*根据需求修改已排产返回按钮显示
+          * 日期：2018-6-28
+          * 制作人：贾旭光*/
+          $("#back-btn").show();
       }else{
           var url = admin_domain + "/api/sys/SysOperation/currentUserOperation/PPMYPP_PAC";
           ajaxToServer(url, {} ,function (result) {

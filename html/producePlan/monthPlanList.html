@@ -83,8 +83,8 @@
                     <!--表头-->
                     <thead>
                     <tr role="row">
+                        <th>所属年计划</th>
                         <th>计划名称</th>
-                        <th>计划类型</th>
                         <th>计划周期</th>
                         <th>创建人</th>
                         <th>创建时间</th>
@@ -152,11 +152,12 @@
                 status: $status
             };
             Page.init("/api/aps/ApsMonthAdjust/page",data,true,function(tableData){
+                console.log(tableData,111)
                 renderTableData(tableData);
                 //审核
                 $(".btn-review").click(function(){
                     var attrArr = getAttr($(this));
-                    location.href = "../producePlan/reviewPlans.html?id="+attrArr[0]+"&adYear="+attrArr[1]+"&adMonth="+attrArr[2]+"&status="+attrArr[3];
+                    location.href = "../producePlan/reviewPlans.html?id="+attrArr[0]+"&adYear="+attrArr[1]+"&adMonth="+attrArr[2]+"&status="+attrArr[5];
                 });
                 //查看
                 $(".btn-check").click(function(){
@@ -171,14 +172,14 @@
                 //编辑
                 $(".btn-edit").click(function(){
                     var attrArr = getAttr($(this));
-                    location.href = '../producePlan/proTargetPlanEdit.html?id='+attrArr[0]+'&year='+attrArr[1]+'&month='+attrArr[2];
+                    location.href = '../producePlan/proTargetPlanEdit.html?id='+attrArr[0]+'&year='+escape(attrArr[1])+'&month='+escape(attrArr[2])+'&name='+escape(attrArr[3])+'&yearname='+escape(attrArr[4]);
                 });
                 //发布
                 $(".btn-issue").click(function(){
                     var attrArr = getAttr($(this));
                     var data = {
                         id:attrArr[0],
-                        status: parseInt(attrArr[3])+1
+                        status: parseInt(attrArr[5])+1
                     };
                     top.layer.confirm("确定要发布吗?",{icon: 3, title:'系统提示'},function(index){
 
@@ -199,19 +200,22 @@
                     id = $iChecks.attr('data-id'),
                     year = $iChecks.attr('data-year'),
                     month = $iChecks.attr('data-month'),
+                    name = $iChecks.attr('data-name'),
+                    yearname = $iChecks.attr('data-yearname'),
                     status = $iChecks.attr('data-status');
-                return [id,year,month,status];
+                return [id,year,month,name,yearname,status];
             }
         };
         pageLoad();
         windowclick();
         $("#btn-add").click(function(){
-            location.href = "./proTargetPlanEdit.html?year="+$year+"&month="+$month;
+            location.href = "./proTargetPlanAdd.html?year="+$year+"&month="+$month;
         });
 
     });
     //  渲染表内容
     function renderTableData(tableData){
+        console.log(tableData,222)
         $('#treeTable').dataTable({
             "bPaginate": false,
             "bAutoWidth": false,
@@ -228,8 +232,8 @@
             "data":tableData,
             //定义列 宽度 以及在json中的列名
             "aoColumns": [
+                {"data": "yearName",'sClass':"alignCenter "},
                 {"data": "name",'sClass':"alignCenter "},
-                {"data": "typeLabel",'sClass':"alignCenter "},
                 {"data": "period",'sClass':"alignCenter"},
                 {"data": "createUser",'sClass':"alignCenter "},
                 {"data": "createDate",'sClass':"alignCenter "},
@@ -266,7 +270,7 @@
                         }else if(row.status == "3") {
                             html = "";
                         }
-                        return "<input type='hidden'  id=" + row.id + " data-type="+row.tYPE+" data-id='"+row.id+"' data-year='"+row.adYear+"' data-month='"+row.adMonth+"'  data-status='"+row.status+"' class='i-checks'>"+
+                        return "<input type='hidden'  id=" + row.id + " data-type="+row.tYPE+" data-id='"+row.id+"' data-year='"+row.adYear+"' data-month='"+row.adMonth +"' data-name='"+row.name+"' data-yearname='"+row.yearName+"' data-status='"+row.status+"' class='i-checks'>"+
                             "<a class='btn btn-check btn-info' ><i class='fa fa-search-plus'></i>查看</a >" +
                             html+
                             "<a class='btn btn-delete'><i class='fa fa-trash'></i>删除</a >";

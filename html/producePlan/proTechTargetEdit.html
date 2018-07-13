@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8" content="width=device-width,initial-scale=1.0">
     <title>全厂主要生产技术指标计划</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <link rel="stylesheet" href="../../plugins/bootstrap/css/bootstrap.min.css">
@@ -67,6 +67,8 @@
    var year =getQueryString('year')||'某',
        month =getQueryString('month')||'某';
        id =getQueryString('id')|| "";
+       yearId =getQueryString('yearId')|| "";
+       monthName =getQueryString('monthName')|| "";
    var dataGridArr = [];
    var clzbjhArr =[],zlzbjhArr = [],gxdhzbjhArr = [],jszbjhArr  =[],dlxhjhArr = [];
    var data =JSON.stringify({
@@ -399,8 +401,8 @@
     * status:0保存；1：提交
     */
     function postData(status) {
-        if(year == "某" || month == "某"){
-            layerAlert("新创建的月计划时间不能为空，请选择时间！");
+        if(monthName === ''){
+            layerAlert("新创建的月计划名称不能为空，请输入月计划名称！");
             return;
         }
         var checkDGArr = [
@@ -417,13 +419,13 @@
                 checkFieldArr: ['yearTarget','monthPlan']
             },
             {
-                dgName:'技术指标计划',
+                dgName:'各项单耗指标计划',
                 dgId: '#td2',
                 checkRowArr: [0,1],
                 checkFieldArr: ['yearTarget','monthPlan']
             },
             {
-                dgName:'各项单耗指标计划',
+                dgName:'技术指标计划',
                 dgId: '#td3',
                 checkRowArr: [0],
                 checkFieldArr: ['yearTarget','monthPlan']
@@ -446,10 +448,13 @@
             "status":status,
             "adYear":year,
             "adMonth": month,
+           "yearId": yearId,
+           "monthName": monthName,
             "mainId":id,
             "techPlans":JSON.stringify(editItems)
         };
        ajaxToServer1("/api/aps/ApsMonthAdjustTech/saveTechInfo",data,function(result){
+           console.log(data,1111)
             if(result.success){
                 top.layer.msg('操作成功，即将返回月计划列表页！',{
                     icon: 1,

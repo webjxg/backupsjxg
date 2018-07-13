@@ -117,10 +117,9 @@
                     <tbody id="treeTableBody" >
 
                     </tbody>
-                    <input type="hidden" name="proc" id = "proc">
+                    <!--<input type="hidden" name="proc" id = "proc">-->
 
                 </table>
-                <p id="wsConnError"></p>
                 <!--<iframe id="officeContent" name="officeContent" width="100%" height="865px" frameborder="0"></iframe>-->
             </div>
         </div>
@@ -152,28 +151,25 @@
         var removeH = $('.ibox-title').outerHeight(true),
             tabsH = parent.$('.content-tabs').height();
         $(".ibox-content").height($('body,html').height() - removeH - tabsH);
-
-
-
         $(".date").text(getShortDate());
         ajaxproc();
         ajaxkind();
-        // $('#officeContent').attr('src','./giveOrdersInner.html');
-        reloadZtree('#proc','/api/ctrl/BaseDirective/getZTtree');
-        reloadZtree('#kind','/api/ctrl/BaseDirective/getZTtree');
-        reloadZtree('#grade','/api/ctrl/BaseDirective/getZTtree');
-        reloadZtreeinput('#contentParam','/api/ctrl/BaseDirective/getZTtree');
+        getOption()
+        reloadZtree('#proc','/api/ctrl/BaseDirective/getZTree');
+        reloadZtree('#kind','/api/ctrl/BaseDirective/getZTree');
+        reloadZtree('#grade','/api/ctrl/BaseDirective/getZTree');
+        reloadZtreeinput('#contentParam','/api/ctrl/BaseDirective/getZTree');
     });
     //写入班信息
     function renderclass(){
-        var data={};
-        //当前用户的班次班组工序
-        ajaxToServer('/api/ctrl/DirectiveIssued/list1',JSON.stringify(data),function (data) { //
-            if(data.rows.length!==0) {
-                $('#proc').val(data.rows[0].process);
-                getOption();
-            }
-        });
+        // var data={};
+        // //当前用户的班次班组工序
+        // ajaxToServer('/api/ctrl/DirectiveIssued/list1',JSON.stringify(data),function (data) {
+        //     if(data.rows.length!==0) {
+        //         $('#proc').val(data.rows[0].process);
+        //         getOption();
+        //     }
+        // });
         //获取当前时间
         ajaxToServer('/api/ctrl/DirectiveIssued/goupList',{},function (data) {
             if(data.rows.length!==0) {
@@ -258,8 +254,7 @@
         ajaxToServer(admin_domain+'/api/sys/SysAuthProperty/getAttributeValue/'+id+'/GXJQ/syswp',{},function (result) {
             if(result.success){
                 var rows = result.rows;
-                 appendOptionsValue($('#proc'), rows, 'name', 'name');
-               // appendOptionsValue($('#proc'), rows, 'code', 'name');//工序的值存编码 update by qiyh 2018-05-24
+                appendOptionsValue($('#proc'), rows, 'value', 'name');//工序的值存编码 update by qiyh 2018-05-24
                 renderclass();
             }else{
                 layer.msg(result.message);
@@ -271,7 +266,8 @@
         ajaxToServer(admin_domain+'/api/sys/SysDict/type/directiveCassifyType',{},function (result) {
             if(result.success){
                 var rows = result.rows;
-                appendOptionsValue($('#kind'), rows, 'label', 'label');
+                console.log(rows)
+                appendOptionsValue($('#kind'), rows, 'value', 'label');
             }else{
                 layer.msg(result.message);
             }
@@ -280,15 +276,12 @@
 
     //点ztree传值id
     function rendersun(data) {
-       updatason(data);
+        updatason(data);
     }
     //指令下达
     $('#giveOrders').click(function () {
         giveorder();
     });
-
-
-
 
     // 右侧内容
     $(document).ready(function(){
@@ -352,12 +345,12 @@
     }
 
     function renderHtml(id,content){
-       return "<tr>" +
-        "<td class='alignCenter' >" +
-        "<input type='checkbox' id='" + id+ "' class='i-checks'>"+
-        "</td>" +
-        "<td>"+content+"</td>"+
-        "</tr>";
+        return "<tr>" +
+            "<td class='alignCenter' >" +
+            "<input type='checkbox' id='" + id+ "' class='i-checks'>"+
+            "</td>" +
+            "<td>"+content+"</td>"+
+            "</tr>";
     }
     //渲染表
     function renderTableData(data) {
@@ -383,7 +376,6 @@
         stompClient = Stomp.over(socket);//使用stomp子协议的WebSocket 客户端
         stompClient.connect({},
             function connectCallback(frame) {//链接Web Socket的服务端。
-                $('#wsConnError').hide();
                 //连接成功后，客户端可使用 send() 方法向服务器发送信息：
                 stompClient.subscribe('/topic/getZljkResponse',function(respnose){ //订阅/topic/getResponse 目标发送的消息。这个是在控制器的@SendTo中定义的。
                     var result = JSON.parse(respnose.body);
@@ -392,16 +384,6 @@
                         top.layer.alert(result.message);
                     }
                 });
-            },
-            function errorCallBack (error) {
-                // 连接失败时（服务器响应 ERROR 帧）的回调方法
-                if(tryConnCount > 0){
-                    $('#wsConnError').html('WebSocket连接失败，正在进行第 '+(4-tryConnCount) + ' 次重连....').show();
-                    tryConnCount --;
-                    connect();
-                }else{
-                    $('#wsConnError').html('WebSocket连接失败. ').show();
-                }
             }
         );
     }
@@ -410,6 +392,7 @@
         stompClient.send("/directiveMonitor", {}, JSON.stringify({'name': ""}));
     }
     // setFrameHeight();
+
 </script>
 
 

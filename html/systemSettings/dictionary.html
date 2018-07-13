@@ -165,6 +165,7 @@
                     $("#type option:first").prop("selected", 'selected');
                     $("#description").val("");
                     Page.reset(["type","description"]);
+                    $('#search-btn').trigger('click');
                 });
             });
         };

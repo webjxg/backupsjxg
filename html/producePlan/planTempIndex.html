@@ -149,11 +149,11 @@
                         return data = "<input type='checkbox' id=" + row.id + " class='i-checks'>"
                     }
                 },
-                {"data": "name", 'sClass':"alignLeft  autoWidth"},//修改内容居左
-                {"data": "type", 'sClass':"alignLeft  autoWidth"},//修改内容居左
-                {"data": "createDate", 'sClass':"alignCenter  autoWidth"},
+                {"data": "name", 'sClass':"alignLeft"},//修改内容居左
+                {"data": "type", 'sClass':"alignLeft"},//修改内容居左
+                {"data": "createDate", 'sClass':"alignCenter"},
                 {
-                    "data": null, 'sClass':"alignCenter  autoWidth",
+                    "data": null, 'sClass':"alignCenter",
                     "render":function (data) {
                         if(data.enable==0){
                             return data = '否'
@@ -188,12 +188,9 @@
                 ids: str.substr(1)
             };
         }
-        console.log(data);
         top.layer.confirm(mess, {icon: 3, title:'系统提示'},function(index){
             ajaxToServer1(url,data,function(result){
-                console.log(url,data,result);
                 if(result.success == true){
-                    console.log(result)
                     var frameActive = top.getActiveTab().attr("name");
                     var obj = $('#refresh-btn', top.window.frames[frameActive].document);
                     // refreshActiveTab();

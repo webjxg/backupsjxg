@@ -4,7 +4,7 @@
         define(['exports', 'echarts'], factory);
     } else if (typeof exports === 'object' && typeof exports.nodeName !== 'string') {
         // CommonJS
-        factory(exports, require('echarts'));
+        factory(exports, require('echarts'))
     } else {
         // Browser globals
         factory({}, root.echarts);

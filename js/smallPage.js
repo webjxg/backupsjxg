@@ -1,5 +1,5 @@
 //分页插件
-var SmallPage = window.SmallPage || (function(){
+var SmallPage = (function(){
 	var dataList,pageNo,pageSize,pageCount,pageRender,container;
 
 	//初始化
@@ -36,10 +36,10 @@ var SmallPage = window.SmallPage || (function(){
 		if(SmallPage.dataList || SmallPage.dataList.length>0){
 			if(SmallPage.pageRender){
 				SmallPage.pageNo = 1;
-                SmallPage.pageRender(getPageRows());
-                $(SmallPage.container).find('.firstP,.preP').addClass("disabled");
+				SmallPage.pageRender(getPageRows());
 			}
 		}
+		setPageDisabled();
 	}
 	//末页
 	var last = function(){
@@ -49,11 +49,10 @@ var SmallPage = window.SmallPage || (function(){
 		if(SmallPage.dataList || SmallPage.dataList.length>0){
 			if(SmallPage.pageRender){
 				SmallPage.pageNo = SmallPage.pageCount;
-                SmallPage.pageRender(getPageRows());
-                $(SmallPage.container).find('.firstP,.preP').removeClass("disabled");
-                $(SmallPage.container).find('.nextP,.lastP').addClass("disabled");
+				SmallPage.pageRender(getPageRows());
 			}
 		}
+		setPageDisabled();
 	}
 	//上一页
 	var pre = function(){
@@ -63,13 +62,10 @@ var SmallPage = window.SmallPage || (function(){
 		if(SmallPage.dataList || SmallPage.dataList.length>0){
 			if(SmallPage.pageRender){
 				SmallPage.pageNo --;
-                SmallPage.pageRender(getPageRows());
-				if(SmallPage.pageNo  == 1){
-                    $(SmallPage.container).find('.firstP,.preP').addClass("disabled");
-				}
-                $(SmallPage.container).find('.nextP,.lastP').removeClass("disabled");
+				SmallPage.pageRender(getPageRows());
 			}
 		}
+		setPageDisabled();
 	};
 	//下一页
 	var next = function(){
@@ -84,9 +80,9 @@ var SmallPage = window.SmallPage || (function(){
 				}else{
                     SmallPage.pageNo = SmallPage.pageCount;
 				}
-                $(SmallPage.container).find('.firstP,.preP').removeClass("disabled");
 			}
 		}
+		setPageDisabled();
 	};
 
 	var getPageRows = function(){
@@ -111,6 +107,23 @@ var SmallPage = window.SmallPage || (function(){
             pageRows_.push(SmallPage.dataList[j]);
         }
         return pageRows_;
+	}
+
+	var setPageDisabled = function(){
+		if(SmallPage.pageNo <= 1){
+			$(SmallPage.container).find('.firstP,.preP').addClass("disabled");
+		}else{
+			$(SmallPage.container).find('.firstP,.preP').removeClass("disabled");
+		}
+		if(SmallPage.pageNo >= SmallPage.pageCount){
+			$(SmallPage.container).find('.nextP,.lastP').addClass("disabled");
+		}else{
+			$(SmallPage.container).find('.nextP,.lastP').removeClass("disabled");
+		}
+		$(SmallPage.container).find('.firstP').attr('title','首页 当前:'+SmallPage.pageNo);
+		$(SmallPage.container).find('.preP').attr('title','上页 当前:'+SmallPage.pageNo);
+		$(SmallPage.container).find('.nextP').attr('title','下页 当前:'+SmallPage.pageNo);
+		$(SmallPage.container).find('.lastP').attr('title','末页 当前:'+SmallPage.pageNo);
 	}
 
 	return {

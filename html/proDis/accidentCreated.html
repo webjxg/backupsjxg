@@ -666,9 +666,9 @@
 
     });
 
-    
-    
-    
+
+
+
     // webscoker连接
     var tryConnCount = 3;
     // 开启socket连接
@@ -720,7 +720,8 @@
         ajaxToServer(admin_domain+'/api/sys/SysAuthProperty/getAttributeValue/'+ids+'/GXJQ/syswp',{},function (result) {
             if(result.success){
                 var rows = result.rows;
-                appendOptionsValue($('#process'), rows, 'name', 'name');
+                console.log(rows)
+                appendOptionsValue($('#process'), rows, 'value', 'name');
                 //appendOptionsValue($('#process'), rows, 'code', 'name');//工序的值存编码 update by qiyh 2018-05-24
             }else{
                 layer.msg(result.message);
@@ -746,6 +747,7 @@
         ajaxToServer(url_, {}, function(result){
             if(result.success){
                 var rows = result.rows;
+                console.log(rows)
                 appendOptionsValue($('#incident'),rows,'label','label');
             }else{
                 layer.msg(result.message);

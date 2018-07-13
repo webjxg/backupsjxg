@@ -141,7 +141,7 @@
                 // 查看按钮
                 $(".btn-check").click(function () {
                     var attrArr = getAttr ($(this));
-                    openDialog('查看年计划', 'producePlan/yearPlanCheck.html?id=' + attrArr[0] + '&year=' + attrArr[1], '800px', '500px')
+                    openDialog('查看年计划', 'producePlan/yearPlanCheck.html?id=' + attrArr[0] + '&year=' + attrArr[1], '900px', '500px')
                 });
                 //删除
                 $(".btn-delete").click(function () {
@@ -167,6 +167,7 @@
     });
     //创建table
     function createTable(tableDate) {
+        console.log(tableDate)
         $('#treeTable').dataTable({
             "bPaginate": false,
             "bAutoWidth": false,
@@ -185,7 +186,7 @@
             "aoColumns": [
                 {"data":"id","sClass":"id alignCenter"},
                 {"data":"adYear","sClass":"years alignCenter"},
-                {"data": "name",'sClass':"alignCenter "},
+                {"data": "yearName",'sClass':"yearName alignCenter "},
                 {"data": "typeLabel",'sClass':"alignCenter "},
                 {"data": "period",'sClass':"alignCenter"},
                 {"data": "createUser",'sClass':"alignCenter "},
@@ -230,7 +231,8 @@
         var   adYear = obj.parents("tr").find('.years').text();
         var id=obj.parents("tr").find('.id').text();
         var status = obj.parent("td").prev().children().attr("class");
-        return [id,adYear,status];
+        var yearName=obj.parents("tr").find('.yearName').text();
+        return [id,adYear,status,yearName];
     }
     //获取状态数据
     function loadStatus(){

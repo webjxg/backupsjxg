@@ -286,6 +286,17 @@
     z-index: 99;
     background: rgba(0,0,0,0.5);
     color: #fff;
+    overflow: hidden;
+}
+.tips img{
+    display: block;
+    margin:0 auto;
+    width:50%;
+    max-height:100%;
+
+}
+.tips .ingsht, .tips .lbdestlist,.tips .shewidt,.tips .eacstreu_hs,.tips .eacstrslist,.tips .circstyle_bg,.tips .circlelist{
+    display: none !important;
 }
 
 .ylmain {

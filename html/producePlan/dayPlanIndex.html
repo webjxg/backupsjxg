@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="../../plugins/easyui/themes/default/easyui.css">
     <link rel="stylesheet" href="../../plugins/easyui/themes/default/datagrid.css">
     <link rel="stylesheet" href="../../plugins/datetimepicker/css/bootstrap-datetimepicker.css">
+    <link rel="stylesheet" href="../../plugins/select2/dist/css/select2.min.css">
     <!--引入样式-->
     <link rel="stylesheet" href="../../css/common.css">
     <link rel="stylesheet" href="../../css/aps.css">
@@ -24,7 +25,6 @@
         }
 
         .pull-left span {
-            margin: 10px 0;
             font-size: 16px;
             font-weight: 100;
         }
@@ -67,6 +67,31 @@
             border: 1px solid #e5e6e7;
             border-radius: 2px;
         }
+        #dayName{
+            width: 200px;
+            height: 30px;
+        }
+        .month{
+            width: 266px;
+         }
+        .select2-container {
+            height: 30px;
+            width: 150px !important;
+        }
+        .select2-container--default .select2-selection--single{
+            border: 1px solid #e5e6e7;
+        }
+        #apsWeek{
+            color:#999;
+        }
+        .apsType-linkage li select, .apsType-linkage li{
+            box-sizing: border-box;
+            padding: 0 12px;
+
+        }
+        #monthName{
+            width: 150px;
+        }
     </style>
     <script src="../../js/dataGridCustom.js"></script>
 
@@ -82,18 +107,24 @@
             <div class="pull-left">
                 <ul class="apsType-linkage">
                     <li class="month">
-                        计划周期（年月）：
-                        <input type="text" value="请选择" id="yMPicker" class="time-input form-control datePicker">
+                        月计划名称：
+                        <select name="monthName" id="monthName" class="form-control required">
+                            <option value=""></option>
+                        </select>
                     </li>
                     <li class="week">
                         计划周期（周）：
-                        <select name="" id="apsWeek" >
+                        <select name="" class="form-control" id="apsWeek" >
                             <option value="">请选择</option>
                             <option value="1">第一周</option>
                             <option value="2">第二周</option>
                             <option value="3">第三周</option>
                             <option value="4">第四周</option>
                         </select>
+                    </li>
+                    <li class="dayPlanName">
+                        日计划名称：
+                        <input type="text" placeholder="请输入名称" id="dayName" class="time-input form-control">
                     </li>
                 </ul>
             </div>
@@ -166,48 +197,56 @@
 <script src="../../js/dataGridCustom.js"></script>
 <script src="../../js/apiDomain.js"></script>
 <script src="../../js/customForm-aps.js"></script>
+<script src="../../plugins/select2/dist/js/select2.min.js"></script>
+<script src="../../plugins/select2/dist/js/i18n/zh-CN.js"></script>
 
 
 </body>
 <script>
     $(function () {
+        ajaxToServer1('/api/aps/DayPlan/dayPlanMonthSelect',{}, function(result){
+            if (result.success) {
+                appendOV('#monthName',result.rows,'id','monthName','adYear','adMonth');
+            } else {
+                layer.msg(result.message)
+            }
+        });
+
         //接收url父页面参数放到input的val里
         var id=getQueryString('id');
-        $("#yMPicker").datetimepicker({
-            format:"yyyy-mm",
-            language:'cn',
-            weekStart: 1,
-            pickTime: false,
-            autoclose:true,
-            startView: 3, //月视图
-            minView: "3",
-            forceParse: 0,
-            startDate:"2018-01-01"
-        });
         if(id){
-            dpYear=getQueryString('year'),dpMonth=getQueryString('month'),dpWeek=getQueryString('week');
-            tabledatagrid(id/*,dpYear,dpMonth,dpWeek*/);
-            $('#td0,#td1,#td2,#td3,#td4').datagrid('hideColumn', 'id');
-            $('#apsWeek').val(dpWeek).attr('disabled',true).css({"cursor":"not-allowed"});
-            $('#yMPicker').val(dpYear+'-'+dpMonth).attr('disabled','disabled').css({"cursor":"not-allowed"});
+            dpYear=getQueryString('year'),
+            dpMonth=getQueryString('month'),
+            dpWeek=getQueryString('week'),
+            dayName=getQueryString('dayName'),
+            monthName=getQueryString('monthName')
+            $('#monthName').attr('disabled','disabled').text(monthName);
+            $('#apsWeek').attr('disabled','disabled').val(dpWeek);
+            $('#dayName').attr('disabled','disabled').val(dayName);
 
+            tabledatagrid(id);
+            $('#td0,#td1,#td2,#td3,#td4').datagrid('hideColumn', 'id');
             btnclick();
         }else{
-            tabledatagrid('','','','');
-//            $('#td0,#td1,#td2,#td3,#td4').datagrid('hideColumn', 'id');
+            tabledatagrid('','','','','');
+        // $('#td0,#td1,#td2,#td3,#td4').datagrid('hideColumn', 'id');
             btnclick();
         }
 
-        $("#apsWeek,#yMPicker").change(function(e){
+        $("#monthName,#apsWeek").change(function(e){
             var idName=$(this).attr('id');
+            var Month=$('#monthName>option:selected').text();
+            var Week=$('#apsWeek>option:selected').text();
+            $('#dayName').val(Month+Week);
             getDataFn()
-            if(dpYear != "请选择" && dpWeek != ""){
-                console.log(1);
+            if(dpYear != "" && dpWeek != ""){
                 var data = JSON.stringify({
                     "dpYear":dpYear,
                     "dpMonth":dpMonth,
-                    "dpWeek":dpWeek
+                    "dpWeek":dpWeek,
+                    "monthId":$('#monthName').val()
                 });
+                console.log(data);
                 ajaxToServer("/api/aps/DayPlan/form",data,function(result){
                     console.log(result);
                     if(result.success) {
@@ -216,16 +255,17 @@
                                 $("#" + idName).val("");
                                 top.layer.closeAll()
                             }, function () {
+                                console.log(idName);
                                 $("#" + idName).val("");
                                 top.layer.closeAll()
                             });
-
                         } else {
-                            tabledatagrid('', dpYear, dpMonth, dpWeek);
+                            tabledatagrid('', dpYear, dpMonth, dpWeek,$('#monthName').val());
                             $('#td0,#td1,#td2,#td3,#td4').datagrid('hideColumn', 'id');
                         }
                     }else{
                         top.layer.confirm(result.message, function () {
+                            console.log(idName);
                             $("#" + idName).val("");
                             top.layer.closeAll()
                         }, function () {
@@ -235,7 +275,7 @@
                     }
                 });
             }else if(dpYear== "") {
-                layerAlert("请选择年、月！");
+                layerAlert("请选择月计划！");
                 //$('.targetPlanTit span').empty().html("某年"+month+"月");
                 return false;
             }
@@ -261,19 +301,48 @@
         }
     });
 
-    function getDataFn(){
-        dpYear=$('.datePicker').val().split("-")[0],dpMonth=$('.datePicker').val().split("-")[1],dpWeek=$('#apsWeek').val();
+    /**
+     * 动态添加Select的option
+     */
+    function appendOV(obj, rows, valueField, labelFile,dpYearFile,dpMonthFile){
+        if(typeof(obj) == "string"){
+            obj = $(obj);
+        }
+        if(rows && rows.length > 0){
+            var options = new Array();
+            valueField = valueField||'value';
+            labelFile = labelFile||'label';
+            dpMonthFile = dpMonthFile||'dpMonth';
+            dpYearFile = dpYearFile||'dpYear';
+            $(rows).each(function(i,o){
+                options.push({'value':o[valueField],'dpMonth':o[dpMonthFile], 'dpYear':o[dpYearFile],'label':o[labelFile]});
+            });
+            appendOptions(obj, options);
+        }
+    }
 
+    // 追加select的options
+    function appendOptions(obj, options){
+        if(options){
+            $(options).each(function(i,o){
+                $(obj).append("<option value='"+o.value+"' dpYear='"+o.dpYear+"' dpMonth='"+o.dpMonth+"'>"+o.label+"</option>");
+            });
+        }
     }
 
 
 
 
+    function getDataFn(){
+        dpYear=$('#monthName>option:selected').attr('dpYear');
+        dpMonth=$('#monthName>option:selected').attr('dpMonth');
+        dpWeek=$('#apsWeek').val();
+    }
 
 
 
     //多表格请求数据渲染方法
-    function tabledatagrid(id,dpYear,dpMonth,dpWeek) {
+    function tabledatagrid(id,dpYear,dpMonth,dpWeek,monthId) {
         //建立空数组
         var cljhArr = [],
             bjhArr = [],
@@ -284,12 +353,12 @@
             "id":id,
             "dpYear": dpYear,
             "dpMonth": dpMonth,
-            "dpWeek": dpWeek
+            "dpWeek": dpWeek,
+            "monthId":monthId
         };
         var da = JSON.stringify(data0);
         ajaxToServer("/api/aps/DayPlan/form", da, table);
         function table(result) {
-            console.log(result);
 //            $("#id").val(result.DayPlan.id);
             var bjh = result.bjh,
                 cljh = result.cljh,
@@ -545,8 +614,15 @@
     //暂存递交
     function btnSubSave(status) {
         getDataFn();
-        if(dpYear==''||dpWeek==''){
-            layer.confirm('请完整选择年、月、周',{icon:0});
+        /*
+        添加需求增加传参数：月计划id、日计划名称
+        增加判断所有输入框不能为空
+        作者：贾旭光
+        日期：2018.7.5
+        */
+        var monthName=$('#monthName').val(),dayName=$('#dayName').val();
+        if(monthName==''||dpWeek==''||dayName==''){
+            layer.confirm('请完整输入信息',{icon:0});
             return;
         }
         var checkDGArr = [
@@ -595,12 +671,15 @@
             "dpYear":dpYear,
             "dpMonth":dpMonth,
             "dpWeek":dpWeek,
+            "dayName":dayName,
+            "monthId":monthName,
             "dayPlans":JSON.stringify(editItems),
             "status":status,
             "id":id
         };
+
         ajaxToServer1('/api/aps/DayPlan/save',data, function(result){
-            console.log(data,result);
+            console.log(result,data);
             if (result.success) {
                 layer.msg('提交成功');
                 refreshActiveTab();

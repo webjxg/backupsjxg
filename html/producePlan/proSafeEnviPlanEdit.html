@@ -12,6 +12,9 @@
     <link rel="stylesheet" href="../../css/common.css">
     <link rel="stylesheet" href="../../css/customDatagrid.css">
     <link rel="stylesheet" href="../../css/aps.css">
+    <style>
+        html,body,#wrapper{height:auto;}
+    </style>
 </head>
 
 <body>
@@ -43,6 +46,8 @@
     var year =getQueryString('year')||'某',
         month =getQueryString('month')||'某',
         id =getQueryString('id')|| "";
+        yearId =getQueryString('yearId')|| "";
+        monthName =getQueryString('monthName')|| "";
     var data = {
         "id":id
     };
@@ -122,10 +127,10 @@
     // 点击保存按钮
      $(".btn-save").click(function () {
          var dataStatus = $(this).attr("data-status");
-         if(year != "某" && month != "某"){
+         if(year != "某" && month != "某" && monthName != ''){
              postData(dataStatus);
          }else{
-             layerAlert("新创建的月计划时间不能为空，请选择时间！")
+             layerAlert("新创建的年计划，计划周期或月计划名称不能为空")
          }
         });
         //将点击状态添加到数组里边
@@ -135,6 +140,8 @@
                 "status":status,
                 "adYear":year,
                 "adMonth": month,
+                "yearId": yearId,
+                "monthName": monthName,
                 "mainId":id,
                 "aqhbPlans":JSON.stringify(editItems),
             };

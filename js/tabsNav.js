@@ -1,6 +1,7 @@
 $(function(){
     var userid=getCookie("loginUserid");
     ajaxToServer1(admin_domain+"/api/sys/SysMenu/getTreeJson/"+userid,{},function(result){
+        console.log(result);
         if(result.success){
 			if(result.children.length>0){
 				var navData = result.children[0].children;
@@ -86,7 +87,7 @@ function loadFn(){
             $(this).remove();
         });
         $('.tabs-nav').children("[data-id]:first").each(function () {
-            $('.J_iframe[data-id="' + $(this).data('id') + '"]').show();
+            $('.J_iframe[data-id="' + $(this).data('id') + '"]').show().removeClass('iframeHide').addClass('iframeShow');
             $(this).addClass("active");
         });
         $('.tabs-nav').css("margin-left", "0");
@@ -113,6 +114,9 @@ function loadFn(){
 function ActiveNavItem(elType) {
     $('.navItem-con .J_iframe').each(function () {
         if ($(this).data('id') == elType) {
+            if($(this).hasClass('iframeHide')){
+                $(this).removeClass('iframeHide').addClass('iframeShow');
+            }
             $(this).show().siblings('.J_iframe').hide();
             // $(this).show().siblings('.J_iframe').hide().eq(0).show();
             return false;

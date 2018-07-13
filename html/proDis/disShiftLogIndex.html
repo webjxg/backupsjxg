@@ -327,15 +327,15 @@
                 renderTableData(result);
                 $('.giveworker').text(result.shiftMain.overUserName);
                 $('.shiftworker').text(result.shiftMain.reciveUserName);
-                console.log(result.shiftMain.overStatus == "0")
                 if (result.shiftMain.overStatus == "0") {
                     $('.apsType-box').append('<input type="button" class="giveWork btn bg-1ab394" value="交班">')
                     $('.apsType-box').append('<input type="button" class="save_btn btn " value="保存">')
                 } else if (result.lastShiftMain.reciveStatus == "0") {
-                    console.log(2);
+                    $('.btnaddr, .btnremove').addClass('hidden');
                     $('textarea').attr('readonly','readonly');
                     $('.apsType-box').append('<input type="button"  class="joinWork btn bg-ffa82d" value="接班" >')
                 }else{
+                    $('.btnaddr, .btnremove').addClass('hidden');
                     $('textarea').attr('readonly','readonly');
                 }
             } else {
@@ -343,6 +343,7 @@
                 renderTableData(result); 
                 layer.msg(result.message)
                 $('textarea').attr('readonly','readonly');
+                $('.btnaddr, .btnremove').addClass('hidden');
             }
 
         });
@@ -450,7 +451,9 @@
                         for (var i = 0; i < keyArr.length; i++) {
                             data[keyArr[i] + "_dataArr"] = JSON.stringify(getItemArrJson($('#' + keyArr[i] + ''), keyArr[i], result));
                         }
+                        console.log(data)
                         ajaxToServer1('/api/ctrl/ShiftMain/over', data, function (result) {
+                            console.log(result)
                             if(result.success){
                                 top.layer.closeAll();
                                 window.location.reload()

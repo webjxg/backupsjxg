@@ -99,21 +99,16 @@
 <script src="../../js/customForm-aps.js"></script>
 <script src="../../js/public.js"></script>
 <script src="../../js/page.js"></script>
-
-
-
-
-
-
 <script>
+    var procs = getQueryString('proc');
     $(document).ready(function() {
-        loadProcess();
-        ajaxkind();
+        loadProcess(); //获取工序数据
+        ajaxkind();    //获取分类数据
         var id=getQueryString('id');
         var pid = getQueryString('pid');
         var level = getQueryString('level');
         if(level){
-            $('#grade').val(1)
+            $('#grade').val(1);
             $('#gradeVal').val($('#grade').val())
         }
         $('#pid').val(pid);
@@ -121,7 +116,6 @@
             var ids={
                 "id":pid
             };
-
             var url = "/api/ctrl/BaseDirective/form/";
             ajaxToServer(url,JSON.stringify(ids), function (result) {
                 console.log(result);
@@ -170,13 +164,19 @@
     //2：如果用code，需要关联，没有人员
     //3：获取工序，根据当前用户获取，
     //4：chengdabin-2018-05-25
-    function loadProcess(){
+    function loadProcess(){    //获取工序数据
         var url=admin_domain+'/api/sys/SysAuthProperty/getAttributeValue/GXJQ/syswp';
         ajaxToServer(url,{},function (result) {
             if(result.success){
                 var rows = result.rows;
-                appendOptionsValue($('#proc'), rows, 'name', 'name');
+                appendOptionsValue($('#proc'), rows, 'value', 'name');
                 //appendOptionsValue($('#proc'), rows, 'code', 'name'); //工序值取编码，update by qiyh 2018-05-24
+                $("#proc option").each(function () {
+                    if(procs == $(this).attr('value')){
+                        $(this).attr("selected",true);
+                        $('#proc').attr('disabled','disabled').css({"cursor":"not-allowed"});
+                    }
+                })
             }else{
                 layer.msg(result.message);
             }
@@ -199,13 +199,13 @@
 
     function doSubmit(){
         var formId = getSubmitFormId();
+        $("#proc").attr("disabled",false);
         var formObj =$(formId);
         var url = formObj.attr('action');
         var validateFlag = formObj.validate({
             submitHandler: function(form){
                 var formdata = JSON.stringify(formObj.serializeJSON());
                 layer.msg('正在提交，请稍等...',{time: 1000});
-                console.log(formdata);
                 ajaxToServer(url,formdata,function(result){
                     if(result.success == true){
                         layer.msg('已成功提交',{time: 1000});

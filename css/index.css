@@ -99,7 +99,10 @@ body.nav-mini .wrapper-con {
     padding: 0 0 0 0;
     height: calc(100% - 70px);
     position: relative;
-    overflow: auto;
+    overflow: hidden;
+}
+.wrap-con{
+    height:calc(100% - 36px);
 }
 .navbar-static-top{
     display: block;
@@ -170,8 +173,8 @@ body.nav-mini .wrapper-con {
 }
 .content-tabs .dropdown-menu{
     position: fixed;
-    top: 120px;
-    right:80px;
+    top: 105px;
+    right:56px;
 }
 .tabs-btnIcon {
     width: 40px;

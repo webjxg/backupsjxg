@@ -11,6 +11,7 @@
     <!--<link rel="stylesheet" href="../../plugins/webUpLoader/webuploader.css">-->
     <!--引入样式-->
     <!--<link rel="stylesheet" href="../../css/common.css">-->
+    <link rel="stylesheet" href="../../plugins/select2/dist/css/select2.min.css">
     <link rel="stylesheet" href="../../css/comInnerTable.css">
 
 </head>
@@ -30,7 +31,7 @@
             </td>
             <td class="width-15" ><label class="pull-right"><font color="red">*</font>模版类型:</label></td>
             <td class="width-35">
-                <input id="opeCode" name="type" type="text" required="required" value="" data-msg-required="" class="form-control valid" style="" aria-required="true" aria-invalid="false">
+                <select id="opeCode" name="type" required="required"  data-msg-required="" class="form-control valid" style="" aria-required="true" aria-invalid="false"></select>
                 <label id="proCode-error" class="error" for="opeCode" style="display:none"></label>
             </td>
         </tr>
@@ -60,6 +61,8 @@
 <script src="../../plugins/layer/layer.js"></script>
 <script src="../../plugins/icheck/icheck.min.js"></script>
 <script src="../../plugins/webUpLoader/webuploader.js"></script>
+<script src="../../plugins/select2/dist/js/select2.min.js"></script>
+<script src="../../plugins/select2/dist/js/i18n/zh-CN.js"></script>
 <!--自定义文件-->
 <script src="../../js/apiDomain.js"></script>
 <script src="../../js/jeeplus.js"></script>
@@ -81,17 +84,33 @@
             /*此处后端接口  id为弹出窗口自带的id 通过浏览器方法传参得到*/
             var url = "/api/aps/Template/form/" + id;
             ajaxToServer(url, {}, function (result) {
-                console.log(result)//查看请求回来的参数
                 if (result.success) {
                     renderData(result.template, $('#inputForm'));
+                    dsRender(result);
                 } else {
                     layer.msg(result.message);
                 }
 
             });
+
+        }else{
+            dsRender();
         }
     });
 
+
+
+    function dsRender(res) {
+        ajaxToServer(admin_domain+'/api/sys/SysDict/type/SCJH_TEMPLETE',{},function (result) {
+            if(result.success) {
+                appendOptionsValue($('#opeCode'),result.rows,'value','value');
+                $('#opeCode').select2().val(res.template.type).trigger('change');
+
+            }else{
+                layerAlert(result.message);
+            }
+        });
+    }
     /*清除头像*/
     function getSubmitFormId(){
         return "#inputForm";

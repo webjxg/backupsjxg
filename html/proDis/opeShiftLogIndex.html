@@ -139,13 +139,11 @@
             top: 21px;
             right: -90px;
             text-align: center;
-
         }
         .newbox > .btnremove {
             position: absolute;
             top: 21px;
             right: -140px;
-
         }
 
         /*输入框三角重叠*/
@@ -328,19 +326,21 @@
                 $('.giveworker').text(result.shiftMain.overUserName);
                 $('.shiftworker').text(result.shiftMain.reciveUserName);
                 if(result.shiftMain.overStatus=="0"){
-                    $('.apsType-box').append('<input type="button" class="giveWork btn bg-1ab394" value="交班">')
-                    $('.apsType-box').append('<input type="button" class="save_btn btn " value="保存">')
+                    $('.apsType-box').append('<input type="button" class="giveWork btn bg-1ab394" value="交班">');
+                    $('.apsType-box').append('<input type="button" class="save_btn btn " value="保存">');
                 }else if(result.lastShiftMain.reciveStatus=="0"){
+                    $('.btnaddr, .btnremove').addClass('hidden');
                     $('textarea').attr('readonly','readonly');
                     $('.apsType-box').append('<input type="button"  class="joinWork btn bg-ffa82d" value="接班" >');
                 }else{
+                    $('.btnaddr, .btnremove').addClass('hidden');
                     $('textarea').attr('readonly','readonly');
                 }
             }else{
                 renderleft(result);
                 layer.msg(result.message);
                 $('textarea').attr('readonly','readonly');
-
+                $('.btnaddr, .btnremove').addClass('hidden');
             }
         });
 
@@ -467,7 +467,7 @@
                         btn:['确定', '取消'],
                         icon: 3},function () {
                         var data = {
-                            bigKind: "DD",
+                            bigKind: "CZ",
                             shiftId: result.shiftMain.shift.id,
                             shiftMainId: result.shiftMain.id,
                             overStatus: "0",
@@ -509,7 +509,6 @@
                         for (var i=0;i<keyArr.length;i++) {
                             data[keyArr[i]+"_dataArr"] = JSON.stringify(getItemArrJson1($('#'+keyArr[i]+''),keyArr[i],result));
                         }
-                        console.log(data);
                         ajaxToServer1('/api/ctrl/ShiftMain/recive',data,function (result) {
                             layer.msg(result.massage)
                         });

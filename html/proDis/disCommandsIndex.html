@@ -116,14 +116,15 @@
         loadProcess();
         ajaxkind();
         Page.init("/api/ctrl/BaseDirective/page",{},true,function(tableData){
+            console.log(tableData);
             renderTableData(tableData);
-
         })
     }
         pageLoad();
 
     //渲染表格
     function renderTableData(data) {
+        console.log(data);
         //↓接口到后修改↓
         var datas=data;
         var tableStr = "";
@@ -131,7 +132,7 @@
             tableStr += "<tr class='alignCenter' >"
                             + "<td class='i-Checks  alignCenter' id='" + datas[i].id + "'>" + datas[i].proc + "</td>"
                             + "<td class='alignCenter'>"+data[i].content+"</td>"
-                            + "<td class='alignCenter'>" + data[i].grade+"级指令</td>"
+                            + "<td class='alignCenter'>" + data[i].gradeLabel+"</td>"
                             + "<td>" + datas[i].kind + "</td>"
                             + "<td>" + datas[i].createDate + "</td>"
                         + "</tr>";
@@ -157,7 +158,6 @@
         });
     }
 
-
     //获取工序数据
     //chengdabin-2018-05-25-取工序根据当前用户获取
     //获取工序
@@ -171,8 +171,8 @@
         ajaxToServer(admin_domain+'/api/sys/SysAuthProperty/getAttributeValue/'+id+'/GXJQ/syswp',{},function (result) {
             if(result.success){
                 var rows = result.rows;
-                appendOptionsValue($('#proc'), rows, 'name', 'name');
-                //appendOptionsValue($('#process'), rows, 'code', 'name');//工序的值存编码 update by qiyh 2018-05-24
+                // appendOptionsValue($('#proc'), rows, 'name', 'name');
+                appendOptionsValue($('#proc'), rows, 'value', 'name');//工序的值存编码 update by qiyh 2018-05-24
             }else{
                 layer.msg(result.message);
             }
@@ -185,7 +185,7 @@
         ajaxToServer(admin_domain+'/api/sys/SysDict/type/directiveCassifyType',{},function (result) {
             if(result.success){
                 var rows = result.rows;
-                appendOptionsValue($('#kind'), rows, 'label', 'label');
+                appendOptionsValue($('#kind'), rows, 'value', 'label');
             }else{
                 layer.msg(result.message);
             }
@@ -196,11 +196,12 @@
     function getOption() {
         var procValue=$('#proc').val(), gradeValue=$('#grade').val(),kindValue=$('#kind').val(),contentParme=$('#contentParam').val();
         data={
-            "proc":procValue,
-            "grade":gradeValue,
-            "kind":kindValue,
-            "contentParam":contentParme
+            "proc":procValue=="请选择"?"":procValue,
+            "grade":gradeValue=="请选择"?"":gradeValue,
+            "kind":kindValue=="请选择"?"":kindValue,
+            "contentParam":contentParme=="请选择"?"":contentParme
         };
+        console.log(data)
         Page.init("/api/ctrl/BaseDirective/page",data,true,function(tableData){
             renderTableData(tableData);
         })

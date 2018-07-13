@@ -30,49 +30,49 @@
                 <input id="loginName" name="loginName" class="form-control required valid" type="text" value="" maxlength="50" aria-required="true" aria-invalid="false"></td>
         </tr>
         <tr>
-            <td class="width-15"><label class="pull-right">部门编码:</label>
+            <td class="width-15"><label class="pull-right"><font color="red">*</font>部门编码:</label>
             </td>
             <td class="width-35">
                 <input id="deptCode" name="deptCode" class="form-control required valid" type="text" value="" maxlength="50" aria-required="true" aria-invalid="false">
             </td>
-            <td class="width-15 active"><label class="pull-right">部门名称:</label>
+            <td class="width-15 active"><label class="pull-right"><font color="red">*</font>部门名称:</label>
             </td>
             <td class="width-35">
                 <input id="deptLabel" name="deptLabel" class="form-control required valid" type="text" value="" maxlength="50" aria-required="true" aria-invalid="false">
             </td>
         </tr>
         <tr>
-            <td class="width-15"><label class="pull-right">岗位编码</label></td>
+            <td class="width-15"><label class="pull-right"><font color="red">*</font>岗位编码</label></td>
             <td class="width-35">
                 <input id="jobCode" name="jobCode" class="form-control required valid" type="text" value="" maxlength="50" aria-required="true" aria-invalid="false">
             </td>
-            <td class="width-15 active"><label class="pull-right">岗位名称:</label></td>
+            <td class="width-15 active"><label class="pull-right"><font color="red">*</font>岗位名称:</label></td>
             <td class="width-35">
                 <input id="jobLabel" name="jobLabel" class="form-control required valid" type="text" value="" maxlength="50" aria-required="true" aria-invalid="false">
             </td>
         </tr>
         <tr>
-            <td class="width-15"><label class="pull-right">手机号码</label></td>
+            <td class="width-15"><label class="pull-right"><font color="red">*</font>手机号码</label></td>
             <td class="width-35">
                 <input id="mobile" name="mobile" class="form-control required valid" type="text" value="" maxlength="50" aria-required="true" aria-invalid="false">
             </td>
             <td class="width-15 active"><label class="pull-right">电话</label></td>
             <td class="width-35">
-                <input id="tel" name="tel" class="form-control required valid" type="text" value="" maxlength="50" aria-required="true" aria-invalid="false">
+                <input id="tel" name="tel" class="form-control  valid" type="text" value="" maxlength="50" aria-required="true" aria-invalid="false">
             </td>
         </tr>
         <tr>
-            <td class="width-15"><label class="pull-right">邮箱</label></td>
+            <td class="width-15"><label class="pull-right"><font color="red">*</font>邮箱</label></td>
             <td class="width-35">
                 <input id="email" name="email" class="form-control required valid" type="text" value="" maxlength="50" aria-required="true" aria-invalid="false">
             </td>
-            <td class="width-15 active"><label class="pull-right">专业</label></td>
+            <td class="width-15 active"><label class="pull-right"><font color="red">*</font>专业</label></td>
             <td class="width-35">
                 <input id="professional" name="professional" class="form-control required valid" type="text" value="" maxlength="50" aria-required="true" aria-invalid="false">
             </td>
         </tr>
         <tr>
-            <td class="width-15"><label class="pull-right">应用</label></td>
+            <td class="width-15"><label class="pull-right"><font color="red">*</font>应用</label></td>
             <td class="width-35">
                 <select id="sys" name="sys" maxlength="1" type="text" value="" data-msg-required="" class="form-control required" style="" aria-required="true">
                     <option value="">--请选择--</option>
@@ -105,7 +105,6 @@
   $(function () {
       var id = getQueryString('id');
       ajaxToServer1("/api/sys/SysUserRel/view/"+id,{},function (result) {
-          console.log(result)
           if(result.success){
               setInput(result);
               $('input').attr('disabled','disabled').css({"cursor":"not-allowed"});
@@ -127,6 +126,7 @@
         $("#tel").val(msgInput.tel);
         $("#email").val(msgInput.email);
         $("#professional").val(msgInput.professional);
+        $("#sys option").text(msgInput.sys)
     }
 </script>
 </html>

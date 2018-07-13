@@ -168,7 +168,7 @@
         ajaxToServer(admin_domain+'/api/sys/SysAuthProperty/getAttributeValue/'+id+'/GXJQ/syswp',{},function (result) {
             if(result.success){
                 var rows = result.rows;
-                 appendOptionsValue($('#proc'), rows, 'name', 'name');
+                 appendOptionsValue($('#proc'), rows, 'value', 'name');
                 //appendOptionsValue($('#proc'), rows, 'code', 'name');//工序的值存编码 update by qiyh 2018-05-24
             }else{
                 layer.msg(result.message);
@@ -182,7 +182,7 @@
         ajaxToServer(admin_domain+'/api/sys/SysDict/type/directiveCassifyType',{},function (result) {
             if(result.success){
                 var rows = result.rows;
-                appendOptionsValue($('#kind'), rows, 'label', 'label');
+                appendOptionsValue($('#kind'), rows, 'value', 'label');
             }else{
                 layer.msg(result.message);
             }

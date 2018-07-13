@@ -70,7 +70,9 @@
     function clickButton(level) {
         $('.btn-addson').click(function(){
             var id = $(this).parents("tr").find('.i-Checks').attr('id');
-            openEditDialog('添加下级指令','./proDis/opeOrderCVAdd.html?&pid='+id,'600px', '450px')
+            var proc = $(this).parents("tr").find(".hide").text();
+            console.log(proc);
+            openEditDialog('添加下级指令','./proDis/opeOrderCVAdd.html?pid='+id+'&proc='+proc,'600px', '450px')
         });
         $('.btn-changeI').click(function () {
             var id = $(this).parents("tr").find('.i-Checks').attr('id');
@@ -92,8 +94,10 @@
     }
     //渲染表
     function renderTableData(data) {
+        console.log(data);
         if(data.pList[0].grade<3) {
             var tablehead = "<tr>" +
+                "<td class='hide'>" + data.pList[0].proc + "</td>" +
                 "<td class='i-Checks'  id='" + data.pList[0].id + "'>" + data.pList[0].content + "</td>" +
                 "<td class='alignCenter center'>" +
                 " <a class='btn btn-target btn-addson'><i class='fa fa-edit'></i>添加子级</a>" +

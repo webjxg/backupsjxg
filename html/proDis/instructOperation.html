@@ -69,7 +69,10 @@
                     <th>名称</th>
                     <th>工序</th>
                     <th>状态</th>
+                    <th>下达时间</th>
+                    <th>下达人</th>
                     <th>执行时间</th>
+                    <th>执行人</th>
                     <th>操作</th>
                 </tr>
                 </thead>
@@ -114,6 +117,7 @@
             var _url = "/api/ctrl/DirectiveDetail/getReceiveDirective";
             ajaxToServer1(_url,{},function (result) {
                 if(result.success){
+                    console.log(result.rows);
                     renderTableData(result.rows)
                 }else{
                     layerAlert(result.message)
@@ -147,6 +151,7 @@
     });
     //创建table
     function renderTableData(data) {
+        console.log(data)
         var str;
         var status;
         var classText;
@@ -179,11 +184,19 @@
             }else{
                 updataDatastr=data[i].updateDate
             }
+            if(data[i].createDate==null){
+                data[i].createDate=''
+            }else{
+                data[i].createDate=data[i].createDate
+            }
             tableStr += "<tr class='"+setClass+"'  " + count + " >"+
                 "<td id='"+data[i].ctrlId+"'>" + data[i].content + "</td>"
                 + "<td>" + data[i].proc + "</td>"
                 + "<td class='alignCenter'>" + statusstr + "</td>"
-                + "<td class='alignCenter'>" + updataDatastr + "</td>"
+                + "<td class='alignCenter'>" + data[i].createDate + "</td>" //下达时间
+                + "<td class='alignCenter'>" + data[i].issuedUser + "</td>"   //夏大人
+                + "<td class='alignCenter'>" + updataDatastr + "</td>"   //执行时间
+                + "<td class='alignCenter'>" + data[i].execUser + "</td>"   //执行人
                 + "<td class='alignCenter'>" + str + "</td>"
                 + "</tr>";
         }

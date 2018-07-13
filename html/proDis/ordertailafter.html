@@ -176,8 +176,8 @@
                 startTime:startTime, //开始时间
                 endTime:endTime, //结束时间
                 issuedTime:exctTime,//下达时间
-                proc:$("#process option:selected").text()=="-- 全部 --"?"":$("#process option:selected").text(),            //工序
-                kind:$("#classify option:selected").text()=="-- 全部 --"?"":$("#classify option:selected").text(),            //分类
+                proc:$("#process option:selected").val()==""?"":$("#process option:selected").val(),            //工序
+                kind:$("#classify option:selected").val()=="-- 全部 --"?"":$("#classify option:selected").val(),            //分类
                 contentParam:$(".name").val(),  //指令
                 status:getcheck()                 //状态
             };
@@ -210,11 +210,13 @@
 
     //获取工序数据
     function loadProcess(){
+        console.log("11");
         id = getCookie("loginUserid")
         ajaxToServer(admin_domain+'/api/sys/SysAuthProperty/getAttributeValue/'+id+'/GXJQ/syswp',{},function (result) {
             if(result.success){
                 var rows = result.rows;
-                appendOptionsValue($('#process'), rows, 'name', 'name');
+                console.log(rows)
+                appendOptionsValue($('#process'), rows, 'value', 'name');
                 //appendOptionsValue($('#process'), rows, 'code', 'name');//工序的值存编码 update by qiyh 2018-05-24
             }else{
                 layer.msg(result.message);
@@ -238,7 +240,7 @@
             ajaxToServer(url_, {}, function(result){
                 if(result.success){
                     var rows = result.rows;
-                    appendOptionsValue($('#classify'), rows, 'id', 'label');
+                    appendOptionsValue($('#classify'), rows, 'value', 'label');
                 }else{
                     layer.msg(result.message);
                 }
@@ -355,9 +357,7 @@
          var data = {
              ids:this.parentNode.parentNode.firstElementChild.textContent
          };
-         console.log(data);
          ajaxToServer1("/api/ctrl/DirectiveIssued/directiveStop",data,function (result) {
-             console.log(result);
              if(result.success){
                  pageLoad();
                  sendName();
@@ -382,12 +382,6 @@
      });
      //值班指令
      $("#duty").click(function () {
-         ajaxToServer("/api/ctrl/DirectiveIssued/list",{},function (result) {
-             console.log(result.rows[0].process);
-             if(result.rows.length!==0) {
-                 $('#process').val(result.rows[0].process);
-             }
-         })
          ajaxToServer("/api/ctrl/DirectiveDetail/queryZbzlPage",{},function (result) {
              console.log(result);
              var data = result.page.rows;

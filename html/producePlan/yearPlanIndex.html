@@ -35,6 +35,10 @@
                                     计划周期（年）：
                                     <input type="text" value="" id="yMPicker" class="time-input form-control datePicker" placeholder="请选择年份">
                                 </li>
+                                <li class="month">
+                                    计划名称：
+                                    <input type="text" value="" id="yearName" class="time-input form-control datePicker" placeholder="请输入计划名称">
+                                </li>
                             </ul>
                         </div>
                         <div class="pull-right">
@@ -74,12 +78,12 @@
     var arr  =[];
     var year = getQueryString('year');
     var id = getQueryString('id');
-    console.log(id==undefined)
     if (id != undefined){
         $('#yMPicker').val(year).attr('disabled','disabled').css({"cursor":"not-allowed"});
     }
     if(id==""){
         $(".Moyear").text("某");
+        $("#yearName").text('')
     }else{
         $("#yMPicker").val(year);
         $(".Moyear").text($("#yMPicker").val());
@@ -104,6 +108,7 @@
             forceParse: 0
         });
         ajaxToServer("/api/aps/ApsYearPlan/queryYearPlan",JSON.stringify(data),function (result) {
+            $("#yearName").val(result.yearPlan.yearName);
             planarr.push(result.cpcl);
             planarr.push(result.cpxl);
             planarr.push(result.zljh);
@@ -198,7 +203,7 @@
             {field: 'itemUnit', title: '单位', width: 100, align: 'center'},
             {field: 'ndyjcl', title: $yesteryear + '年预计产量', editor: 'text', width: 100, align: 'center'},
             {field: 'yjdsjdcl', title: '预计第四季度产量', editor: 'text', width: 100, align: 'center'},
-            {field: 'ncl', title: $thisyear + '年产量', editor: 'text', width: 100, align: 'center'}
+            {field: 'ncl', title: $thisyear + '年计划', editor: 'text', width: 100, align: 'center'}
         ]],
         onAfterEdit: function (rowIndex, rowData, changes) {
             dataGridObj.pushRowData(rowData);
@@ -223,20 +228,10 @@
         $('#td0').datagrid('hideColumn', 'mainId');
         $('#td0').datagrid('hideColumn', 'itemCode');
     });
-    //输入框change事件
+    // //输入框change事件
+    // 年份可以重复添加
     $("#yMPicker").change(function () {
-        var data = {
-            adYear: $("#yMPicker").val()
-        };
-        ajaxToServer("/api/aps/ApsYearPlan/form", JSON.stringify(data), function (result) {
-            if (result.success == true) {
-                if (result.rows.length > 0) {
-                    layer.confirm("选择的年份已经存在，请重新选择!");
-                    $("#yMPicker").val("");
-                }
-                ;
                 changeth();
-            }
         });
         //隐藏id列
         $(function () {
@@ -244,10 +239,11 @@
             $('#td0').datagrid('hideColumn', 'mainId');
             $('#td0').datagrid('hideColumn', 'itemCode');
         });
-    });
+    // });
 
     function changeth() {
         var $yearupdata = $("#yMPicker").val();
+        console.log($yearupdata)
         if ($yearupdata == "") {
             $yesteryear = "去";
             $thisyear = "今";
@@ -327,7 +323,8 @@
             "status": status,
             "adYear": $("#yMPicker").val(),
             "mainId": id,
-            "yearPlans": JSON.stringify(editItems)
+            "yearPlans": JSON.stringify(editItems),
+            "yearName":$("#yearName").val()
         };
         ajaxToServer1("/api/aps/ApsYearPlan/saveYearInfo", data, function (result) {
             if (result.success) {

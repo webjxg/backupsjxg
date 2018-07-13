@@ -174,7 +174,7 @@
             if(result.success){
                 var rows = result.rows;
                 // appendOptionsValue($('#proc'), rows, 'name', 'name');
-                appendOptionsValue($('#proc'), rows, 'name', 'name'); //工序值取编码，update by qiyh 2018-05-24
+                appendOptionsValue($('#proc'), rows, 'value', 'name'); //工序值取编码，update by qiyh 2018-05-24
                 renderAll()
             }else{
                 layer.msg(result.message);

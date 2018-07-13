@@ -118,9 +118,9 @@
         ajaxkind();
         loadProcess();
         loadGrade();
-        reloadZtree('#proc','/api/ctrl/BaseDirective/getZTtree');
-        reloadZtree('#kind','/api/ctrl/BaseDirective/getZTtree');
-        reloadZtree('#grade','/api/ctrl/BaseDirective/getZTtree');
+        reloadZtree('#proc');
+        reloadZtree('#kind');
+        reloadZtree('#grade');
         $('#btn-add').click(function () {
             openEditDialog1('添加指令', './proDis/createInsCVAdd.html?level=1&id=""', '600px', '450px')
         });
@@ -132,7 +132,6 @@
     function loadGrade() {
         var url=admin_domain+'/api/sys/SysDict/type/directiveLeaveyType';
         ajaxToServer(url,{},function (result) {
-            console.log(result);
             if(result.success){
                 var rows = result.rows;
                 appendOptionsValue($('#grade'), rows, 'value', 'label');
@@ -171,7 +170,7 @@
             if(result.success){
                 var rows = result.rows;
                 // appendOptionsValue($('#proc'), rows, 'name', 'name');
-                appendOptionsValue($('#proc'), rows, 'name', 'name'); //工序值取编码，update by qiyh 2018-05-24
+                appendOptionsValue($('#proc'), rows, 'value', 'name'); //工序值取编码，update by qiyh 2018-05-24
             }else{
                 layer.msg(result.message);
             }
